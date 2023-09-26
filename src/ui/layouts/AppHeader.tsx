@@ -1,0 +1,509 @@
+import { Box, useTheme } from '@mui/system';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+
+import Logo from '/public/images/logo.svg';
+
+import { useStore } from '../../store';
+import { isForIPFS } from '../../utils/appConfig';
+import { BoxWith3D } from '../components/BoxWith3D';
+import { Link } from '../components/Link';
+import { ThemeSwitcher } from '../components/ThemeSwitcher';
+import { Container } from '../primitives/Container';
+import { Divider } from '../primitives/Divider';
+import { IconBox } from '../primitives/IconBox';
+import { ROUTES } from '../utils/routes';
+import { texts } from '../utils/texts';
+import { media } from '../utils/themeMUI';
+import { useClickOutside } from '../utils/useClickOutside';
+import { useMediaQuery } from '../utils/useMediaQuery';
+import { useScrollDirection } from '../utils/useScrollDirection';
+import { SettingsButton } from './SettingsButton';
+
+const headerNavItems = [
+  {
+    link: 'https://snapshot.org/#/aave.eth',
+    title: texts.header.navSnapshots,
+  },
+  {
+    link: 'https://governance.aave.com/',
+    title: texts.header.navForum,
+  },
+  {
+    link: 'https://app.aave.com/governance/',
+    title: 'Governance v2',
+  },
+];
+
+export function AppHeader() {
+  const theme = useTheme();
+  const path = usePathname();
+
+  const sm = useMediaQuery(media.sm);
+  const wrapperRef = useRef(null);
+
+  const {
+    isRendered,
+    setIsHelpModalOpen,
+    checkTutorialStartButtonClick,
+    isModalOpen,
+
+    isClickedOnStartButtonOnHelpModal,
+    setIsTermModalOpen,
+    setIsRepresentationInfoModalOpen,
+  } = useStore();
+
+  const { scrollDirection } = useScrollDirection();
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleOpenMobileMenu = () => {
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
+    setMobileMenuOpen(true);
+    setIsRepresentationInfoModalOpen(false);
+  };
+
+  const handleCloseMobileMenu = () => {
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'unset';
+    }
+    setMobileMenuOpen(false);
+  };
+
+  useClickOutside({
+    ref: wrapperRef,
+    outsideClickFunc: () => setTimeout(() => handleCloseMobileMenu(), 10),
+    additionalCondition: mobileMenuOpen,
+  });
+
+  useEffect(() => {
+    checkTutorialStartButtonClick();
+  }, []);
+
+  useEffect(() => {
+    if (sm) {
+      handleCloseMobileMenu();
+    }
+  }, [sm]);
+
+  return (
+    <>
+      <Box
+        component="header"
+        sx={{
+          position: 'sticky',
+          top: scrollDirection === 'down' ? (isModalOpen ? 0 : -82) : 0,
+          py: mobileMenuOpen ? 0 : 12,
+          zIndex: 110,
+          mb: 12,
+          backgroundColor: isRendered
+            ? `${theme.palette.$paper} !important`
+            : theme.palette.$paper,
+          transition: mobileMenuOpen ? 'all 0.2s ease' : 'all 0.5s ease',
+          [theme.breakpoints.up('sm')]: {
+            position: 'relative',
+            backgroundColor: 'transparent !important',
+            pb: 0,
+            top: 0,
+            zIndex: 90,
+          },
+        }}>
+        <Container
+          sx={{
+            px: mobileMenuOpen ? 0 : 12,
+            transition: 'padding 0.2s ease',
+            overflow: 'hidden',
+            [theme.breakpoints.up('sm')]: {
+              px: 20,
+              overflow: 'unset',
+            },
+          }}>
+          <BoxWith3D
+            className="Header_content"
+            borderSize={10}
+            leftBorderColor="$secondary"
+            bottomBorderColor="$headerGray"
+            onHeader={!sm}
+            disabled={mobileMenuOpen}
+            wrapperCss={{
+              backgroundColor: mobileMenuOpen
+                ? isRendered
+                  ? `${theme.palette.$mainStable} !important`
+                  : theme.palette.$mainStable
+                : isRendered
+                ? `${theme.palette.$paper} !important`
+                : theme.palette.$paper,
+              '> div': {
+                left: mobileMenuOpen ? 3 : 0,
+                bottom: mobileMenuOpen ? 3 : 0,
+              },
+            }}
+            css={{
+              p: '6px 0 6px 12px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              height: 52,
+              borderColor: mobileMenuOpen
+                ? 'transparent !important'
+                : `${theme.palette.$mainBorder} !important`,
+              [theme.breakpoints.up('lg')]: {
+                p: '8px 12px 8px 22px',
+                height: 66,
+              },
+            }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Link
+                href={ROUTES.main}
+                disabled={path === ROUTES.main}
+                css={{
+                  lineHeight: 0,
+                  transform: 'translate(0)',
+                  hover: { opacity: 0.7 },
+                  [theme.breakpoints.up('sm')]: {
+                    mr: 15,
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    mr: 20,
+                  },
+                }}>
+                <IconBox
+                  sx={{
+                    width: 61,
+                    height: 28,
+                    '> svg': {
+                      width: 61,
+                      height: 28,
+                      [theme.breakpoints.up('lg')]: {
+                        width: 66,
+                        height: 32,
+                      },
+                    },
+                    [theme.breakpoints.up('lg')]: {
+                      width: 66,
+                      height: 32,
+                    },
+                  }}>
+                  <Logo />
+                </IconBox>
+              </Link>
+
+              <Box
+                sx={{
+                  display: 'none',
+                  [theme.breakpoints.up('sm')]: {
+                    display: 'flex',
+                    alignItems: 'center',
+                  },
+                }}>
+                {headerNavItems.map((item) => (
+                  <React.Fragment key={item.title}>
+                    {item.title === texts.header.navTutorial ? (
+                      <Box
+                        component="button"
+                        onClick={() => setIsHelpModalOpen(true)}
+                        sx={{
+                          color: '$textLight',
+                          mr: 15,
+                          transition: 'all 0.2s ease',
+                          position: 'relative',
+                          fontWeight: '300',
+                          fontSize: 13,
+                          lineHeight: '15px',
+                          [theme.breakpoints.up('lg')]: {
+                            mr: 25,
+                            fontSize: 15,
+                            lineHeight: '18px',
+                          },
+                          hover: {
+                            opacity: '0.7',
+                          },
+                        }}>
+                        <Box
+                          component="p"
+                          className="Header__navItem"
+                          sx={{
+                            typography: 'body',
+                            color: isRendered
+                              ? `${theme.palette.$textLight} !important`
+                              : theme.palette.$textLight,
+                          }}>
+                          {item.title}
+                        </Box>
+
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            opacity:
+                              isClickedOnStartButtonOnHelpModal || !isRendered
+                                ? 0
+                                : 1,
+                            zIndex: 100,
+                            position: 'absolute',
+                            top: -3,
+                            right: -8,
+                            transform: 'scale(0.8)',
+                            borderRadius: '50%',
+                            backgroundColor: '$error',
+                          }}
+                        />
+                      </Box>
+                    ) : (
+                      <Box
+                        component={Link}
+                        href={item.link}
+                        inNewWindow
+                        sx={{
+                          color: '$textLight',
+                          mr: 15,
+                          transition: 'all 0.2s ease',
+                          position: 'relative',
+                          fontWeight: '300',
+                          fontSize: 13,
+                          lineHeight: '15px',
+                          [theme.breakpoints.up('lg')]: {
+                            mr: 25,
+                            fontSize: 15,
+                            lineHeight: '18px',
+                          },
+                          hover: {
+                            opacity: '0.7',
+                          },
+                        }}>
+                        <Box
+                          component="p"
+                          className="Header__navItem"
+                          sx={{
+                            typography: 'body',
+                            color: isRendered
+                              ? `${theme.palette.$textLight} !important`
+                              : theme.palette.$textLight,
+                          }}>
+                          {item.title}
+                        </Box>
+                      </Box>
+                    )}
+                  </React.Fragment>
+                ))}
+              </Box>
+            </Box>
+
+            <>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <SettingsButton />
+
+                <Box
+                  component="button"
+                  type="button"
+                  onClick={() => {
+                    if (mobileMenuOpen) {
+                      handleCloseMobileMenu();
+                    } else {
+                      handleOpenMobileMenu();
+                    }
+                  }}
+                  sx={{
+                    p: 10,
+                    display: 'inline-block',
+                    transitionProperty: 'opacity, filter',
+                    transitionDuration: '0.15s',
+                    transitionTimingFunction: 'linear',
+                    overflow: 'visible',
+                    position: 'relative',
+                    zIndex: 21,
+                    [theme.breakpoints.up('sm')]: {
+                      display: 'none',
+                    },
+                    hover: {
+                      opacity: 0.7,
+                    },
+                    '.hamburger-box': {
+                      width: 17,
+                      height: 16,
+                      display: 'inline-block',
+                      position: 'relative',
+                    },
+                    '.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after':
+                      {
+                        width: 17,
+                        height: 2,
+                        backgroundColor: '$textWhite',
+                        position: 'absolute',
+                        transitionProperty: 'transform',
+                        transitionDuration: '0.15s',
+                        transitionTimingFunction: 'ease',
+                      },
+                    '.hamburger-inner': {
+                      display: 'block',
+                      mt: -2,
+                      top: 2,
+                      transition: 'background-color 0s 0.13s linear',
+                      transitionDelay: mobileMenuOpen ? '0.22s' : '0.13s',
+                      backgroundColor: mobileMenuOpen
+                        ? 'transparent !important'
+                        : '$textWhite',
+                      '&:before, &:after': {
+                        content: `''`,
+                        display: 'block',
+                      },
+                      '&:before': {
+                        top: mobileMenuOpen ? 0 : 8,
+                        transition: mobileMenuOpen
+                          ? 'top 0.1s 0.15s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1)'
+                          : 'top 0.1s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+                        transform: mobileMenuOpen
+                          ? 'translate3d(0, 8px, 0) rotate(45deg)'
+                          : 'unset',
+                      },
+                      '&:after': {
+                        top: mobileMenuOpen ? 0 : 16,
+                        transition: mobileMenuOpen
+                          ? 'top 0.2s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1)'
+                          : 'top 0.2s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+                        transform: mobileMenuOpen
+                          ? 'translate3d(0, 8px, 0) rotate(-45deg)'
+                          : 'unset',
+                      },
+                    },
+                  }}>
+                  <span className="hamburger-box">
+                    <span className="hamburger-inner" />
+                  </span>
+                </Box>
+              </Box>
+            </>
+          </BoxWith3D>
+        </Container>
+      </Box>
+
+      <>
+        <Box
+          ref={wrapperRef}
+          sx={{
+            display: 'block',
+            transition: 'transform 0.4s ease',
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            zIndex: 109,
+            transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(150px)',
+            width: mobileMenuOpen ? 150 : 0,
+            height: '100%',
+            overflowY: 'auto',
+            [theme.breakpoints.up('sm')]: { display: 'none' },
+          }}>
+          <Box
+            sx={{
+              height: '100%',
+              '> div, .BoxWith3D__content': {
+                height: '100%',
+                '@media only screen and (max-height: 370px)': {
+                  height: 'unset',
+                },
+              },
+            }}>
+            <Box
+              sx={{
+                backgroundColor: '$mainStable',
+                p: '85px 15px 15px',
+                height: '100%',
+              }}>
+              {headerNavItems.map((item) => (
+                <React.Fragment key={item.title}>
+                  {item.title === texts.header.navTutorial ? (
+                    <Box
+                      component="button"
+                      type="button"
+                      onClick={() => {
+                        setIsHelpModalOpen(true);
+                        handleCloseMobileMenu();
+                      }}
+                      sx={{
+                        color: '$textLight',
+                        mb: 15,
+                        display: 'block',
+                      }}>
+                      <Box
+                        component="p"
+                        sx={{ typography: 'body', color: '$textLight' }}>
+                        {item.title}
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Link
+                      href={item.link}
+                      onClick={() => handleCloseMobileMenu()}
+                      inNewWindow={item.title !== 'Create'}
+                      css={{
+                        color: '$textLight',
+                        mb: 15,
+                        display: 'block',
+                      }}>
+                      <Box
+                        component="p"
+                        sx={{ typography: 'body', color: '$textLight' }}>
+                        {item.title}
+                      </Box>
+                    </Link>
+                  )}
+                </React.Fragment>
+              ))}
+              {!isForIPFS && (
+                <Box
+                  component="button"
+                  type="button"
+                  onClick={() => {
+                    setIsTermModalOpen(true);
+                    handleCloseMobileMenu();
+                  }}
+                  sx={{
+                    textAlign: 'left',
+                    color: '$textLight',
+                    mb: 15,
+                    display: 'block',
+                  }}>
+                  <Box sx={{ typography: 'body' }}>
+                    {texts.header.termsAndConditions}
+                  </Box>
+                </Box>
+              )}
+              <Box
+                sx={{
+                  color: '$textLight',
+                  whiteSpace: 'nowrap',
+                }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    whiteSpace: 'nowrap',
+                  }}>
+                  <Box component="p" sx={{ typography: 'headline' }}>
+                    {texts.header.theme}
+                  </Box>
+                </Box>
+                <Divider sx={{ my: 15 }} />
+                <ThemeSwitcher />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
+        {mobileMenuOpen && (
+          <Box
+            sx={{
+              position: 'fixed',
+              backgroundColor: '$backgroundOverlap',
+              inset: 0,
+              zIndex: 100,
+            }}
+            aria-hidden="true"
+          />
+        )}
+      </>
+    </>
+  );
+}

@@ -1,0 +1,56 @@
+name: Deploy to ipfs
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  NEXT_PUBLIC_DEPLOY_FOR_IPFS: true
+
+jobs:
+  ipfs_deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: 'ipfs'
+      url: https://${{ steps.pinata.outputs.hash }}.ipfs.cf-ipfs.com/
+    outputs:
+      pinata_hash: '${{ steps.pinata.outputs.hash }}'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Checkout submodules
+        run: git submodule update --recursive --init
+
+      - name: Packages install
+        shell: sh
+        run: yarn --frozen-lockfile --prefer-offline
+
+      - name: Build next js app
+        run: yarn build
+
+      - name: Deploy to ipfs
+        id: pinata
+        uses: aave/pinata-action@a3409e26f4cb859a2d9984109317caac53db5f68
+        with:
+          PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
+          PINATA_SECRET_KEY: ${{ secrets.PINATA_SECRET_KEY }}
+          PIN_ALIAS: 'app-aave-governance-v3-${{ github.head_ref || github.ref }}'
+          BUILD_LOCATION: './out'
+          CID_VERSION: 1
+
+      - name: Create or update commit comment
+        uses: peter-evans/commit-comment@4a537e71b0d89d18c5534e8aaba515f828f7383b
+        with:
+          sha: ${{ github.sha }}
+          body: ${{ steps.pinata.outputs.uri }}

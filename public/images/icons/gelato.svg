@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" fill="none">
+  <g clip-path="url(#oqiuweiuqwyeiuqwyeiuqwyeiuqwyeiuhqwieujqwpokepqwojeoqwueiuqjwkpeolqwpoeuoqwej)">
+    <path fill="url(#oqiiuewiuqweiuqyweiuqwyeiuqwhiehqwiuehiqwehiuqwgeuyqwge)" d="M10.805 5.633c-.006.246-.197.439-.424.432a7.297 7.297 0 0 0-1.713-.01c-1.119.127-2.053.5-2.912.846l-.156.062c-.912.365-1.754.68-2.75.704a5.405 5.405 0 0 1-1.302-.133C1.143 7.45.824 7.11.74 6.674a5.995 5.995 0 0 1-.096-1.075c0-3.037 2.275-5.5 5.08-5.5 2.807 0 5.082 2.463 5.082 5.5v.034Z"/>
+    <path fill="url(#ckashdkjqmkwneiqwhekqjwhe)" d="M1.094 8.366c-.381-.099-.73.344-.541.718L5.54 18.98c.055.111.184.152.286.092a.225.225 0 0 0 .085-.092l5.505-10.923c.165-.31.067-.707-.22-.886a.568.568 0 0 0-.175-.073 6.9 6.9 0 0 0-2.271-.135c-1.012.115-1.852.452-2.725.802l-.14.055c-.913.366-1.871.732-3.024.76a6.338 6.338 0 0 1-1.768-.214Z" opacity=".7"/>
+    <path fill="url(#qowhekanmcqiweguqwhekasjdoyqhwiehqwiehuqwieh)" d="M5.723 8.078c0-.115.066-.218.166-.258l.138-.055c.873-.35 1.712-.687 2.726-.802a6.9 6.9 0 0 1 2.27.135c.325.075.531.419.463.77a.687.687 0 0 1-.067.189L5.91 18.98a.206.206 0 0 1-.188.12V8.077Z"/>
+  </g>
+  <defs>
+    <linearGradient id="ckashdkjqmkwneiqwhekqjwhe" x1="5.999" x2="5.999" y1="7.214" y2="19.1" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".5"/>
+    </linearGradient>
+    <linearGradient id="qowhekanmcqiweguqwhekasjdoyqhwiehqwiehuqwieh" x1="8.611" x2="8.611" y1="6.924" y2="24.176" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="oqiiuewiuqweiuqyweiuqwyeiuqwhiehqwiuehiqwehiuqwgeuyqwge" cx="0" cy="0" r="1" gradientTransform="matrix(-18.98127 4.6296 -5.9539 -24.4109 8.263 2.417)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset=".12" stop-color="#fff" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="oqiuweiuqwyeiuqwyeiuqwyeiuqwyeiuhqwieujqwpokepqwojeoqwueiuqjwkpeolqwpoeuoqwej">
+      <path fill="#fff" d="M0 0h11v19H0z" transform="translate(.5 .1)"/>
+    </clipPath>
+  </defs>
+</svg>
