@@ -99,6 +99,12 @@ const CHAINS: {
     name: 'Mumbai Testnet',
     blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
   },
+  [ChainIdByName.AvalancheFuji]: {
+    urls: ['https://api.avax-test.network/ext/bc/C/rpc'],
+    nativeCurrency: AVAX,
+    name: 'Avalanche fuji',
+    blockExplorerUrls: ['https://testnet.snowtrace.io/'],
+  },
   [ChainIdByName.BnbTest]: {
     urls: [`https://data-seed-prebsc-1-s1.bnbchain.org:8545`],
     nativeCurrency: BNB,

@@ -37,6 +37,7 @@ interface SearchButtonProps {
   setIsOpen: (value: boolean) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
+  disabled?: boolean;
 }
 
 export function SearchButton({
@@ -44,6 +45,7 @@ export function SearchButton({
   setIsOpen,
   searchValue,
   setSearchValue,
+  disabled,
 }: SearchButtonProps) {
   const theme = useTheme();
 
@@ -75,24 +77,27 @@ export function SearchButton({
       </Box>
 
       <Box
-        onMouseOver={() => !isOpen && setIsHovered(true)}
-        onMouseOut={() => setIsHovered(false)}
+        onMouseOver={() => !isOpen && !disabled && setIsHovered(true)}
+        onMouseOut={() => !disabled && setIsHovered(false)}
         onClick={() => {
-          if (!isOpen) {
+          if (!isOpen && !disabled) {
             ref.current?.focus();
             refMobile.current?.focus();
           }
-          setIsOpen(!isOpen);
-          setIsHovered(false);
+          if (!disabled) {
+            setIsOpen(!isOpen);
+            setIsHovered(false);
+          }
         }}>
         <BoxWith3D
           withActions={isHovered}
           borderSize={isOpen ? 5 : 10}
           disableActiveState
+          disabled={disabled}
           contentColor="$mainLight"
           bottomBorderColor="$light"
           wrapperCss={{
-            cursor: 'pointer',
+            cursor: disabled ? 'not-allowed' : 'pointer',
             display: 'none',
             hover: {
               '.BoxWith3D__content': {

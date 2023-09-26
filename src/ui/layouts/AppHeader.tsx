@@ -6,12 +6,14 @@ import Logo from '/public/images/logo.svg';
 
 import { useStore } from '../../store';
 import { isForIPFS } from '../../utils/appConfig';
+import { WalletWidget } from '../../web3/components/wallet/WalletWidget';
 import { BoxWith3D } from '../components/BoxWith3D';
 import { Link } from '../components/Link';
 import { ThemeSwitcher } from '../components/ThemeSwitcher';
 import { Container } from '../primitives/Container';
 import { Divider } from '../primitives/Divider';
 import { IconBox } from '../primitives/IconBox';
+import NoSSR from '../primitives/NoSSR';
 import { ROUTES } from '../utils/routes';
 import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
@@ -30,8 +32,8 @@ const headerNavItems = [
     title: texts.header.navForum,
   },
   {
-    link: 'https://app.aave.com/governance/',
-    title: 'Governance v2',
+    link: 'https://docs.aave.com/faq/governance',
+    title: texts.header.navTutorial,
   },
 ];
 
@@ -45,7 +47,11 @@ export function AppHeader() {
   const {
     isRendered,
     setIsHelpModalOpen,
+    setActivePage,
+    activeWallet,
+    checkAppMode,
     checkTutorialStartButtonClick,
+    appMode,
     isModalOpen,
 
     isClickedOnStartButtonOnHelpModal,
@@ -80,13 +86,27 @@ export function AppHeader() {
 
   useEffect(() => {
     checkTutorialStartButtonClick();
-  }, []);
+    checkAppMode();
+  }, [activeWallet?.isActive]);
 
   useEffect(() => {
     if (sm) {
       handleCloseMobileMenu();
     }
   }, [sm]);
+
+  if (appMode === 'default') {
+    if (headerNavItems.some((item) => item.title === 'Create')) {
+      headerNavItems.shift();
+    }
+  } else {
+    if (!headerNavItems.some((item) => item.title === 'Create')) {
+      headerNavItems.unshift({
+        link: '/create',
+        title: texts.header.navCreate,
+      });
+    }
+  }
 
   return (
     <>
@@ -157,6 +177,7 @@ export function AppHeader() {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Link
                 href={ROUTES.main}
+                onClick={() => setActivePage(0)}
                 disabled={path === ROUTES.main}
                 css={{
                   lineHeight: 0,
@@ -291,8 +312,9 @@ export function AppHeader() {
               </Box>
             </Box>
 
-            <>
+            <NoSSR>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <WalletWidget />
                 <SettingsButton />
 
                 <Box
@@ -374,12 +396,12 @@ export function AppHeader() {
                   </span>
                 </Box>
               </Box>
-            </>
+            </NoSSR>
           </BoxWith3D>
         </Container>
       </Box>
 
-      <>
+      <NoSSR>
         <Box
           ref={wrapperRef}
           sx={{
@@ -503,7 +525,7 @@ export function AppHeader() {
             aria-hidden="true"
           />
         )}
-      </>
+      </NoSSR>
     </>
   );
 }

@@ -1,7 +1,26 @@
-import { StoreSlice } from '../../../lib/web3/src';
+import { produce } from 'immer';
+
+import { ProposalWithLoadings } from '../../../lib/helpers/src';
+import { IWalletSlice, StoreSlice } from '../../../lib/web3/src';
+import { DelegateItem } from '../../delegate/types';
+import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { isForIPFS } from '../../utils/appConfig';
+import { getDelegateData } from '../helpModals/getDelegateData';
+import { getProposalData } from '../helpModals/getProposalData';
+import {
+  generateStatus,
+  getTestTransactionsPool,
+  makeTestTransaction,
+  TransactionItem,
+} from '../helpModals/getTestTransactions';
+
+export type AppModeType = 'default' | 'dev' | 'expert';
 
 export interface IUISlice {
+  isGaslessVote: boolean;
+  checkIsGaslessVote: () => void;
+  setIsGaslessVote: (value: boolean) => void;
+
   isRendered: boolean;
   setIsRendered: () => void;
 
@@ -11,6 +30,23 @@ export interface IUISlice {
   isAppBlockedByTerms: boolean;
   checkIsAppBlockedByTerms: () => void;
   setIsTermsAccept: (value: boolean) => void;
+
+  appMode: AppModeType;
+  checkAppMode: () => void;
+  setAppMode: (appMode: AppModeType) => void;
+
+  helpProposalData: ProposalWithLoadings | undefined;
+  getHelpProposalData: () => void;
+  setHelpProposalData: (proposalData: ProposalWithLoadings | undefined) => void;
+
+  helpDelegateData: DelegateItem[];
+  setHelpDelegateData: (delegateData: DelegateItem[]) => void;
+  getHelpDelegateData: () => void;
+
+  testTransactionsPool: Record<number, TransactionItem>;
+  getTestTransactionsPool: () => void;
+  addTestTransaction: (timestamp: number) => void;
+  resetTestTransactionsPool: () => void;
 
   isModalOpen: boolean;
   setModalOpen: (value: boolean) => void;
@@ -131,7 +167,27 @@ export interface IUISlice {
   setIsRepresentationInfoModalOpen: (value: boolean) => void;
 }
 
-export const createUISlice: StoreSlice<IUISlice> = (set, get) => ({
+export const createUISlice: StoreSlice<
+  IUISlice,
+  IWalletSlice & TransactionsSlice
+> = (set, get) => ({
+  isGaslessVote: true,
+  checkIsGaslessVote: () => {
+    if (
+      localStorage?.getItem('isGaslessVote') === 'on' &&
+      get().isGelatoAvailable &&
+      !get().activeWallet?.isContractAddress
+    ) {
+      set({ isGaslessVote: true });
+    } else {
+      set({ isGaslessVote: false });
+    }
+  },
+  setIsGaslessVote: (value) => {
+    localStorage?.setItem('isGaslessVote', value ? 'on' : 'off');
+    set({ isGaslessVote: value });
+  },
+
   isRendered: false,
   setIsRendered: () => set({ isRendered: true }),
 
@@ -154,6 +210,121 @@ export const createUISlice: StoreSlice<IUISlice> = (set, get) => ({
       localStorage?.setItem('termsAccept', 'true');
       set({ isAppBlockedByTerms: false });
     }
+  },
+
+  appMode: 'default',
+  checkAppMode: () => {
+    if (get().activeWallet?.isContractAddress) {
+      localStorage?.setItem('appMode', 'default');
+      set({ appMode: 'default' });
+    } else {
+      const localStorageAppMode = localStorage?.getItem(
+        'appMode',
+      ) as AppModeType;
+
+      if (localStorageAppMode) {
+        set({ appMode: localStorageAppMode });
+      } else {
+        localStorage?.setItem('appMode', 'default');
+        set({ appMode: 'default' });
+      }
+    }
+  },
+  setAppMode: (appMode) => {
+    if (get().activeWallet?.isContractAddress) {
+      localStorage?.setItem('appMode', 'default');
+      set({ appMode: 'default' });
+    } else {
+      localStorage?.setItem('appMode', appMode);
+      set({ appMode });
+    }
+  },
+
+  helpProposalData: undefined,
+  getHelpProposalData: () => {
+    const proposalData = getProposalData();
+
+    set((state) =>
+      produce(state, (draft) => {
+        draft.helpProposalData = {
+          ...proposalData,
+          proposal: {
+            ...proposalData.proposal,
+            data: {
+              ...proposalData.proposal.data,
+              votingMachineData: {
+                ...proposalData.proposal.data.votingMachineData,
+                forVotes:
+                  draft.helpProposalData?.proposal.data.votingMachineData
+                    .forVotes === '0'
+                    ? '0'
+                    : draft.helpProposalData?.proposal.data.votingMachineData
+                        .forVotes || '0',
+                againstVotes:
+                  draft.helpProposalData?.proposal.data.votingMachineData
+                    .againstVotes === '0'
+                    ? '0'
+                    : draft.helpProposalData?.proposal.data.votingMachineData
+                        .againstVotes || '0',
+                votedInfo: {
+                  ...proposalData.proposal.data.votingMachineData.votedInfo,
+                  support:
+                    draft.helpProposalData?.proposal.data.votingMachineData
+                      .votedInfo.support || false,
+                  votingPower:
+                    draft.helpProposalData?.proposal.data.votingMachineData
+                      .votedInfo.votingPower || '0',
+                },
+              },
+            },
+          },
+        };
+      }),
+    );
+  },
+  setHelpProposalData: (proposalData) => {
+    set({ helpProposalData: proposalData });
+  },
+
+  helpDelegateData: [],
+  setHelpDelegateData: (delegateData) => {
+    set({ helpDelegateData: delegateData });
+  },
+  getHelpDelegateData: () => {
+    const delegateData = getDelegateData();
+
+    set({ helpDelegateData: delegateData });
+  },
+
+  testTransactionsPool: {},
+  getTestTransactionsPool: () => {
+    const transactionsPool = getTestTransactionsPool();
+
+    set({ testTransactionsPool: transactionsPool });
+  },
+  addTestTransaction: (timestamp) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.testTransactionsPool[timestamp] = makeTestTransaction(
+          timestamp,
+          true,
+        );
+      }),
+    );
+    setTimeout(() => {
+      set((state) =>
+        produce(state, (draft) => {
+          draft.testTransactionsPool[timestamp] = makeTestTransaction(
+            timestamp,
+            false,
+            generateStatus(),
+          );
+        }),
+      );
+    }, 1000);
+  },
+  resetTestTransactionsPool: () => {
+    set({ testTransactionsPool: {} });
   },
 
   isModalOpen: false,

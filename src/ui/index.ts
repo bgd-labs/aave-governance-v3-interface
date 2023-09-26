@@ -3,6 +3,7 @@ import { BasicModal } from './components/BasicModal';
 import { BigButton } from './components/BigButton';
 import { BoxWith3D } from './components/BoxWith3D';
 import { CopyToClipboard } from './components/CopyToClipboard';
+import { FilterDropdown } from './components/FilterDropdown';
 import { Link } from './components/Link';
 import { Pagination } from './components/Pagination';
 import { SmallButton } from './components/SmallButton';
@@ -28,6 +29,7 @@ export {
   Container,
   CopyToClipboard,
   Divider,
+  FilterDropdown,
   Image,
   Input,
   Link,

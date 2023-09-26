@@ -1,7 +1,9 @@
 import { Box, useTheme } from '@mui/system';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 
 import { useStore } from '../../store';
+import { isForIPFS } from '../../utils/appConfig';
+import { AppLoading } from '../components/AppLoading';
 import NoSSR from '../primitives/NoSSR';
 import { setRelativePath } from '../utils/relativePath';
 import { AppHeader } from './AppHeader';
@@ -13,6 +15,10 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const store = useStore();
   const theme = useTheme();
+
+  useEffect(() => {
+    store.setGovCoreConfigs();
+  }, []);
 
   return (
     <Box
@@ -66,7 +72,18 @@ export function MainLayout({ children }: MainLayoutProps) {
       <AppHeader />
 
       <Box component="main" sx={{ position: 'relative', zIndex: 2 }}>
-        {children}
+        {store.loadingListCache && !isForIPFS ? (
+          children
+        ) : (
+          <>
+            {!!store.configs.length &&
+            store.contractsConstants.expirationTime > 0 ? (
+              children
+            ) : (
+              <AppLoading />
+            )}
+          </>
+        )}
       </Box>
     </Box>
   );

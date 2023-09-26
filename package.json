@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "BGD labs",
-  "license": "BSL",
+  "license": "BUSL1.1",
   "contributors": [
     {
       "name": "Oleksandr Tkach",
@@ -39,7 +39,7 @@
     "@emotion/styled": "^11.11.0",
     "@gelatonetwork/relay-sdk": "^5.3.0",
     "@headlessui/react": "^1.7.17",
-    "@mui/system": "^5.14.10",
+    "@mui/system": "^5.14.11",
     "@safe-global/safe-deployments": "^1.27.0",
     "@walletconnect/ethereum-provider": "^2.10.0",
     "@web3-react/coinbase-wallet": "8.2.2",

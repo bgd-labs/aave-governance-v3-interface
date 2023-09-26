@@ -1,4 +1,4 @@
-# Aave Governance V3 interface
+# Aave Governance V3 frontend
 
 <img src="./public/metaLogo.jpg" alt="Aave Governance v3" width="100%" height="75%">
 
@@ -61,7 +61,7 @@ You can deploy your version of the application using Vercel just by clicking on 
 
 ### Hosted version
 
-We have our own hosted version from Vercel, you can access it on [https://governance-v3.vercel.app/]() (TODO: need change to domain link)
+We have our own hosted version from Vercel, you can access it on []() (TODO: need add domain link)
 
 <br>
 
@@ -69,4 +69,6 @@ We have our own hosted version from Vercel, you can access it on [https://govern
 
 Copyright © 2023, [BGD Labs](https://bgdlabs.com/).
 
-Released under the [BSL License](./LICENSE).
+The contents of this repository are licensed under [BUSL1.1](./LICENSE).
+
+**IMPORTANT**. The BUSL1.1 license of this repository allows for any usage of the software, if respecting the *Additional Use Grant* limitations, forbidding any use case damaging anyhow the Aave DAO's interests.
