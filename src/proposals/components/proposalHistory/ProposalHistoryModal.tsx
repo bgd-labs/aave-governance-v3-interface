@@ -89,7 +89,10 @@ export function ProposalHistoryModal({
   };
 
   return (
-    <DetailsModalWrapper isOpen={isOpen} setIsOpen={setIsOpen}>
+    <DetailsModalWrapper
+      proposalId={proposalId}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}>
       {historyTypes.map((type) => {
         return Object.entries(store.proposalHistory).map((item) => {
           const txInfo = item[1].txInfo;

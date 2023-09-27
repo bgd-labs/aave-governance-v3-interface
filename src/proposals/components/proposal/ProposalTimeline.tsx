@@ -329,7 +329,7 @@ const StateWrapper = ({
       className="StateWrapper"
       sx={(theme) => ({
         position: 'absolute',
-        top: color === 'secondary' ? 'calc(100% + 36px)' : 'calc(100% + 24px)',
+        top: 'calc(100% + 36px)',
         color:
           color === 'success'
             ? theme.palette.$mainFor
@@ -715,13 +715,7 @@ export function ProposalTimeline({
                   timeline.type === TimelineItemTypeType.votingClosed &&
                   typeof getVotingClosedState() === 'undefined' &&
                   '≈ '}
-                {dayjs
-                  .unix(timeline.timestamp)
-                  .format(
-                    timeline.type === TimelineItemTypeType.finished
-                      ? 'D MMM YYYY'
-                      : 'D MMM YYYY, h:mm A',
-                  )}
+                {dayjs.unix(timeline.timestamp).format('D MMM YYYY, h:mm A')}
               </Box>
               {timeline.state &&
                 timeline.type === TimelineItemTypeType.votingClosed && (

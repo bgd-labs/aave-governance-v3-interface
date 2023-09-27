@@ -10,7 +10,7 @@ export const texts = {
     voting: 'You voting',
     votingPower: 'Voting power',
     totalVotingPower: 'Total voting power',
-    detailsModalTitle: 'Proposal life cycle details',
+    detailsModalTitle: (id: number) => `Proposal #${id} life cycle details`,
     vote: 'Vote',
     notEnoughPower: 'You don’t have enough voting power to vote',
     notEnough: 'Not enough',
@@ -116,8 +116,9 @@ export const texts = {
       )})`,
     proposalOpenForVoting: (id: number, chainId: number) =>
       `Voting started for proposal #${id} (${getChainName(chainId)})`,
-    votingOver: 'Voting is over',
-    votingFailed: 'Proposal failed because there were not enough votes for it',
+    votingOver: `Voting is over. <b>Proposal Passed</b>`,
+    votingFailed: (forVotes: number, againstVotes: number) =>
+      `<b>Proposal failed</b>, because there were not enough votes <b>for</b>. Votes: For <b>(${forVotes})</b> | Against <b>(${againstVotes})</b>`,
     proposalVotingClosed: (id: number, chainId: number) =>
       `Proposal #${id} voting was closed (${getChainName(chainId)})`,
     votingResultsSent: `Voting results were sent to Core (${getChainName(
@@ -334,7 +335,7 @@ export const texts = {
     fetchFromIpfsError:
       'An error occurred while fetching proposal metadata from IPFS. Try again later or try using a VPN.',
     fetchFromIpfsIncorrectHash: `An error occurred while fetching proposal metadata from IPFS. It seems that the ipfs hash is incorrect or the content by this hash does not match the desired one.`,
-    explorer: 'Explorer link',
+    explorer: 'Explorer',
     votingNotAvailableForGnosis:
       'Voting on this chain is not available for Gnosis safe wallet',
     unset: 'Unset',

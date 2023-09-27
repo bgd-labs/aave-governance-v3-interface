@@ -1,10 +1,15 @@
-import { Box } from '@mui/system';
+import { Box, fontWeight, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
 
-import { Link } from '../../../ui';
+import CopyIcon from '/public/images/icons/copy.svg';
+import LinkIcon from '/public/images/icons/linkIcon.svg';
+
+import { CopyToClipboard, Link } from '../../../ui';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
+import { IconBox } from '../../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
+import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
 import { ProposalHistoryItem as IProposalHistoryItem } from '../../store/proposalsHistorySlice';
@@ -21,6 +26,8 @@ export function ProposalHistoryItem({
   onClick,
   item,
 }: ProposalHistoryItemProps) {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -55,7 +62,7 @@ export function ProposalHistoryItem({
         }}
       />
       <Box
-        sx={(theme) => ({
+        sx={{
           display: 'flex',
           mb: 35,
           justifyContent: 'space-between',
@@ -65,7 +72,7 @@ export function ProposalHistoryItem({
           [theme.breakpoints.up('sm')]: {
             flexDirection: 'row',
           },
-        })}>
+        }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           {!!item.timestamp && (
             <Box
@@ -95,7 +102,13 @@ export function ProposalHistoryItem({
           sx={{ typography: 'body', width: item.timestamp ? '68%' : '100%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <NetworkIcon chainId={item.txInfo.chainId} css={{ mr: 8 }} />
-            <Box component="p">{item.title}</Box>
+            <Box
+              sx={{ b: { fontWeight: 600 } }}
+              component="p"
+              dangerouslySetInnerHTML={{
+                __html: item.title,
+              }}
+            />
           </Box>
 
           {!!item.addresses?.length && (
@@ -111,26 +124,72 @@ export function ProposalHistoryItem({
                   pl: 15,
                 }}>
                 {item.addresses.map((address, index) => (
-                  <Link
-                    key={index}
-                    inNewWindow
-                    href={`${
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      chainInfoHelper.getChainParameters(
-                        item.txInfo.chainId || appConfig.govCoreChainId,
-                      ).blockExplorerUrls[0]
-                    }address/${address}`}>
-                    <Box
-                      component="li"
-                      sx={{
-                        mt: 2,
-                        transition: 'all 0.2s ease',
-                        hover: { opacity: 0.7 },
-                      }}>
-                      {textCenterEllipsis(address, 6, 6)}
-                    </Box>
-                  </Link>
+                  <Box
+                    sx={{ display: 'inline-flex', alignItems: 'center' }}
+                    key={index}>
+                    <Link
+                      css={{ display: 'inline-flex', alignItems: 'center' }}
+                      inNewWindow
+                      href={`${
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        chainInfoHelper.getChainParameters(
+                          item.txInfo.chainId || appConfig.govCoreChainId,
+                        ).blockExplorerUrls[0]
+                      }address/${address}`}>
+                      <Box
+                        component="li"
+                        sx={{
+                          mt: 2,
+                          transition: 'all 0.2s ease',
+                          hover: { opacity: 0.7 },
+                        }}>
+                        {textCenterEllipsis(address, 6, 6)}
+                      </Box>
+
+                      <IconBox
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          ml: 2,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                            path: {
+                              '&:first-of-type': {
+                                stroke: theme.palette.$text,
+                              },
+                              '&:last-of-type': {
+                                fill: theme.palette.$text,
+                              },
+                            },
+                          },
+                        }}>
+                        <LinkIcon />
+                      </IconBox>
+                    </Link>
+
+                    <CopyToClipboard copyText={address}>
+                      <IconBox
+                        sx={{
+                          cursor: 'pointer',
+                          width: 10,
+                          height: 10,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                          },
+                          ml: 3,
+                          path: {
+                            transition: 'all 0.2s ease',
+                            stroke: theme.palette.$textSecondary,
+                          },
+                          hover: { path: { stroke: theme.palette.$main } },
+                        }}>
+                        <CopyIcon />
+                      </IconBox>
+                    </CopyToClipboard>
+                  </Box>
                 ))}
               </Box>
             </>

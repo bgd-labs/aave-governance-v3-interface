@@ -155,6 +155,8 @@ export const createProposalsHistorySlice: StoreSlice<
       isVotingEnded,
       lastPayloadCanceledAt,
       lastPayloadExpiredAt,
+      forVotes,
+      againstVotes,
     } = getProposalStepsAndAmounts({
       proposalData: proposal.data,
       quorum: proposal.config.quorum,
@@ -229,7 +231,7 @@ export const createProposalsHistorySlice: StoreSlice<
         historyId,
         HistoryItemType.VOTING_OVER,
         isVotingFailed
-          ? texts.proposalHistory.votingFailed
+          ? texts.proposalHistory.votingFailed(forVotes, againstVotes)
           : texts.proposalHistory.votingOver,
         proposal.data.id,
         proposal.data.votingChainId,

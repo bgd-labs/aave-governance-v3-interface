@@ -61,7 +61,7 @@ You can deploy your version of the application using Vercel just by clicking on 
 
 ### Hosted version
 
-We have our own hosted version from Vercel, you can access it on []() (TODO: need add domain link)
+We have our own hosted version from Vercel, you can access it on [https://vote.onaave.com/](https://vote.onaave.com/)
 
 <br>
 
