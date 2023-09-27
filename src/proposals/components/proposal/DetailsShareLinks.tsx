@@ -2,7 +2,7 @@ import { Box, styled } from '@mui/system';
 import React from 'react';
 
 import Download from '/public/images/icons/download.svg';
-import Twitter from '/public/images/icons/twitter.svg';
+import Twitter from '/public/images/icons/twitterX.svg';
 
 import { ipfsGateway, ProposalMetadata } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
@@ -18,18 +18,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   display: 'inline-flex',
   alignItems: 'center',
   color: theme.palette.$textDisabled,
-  path: {
-    fill: theme.palette.$textDisabled,
-    stroke: theme.palette.$textDisabled,
-    transition: 'all 0.2s ease',
-  },
-  '&:hover': {
-    color: theme.palette.$text,
-    path: {
-      fill: theme.palette.$text,
-      stroke: theme.palette.$text,
-    },
-  },
   '&:last-of-type': {
     mr: 0,
   },
@@ -84,6 +72,28 @@ export function DetailsShareLinks({ ipfs, ipfsError }: DetailsShareLinksProps) {
   return (
     <NoSSR>
       <StyledLink
+        sx={(theme) => ({
+          path: {
+            '&:last-of-type': {
+              fill: theme.palette.$appBackground,
+            },
+            '&:first-of-type': {
+              fill: theme.palette.$textDisabled,
+            },
+            transition: 'all 0.2s ease',
+          },
+          '&:hover': {
+            color: theme.palette.$text,
+            path: {
+              '&:last-of-type': {
+                fill: theme.palette.$appBackground,
+              },
+              '&:first-of-type': {
+                fill: theme.palette.$text,
+              },
+            },
+          },
+        })}
         href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
           ipfs?.title || '',
         )}&url=${
@@ -102,7 +112,23 @@ export function DetailsShareLinks({ ipfs, ipfsError }: DetailsShareLinksProps) {
         </IconBox>
         {texts.proposals.detailsShareTwitter}
       </StyledLink>
-      <StyledLink href={`${ipfsGateway}/${ipfs?.ipfsHash}`} inNewWindow>
+      <StyledLink
+        sx={(theme) => ({
+          path: {
+            fill: theme.palette.$textDisabled,
+            stroke: theme.palette.$textDisabled,
+            transition: 'all 0.2s ease',
+          },
+          '&:hover': {
+            color: theme.palette.$text,
+            path: {
+              fill: theme.palette.$text,
+              stroke: theme.palette.$text,
+            },
+          },
+        })}
+        href={`${ipfsGateway}/${ipfs?.ipfsHash}`}
+        inNewWindow>
         <IconBox
           sx={{
             width: 18,

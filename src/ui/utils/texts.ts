@@ -29,7 +29,7 @@ export const texts = {
     detailsLinkSnapshotVoting: 'Snapshot voting',
     detailsLinkBGDReport: 'BGD Report',
     detailsLinkSeatbeltReport: 'Seatbelt report',
-    detailsShareTwitter: 'Share on twitter',
+    detailsShareTwitter: 'Share on X',
     detailsRawIpfs: 'Raw-Ipfs',
     timelinePointCreated: 'Created',
     timelinePointOpenVote: 'Open for voting',
