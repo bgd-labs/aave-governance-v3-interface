@@ -80,6 +80,14 @@ export function ProposalPage({
 
   useEffect(() => {
     const { forVotes, againstVotes } = formatProposal(proposalData.proposal);
+    const { isVotingActive } = getProposalStepsAndAmounts({
+      proposalData: proposal.data,
+      quorum: proposal.config.quorum,
+      differential: proposal.config.differential,
+      precisionDivider: proposal.precisionDivider,
+      cooldownPeriod: proposal.timings.cooldownPeriod,
+      executionPayloadTime: proposal.timings.executionPayloadTime,
+    });
 
     const startBlock =
       proposalData.proposal.data.votingMachineData.createdBlock;
@@ -88,12 +96,6 @@ export function ProposalPage({
         .votingClosedAndSentBlockNumber;
 
     const totalVotes = forVotes + againstVotes;
-
-    const isFinished =
-      proposalData.proposal.state === ProposalState.Executed ||
-      proposalData.proposal.state === ProposalState.Defeated ||
-      proposalData.proposal.state === ProposalState.Canceled ||
-      proposalData.proposal.state === ProposalState.Expired;
 
     if (startBlock > 0) {
       if (totalVotes > 0 && !proposal.data.prerender) {
@@ -106,7 +108,7 @@ export function ProposalPage({
         );
       }
 
-      if (!isFinished) {
+      if (!isVotingActive) {
         startVotersPolling(
           proposal.data.id,
           proposal.data.votingChainId,

@@ -124,6 +124,13 @@ export function ActiveProposalListItem({
           if (!isForHelpModal) {
             setIsClicked(true);
           }
+        }}
+        sx={{
+          '&:visited': {
+            '.VoteLine': {
+              borderColor: `${theme.palette.$mainElements} !important`,
+            },
+          },
         }}>
         <ProposalListItemWrapper
           isVotingActive={isVotingActive}

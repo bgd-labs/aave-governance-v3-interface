@@ -13,18 +13,19 @@ export function VoteLine({
 }: VoteLineProps) {
   return (
     <Box
+      className="VoteLine"
       sx={(theme) => ({
         display: 'inline-flex',
         alignItems: 'center',
         position: 'relative',
-        height: 11,
+        height: 8,
         width: width,
         backgroundColor: '$mainLight',
         borderColor: `${theme.palette.$mainElements} !important`,
         borderStyle: 'solid',
         borderWidth: '1px',
-        borderTopWidth: 3,
-        borderRightWidth: 3,
+        borderTopWidth: 2,
+        borderRightWidth: 2,
         [theme.breakpoints.up('lg')]: {
           height: 10,
           borderTopWidth: 3,
