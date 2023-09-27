@@ -25,6 +25,8 @@ export function Branding() {
       className="Branding"
       sx={{
         mt: 34,
+        position: 'relative',
+        zIndex: 2,
         [theme.breakpoints.up('sm')]: {
           mt: 0,
           position: 'absolute',
