@@ -30,6 +30,10 @@ import {
 } from '../transactions/store/transactionsSlice';
 import { createUISlice, IUISlice } from '../ui/store/uiSlice';
 import { createEnsSlice, IEnsSlice } from '../web3/store/ensSlice';
+import {
+  createProviderSlice,
+  IProviderSlice,
+} from '../web3/store/providerSlice';
 import { createWeb3Slice, IWeb3Slice } from '../web3/store/web3Slice';
 
 export type RootState = IProposalsSlice &
@@ -41,7 +45,8 @@ export type RootState = IProposalsSlice &
   IUISlice &
   IProposalsHistorySlice &
   IRepresentationsSlice &
-  IEnsSlice;
+  IEnsSlice &
+  IProviderSlice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -56,6 +61,7 @@ const createRootSlice = (
   ...createProposalsHistorySlice(set, get),
   ...createRepresentationsSlice(set, get),
   ...createEnsSlice(set, get),
+  ...createProviderSlice(set, get),
 });
 
 export const useStore = create(devtools(createRootSlice, { serialize: true }));

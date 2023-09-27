@@ -29,6 +29,7 @@ import { appConfig } from '../../utils/appConfig';
 import { ipfsGateway } from '../../utils/configs';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
+import { IProviderSlice } from '../../web3/store/providerSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import {
   generateProofsRepresentativeByChain,
@@ -209,7 +210,8 @@ export const createProposalsSlice: StoreSlice<
     IUISlice &
     IProposalsHistorySlice &
     IRepresentationsSlice &
-    IEnsSlice
+    IEnsSlice &
+    IProviderSlice
 > = (set, get) => ({
   isInitialLoading: true,
 

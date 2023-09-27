@@ -17,6 +17,7 @@ import {
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
 import { IEnsSlice } from '../../web3/store/ensSlice';
+import { IProviderSlice } from '../../web3/store/providerSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 type BaseTx = BT & {
@@ -153,7 +154,8 @@ export const createTransactionsSlice: StoreSlice<
     IUISlice &
     IProposalsHistorySlice &
     IRepresentationsSlice &
-    IEnsSlice
+    IEnsSlice &
+    IProviderSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
