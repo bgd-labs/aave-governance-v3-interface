@@ -115,10 +115,6 @@ export function ProposalVotingPower({
               display: 'inline-flex',
               alignItems: 'center',
               position: 'relative',
-              top: 2,
-              [theme.breakpoints.up('xl')]: {
-                top: 1,
-              },
             }}>
             <RepresentationIcon
               address={representative.address}
