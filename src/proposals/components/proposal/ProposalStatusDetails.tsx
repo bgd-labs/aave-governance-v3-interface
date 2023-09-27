@@ -5,9 +5,6 @@ import React, { useEffect } from 'react';
 import {
   BasicProposalState,
   checkHash,
-  InitialPayload,
-  Payload,
-  PayloadState,
   ProposalState,
   VotingMachineProposalState,
 } from '../../../../lib/helpers/src';
@@ -15,7 +12,6 @@ import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Timer } from '../../../ui';
-import { getChainName } from '../../../ui/utils/getChainName';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { getTokenName } from '../../../utils/getTokenName';
@@ -45,12 +41,9 @@ interface ProposalStatusDetailsProps {
   proposalResultsSent: boolean;
   proposalQueuingTime: number;
   cooldownPeriod: number;
-  executionPayloadTime: number;
-  payloads: Payload[];
   underlyingAssets: string[];
   votingChainId: number;
   hasRequiredRoots: boolean;
-  setSelectedPayloadForExecute: (payload: InitialPayload | undefined) => void;
 }
 
 export function ProposalStatusDetails({
@@ -65,12 +58,9 @@ export function ProposalStatusDetails({
   proposalResultsSent,
   proposalQueuingTime,
   cooldownPeriod,
-  executionPayloadTime,
-  payloads,
   underlyingAssets,
   votingChainId,
   hasRequiredRoots,
-  setSelectedPayloadForExecute,
 }: ProposalStatusDetailsProps) {
   const theme = useTheme();
   const store = useStore();
@@ -94,7 +84,6 @@ export function ProposalStatusDetails({
     setCloseVotingModalOpen,
     isExecuteProposalModalOpen,
     setExecuteProposalModalOpen,
-    setExecutePayloadModalOpen,
     setConnectWalletModalOpen,
     getProposalDataWithIpfsById,
     appMode,
@@ -122,11 +111,6 @@ export function ProposalStatusDetails({
 
   if (proposalStatus === ProposalState.Active || isExecuted || !isExpertMode)
     return null;
-
-  const lastPayloadQueuedAt = Math.max.apply(
-    null,
-    payloads.map((payload) => payload?.queuedAt || 0),
-  );
 
   const getTxStatus = ({
     type,
@@ -450,112 +434,6 @@ export function ProposalStatusDetails({
                   }
                 />{' '}
                 {texts.proposalActions.executeProposalTimer}
-              </Box>
-            ),
-          };
-        }
-      } else if (
-        proposalBasicStatus === BasicProposalState.Executed &&
-        lastPayloadQueuedAt === 0 &&
-        !isExecuted
-      ) {
-        return {
-          title: texts.proposalActions.proposalExecuted,
-          button: () => (
-            <Box
-              sx={{
-                typography: 'body',
-                textAlign: 'center',
-                color: '$textSecondary',
-              }}>
-              {texts.proposalActions.payloadsTimeLocked}
-            </Box>
-          ),
-        };
-      } else if (
-        payloads.some(
-          (payload) => payload?.state && payload.state === PayloadState.Queued,
-        ) &&
-        !isExecuted
-      ) {
-        const returnObject = {
-          title: texts.proposalActions.payloadsTimeLocked,
-        };
-
-        if (
-          dayjs().unix() > lastPayloadQueuedAt + executionPayloadTime &&
-          !isExecuted
-        ) {
-          return {
-            ...returnObject,
-            button: () => (
-              <>
-                {payloads.map((payload) => (
-                  <Box
-                    key={`${payload.id}_${payload.chainId}`}
-                    sx={{ mb: 8, textAlign: 'center' }}>
-                    <BigButton
-                      css={{ mb: 4 }}
-                      disabled={
-                        getTxStatus({
-                          type: 'executePayload',
-                          payload: {
-                            proposalId,
-                            payloadId: payload.id,
-                            chainId: payload.chainId,
-                          },
-                        }).isSuccess || payload.state === PayloadState.Expired
-                      }
-                      loading={
-                        getTxStatus({
-                          type: 'executePayload',
-                          payload: {
-                            proposalId,
-                            payloadId: payload.id,
-                            chainId: payload.chainId,
-                          },
-                        }).isPending
-                      }
-                      onClick={() => {
-                        setSelectedPayloadForExecute({
-                          chainId: payload.chainId,
-                          payloadsController: payload.payloadsController,
-                          id: payload.id,
-                        });
-                        setExecutePayloadModalOpen(true);
-                      }}>
-                      {texts.proposalActions.executePayload} {payload.id}
-                    </BigButton>
-                    <Box component="p" sx={{ typography: 'descriptor' }}>
-                      on {getChainName(payload.chainId)}
-                    </Box>
-                    {payload.state === PayloadState.Expired && (
-                      <Box component="p" sx={{ typography: 'body' }}>
-                        {texts.proposalActions.expiredPayload}
-                      </Box>
-                    )}
-                  </Box>
-                ))}
-              </>
-            ),
-          };
-        } else {
-          return {
-            ...returnObject,
-            button: () => (
-              <Box
-                sx={{
-                  typography: 'body',
-                  textAlign: 'center',
-                  color: '$textSecondary',
-                }}>
-                <Timer
-                  timestamp={lastPayloadQueuedAt + executionPayloadTime}
-                  callbackFuncWhenTimerFinished={() =>
-                    getProposalDataWithIpfsById(proposalId)
-                  }
-                />{' '}
-                {texts.proposalActions.executePayloadsTimer}
               </Box>
             ),
           };

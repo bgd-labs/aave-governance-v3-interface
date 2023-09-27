@@ -1,32 +1,52 @@
-import { Box, fontWeight, useTheme } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
 
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
+import {
+  getProposalStepsAndAmounts,
+  ProposalWithLoadings,
+} from '../../../../lib/helpers/src';
 import { CopyToClipboard, Link } from '../../../ui';
+import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
-import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
-import { ProposalHistoryItem as IProposalHistoryItem } from '../../store/proposalsHistorySlice';
+import {
+  HistoryItemType,
+  ProposalHistoryItem as IProposalHistoryItem,
+} from '../../store/proposalsHistorySlice';
 import { ProposalHistoryItemTxLink } from './ProposalHistoryItemTxLink';
 
 export interface ProposalHistoryItemProps {
   proposalId: number;
+  proposalData: ProposalWithLoadings;
   item: IProposalHistoryItem;
   onClick?: () => void;
 }
 
 export function ProposalHistoryItem({
   proposalId,
+  proposalData,
   onClick,
   item,
 }: ProposalHistoryItemProps) {
   const theme = useTheme();
+
+  const { isVotingFailed, forVotes, againstVotes } = getProposalStepsAndAmounts(
+    {
+      proposalData: proposalData.proposal.data,
+      quorum: proposalData.proposal.config.quorum,
+      differential: proposalData.proposal.config.differential,
+      precisionDivider: proposalData.proposal.precisionDivider,
+      cooldownPeriod: proposalData.proposal.timings.cooldownPeriod,
+      executionPayloadTime: proposalData.proposal.timings.executionPayloadTime,
+    },
+  );
 
   return (
     <Box
@@ -90,6 +110,7 @@ export function ProposalHistoryItem({
 
           {!!item.timestamp && !!onClick && (
             <ProposalHistoryItemTxLink
+              proposalData={proposalData}
               proposalId={proposalId}
               onClick={onClick}
               item={item}
@@ -102,13 +123,32 @@ export function ProposalHistoryItem({
           sx={{ typography: 'body', width: item.timestamp ? '68%' : '100%' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <NetworkIcon chainId={item.txInfo.chainId} css={{ mr: 8 }} />
-            <Box
-              sx={{ b: { fontWeight: 600 } }}
-              component="p"
-              dangerouslySetInnerHTML={{
-                __html: item.title,
-              }}
-            />
+            <Box sx={{ display: 'inline-block' }}>
+              <Box
+                sx={{ b: { fontWeight: 600 } }}
+                component="p"
+                dangerouslySetInnerHTML={{
+                  __html: item.title,
+                }}
+              />
+              {item.type === HistoryItemType.VOTING_OVER && isVotingFailed && (
+                <Box sx={{ mt: 5 }}>
+                  Votes: For (
+                  <FormattedNumber
+                    variant="headline"
+                    value={forVotes}
+                    visibleDecimals={2}
+                  />
+                  ) | Against (
+                  <FormattedNumber
+                    variant="headline"
+                    value={againstVotes}
+                    visibleDecimals={2}
+                  />
+                  )
+                </Box>
+              )}
+            </Box>
           </Box>
 
           {!!item.addresses?.length && (
@@ -119,6 +159,8 @@ export function ProposalHistoryItem({
               <Box
                 component="ul"
                 sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
                   typography: 'descriptor',
                   listStyleType: 'disc',
                   pl: 15,

@@ -15,7 +15,7 @@ jobs:
   ipfs_deploy:
     runs-on: ubuntu-latest
     environment:
-      name: 'ipfs'
+      name: 'IPFS'
       url: https://${{ steps.pinata.outputs.hash }}.ipfs.cf-ipfs.com/
     outputs:
       pinata_hash: '${{ steps.pinata.outputs.hash }}'

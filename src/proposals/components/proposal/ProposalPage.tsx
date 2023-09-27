@@ -28,6 +28,7 @@ import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
+import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
 import { ProposalTimeline } from './ProposalTimeline';
 import { ProposalVoteInfo } from './ProposalVoteInfo';
@@ -164,6 +165,7 @@ export function ProposalPage({
     lastPayloadCanceledAt,
     lastPayloadExecutedAt,
     lastPayloadExpiredAt,
+    isProposalExecuted,
   } = getProposalStepsAndAmounts({
     proposalData: proposal.data,
     quorum: proposal.config.quorum,
@@ -423,6 +425,15 @@ export function ProposalPage({
               </>
             </NoSSR>
 
+            <NoSSR>
+              <ProposalPayloads
+                proposalId={proposal.data.id}
+                isProposalExecuted={isProposalExecuted}
+                payloads={proposal.data.payloads}
+                setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+              />
+            </NoSSR>
+
             <Box
               sx={{
                 display: 'none',
@@ -467,9 +478,7 @@ export function ProposalPage({
                     proposal.data.votingMachineData.sentToGovernance
                   }
                   proposalQueuingTime={proposal.data.queuingTime}
-                  payloads={proposal.data.payloads}
                   cooldownPeriod={proposal.timings.cooldownPeriod}
-                  executionPayloadTime={proposal.timings.executionPayloadTime}
                   underlyingAssets={
                     proposal.data.votingMachineData.votingAssets
                   }
@@ -479,7 +488,6 @@ export function ProposalPage({
                   hasRequiredRoots={
                     proposal.data.votingMachineData.hasRequiredRoots
                   }
-                  setSelectedPayloadForExecute={setSelectedPayloadForExecute}
                 />
               </>
             </NoSSR>

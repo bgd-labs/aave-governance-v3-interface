@@ -19,9 +19,7 @@ export function ProposalHistoryModal({
 }: ProposalHistoryModalProps) {
   const store = useStore();
 
-  const proposalData = useStore((store) =>
-    getProposalDataById(store, proposalId),
-  );
+  const proposalData = getProposalDataById(store, proposalId);
 
   useEffect(() => {
     if (proposalData?.proposal) {
@@ -107,6 +105,7 @@ export function ProposalHistoryModal({
                     proposalId={proposalId}
                     item={historyItem}
                     onClick={getHistoryLinkFunc(type, txInfo)}
+                    proposalData={proposalData}
                   />
                 )}
               </React.Fragment>

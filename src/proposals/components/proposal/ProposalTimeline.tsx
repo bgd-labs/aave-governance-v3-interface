@@ -813,7 +813,11 @@ export function ProposalTimeline({
                               : (timeline.position || 0) < 20 &&
                                 (timeline.position || 0) > 10
                               ? 15
-                              : `calc(${timeline.position}% - 24px)`,
+                              : `calc(${
+                                  timeline.position <= 99
+                                    ? timeline.position
+                                    : 99
+                                }% - 24px)`,
                           hover: {
                             transform: !withoutDetails
                               ? 'scale(1.15)'
@@ -829,7 +833,11 @@ export function ProposalTimeline({
                                 : (timeline.position || 0) < 20 &&
                                   (timeline.position || 0) > 10
                                 ? 15
-                                : `calc(${timeline.position}% - 35px)`,
+                                : `calc(${
+                                    timeline.position <= 99
+                                      ? timeline.position
+                                      : 99
+                                  }% - 35px)`,
                           },
                           '.black': {
                             fill: theme.palette.$mainElements,

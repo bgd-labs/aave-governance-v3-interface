@@ -59,6 +59,19 @@ export const texts = {
     fallbackVoteDescription:
       "If you don't want to relay your vote via Gelato, it is always possible to submit and pay for your own vote transaction by disabling the gas-less mode. Beware that you will need to pay on the gas token of the voting network (e.g. MATIC for Polygon",
     noVotersData: (type: 'for' | 'against') => `No votes '${type}'`,
+    payloadsDetails: {
+      payload: 'Payload',
+      created: 'Created at',
+      executedIn: 'Executed in',
+      execute: 'Execute',
+      executedAt: 'Executed at',
+      cancelledAt: 'Cancelled at',
+      expired: 'Expired',
+      expiredIn: 'Expired in',
+      actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
+      details: 'Status details',
+      more: (active: boolean) => (active ? 'Hide' : 'Show more'),
+    },
   },
   proposalActions: {
     proposalCreated: 'Proposal created',
@@ -84,8 +97,6 @@ export const texts = {
     activateVotingDescription: 'Voting will be activate',
     cancelProposal: 'Cancel proposal',
     cancelProposalError: 'Error during the cancel proposal',
-    cancelProposalDescription: (id: number) =>
-      `Proposal #${id} will be canceled`,
     closeVotingError: 'Error during the close voting',
     closeVotingDescription: 'Voting will be closed and result sent',
     createPayload: 'Create payload',
@@ -117,8 +128,7 @@ export const texts = {
     proposalOpenForVoting: (id: number, chainId: number) =>
       `Voting started for proposal #${id} (${getChainName(chainId)})`,
     votingOver: `Voting is over. <b>Proposal Passed</b>`,
-    votingFailed: (forVotes: number, againstVotes: number) =>
-      `<b>Proposal failed</b>, because there were not enough votes <b>for</b>. Votes: For <b>(${forVotes})</b> | Against <b>(${againstVotes})</b>`,
+    votingFailed: `<b>Proposal failed</b>, because there were not enough votes <b>for</b>.`,
     proposalVotingClosed: (id: number, chainId: number) =>
       `Proposal #${id} voting was closed (${getChainName(chainId)})`,
     votingResultsSent: `Voting results were sent to Core (${getChainName(
