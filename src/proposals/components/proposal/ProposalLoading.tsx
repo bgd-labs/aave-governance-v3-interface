@@ -47,17 +47,6 @@ export function ProposalLoading({
                 <CustomSkeleton height={22} />
               )}
             </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                mb: 18,
-              }}>
-              <Box sx={{ mr: 12 }}>
-                <CustomSkeleton width={100} height={20} />
-              </Box>
-              <CustomSkeleton width={100} height={20} />
-            </Box>
 
             {ipfsData ? (
               <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
@@ -222,9 +211,6 @@ export function ProposalLoading({
                     '.react-loading-skeleton': { width: 120 },
                   },
                 }}>
-                <Box sx={{ mr: 20 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
                 <Box sx={{ mr: 12 }}>
                   <CustomSkeleton height={20} />
                 </Box>
@@ -235,10 +221,9 @@ export function ProposalLoading({
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'column-reverse',
+                flexDirection: 'column',
                 mb: 28,
                 [theme.breakpoints.up('sm')]: {
-                  flexDirection: 'column',
                   mb: 0,
                 },
               }}>
@@ -255,9 +240,6 @@ export function ProposalLoading({
                     '.react-loading-skeleton': { width: 120 },
                   },
                 }}>
-                <Box sx={{ mr: 12 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
                 <Box sx={{ mr: 12 }}>
                   <CustomSkeleton height={20} />
                 </Box>

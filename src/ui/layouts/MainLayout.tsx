@@ -4,6 +4,7 @@ import React, { ReactNode, useEffect } from 'react';
 import { useStore } from '../../store';
 import { isForIPFS } from '../../utils/appConfig';
 import { AppLoading } from '../components/AppLoading';
+import { Branding } from '../components/Branding';
 import NoSSR from '../primitives/NoSSR';
 import { setRelativePath } from '../utils/relativePath';
 import { AppHeader } from './AppHeader';
@@ -85,6 +86,8 @@ export function MainLayout({ children }: MainLayoutProps) {
           </>
         )}
       </Box>
+
+      <Branding />
     </Box>
   );
 }

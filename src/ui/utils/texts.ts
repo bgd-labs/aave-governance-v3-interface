@@ -10,7 +10,7 @@ export const texts = {
     voting: 'You voting',
     votingPower: 'Voting power',
     totalVotingPower: 'Total voting power',
-    detailsModalTitle: 'Proposal life cycle details',
+    detailsModalTitle: (id: number) => `Proposal #${id} life cycle details`,
     vote: 'Vote',
     notEnoughPower: 'You don’t have enough voting power to vote',
     notEnough: 'Not enough',
@@ -29,7 +29,7 @@ export const texts = {
     detailsLinkSnapshotVoting: 'Snapshot voting',
     detailsLinkBGDReport: 'BGD Report',
     detailsLinkSeatbeltReport: 'Seatbelt report',
-    detailsShareTwitter: 'Share on twitter',
+    detailsShareTwitter: 'Share on X',
     detailsRawIpfs: 'Raw-Ipfs',
     timelinePointCreated: 'Created',
     timelinePointOpenVote: 'Open for voting',
@@ -59,6 +59,20 @@ export const texts = {
     fallbackVoteDescription:
       "If you don't want to relay your vote via Gelato, it is always possible to submit and pay for your own vote transaction by disabling the gas-less mode. Beware that you will need to pay on the gas token of the voting network (e.g. MATIC for Polygon",
     noVotersData: (type: 'for' | 'against') => `No votes '${type}'`,
+    payloadsDetails: {
+      payload: 'Payload',
+      created: 'Created at',
+      executedIn: 'Executed in',
+      execute: 'Execute',
+      executedAt: 'Executed at',
+      execution: 'Ready for execution',
+      cancelledAt: 'Cancelled at',
+      expired: 'Expired',
+      expiredIn: 'Expired in',
+      actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
+      details: 'Status details',
+      more: (active: boolean) => (active ? 'Hide' : 'Show more'),
+    },
   },
   proposalActions: {
     proposalCreated: 'Proposal created',
@@ -84,8 +98,6 @@ export const texts = {
     activateVotingDescription: 'Voting will be activate',
     cancelProposal: 'Cancel proposal',
     cancelProposalError: 'Error during the cancel proposal',
-    cancelProposalDescription: (id: number) =>
-      `Proposal #${id} will be canceled`,
     closeVotingError: 'Error during the close voting',
     closeVotingDescription: 'Voting will be closed and result sent',
     createPayload: 'Create payload',
@@ -116,8 +128,8 @@ export const texts = {
       )})`,
     proposalOpenForVoting: (id: number, chainId: number) =>
       `Voting started for proposal #${id} (${getChainName(chainId)})`,
-    votingOver: 'Voting is over',
-    votingFailed: 'Proposal failed because there were not enough votes for it',
+    votingOver: `Voting is over. <b>Proposal Passed</b>`,
+    votingFailed: `<b>Proposal failed</b>, because there were not enough votes <b>for</b>.`,
     proposalVotingClosed: (id: number, chainId: number) =>
       `Proposal #${id} voting was closed (${getChainName(chainId)})`,
     votingResultsSent: `Voting results were sent to Core (${getChainName(
@@ -334,7 +346,7 @@ export const texts = {
     fetchFromIpfsError:
       'An error occurred while fetching proposal metadata from IPFS. Try again later or try using a VPN.',
     fetchFromIpfsIncorrectHash: `An error occurred while fetching proposal metadata from IPFS. It seems that the ipfs hash is incorrect or the content by this hash does not match the desired one.`,
-    explorer: 'Explorer link',
+    explorer: 'Explorer',
     votingNotAvailableForGnosis:
       'Voting on this chain is not available for Gnosis safe wallet',
     unset: 'Unset',

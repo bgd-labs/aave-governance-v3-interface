@@ -110,7 +110,8 @@ export const getProposalDataById = (store: RootState, id: number) => {
       proposalData.accessLevel,
     );
 
-    const executionPayloadTime = Math.max.apply(
+    // minimal delay from all payloads in proposal for payloads execution estimated status timestamp
+    const executionPayloadTime = Math.min.apply(
       null,
       proposalData.payloads.map((payload) => payload?.delay || 0),
     );

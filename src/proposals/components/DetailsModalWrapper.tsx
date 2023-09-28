@@ -7,10 +7,12 @@ import { texts } from '../../ui/utils/texts';
 interface DetailsModalWrapperProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  proposalId: number;
   children: ReactNode;
 }
 
 export function DetailsModalWrapper({
+  proposalId,
   isOpen,
   setIsOpen,
   children,
@@ -24,7 +26,7 @@ export function DetailsModalWrapper({
       <Box
         sx={(theme) => ({ [theme.breakpoints.up('sm')]: { p: '40px 60px' } })}>
         <Box component="h2" sx={{ typography: 'h1', mb: 40 }}>
-          {texts.proposals.detailsModalTitle}
+          {texts.proposals.detailsModalTitle(proposalId)}
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>

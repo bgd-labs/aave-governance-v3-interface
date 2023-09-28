@@ -22,11 +22,12 @@ export function ProposalListItemWrapper({
   disabled?: boolean;
 }) {
   const sm = useMediaQuery(media.sm);
+  const md = useMediaQuery(media.md);
   const theme = useTheme();
 
   return (
     <BoxWith3D
-      disabled={disabled}
+      disabled={md && disabled}
       alwaysWithBorders={isForHelpModal}
       withActions={!sm || !isForHelpModal}
       borderSize={10}

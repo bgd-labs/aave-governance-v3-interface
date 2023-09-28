@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import LinkIcon from '/public/images/icons/link.svg';
+import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import { selectTxExplorerLink, WalletType } from '../../../lib/web3/src';
 import { useStore } from '../../store';
@@ -157,15 +157,14 @@ export function ActionModalContent({
                     </Box>
                     <IconBox
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         '> svg': {
-                          width: 10,
-                          height: 10,
+                          width: 12,
+                          height: 12,
                         },
-                        ml: 3,
+                        ml: 4,
                         position: 'relative',
-                        bottom: 0.5,
                       }}>
                       <LinkIcon />
                     </IconBox>

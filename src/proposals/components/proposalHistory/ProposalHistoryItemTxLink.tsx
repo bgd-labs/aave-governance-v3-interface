@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import React from 'react';
 
 import CopyIcon from '/public/images/icons/copy.svg';
+import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import { CopyToClipboard, Link, Spinner } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
@@ -39,6 +40,26 @@ export function ProposalHistoryItemTxLink({
             hover: { opacity: 0.7 },
           }}
           onClick={onClick}>
+          <IconBox
+            sx={{
+              width: 10,
+              height: 10,
+              mr: 4,
+              '> svg': {
+                width: 10,
+                height: 10,
+                path: {
+                  '&:first-of-type': {
+                    stroke: theme.palette.$textSecondary,
+                  },
+                  '&:last-of-type': {
+                    fill: theme.palette.$textSecondary,
+                  },
+                },
+              },
+            }}>
+            <LinkIcon />
+          </IconBox>
           <Box component="p" sx={{ typography: 'descriptor', mr: 3 }}>
             {texts.other.explorer}
           </Box>
@@ -69,6 +90,27 @@ export function ProposalHistoryItemTxLink({
               {textCenterEllipsis(item.txInfo.hash, 5, 5)}
             </Box>
           </Link>
+
+          <IconBox
+            sx={{
+              width: 10,
+              height: 10,
+              ml: 2,
+              '> svg': {
+                width: 10,
+                height: 10,
+                path: {
+                  '&:first-of-type': {
+                    stroke: theme.palette.$textSecondary,
+                  },
+                  '&:last-of-type': {
+                    fill: theme.palette.$textSecondary,
+                  },
+                },
+              },
+            }}>
+            <LinkIcon />
+          </IconBox>
 
           <CopyToClipboard copyText={item.txInfo.hash}>
             <IconBox
