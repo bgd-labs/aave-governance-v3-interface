@@ -53,12 +53,6 @@ For submodules update:
 git submodule update --remote --init
 ```
 
-### Deploy your own Vercel instance
-
-You can deploy your version of the application using Vercel just by clicking on the following button, and following the instructions:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/bgd-labs/aave-governance-v3-interface)
-
 ### Hosted version
 
 We have our own hosted version from Vercel, you can access it on [https://vote.onaave.com/](https://vote.onaave.com/)
