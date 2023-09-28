@@ -189,19 +189,27 @@ function PayloadItem({
           )}
 
           {isPayloadReadyForExecution && !isExecuted && (
-            <SmallButton
-              disabled={tx?.status === 1}
-              loading={tx?.pending}
-              onClick={() => {
-                setSelectedPayloadForExecute({
-                  chainId: payload.chainId,
-                  payloadsController: payload.payloadsController,
-                  id: payload.id,
-                });
-                store.setExecutePayloadModalOpen(true);
-              }}>
-              {texts.proposals.payloadsDetails.execute}
-            </SmallButton>
+            <>
+              {store.activeWallet?.isActive ? (
+                <SmallButton
+                  disabled={tx?.status === 1}
+                  loading={tx?.pending}
+                  onClick={() => {
+                    setSelectedPayloadForExecute({
+                      chainId: payload.chainId,
+                      payloadsController: payload.payloadsController,
+                      id: payload.id,
+                    });
+                    store.setExecutePayloadModalOpen(true);
+                  }}>
+                  {texts.proposals.payloadsDetails.execute}
+                </SmallButton>
+              ) : (
+                <PayloadItemStatusInfo>
+                  {texts.proposals.payloadsDetails.execution}
+                </PayloadItemStatusInfo>
+              )}
+            </>
           )}
 
           {isExecuted && (

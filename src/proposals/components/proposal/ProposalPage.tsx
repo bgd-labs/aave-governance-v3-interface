@@ -109,7 +109,7 @@ export function ProposalPage({
         );
       }
 
-      if (!isVotingActive) {
+      if (isVotingActive) {
         startVotersPolling(
           proposal.data.id,
           proposal.data.votingChainId,

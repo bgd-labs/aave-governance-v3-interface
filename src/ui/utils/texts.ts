@@ -65,6 +65,7 @@ export const texts = {
       executedIn: 'Executed in',
       execute: 'Execute',
       executedAt: 'Executed at',
+      execution: 'Ready for execution',
       cancelledAt: 'Cancelled at',
       expired: 'Expired',
       expiredIn: 'Expired in',
