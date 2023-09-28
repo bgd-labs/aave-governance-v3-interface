@@ -10,7 +10,7 @@ import { chainInfoHelper } from './configs';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 
-export const coreName: CoreNetworkName = 'sepolia';
+export const coreName: CoreNetworkName = 'mainnet';
 export const WC_PROJECT_ID = 'e6ed0c48443e54cc875462bbaec6e3a7'; // https://docs.walletconnect.com/2.0/cloud/relay
 
 // @ts-ignore
