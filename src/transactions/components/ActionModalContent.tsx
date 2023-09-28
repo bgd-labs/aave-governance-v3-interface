@@ -2,6 +2,8 @@ import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
+import RocketError from '/public/images/rocketError.svg';
+import RocketSuccess from '/public/images/rocketSuccess.svg';
 
 import { selectTxExplorerLink, WalletType } from '../../../lib/web3/src';
 import { useStore } from '../../store';
@@ -54,6 +56,8 @@ export function ActionModalContent({
   const theme = useTheme();
   const state = useStore();
 
+  const rocketSize = 77;
+
   return (
     <>
       {topBlock}
@@ -80,9 +84,36 @@ export function ActionModalContent({
               }}>
               {txPending && (
                 <Box sx={{ lineHeight: 0, ml: -13 }}>
-                  <RocketLoader />
+                  <RocketLoader size={rocketSize} />
                 </Box>
               )}
+              {isError && (
+                <IconBox
+                  sx={{
+                    width: rocketSize,
+                    height: rocketSize,
+                    '> svg': {
+                      width: rocketSize,
+                      height: rocketSize,
+                    },
+                  }}>
+                  <RocketError />
+                </IconBox>
+              )}
+              {txSuccess && (
+                <IconBox
+                  sx={{
+                    width: rocketSize,
+                    height: rocketSize,
+                    '> svg': {
+                      width: rocketSize,
+                      height: rocketSize,
+                    },
+                  }}>
+                  <RocketSuccess />
+                </IconBox>
+              )}
+
               <Box
                 component="h3"
                 sx={{

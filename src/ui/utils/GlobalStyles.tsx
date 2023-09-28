@@ -223,6 +223,10 @@ export function GlobalStyles() {
           },
         },
       },
+
+      '.ProposalList__noData__image': {
+        backgroundImage: 'url(/images/noDataList.svg)',
+      },
     },
     "[data-theme='dark']": {
       body: {
@@ -362,6 +366,10 @@ export function GlobalStyles() {
             },
           },
         },
+      },
+
+      '.ProposalList__noData__image': {
+        backgroundImage: 'url(/images/noDataListDark.svg)',
       },
     },
   };
