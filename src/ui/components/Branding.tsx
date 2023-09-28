@@ -67,15 +67,6 @@ export function Branding() {
                   ml: 0,
                 },
                 [theme.breakpoints.up('sm')]: { ml: 6 },
-                hover: {
-                  '.Branding__icon': {
-                    svg: {
-                      path: {
-                        fill: theme.palette.$text,
-                      },
-                    },
-                  },
-                },
               }}>
               <IconBox
                 className="Branding__icon"

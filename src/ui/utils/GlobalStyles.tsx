@@ -210,6 +210,17 @@ export function GlobalStyles() {
         '.Branding__text': {
           color: '#C6C3D1',
         },
+        a: {
+          '&:hover': {
+            '.Branding__icon': {
+              svg: {
+                path: {
+                  fill: '#101423',
+                },
+              },
+            },
+          },
+        },
         '.Branding__icon': {
           '> svg': {
             path: {
@@ -348,6 +359,17 @@ export function GlobalStyles() {
       '.Branding': {
         '.Branding__text': {
           color: '#47557C',
+        },
+        a: {
+          '&:hover': {
+            '.Branding__icon': {
+              svg: {
+                path: {
+                  fill: '#ADAECF',
+                },
+              },
+            },
+          },
         },
         '.Branding__icon': {
           '> svg': {
