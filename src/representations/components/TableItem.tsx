@@ -41,10 +41,18 @@ export function TableItem({
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          flexDirection: 'column',
+          py: 20,
+          [theme.breakpoints.up('xsm')]: {
+            flexDirection: isEdit ? 'column' : 'row',
+            alignItems: isEdit ? 'flex-start' : 'center',
+          },
           [theme.breakpoints.up('sm')]: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             height: 85,
+            py: 0,
           },
           [theme.breakpoints.up('md')]: {
             height: 110,
@@ -59,8 +67,14 @@ export function TableItem({
             alignItems: 'center',
             justifyContent: 'flex-start',
             flex: 1,
-            maxWidth: 300,
-            minWidth: 300,
+            maxWidth: 250,
+            [theme.breakpoints.up('sm')]: {
+              minWidth: 250,
+            },
+            [theme.breakpoints.up('md')]: {
+              maxWidth: 300,
+              minWidth: 300,
+            },
           }}>
           {!chainId ? (
             <Box sx={{ mr: 20 }}>
@@ -91,7 +105,23 @@ export function TableItem({
         </Box>
 
         <Box
-          sx={{ display: 'flex', flex: 2, justifyContent: 'flex-end', pr: 7 }}>
+          sx={{
+            display: 'flex',
+            flex: 2,
+            justifyContent: 'flex-end',
+            width: '100%',
+            mt: 12,
+            [theme.breakpoints.up('xsm')]: {
+              mt: isEdit ? 12 : 0,
+              width: isEdit ? '100%' : 'unset',
+              pr: isEdit ? 0 : 7,
+            },
+            [theme.breakpoints.up('sm')]: {
+              mt: 0,
+              width: 'unset',
+              pr: 7,
+            },
+          }}>
           {loading || representationDataLoading ? (
             <CustomSkeleton width={150} height={20} />
           ) : (

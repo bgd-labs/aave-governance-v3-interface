@@ -49,9 +49,8 @@ export function RepresentationsTableWrapper({
       borderSize={10}
       contentColor="$mainLight"
       css={{
-        p: '12px 10px 25px',
-        [theme.breakpoints.up('sm')]: { p: '30px 40px' },
-        [theme.breakpoints.up('md')]: { p: 0, pb: 40 },
+        pb: 40,
+        [theme.breakpoints.up('sm')]: { pb: 34 },
       }}>
       {typeof handleFormSubmit === 'function' ? (
         <Box component="form" onSubmit={handleFormSubmit}>
