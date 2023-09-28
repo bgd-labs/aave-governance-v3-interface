@@ -24,18 +24,11 @@ export function Branding() {
     <Box
       className="Branding"
       sx={{
-        mt: 34,
+        mt: 28,
         position: 'relative',
         zIndex: 2,
         [theme.breakpoints.up('sm')]: {
-          mt: 0,
-          position: 'absolute',
-          right: 5,
-          top: 5,
-          zIndex: 101,
-        },
-        [theme.breakpoints.up('md')]: {
-          right: 40,
+          mt: 40,
         },
       }}>
       <Box
@@ -74,7 +67,15 @@ export function Branding() {
                   ml: 0,
                 },
                 [theme.breakpoints.up('sm')]: { ml: 6 },
-                hover: { opacity: 0.7 },
+                hover: {
+                  '.Branding__icon': {
+                    svg: {
+                      path: {
+                        fill: theme.palette.$text,
+                      },
+                    },
+                  },
+                },
               }}>
               <IconBox
                 className="Branding__icon"
@@ -88,13 +89,9 @@ export function Branding() {
                   '> svg': {
                     width: 20,
                     height: 20,
+                    transition: 'all 0.2s ease',
                     path: {
-                      '&:last-of-type': {
-                        fill: theme.palette.$appBackground,
-                      },
-                      '&:first-of-type': {
-                        fill: theme.palette.$textDisabled,
-                      },
+                      fill: theme.palette.$textDisabled,
                     },
                     [theme.breakpoints.up('sm')]: {
                       width: 14,
