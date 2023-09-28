@@ -377,6 +377,7 @@ export const texts = {
       wallet: 'How to connect and manage my wallet?',
       vote: 'How to vote?',
       delegate: 'How to delegate?',
+      representation: 'How do representation work?',
       lifeCycle: 'Proposal life cycle description',
     },
     wallet: {

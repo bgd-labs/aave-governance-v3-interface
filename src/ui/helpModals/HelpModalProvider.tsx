@@ -10,6 +10,7 @@ import { HelpDelegationPP } from './HelpDelegationPP';
 import { HelpDelegationVP } from './HelpDelegationVP';
 import { HelpModalNavigation, InfoType } from './HelpModalNavigation';
 import { HelpModalWrapper } from './HelpModalWrapper';
+import { HelpRepresentativeModal } from './HelpRepresentativeModal';
 import { HelpStatusesModal } from './HelpStatusesModal';
 import { HelpVotingBarsModal } from './HelpVotingBarsModal';
 import { HelpVotingModal } from './HelpVotingModal';
@@ -90,7 +91,6 @@ export function HelpModalProvider() {
               color="white"
               onClick={() => {
                 setIsHelpModalOpen(false);
-
                 localStorage?.setItem('isHelpModalVisible', 'false');
               }}>
               {texts.faq.welcome.closeButtonTitle}
@@ -116,6 +116,7 @@ export function HelpModalProvider() {
           <HelpWalletModal infoType={infoType} />
           <HelpVotingModal />
           <HelpDelegateModal infoType={infoType} />
+          <HelpRepresentativeModal />
           <HelpStatusesModal infoType={infoType} />
           <HelpVotingPowerModal />
           <HelpVotingBarsModal />

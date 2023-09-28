@@ -15,6 +15,7 @@ export enum InfoType {
   WalletOptions = 'WalletOptions',
   Vote = 'Vote',
   Delegate = 'Delegate',
+  Representation = 'Representation',
   Statuses = 'Statuses',
 }
 
@@ -30,6 +31,10 @@ export const infoTypes = [
   {
     type: InfoType.Delegate,
     title: texts.faq.navigation.delegate,
+  },
+  {
+    type: InfoType.Representation,
+    title: texts.faq.navigation.representation,
   },
   {
     type: InfoType.Statuses,
@@ -51,6 +56,7 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
     setIsHelpVotingModalOpen,
     setIsHelpDelegateModalOpen,
     setIsHelpStatusesModalOpen,
+    setIsHelpRepresentativeModalOpen,
     setHelpProposalData,
   } = useStore();
 
@@ -69,6 +75,9 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
     } else if (type === InfoType.Delegate) {
       setInfoType(InfoType.Delegate);
       setIsHelpDelegateModalOpen(true); // delegate info help modal
+    } else if (type === InfoType.Representation) {
+      setInfoType(InfoType.Representation);
+      setIsHelpRepresentativeModalOpen(true); // representation info help modal
     } else if (type === InfoType.Statuses) {
       setInfoType(InfoType.Statuses);
       setIsHelpStatusesModalOpen(true); // life cycle info help modal

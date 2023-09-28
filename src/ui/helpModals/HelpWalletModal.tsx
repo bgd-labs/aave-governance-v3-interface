@@ -42,6 +42,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
     setIsHelpNavigationModalOpen,
     resetTestTransactionsPool,
     addTestTransaction,
+    setIsHelpRepresentationModalOpen,
   } = useStore();
 
   const allTestTransaction = useStore((state) =>
@@ -290,6 +291,8 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                         isActive={true}
                         allTransactions={allTestTransaction}
                         onDelegateButtonClick={() => {
+                          setActiveWallet('');
+                          setWalletActivating(false);
                           setIsHelpWalletModalOpen(false);
                           setIsHelpDelegateModalOpen(true);
                         }}
@@ -297,9 +300,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                           setActiveWallet('');
                           setWalletActivating(false);
                           setIsHelpWalletModalOpen(false);
-                          console.log(
-                            'TODO: need FAQ modal with representations texts',
-                          );
+                          setIsHelpRepresentationModalOpen(true);
                         }}
                         onDisconnectButtonClick={() => {
                           setActiveWallet('');

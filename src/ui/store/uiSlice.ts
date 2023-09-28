@@ -13,6 +13,7 @@ import {
   makeTestTransaction,
   TransactionItem,
 } from '../helpModals/getTestTransactions';
+import { closeHelpModal } from './uiSelectors';
 
 export type AppModeType = 'default' | 'dev' | 'expert';
 
@@ -138,6 +139,12 @@ export interface IUISlice {
 
   isHelpDelegateModalOpen: boolean;
   setIsHelpDelegateModalOpen: (value: boolean) => void;
+
+  isHelpRepresentationModalOpen: boolean;
+  setIsHelpRepresentationModalOpen: (value: boolean) => void;
+
+  isHelpRepresentativeModalOpen: boolean;
+  setIsHelpRepresentativeModalOpen: (value: boolean) => void;
 
   isHelpStatusesModalOpen: boolean;
   setIsHelpStatusesModalOpen: (value: boolean) => void;
@@ -475,8 +482,7 @@ export const createUISlice: StoreSlice<
   setIsHelpModalOpen: (value) => {
     set({ isModalOpen: value, isHelpModalOpen: value });
     if (!get().isHelpModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -488,8 +494,7 @@ export const createUISlice: StoreSlice<
       isHelpModalOpen: false,
     });
     if (!get().isHelpModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -502,8 +507,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpWalletModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -516,8 +520,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpVotingModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -530,8 +533,33 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpDelegateModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
+    }
+  },
+
+  isHelpRepresentationModalOpen: false,
+  setIsHelpRepresentationModalOpen: (value) => {
+    set({
+      isModalOpen: value,
+      isHelpRepresentationModalOpen: value,
+      isHelpModalOpen: false,
+      isHelpNavigationModalOpen: false,
+    });
+    if (!get().isHelpRepresentationModalOpen) {
+      closeHelpModal(get());
+    }
+  },
+
+  isHelpRepresentativeModalOpen: false,
+  setIsHelpRepresentativeModalOpen: (value) => {
+    set({
+      isModalOpen: value,
+      isHelpRepresentativeModalOpen: value,
+      isHelpModalOpen: false,
+      isHelpNavigationModalOpen: false,
+    });
+    if (!get().isHelpRepresentativeModalOpen) {
+      closeHelpModal(get());
     }
   },
 
@@ -544,8 +572,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpStatusesModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -558,8 +585,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpVotingPowerModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -572,8 +598,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpVotingBarsModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -586,8 +611,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpDelegationVotingPowerModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 
@@ -600,8 +624,7 @@ export const createUISlice: StoreSlice<
       isHelpNavigationModalOpen: false,
     });
     if (!get().isHelpDelegationPropositionPowerModalOpen) {
-      get().setIsHelpModalClosed(true);
-      setTimeout(() => get().setIsHelpModalClosed(false), 1000);
+      closeHelpModal(get());
     }
   },
 

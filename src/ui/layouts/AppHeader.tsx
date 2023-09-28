@@ -53,7 +53,7 @@ export function AppHeader() {
     checkTutorialStartButtonClick,
     appMode,
     isModalOpen,
-
+    isAppBlockedByTerms,
     isClickedOnStartButtonOnHelpModal,
     setIsTermModalOpen,
     setIsRepresentationInfoModalOpen,
@@ -114,7 +114,12 @@ export function AppHeader() {
         component="header"
         sx={{
           position: 'sticky',
-          top: scrollDirection === 'down' ? (isModalOpen ? 0 : -82) : 0,
+          top:
+            scrollDirection === 'down'
+              ? isModalOpen || isAppBlockedByTerms
+                ? 0
+                : -82
+              : 0,
           py: mobileMenuOpen ? 0 : 12,
           zIndex: 110,
           mb: 12,
