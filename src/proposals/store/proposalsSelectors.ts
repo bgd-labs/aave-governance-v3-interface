@@ -1,5 +1,3 @@
-import Fuse from 'fuse.js';
-
 import {
   Balance,
   CachedProposalDataItemWithId,
@@ -7,7 +5,9 @@ import {
   ProposalWithId,
   ProposalWithLoadings,
   VotersData,
-} from '../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import Fuse from 'fuse.js';
+
 import { RootState } from '../../store';
 import { PAGE_SIZE } from '../../web3/services/govDataService';
 

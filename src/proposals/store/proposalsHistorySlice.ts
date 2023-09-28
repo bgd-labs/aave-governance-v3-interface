@@ -1,6 +1,3 @@
-import { ethers } from 'ethers';
-import { produce } from 'immer';
-
 import {
   BasicProposalState,
   checkHash,
@@ -10,7 +7,10 @@ import {
   Proposal,
   ProposalState,
   ProposalWithLoadings,
-} from '../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import { ethers } from 'ethers';
+import { produce } from 'immer';
+
 import { StoreSlice } from '../../../lib/web3/src';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';

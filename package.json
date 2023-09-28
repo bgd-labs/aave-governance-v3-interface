@@ -31,7 +31,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
   "dependencies": {
-    "@bgd-labs/aave-address-book": "^2.4.2",
+    "@bgd-labs/aave-address-book": "^2.6.0",
     "@coinbase/wallet-sdk": "^3.7.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
@@ -48,6 +48,7 @@
     "@web3-react/metamask": "8.2.3",
     "@web3-react/types": "8.2.2",
     "@web3-react/walletconnect-v2": "^8.5.0",
+    "aave-governance-ui-helpers": "bgd-labs/aave-governance-ui-helpers#fix/module",
     "alova": "^2.13.1",
     "bignumber.js": "^9.1.2",
     "date-fns": "^2.30.0",

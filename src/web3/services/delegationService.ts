@@ -1,11 +1,11 @@
 'use client';
 
+import { normalizeBN } from 'aave-governance-ui-helpers';
 import { ethers, providers } from 'ethers';
 
-import { normalizeBN } from '../../../lib/helpers/src';
-import { AaveTokenV3__factory } from '../../../lib/helpers/src/contracts/AaveTokenV3__factory';
-import { ATokenWithDelegation__factory } from '../../../lib/helpers/src/contracts/ATokenWithDelegation__factory';
-import { IMetaDelegateHelper__factory } from '../../../lib/helpers/src/contracts/IMetaDelegateHelper__factory';
+import { AaveTokenV3__factory } from '../../contracts/AaveTokenV3__factory';
+import { ATokenWithDelegation__factory } from '../../contracts/ATokenWithDelegation__factory';
+import { IMetaDelegateHelper__factory } from '../../contracts/IMetaDelegateHelper__factory';
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
 

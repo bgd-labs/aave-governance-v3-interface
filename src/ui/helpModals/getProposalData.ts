@@ -1,6 +1,6 @@
+import { ProposalWithLoadings } from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 
-import { ProposalWithLoadings } from '../../../lib/helpers/src';
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
 

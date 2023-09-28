@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
+import { Balance, valueToBigNumber } from 'aave-governance-ui-helpers';
 import React, { useState } from 'react';
 
-import { Balance, valueToBigNumber } from '../../../lib/helpers/src';
 import { BackButton3D, Divider } from '../../ui';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
 import { TokenIcon } from '../../ui/components/TokenIcon';

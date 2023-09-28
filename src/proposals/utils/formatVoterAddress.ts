@@ -1,4 +1,5 @@
-import { VotersData } from '../../../lib/helpers/src';
+import { VotersData } from 'aave-governance-ui-helpers';
+
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 
 export function formatVoterAddress(vote: VotersData) {

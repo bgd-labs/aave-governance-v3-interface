@@ -1,9 +1,9 @@
 import { Box, styled, useTheme } from '@mui/system';
+import { VotersData } from 'aave-governance-ui-helpers';
 import React, { useState } from 'react';
 
 import BackArrowIcon from '/public/images/icons/backArrow.svg';
 
-import { VotersData } from '../../../../lib/helpers/src';
 import { BasicModal, Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { IconBox } from '../../../ui/primitives/IconBox';

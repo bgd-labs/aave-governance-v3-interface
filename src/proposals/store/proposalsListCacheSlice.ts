@@ -1,4 +1,5 @@
-import { FinishedProposalForList } from '../../../lib/helpers/src';
+import { FinishedProposalForList } from 'aave-governance-ui-helpers';
+
 import { StoreSlice } from '../../../lib/web3/src';
 
 export interface IProposalsListCacheSlice {

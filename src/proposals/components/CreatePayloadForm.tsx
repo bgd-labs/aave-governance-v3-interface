@@ -1,10 +1,10 @@
 import { Box } from '@mui/system';
+import { PayloadAction } from 'aave-governance-ui-helpers';
 import arrayMutators from 'final-form-arrays';
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 
-import { PayloadAction } from '../../../lib/helpers/src';
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { BigButton, BoxWith3D, Input } from '../../ui';

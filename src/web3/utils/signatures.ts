@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-import { IVotingMachineWithProofs } from '../../../lib/helpers/src/contracts/IVotingMachineWithProofs';
+import { IVotingMachineWithProofs } from '../../contracts/IVotingMachineWithProofs';
 import { appConfig } from '../../utils/appConfig';
 
 export async function getVoteSignatureParams({

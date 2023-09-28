@@ -1,7 +1,7 @@
+import { ChainIdByName } from 'aave-governance-ui-helpers';
 import makeBlockie from 'ethereum-blockies-base64';
 import { utils } from 'ethers';
 
-import { ChainIdByName } from '../../../lib/helpers/src';
 import { chainInfoHelper } from '../../utils/configs';
 
 const mainnetProvider =

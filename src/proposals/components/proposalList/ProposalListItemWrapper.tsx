@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/system';
+import { ProposalEstimatedState } from 'aave-governance-ui-helpers';
 import React, { ReactNode } from 'react';
 
-import { ProposalEstimatedState } from '../../../../lib/helpers/src';
 import { BoxWith3D } from '../../../ui';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';

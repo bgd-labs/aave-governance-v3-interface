@@ -3,6 +3,13 @@ import {
   getSafeSingletonDeployment,
   SingletonDeployment,
 } from '@safe-global/safe-deployments';
+import {
+  Balance,
+  formatProposal,
+  getEstimatedState,
+  ProposalState,
+  valueToBigNumber,
+} from 'aave-governance-ui-helpers';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import Image from 'next/image';
@@ -12,13 +19,6 @@ import React, { useEffect, useState } from 'react';
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
 import InfoIcon from '/public/images/icons/info.svg';
 
-import {
-  Balance,
-  formatProposal,
-  getEstimatedState,
-  ProposalState,
-  valueToBigNumber,
-} from '../../../../lib/helpers/src';
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
 import { useStore } from '../../../store';
 import { BasicActionModal } from '../../../transactions/components/BasicActionModal';

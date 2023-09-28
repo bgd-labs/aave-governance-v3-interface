@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-
 import {
   ProposalMetadata,
   ProposalState,
   ProposalWithLoadings,
   VotersData,
-} from '../../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import React, { useEffect, useState } from 'react';
+
 import { useStore } from '../../../store';
 import {
   getProposalDataById,

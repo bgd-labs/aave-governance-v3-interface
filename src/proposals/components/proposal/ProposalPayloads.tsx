@@ -1,4 +1,9 @@
 import { Box, useTheme } from '@mui/system';
+import {
+  InitialPayload,
+  Payload,
+  PayloadState,
+} from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
 
@@ -7,11 +12,6 @@ import ArrowToTop from '/public/images/icons/arrowToTop.svg';
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import {
-  InitialPayload,
-  Payload,
-  PayloadState,
-} from '../../../../lib/helpers/src';
 import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';

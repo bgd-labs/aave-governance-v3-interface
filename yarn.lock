@@ -1131,10 +1131,10 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@bgd-labs/aave-address-book@^2.4.2":
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.4.2.tgz#8c863fd3270359be8ecbbcbb0a8783feb2634f7d"
-  integrity sha512-Rxpy2T6NeqYQNkjK18+KKcP0EsWBReDQafzuvqAWwFliUG9bpu9/KbDIIrk6QeeaTwogCohFGraUFcoa64iDnw==
+"@bgd-labs/aave-address-book@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.6.0.tgz#c79391e2c39cfe773edd29e1973edcecd7489b43"
+  integrity sha512-rnJq+zyx1gxyO7t0oGwHGEvX1l11NEtV9iSh6bKTeptTsyJPCpgXmXLQL571vznIRozRUPmYbyOdxq4d1TQNiQ==
 
 "@coinbase/wallet-sdk@^3.7.1":
   version "3.7.2"
@@ -2952,7 +2952,7 @@
   dependencies:
     "@web3-react/types" "^8.2.2"
 
-"@web3-react/core@8.2.2":
+"@web3-react/core@8.2.2", "@web3-react/core@^8.2.2":
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/@web3-react/core/-/core-8.2.2.tgz#f1a76e42f30a8c36bc0cc3b6e59f5cc89b357398"
   integrity sha512-4AFWqOBisBBMj22/RB3+w6px66YxtK0iVIReQj1h1Rssko2ptIHjGMLyyRInN8eVemx8QaOE481odOHfFKZkUQ==
@@ -3013,6 +3013,15 @@ JSONStream@^1.3.5:
   dependencies:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
+
+aave-governance-ui-helpers@bgd-labs/aave-governance-ui-helpers#fix/module:
+  version "0.1.0"
+  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/d55df65518881034712ff6f17841b42469aac8a9"
+  dependencies:
+    "@bgd-labs/aave-address-book" "^2.6.0"
+    "@web3-react/core" "^8.2.2"
+    dayjs "^1.11.10"
+    gray-matter "^4.0.3"
 
 abitype@0.9.8:
   version "0.9.8"

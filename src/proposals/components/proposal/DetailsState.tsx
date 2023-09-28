@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
+import { ProposalState } from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 
-import { ProposalState } from '../../../../lib/helpers/src';
 import { proposalStatuses } from '../../utils/statuses';
 
 interface DetailsStateProps {

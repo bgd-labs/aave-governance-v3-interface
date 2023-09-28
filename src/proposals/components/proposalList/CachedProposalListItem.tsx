@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
+import { CachedProposalDataItemWithId } from 'aave-governance-ui-helpers';
 import React, { useState } from 'react';
 
-import { CachedProposalDataItemWithId } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
 import { ROUTES } from '../../../ui/utils/routes';

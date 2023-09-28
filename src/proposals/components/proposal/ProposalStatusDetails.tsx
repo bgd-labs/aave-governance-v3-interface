@@ -1,13 +1,13 @@
 import { Box, useTheme } from '@mui/system';
-import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
-
 import {
   BasicProposalState,
   checkHash,
   ProposalState,
   VotingMachineProposalState,
-} from '../../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import dayjs from 'dayjs';
+import React, { useEffect } from 'react';
+
 import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';

@@ -1,4 +1,5 @@
 import { Box, styled, SxProps, useTheme } from '@mui/system';
+import { ProposalStateWithName } from 'aave-governance-ui-helpers';
 import { BigNumber } from 'bignumber.js';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useRef } from 'react';
@@ -6,7 +7,6 @@ import React, { ReactNode, useEffect, useRef } from 'react';
 import Rocket from '/public/images/rocket.svg';
 import RocketToTop from '/public/images/rocketToTop.svg';
 
-import { ProposalStateWithName } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { BoxWith3D, NoSSR, Timer } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';

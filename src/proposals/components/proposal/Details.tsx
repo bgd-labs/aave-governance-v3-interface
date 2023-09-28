@@ -1,9 +1,9 @@
 import { Box, useTheme } from '@mui/system';
+import { ProposalMetadata } from 'aave-governance-ui-helpers';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-import { ProposalMetadata } from '../../../../lib/helpers/src';
 import { BoxWith3D, Image, Link } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { texts } from '../../../ui/utils/texts';

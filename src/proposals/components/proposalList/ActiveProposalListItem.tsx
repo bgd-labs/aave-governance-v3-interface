@@ -1,12 +1,12 @@
 import { Box, useTheme } from '@mui/system';
-import { ethers } from 'ethers';
-import React, { useState } from 'react';
-
 import {
   formatProposal,
   ProposalState,
   ProposalWithLoadings,
-} from '../../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import { ethers } from 'ethers';
+import React, { useState } from 'react';
+
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
 import { ChainNameWithIcon } from '../../../ui/components/ChainNameWithIcon';

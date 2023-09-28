@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-
 import {
   CachedDetails,
   getVotingMachineProposalState,
   ProposalData,
   ProposalWithLoadings,
   VotersData,
-} from '../../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import React, { useEffect } from 'react';
+
 import { useStore } from '../../../store';
 import { setProposalDetailsVoters } from '../../store/proposalsSelectors';
 import { ProposalPageWrapper } from './ProposalPageWrapper';

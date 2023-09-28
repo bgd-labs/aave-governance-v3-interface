@@ -1,10 +1,10 @@
 import { Box, styled } from '@mui/system';
+import { ipfsGateway, ProposalMetadata } from 'aave-governance-ui-helpers';
 import React from 'react';
 
 import Download from '/public/images/icons/download.svg';
 import Twitter from '/public/images/icons/twitterX.svg';
 
-import { ipfsGateway, ProposalMetadata } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { Link, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';

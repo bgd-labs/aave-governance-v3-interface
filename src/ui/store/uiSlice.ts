@@ -1,6 +1,6 @@
+import { ProposalWithLoadings } from 'aave-governance-ui-helpers';
 import { produce } from 'immer';
 
-import { ProposalWithLoadings } from '../../../lib/helpers/src';
 import { IWalletSlice, StoreSlice } from '../../../lib/web3/src';
 import { DelegateItem } from '../../delegate/types';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';

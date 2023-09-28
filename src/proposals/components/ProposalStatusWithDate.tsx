@@ -1,7 +1,7 @@
 import { Box, SxProps } from '@mui/system';
+import { ProposalWaitForState } from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 
-import { ProposalWaitForState } from '../../../lib/helpers/src';
 import { ProposalStatus, ProposalStatusProps } from './ProposalStatus';
 
 export interface ProposalStatusWithDateProps extends ProposalStatusProps {

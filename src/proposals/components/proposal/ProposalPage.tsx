@@ -1,8 +1,4 @@
 import { Box, useTheme } from '@mui/system';
-import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-
 import {
   BasicProposalState,
   formatProposal,
@@ -12,7 +8,11 @@ import {
   ProposalState,
   ProposalStateWithName,
   ProposalWithLoadings,
-} from '../../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
 import { useStore } from '../../../store';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';

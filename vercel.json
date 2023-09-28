@@ -1,5 +1,4 @@
 {
-  "installCommand": "git submodule update --remote --init && yarn",
   "headers": [
     {
       "source": "/(.*)",

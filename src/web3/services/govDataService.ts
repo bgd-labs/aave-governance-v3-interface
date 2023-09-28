@@ -1,31 +1,7 @@
 'use client';
 
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  constants,
-  ethers,
-  providers,
-  utils,
-} from 'ethers';
-import { hexZeroPad } from 'ethers/lib/utils';
-
-import { IGovernanceCore } from '../../../lib/helpers/src/contracts/IGovernanceCore';
-import { IGovernanceDataHelper } from '../../../lib/helpers/src/contracts/IGovernanceDataHelper';
-import {
-  formatToProofRLP,
-  getExtendedBlock,
-  getProof,
-  getSolidityStorageSlotBytes,
-  prepareBLockRLP,
-} from '../utils/helperToGetProofs';
-import { getVoteSignatureParams } from '../utils/signatures';
-import RepresentativeInputStruct = IGovernanceCore.RepresentativeInputStruct;
-
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
-
 import {
   BasicProposal,
   blockLimit,
@@ -48,18 +24,42 @@ import {
   ProposalData,
   updateVotingMachineData,
   VotersData,
-} from '../../../lib/helpers/src';
-import { IBaseVotingStrategy__factory } from '../../../lib/helpers/src/contracts/IBaseVotingStrategy__factory';
-import { IDataWarehouse__factory } from '../../../lib/helpers/src/contracts/IDataWarehouse__factory';
-import { IGovernanceCore__factory } from '../../../lib/helpers/src/contracts/IGovernanceCore__factory';
-import { IGovernanceDataHelper__factory } from '../../../lib/helpers/src/contracts/IGovernanceDataHelper__factory';
-import { IPayloadsControllerCore__factory } from '../../../lib/helpers/src/contracts/IPayloadsControllerCore__factory';
-import { IPayloadsControllerDataHelper } from '../../../lib/helpers/src/contracts/IPayloadsControllerDataHelper';
-import { IPayloadsControllerDataHelper__factory } from '../../../lib/helpers/src/contracts/IPayloadsControllerDataHelper__factory';
-import { IVotingMachineDataHelper } from '../../../lib/helpers/src/contracts/IVotingMachineDataHelper';
-import { IVotingMachineDataHelper__factory } from '../../../lib/helpers/src/contracts/IVotingMachineDataHelper__factory';
-import { IVotingMachineWithProofs } from '../../../lib/helpers/src/contracts/IVotingMachineWithProofs';
-import { IVotingMachineWithProofs__factory } from '../../../lib/helpers/src/contracts/IVotingMachineWithProofs__factory';
+} from 'aave-governance-ui-helpers';
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  constants,
+  ethers,
+  providers,
+  utils,
+} from 'ethers';
+import { hexZeroPad } from 'ethers/lib/utils';
+
+import { IBaseVotingStrategy__factory } from '../../contracts/IBaseVotingStrategy__factory';
+import { IDataWarehouse__factory } from '../../contracts/IDataWarehouse__factory';
+import { IGovernanceCore } from '../../contracts/IGovernanceCore';
+import { IGovernanceCore__factory } from '../../contracts/IGovernanceCore__factory';
+import { IGovernanceDataHelper } from '../../contracts/IGovernanceDataHelper';
+import { IGovernanceDataHelper__factory } from '../../contracts/IGovernanceDataHelper__factory';
+import { IPayloadsControllerCore__factory } from '../../contracts/IPayloadsControllerCore__factory';
+import { IPayloadsControllerDataHelper } from '../../contracts/IPayloadsControllerDataHelper';
+import { IPayloadsControllerDataHelper__factory } from '../../contracts/IPayloadsControllerDataHelper__factory';
+import { IVotingMachineDataHelper } from '../../contracts/IVotingMachineDataHelper';
+import { IVotingMachineDataHelper__factory } from '../../contracts/IVotingMachineDataHelper__factory';
+import { IVotingMachineWithProofs } from '../../contracts/IVotingMachineWithProofs';
+import { IVotingMachineWithProofs__factory } from '../../contracts/IVotingMachineWithProofs__factory';
+import {
+  formatToProofRLP,
+  getExtendedBlock,
+  getProof,
+  getSolidityStorageSlotBytes,
+  prepareBLockRLP,
+} from '../utils/helperToGetProofs';
+import { getVoteSignatureParams } from '../utils/signatures';
+
+import RepresentativeInputStruct = IGovernanceCore.RepresentativeInputStruct;
+
 import { appConfig, isTestnet } from '../../utils/appConfig';
 
 export const PAGE_SIZE = 10;

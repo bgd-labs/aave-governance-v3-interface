@@ -1,10 +1,10 @@
-import { useRequest } from 'alova';
-import React, { useEffect } from 'react';
-
 import {
   getVotingMachineProposalState,
   ProposalData,
-} from '../../../../lib/helpers/src';
+} from 'aave-governance-ui-helpers';
+import { useRequest } from 'alova';
+import React, { useEffect } from 'react';
+
 import { useStore } from '../../../store';
 import { getProposalDetailsCache } from '../../../utils/githubCacheRequests';
 import { ProposalLoading } from './ProposalLoading';

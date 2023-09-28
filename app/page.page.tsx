@@ -1,12 +1,12 @@
-import { Metadata } from 'next';
-import React from 'react';
-
 import {
   CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
-} from '../lib/helpers/src';
-import { IGovernanceDataHelper__factory } from '../lib/helpers/src/contracts/IGovernanceDataHelper__factory';
+} from 'aave-governance-ui-helpers';
+import { Metadata } from 'next';
+import React from 'react';
+
+import { IGovernanceDataHelper__factory } from '../src/contracts/IGovernanceDataHelper__factory';
 import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
 import { texts } from '../src/ui/utils/texts';
 import { appConfig } from '../src/utils/appConfig';

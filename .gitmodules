@@ -1,6 +1,3 @@
 [submodule "lib/web3"]
 	path = lib/web3
 	url = https://github.com/bgd-labs/fe-shared
-[submodule "lib/helpers"]
-	path = lib/helpers
-	url = https://github.com/bgd-labs/aave-governance-ui-helpers

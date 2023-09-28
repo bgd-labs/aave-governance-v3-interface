@@ -1,4 +1,4 @@
-import { ProposalStateWithName } from '../../../lib/helpers/src';
+import { ProposalStateWithName } from 'aave-governance-ui-helpers';
 
 export type ProposalStateForFilter = {
   value: number | null;

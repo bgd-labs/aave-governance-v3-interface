@@ -1,9 +1,8 @@
 import { Box, SxProps } from '@mui/system';
+import { normalizeBN, valueToBigNumber } from 'aave-governance-ui-helpers';
 import { BigNumber } from 'bignumber.js';
 import dynamic from 'next/dynamic';
 import React from 'react';
-
-import { normalizeBN, valueToBigNumber } from '../../../lib/helpers/src';
 
 const CountUp = dynamic(() => import('react-countup'), { ssr: false });
 

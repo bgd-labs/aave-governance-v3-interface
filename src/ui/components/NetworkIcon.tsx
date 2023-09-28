@@ -1,6 +1,6 @@
 import { SxProps } from '@mui/system';
+import { ChainIdByName } from 'aave-governance-ui-helpers';
 
-import { ChainIdByName } from '../../../lib/helpers/src';
 import { chainInfoHelper } from '../../utils/configs';
 import { Image } from '../primitives/Image';
 import { setRelativePath } from '../utils/relativePath';

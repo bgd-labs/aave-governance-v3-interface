@@ -1,6 +1,3 @@
-import type { Metadata } from 'next';
-import React from 'react';
-
 import {
   CachedDetails,
   getGovCoreConfigs,
@@ -8,9 +5,12 @@ import {
   getProposalState,
   getVotingMachineProposalState,
   ProposalWithLoadings,
-} from '../../lib/helpers/src';
-import { IGovernanceCore__factory } from '../../lib/helpers/src/contracts/IGovernanceCore__factory';
-import { IGovernanceDataHelper__factory } from '../../lib/helpers/src/contracts/IGovernanceDataHelper__factory';
+} from 'aave-governance-ui-helpers';
+import type { Metadata } from 'next';
+import React from 'react';
+
+import { IGovernanceCore__factory } from '../../src/contracts/IGovernanceCore__factory';
+import { IGovernanceDataHelper__factory } from '../../src/contracts/IGovernanceDataHelper__factory';
 import { ProposalClientPageSSR } from '../../src/proposals/components/proposal/ProposalClientPageSSR';
 import { texts } from '../../src/ui/utils/texts';
 import { appConfig } from '../../src/utils/appConfig';

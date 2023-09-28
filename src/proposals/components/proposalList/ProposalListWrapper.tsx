@@ -1,7 +1,7 @@
+import { CachedProposalDataItemWithId } from 'aave-governance-ui-helpers';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-import { CachedProposalDataItemWithId } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { isForIPFS } from '../../../utils/appConfig';
 import { selectPaginatedProposalsData } from '../../store/proposalsSelectors';
