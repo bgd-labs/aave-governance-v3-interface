@@ -396,9 +396,11 @@ export function ProposalPayloads({
       <Box
         sx={(theme) => ({
           pr: 20,
-          maxHeight: 200,
-          overflowY: 'auto',
-          [theme.breakpoints.up('lg')]: { maxHeight: 300 },
+          maxHeight: payloads.length > 2 ? 200 : 'unset',
+          overflowY: payloads.length > 2 ? 'auto' : undefined,
+          [theme.breakpoints.up('lg')]: {
+            maxHeight: payloads.length > 2 ? 300 : 'unset',
+          },
         })}>
         <PayloadItem
           proposalId={proposalId}
