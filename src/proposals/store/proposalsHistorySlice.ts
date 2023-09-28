@@ -8,10 +8,10 @@ import {
   ProposalState,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { ethers } from 'ethers';
 import { produce } from 'immer';
 
-import { StoreSlice } from '../../../lib/web3/src';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { IWeb3Slice } from '../../web3/store/web3Slice';

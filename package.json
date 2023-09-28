@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": false,
   "author": "BGD labs",
-  "license": "BUSL1.1",
   "contributors": [
     {
       "name": "Oleksandr Tkach",
@@ -33,6 +32,7 @@
   "dependencies": {
     "@bgd-labs/aave-address-book": "latest",
     "@bgd-labs/aave-governance-ui-helpers": "bgd-labs/aave-governance-ui-helpers#fix/module",
+    "@bgd-labs/frontend-web3-utils": "bgd-labs/fe-shared#fix/packages-dir",
     "@coinbase/wallet-sdk": "^3.7.1",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",

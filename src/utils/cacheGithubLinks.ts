@@ -1,4 +1,4 @@
-import { coreName } from './appConfig';
+import { coreName } from './coreName';
 
 export const githubStartUrl = `https://raw.githubusercontent.com/bgd-labs/@bgd-labs/aave-governance-ui-helpers/main/src/generated-cache/${coreName}`;
 

@@ -5,6 +5,7 @@ import {
   getProposalState,
   getVotingMachineProposalState,
   ProposalWithLoadings,
+  providers,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -12,8 +13,8 @@ import React from 'react';
 import { IGovernanceCore__factory } from '../../src/contracts/IGovernanceCore__factory';
 import { IGovernanceDataHelper__factory } from '../../src/contracts/IGovernanceDataHelper__factory';
 import { ProposalClientPageSSR } from '../../src/proposals/components/proposal/ProposalClientPageSSR';
-import { texts } from '../../src/ui/utils/texts';
-import { appConfig } from '../../src/utils/appConfig';
+import { metaTexts } from '../../src/ui/utils/metaTexts';
+import { appConfigForSSR } from '../../src/utils/appConfigForSSR';
 import {
   cachedDetailsPath,
   cachedProposalsIdsPath,
@@ -42,25 +43,26 @@ export async function generateMetadata({
     const ipfsData = await getProposalMetadata(ipfsHash);
 
     return {
-      title: `${texts.meta.main}${texts.meta.proposalId(proposalId)}`,
+      title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
       description: ipfsData.title,
       openGraph: {
         images: ['/metaLogo.jpg'],
-        title: `${texts.meta.main}${texts.meta.proposalId(proposalId)}`,
+        title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
         description: ipfsData.title,
       },
     };
   }
 
   return {
-    title: `${texts.meta.ipfsTitle}`,
-    description: texts.meta.ipfsDescription,
+    title: `${metaTexts.ipfsTitle}`,
+    description: metaTexts.ipfsDescription,
     openGraph: {
       images: ['/metaLogo.jpg'],
     },
   };
 }
 
+// TODO: need fix SSR
 export default async function ProposalPage({
   searchParams,
 }: {
@@ -77,12 +79,14 @@ export default async function ProposalPage({
 
   // contracts
   const govCore = IGovernanceCore__factory.connect(
-    appConfig.govCoreConfig.contractAddress,
-    appConfig.providers[appConfig.govCoreChainId],
+    appConfigForSSR.govCoreConfig.contractAddress,
+    // @ts-ignore
+    providers[appConfigForSSR.govCoreChainId],
   );
   const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-    appConfig.govCoreConfig.dataHelperContractAddress,
-    appConfig.providers[appConfig.govCoreChainId],
+    appConfigForSSR.govCoreConfig.dataHelperContractAddress,
+    // @ts-ignore
+    providers[appConfigForSSR.govCoreChainId],
   );
 
   // cached data
@@ -110,7 +114,7 @@ export default async function ProposalPage({
   // data from contracts
   const { configs, contractsConstants } = await getGovCoreConfigs(
     govCoreDataHelper,
-    appConfig.govCoreConfig.contractAddress,
+    appConfigForSSR.govCoreConfig.contractAddress,
   );
 
   const proposalsCountInitial = await govCore.getProposalsCount();

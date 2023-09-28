@@ -1,17 +1,16 @@
 import {
   appConfigInit,
   ChainIdByName,
-  CoreNetworkName,
   payloadsControllerChainIds,
+  providers as baseProviders,
   votingMachineChainIds,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils';
 
-import { StaticJsonRpcBatchProvider } from '../../lib/web3/src/utils/StaticJsonRpcBatchProvider';
-import { chainInfoHelper } from './configs';
+import { coreName } from './coreName';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 
-export const coreName: CoreNetworkName = 'mainnet';
 export const WC_PROJECT_ID = 'e6ed0c48443e54cc875462bbaec6e3a7'; // https://docs.walletconnect.com/2.0/cloud/relay
 
 // @ts-ignore
@@ -24,7 +23,9 @@ const appUsedNetworks: ChainIdByName[] = [
 
 const providers: Record<number, StaticJsonRpcBatchProvider> = {};
 appUsedNetworks.forEach((chain) => {
-  providers[chain] = chainInfoHelper.providerInstances[chain].instance;
+  // TODO: need fix
+  // @ts-ignore
+  providers[chain] = baseProviders[chain];
 });
 
 export const appConfig = appConfigInit(providers, coreName);

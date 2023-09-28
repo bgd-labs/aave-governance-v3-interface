@@ -1,7 +1,7 @@
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { produce } from 'immer';
 
-import { StoreSlice } from '../../../lib/web3/src';
 import {
   getLocalStorageEnsAddresses,
   setLocalStorageEnsAddresses,

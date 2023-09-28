@@ -1,4 +1,5 @@
-import { Web3Provider as Web3BaseProvider } from '../../../lib/web3/src';
+import { Web3Provider as Web3BaseProvider } from '@bgd-labs/frontend-web3-utils';
+
 import { useStore } from '../../store';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';
 import { chainInfoHelper, internalChains } from '../../utils/configs';

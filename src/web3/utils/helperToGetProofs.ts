@@ -1,3 +1,4 @@
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils';
 import { BigNumber, BytesLike, ethers, utils } from 'ethers';
 import {
   defaultAbiCoder,
@@ -6,7 +7,6 @@ import {
   keccak256,
 } from 'ethers/lib/utils.js';
 
-import { StaticJsonRpcBatchProvider } from '../../../lib/web3/src/utils/StaticJsonRpcBatchProvider';
 import { appConfig } from '../../utils/appConfig';
 
 export const slots = {

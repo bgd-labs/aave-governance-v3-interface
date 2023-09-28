@@ -1,6 +1,6 @@
+import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils';
 import { useEffect, useState } from 'react';
 
-import { getBrowserWalletLabelAndIcon } from '../../../../lib/web3/src';
 import { useStore } from '../../../store';
 import { BasicModal } from '../../../ui';
 import { setRelativePath } from '../../../ui/utils/relativePath';

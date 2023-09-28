@@ -4,11 +4,11 @@ import {
   ProposalState,
   VotingMachineProposalState,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 
-import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Timer } from '../../../ui';

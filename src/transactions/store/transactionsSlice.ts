@@ -1,9 +1,12 @@
-import { IWalletSlice, StoreSlice, WalletType } from '../../../lib/web3/src';
 import {
   BaseTx as BT,
   createTransactionsSlice as createBaseTransactionsSlice,
   ITransactionsSlice,
-} from '../../../lib/web3/src/web3/store/transactionsSlice';
+  IWalletSlice,
+  StoreSlice,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils';
+
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';

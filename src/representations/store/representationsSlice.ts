@@ -1,8 +1,8 @@
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { ethers } from 'ethers';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
 
-import { StoreSlice } from '../../../lib/web3/src';
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';

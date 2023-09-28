@@ -1,9 +1,9 @@
 'use client';
 
+import { IWalletSlice } from '@bgd-labs/frontend-web3-utils';
 import { create, StoreApi } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { IWalletSlice } from '../../lib/web3/src';
 import {
   createDelegationSlice,
   IDelegationSlice,

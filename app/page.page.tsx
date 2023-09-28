@@ -2,14 +2,15 @@ import {
   CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
+  providers,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Metadata } from 'next';
 import React from 'react';
 
 import { IGovernanceDataHelper__factory } from '../src/contracts/IGovernanceDataHelper__factory';
 import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
-import { texts } from '../src/ui/utils/texts';
-import { appConfig } from '../src/utils/appConfig';
+import { metaTexts } from '../src/ui/utils/metaTexts';
+import { appConfigForSSR } from '../src/utils/appConfigForSSR';
 import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
 
 export const dynamic = 'force-dynamic';
@@ -17,11 +18,11 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
-  title: `${texts.meta.main}${texts.meta.proposalListMetaTitle}`,
-  description: texts.meta.proposalListMetaDescription,
+  title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
+  description: metaTexts.proposalListMetaDescription,
   openGraph: {
-    title: `${texts.meta.main}${texts.meta.proposalListMetaTitle}`,
-    description: texts.meta.proposalListMetaDescription,
+    title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
+    description: metaTexts.proposalListMetaDescription,
   },
 };
 
@@ -30,6 +31,7 @@ export interface PageServerSideData {
   proposals: FinishedProposalForList[];
 }
 
+// TODO: need fix SSR
 export default async function Page({
   searchParams,
 }: {
@@ -87,13 +89,14 @@ export default async function Page({
   }
 
   const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-    appConfig.govCoreConfig.dataHelperContractAddress,
-    appConfig.providers[appConfig.govCoreChainId],
+    appConfigForSSR.govCoreConfig.dataHelperContractAddress,
+    // @ts-ignore
+    providers[appConfigForSSR.govCoreChainId],
   );
 
   const { configs, contractsConstants } = await getGovCoreConfigs(
     govCoreDataHelper,
-    appConfig.govCoreConfig.contractAddress,
+    appConfigForSSR.govCoreConfig.contractAddress,
   );
 
   const cachedProposalsData = cachedIdsByPage.map((id) => {

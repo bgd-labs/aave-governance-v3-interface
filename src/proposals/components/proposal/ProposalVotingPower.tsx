@@ -1,9 +1,9 @@
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
 
 import InfoIcon from '/public/images/icons/info.svg';
 
-import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';

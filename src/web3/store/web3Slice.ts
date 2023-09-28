@@ -2,7 +2,8 @@ import {
   createWalletSlice,
   IWalletSlice,
   StoreSlice,
-} from '../../../lib/web3/src';
+} from '@bgd-labs/frontend-web3-utils';
+
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { chainInfoHelper } from '../../utils/configs';
 import { DelegationService } from '../services/delegationService';
