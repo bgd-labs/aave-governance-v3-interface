@@ -1,5 +1,5 @@
 {
-  "installCommand": "git submodule add https://github.com/bgd-labs/fe-shared lib/web3 && git submodule add https://github.com/bgd-labs/aave-governance-ui-helpers lib/helpers && git submodule update --remote --init && yarn",
+  "installCommand": "git submodule update --remote --init && yarn",
   "headers": [
     {
       "source": "/(.*)",
