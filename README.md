@@ -67,8 +67,8 @@ We have our own hosted version from Vercel, you can access it on [https://vote.o
 
 ## License
 
-Copyright © 2023, [BGD Labs](https://bgdlabs.com/).
+Copyright © 2023, Aave DAO, represented by its governance smart contracts.
 
-The contents of this repository are licensed under [BUSL1.1](./LICENSE).
+Created by BGD Labs.
 
 **IMPORTANT**. The BUSL1.1 license of this repository allows for any usage of the software, if respecting the *Additional Use Grant* limitations, forbidding any use case damaging anyhow the Aave DAO's interests.
