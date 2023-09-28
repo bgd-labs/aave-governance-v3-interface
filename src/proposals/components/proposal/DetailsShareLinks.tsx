@@ -74,23 +74,13 @@ export function DetailsShareLinks({ ipfs, ipfsError }: DetailsShareLinksProps) {
       <StyledLink
         sx={(theme) => ({
           path: {
-            '&:last-of-type': {
-              fill: theme.palette.$appBackground,
-            },
-            '&:first-of-type': {
-              fill: theme.palette.$textDisabled,
-            },
+            fill: theme.palette.$textDisabled,
             transition: 'all 0.2s ease',
           },
           '&:hover': {
             color: theme.palette.$text,
             path: {
-              '&:last-of-type': {
-                fill: theme.palette.$appBackground,
-              },
-              '&:first-of-type': {
-                fill: theme.palette.$text,
-              },
+              fill: theme.palette.$text,
             },
           },
         })}

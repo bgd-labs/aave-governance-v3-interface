@@ -213,12 +213,7 @@ export function GlobalStyles() {
         '.Branding__icon': {
           '> svg': {
             path: {
-              '&:last-of-type': {
-                fill: '#EDF0FC',
-              },
-              '&:first-of-type': {
-                fill: '#C6C3D1',
-              },
+              fill: '#C6C3D1',
             },
           },
         },
@@ -357,12 +352,7 @@ export function GlobalStyles() {
         '.Branding__icon': {
           '> svg': {
             path: {
-              '&:last-of-type': {
-                fill: '#1C2445',
-              },
-              '&:first-of-type': {
-                fill: '#47557C',
-              },
+              fill: '#47557C',
             },
           },
         },
