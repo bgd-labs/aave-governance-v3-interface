@@ -1,7 +1,7 @@
 {
   "name": "aave-governance-v3-interface",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "author": "BGD labs",
   "license": "BUSL1.1",
   "contributors": [
