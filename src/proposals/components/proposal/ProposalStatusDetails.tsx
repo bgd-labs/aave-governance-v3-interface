@@ -1,10 +1,10 @@
-import { Box, useTheme } from '@mui/system';
 import {
   BasicProposalState,
   checkHash,
   ProposalState,
   VotingMachineProposalState,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 

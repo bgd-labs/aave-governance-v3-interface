@@ -7,7 +7,7 @@ import {
   Proposal,
   ProposalState,
   ProposalWithLoadings,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { ethers } from 'ethers';
 import { produce } from 'immer';
 

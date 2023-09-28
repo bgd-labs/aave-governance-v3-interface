@@ -1,9 +1,9 @@
-import { Box, useTheme } from '@mui/system';
 import {
   formatProposal,
   ProposalState,
   ProposalWithLoadings,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box, useTheme } from '@mui/system';
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
 

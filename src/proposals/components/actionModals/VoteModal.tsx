@@ -1,15 +1,15 @@
-import { Box, useTheme } from '@mui/system';
-import {
-  getSafeSingletonDeployment,
-  SingletonDeployment,
-} from '@safe-global/safe-deployments';
 import {
   Balance,
   formatProposal,
   getEstimatedState,
   ProposalState,
   valueToBigNumber,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box, useTheme } from '@mui/system';
+import {
+  getSafeSingletonDeployment,
+  SingletonDeployment,
+} from '@safe-global/safe-deployments';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import Image from 'next/image';

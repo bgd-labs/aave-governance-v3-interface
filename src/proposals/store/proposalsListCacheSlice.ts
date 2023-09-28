@@ -1,4 +1,4 @@
-import { FinishedProposalForList } from 'aave-governance-ui-helpers';
+import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers';
 
 import { StoreSlice } from '../../../lib/web3/src';
 

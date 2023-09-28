@@ -1,5 +1,5 @@
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { useTheme } from '@mui/system';
-import { ProposalEstimatedState } from 'aave-governance-ui-helpers';
 import React, { ReactNode } from 'react';
 
 import { BoxWith3D } from '../../../ui';

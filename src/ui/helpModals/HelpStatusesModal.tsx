@@ -1,5 +1,5 @@
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { ProposalStateWithName } from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 

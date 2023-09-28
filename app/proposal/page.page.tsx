@@ -5,7 +5,7 @@ import {
   getProposalState,
   getVotingMachineProposalState,
   ProposalWithLoadings,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import type { Metadata } from 'next';
 import React from 'react';
 

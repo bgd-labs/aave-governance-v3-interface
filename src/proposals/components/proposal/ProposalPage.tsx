@@ -1,4 +1,3 @@
-import { Box, useTheme } from '@mui/system';
 import {
   BasicProposalState,
   formatProposal,
@@ -8,7 +7,8 @@ import {
   ProposalState,
   ProposalStateWithName,
   ProposalWithLoadings,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';

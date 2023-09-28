@@ -1,5 +1,5 @@
+import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
-import { ProposalState } from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 
 import { proposalStatuses } from '../../utils/statuses';

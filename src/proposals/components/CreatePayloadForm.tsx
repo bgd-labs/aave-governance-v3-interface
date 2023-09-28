@@ -1,5 +1,5 @@
+import { PayloadAction } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
-import { PayloadAction } from 'aave-governance-ui-helpers';
 import arrayMutators from 'final-form-arrays';
 import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';

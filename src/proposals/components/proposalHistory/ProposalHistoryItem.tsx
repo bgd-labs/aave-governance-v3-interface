@@ -1,8 +1,8 @@
-import { Box, useTheme } from '@mui/system';
 import {
   getProposalStepsAndAmounts,
   ProposalWithLoadings,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
 

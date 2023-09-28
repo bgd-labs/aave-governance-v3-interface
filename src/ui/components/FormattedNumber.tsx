@@ -1,5 +1,8 @@
+import {
+  normalizeBN,
+  valueToBigNumber,
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
-import { normalizeBN, valueToBigNumber } from 'aave-governance-ui-helpers';
 import { BigNumber } from 'bignumber.js';
 import dynamic from 'next/dynamic';
 import React from 'react';

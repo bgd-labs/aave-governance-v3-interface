@@ -1,7 +1,7 @@
 import {
   getVotingMachineProposalState,
   ProposalData,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 

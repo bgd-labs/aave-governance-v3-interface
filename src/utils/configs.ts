@@ -1,8 +1,8 @@
-import { AddEthereumChainParameter } from '@web3-react/types';
 import {
   ChainIdByName,
   ipfsGateway as baseIpfsGateway,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { AddEthereumChainParameter } from '@web3-react/types';
 
 import {
   AVAX,

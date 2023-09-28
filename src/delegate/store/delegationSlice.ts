@@ -1,4 +1,4 @@
-import { normalizeBN } from 'aave-governance-ui-helpers';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import { constants } from 'ethers';
 import { produce } from 'immer';
 

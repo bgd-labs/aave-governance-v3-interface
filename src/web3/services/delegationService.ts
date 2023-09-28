@@ -1,6 +1,6 @@
 'use client';
 
-import { normalizeBN } from 'aave-governance-ui-helpers';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import { ethers, providers } from 'ethers';
 
 import { AaveTokenV3__factory } from '../../contracts/AaveTokenV3__factory';

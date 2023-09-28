@@ -1,7 +1,5 @@
 'use client';
 
-import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
-import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import {
   BasicProposal,
   blockLimit,
@@ -24,7 +22,9 @@ import {
   ProposalData,
   updateVotingMachineData,
   VotersData,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
+import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import {
   BigNumber,
   BigNumberish,

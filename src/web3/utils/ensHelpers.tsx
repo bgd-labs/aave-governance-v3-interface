@@ -1,4 +1,4 @@
-import { ChainIdByName } from 'aave-governance-ui-helpers';
+import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers';
 import makeBlockie from 'ethereum-blockies-base64';
 import { utils } from 'ethers';
 

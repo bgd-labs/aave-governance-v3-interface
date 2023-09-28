@@ -1,5 +1,5 @@
+import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { ProposalState } from 'aave-governance-ui-helpers';
 import dayjs from 'dayjs';
 
 import SuccessIcon from '/public/images/icons/check.svg';

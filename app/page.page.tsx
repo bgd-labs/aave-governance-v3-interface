@@ -2,7 +2,7 @@ import {
   CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Metadata } from 'next';
 import React from 'react';
 

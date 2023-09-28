@@ -1,4 +1,3 @@
-import { Box } from '@mui/system';
 import {
   Balance,
   formatProposal,
@@ -6,7 +5,8 @@ import {
   ProposalState,
   ProposalWithLoadings,
   valueToBigNumber,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';

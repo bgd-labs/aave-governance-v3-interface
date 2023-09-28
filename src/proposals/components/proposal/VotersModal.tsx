@@ -1,5 +1,5 @@
+import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, useTheme } from '@mui/system';
-import { VotersData } from 'aave-governance-ui-helpers';
 import React, { useState } from 'react';
 
 import BackArrowIcon from '/public/images/icons/backArrow.svg';

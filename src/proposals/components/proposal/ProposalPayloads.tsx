@@ -1,9 +1,9 @@
-import { Box, useTheme } from '@mui/system';
 import {
   InitialPayload,
   Payload,
   PayloadState,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
 

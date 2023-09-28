@@ -1,5 +1,8 @@
+import {
+  ipfsGateway,
+  ProposalMetadata,
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled } from '@mui/system';
-import { ipfsGateway, ProposalMetadata } from 'aave-governance-ui-helpers';
 import React from 'react';
 
 import Download from '/public/images/icons/download.svg';

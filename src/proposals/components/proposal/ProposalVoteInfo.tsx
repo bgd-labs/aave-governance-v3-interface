@@ -1,5 +1,8 @@
+import {
+  ProposalEstimatedState,
+  VotersData,
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { ProposalEstimatedState, VotersData } from 'aave-governance-ui-helpers';
 import React from 'react';
 
 import { useStore } from '../../../store';

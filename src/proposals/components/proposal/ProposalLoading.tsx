@@ -1,7 +1,7 @@
 'use client';
 
+import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { ProposalMetadata } from 'aave-governance-ui-helpers';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 

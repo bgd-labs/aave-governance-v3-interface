@@ -4,7 +4,7 @@ import {
   CoreNetworkName,
   payloadsControllerChainIds,
   votingMachineChainIds,
-} from 'aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers';
 
 import { StaticJsonRpcBatchProvider } from '../../lib/web3/src/utils/StaticJsonRpcBatchProvider';
 import { chainInfoHelper } from './configs';

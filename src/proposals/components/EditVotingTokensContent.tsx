@@ -1,5 +1,8 @@
+import {
+  Balance,
+  valueToBigNumber,
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
-import { Balance, valueToBigNumber } from 'aave-governance-ui-helpers';
 import React, { useState } from 'react';
 
 import { BackButton3D, Divider } from '../../ui';

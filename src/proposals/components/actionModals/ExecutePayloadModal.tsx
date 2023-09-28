@@ -1,5 +1,5 @@
+import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
-import { InitialPayload } from 'aave-governance-ui-helpers';
 import React from 'react';
 
 import { useStore } from '../../../store';

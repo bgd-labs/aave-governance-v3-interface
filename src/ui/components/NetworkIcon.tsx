@@ -1,5 +1,5 @@
+import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers';
 import { SxProps } from '@mui/system';
-import { ChainIdByName } from 'aave-governance-ui-helpers';
 
 import { chainInfoHelper } from '../../utils/configs';
 import { Image } from '../primitives/Image';
