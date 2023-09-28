@@ -1,0 +1,26 @@
+{
+  "installCommand": "git submodule add https://github.com/bgd-labs/fe-shared lib/web3 && git submodule add https://github.com/bgd-labs/aave-governance-ui-helpers lib/helpers && git submodule update --remote --init && yarn",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer-when-downgrade"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}
