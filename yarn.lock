@@ -1138,7 +1138,7 @@
 
 "@bgd-labs/aave-governance-ui-helpers@bgd-labs/aave-governance-ui-helpers#fix/module":
   version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/873b93a4fc30023706a2364279b36e42cb3bb25d"
+  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/cf79f5f601283e314b8c23f25b544d3c6ca9df00"
   dependencies:
     "@bgd-labs/aave-address-book" latest
     "@web3-react/core" "^8.2.2"
@@ -8746,9 +8746,9 @@ vfile@^6.0.0:
     vfile-message "^4.0.0"
 
 viem@^1.0.0:
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-1.13.2.tgz#73ff5fd44c8bfb8dcd5b2a73cbe3952804029490"
-  integrity sha512-iaiExxe0WIbf4Yvqtk/nDaFbKg6CBtW6xY6bGUNBV8/lx9PhSeFneSK/LogC2NPo0X2LpCLaxx+E6MUqL5JEAg==
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-1.14.0.tgz#e4b305c4cce500e04a66b951c01856d7b04ab403"
+  integrity sha512-4d+4/H3lnbkSAbrpQ15i1nBA7hne06joLFy3L3m0ZpMc+g+Zr3D4nuSTyeiqbHAYs9m2P9Kjap0HlyGkehasgg==
   dependencies:
     "@adraffy/ens-normalize" "1.9.4"
     "@noble/curves" "1.2.0"

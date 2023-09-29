@@ -1,9 +1,11 @@
-import { ChainIdByName, providers } from '@bgd-labs/aave-governance-ui-helpers';
+import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
 import makeBlockie from 'ethereum-blockies-base64';
 import { utils } from 'ethers';
 
-// TODO: need fix
-const mainnetProvider = providers[ChainIdByName.EthereumMainnet];
+import { chainInfoHelper } from '../../utils/configs';
+
+const mainnetProvider =
+  chainInfoHelper.providerInstances[ChainIdByName.EthereumMainnet].instance;
 
 export const getName = async (address: string) => {
   try {

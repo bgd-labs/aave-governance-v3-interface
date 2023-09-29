@@ -9,7 +9,7 @@ import {
   initChainInformationConfig,
   initialChains,
   MATIC,
-} from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/frontend-web3-utils/src/utils/chainInfoHelpers';
 import { AddEthereumChainParameter } from '@web3-react/types';
 
 // ipfs gateway to get proposals metadata

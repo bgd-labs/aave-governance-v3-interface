@@ -16,5 +16,4 @@ module.exports = {
     'import/no-unresolved': 'off',
     'react/self-closing-comp': 'warn',
   },
-  ignorePatterns: ['lib/**/*'],
 };

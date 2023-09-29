@@ -5,16 +5,15 @@ import {
   getProposalState,
   getVotingMachineProposalState,
   ProposalWithLoadings,
-  providers,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { IGovernanceCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore__factory';
+import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
 import type { Metadata } from 'next';
 import React from 'react';
 
-import { IGovernanceCore__factory } from '../../src/contracts/IGovernanceCore__factory';
-import { IGovernanceDataHelper__factory } from '../../src/contracts/IGovernanceDataHelper__factory';
 import { ProposalClientPageSSR } from '../../src/proposals/components/proposal/ProposalClientPageSSR';
 import { metaTexts } from '../../src/ui/utils/metaTexts';
-import { appConfigForSSR } from '../../src/utils/appConfigForSSR';
+import { appConfig } from '../../src/utils/appConfig';
 import {
   cachedDetailsPath,
   cachedProposalsIdsPath,
@@ -62,7 +61,6 @@ export async function generateMetadata({
   };
 }
 
-// TODO: need fix SSR
 export default async function ProposalPage({
   searchParams,
 }: {
@@ -79,14 +77,12 @@ export default async function ProposalPage({
 
   // contracts
   const govCore = IGovernanceCore__factory.connect(
-    appConfigForSSR.govCoreConfig.contractAddress,
-    // @ts-ignore
-    providers[appConfigForSSR.govCoreChainId],
+    appConfig.govCoreConfig.contractAddress,
+    appConfig.providers[appConfig.govCoreChainId],
   );
   const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-    appConfigForSSR.govCoreConfig.dataHelperContractAddress,
-    // @ts-ignore
-    providers[appConfigForSSR.govCoreChainId],
+    appConfig.govCoreConfig.dataHelperContractAddress,
+    appConfig.providers[appConfig.govCoreChainId],
   );
 
   // cached data
@@ -114,7 +110,7 @@ export default async function ProposalPage({
   // data from contracts
   const { configs, contractsConstants } = await getGovCoreConfigs(
     govCoreDataHelper,
-    appConfigForSSR.govCoreConfig.contractAddress,
+    appConfig.govCoreConfig.contractAddress,
   );
 
   const proposalsCountInitial = await govCore.getProposalsCount();

@@ -1,4 +1,6 @@
-import { Web3Provider as Web3BaseProvider } from '@bgd-labs/frontend-web3-utils';
+'use client';
+
+import { Web3Provider as Web3BaseProvider } from '@bgd-labs/frontend-web3-utils/src';
 
 import { useStore } from '../../store';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';

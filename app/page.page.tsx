@@ -2,15 +2,14 @@ import {
   CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
-  providers,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
 import { Metadata } from 'next';
 import React from 'react';
 
-import { IGovernanceDataHelper__factory } from '../src/contracts/IGovernanceDataHelper__factory';
 import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
 import { metaTexts } from '../src/ui/utils/metaTexts';
-import { appConfigForSSR } from '../src/utils/appConfigForSSR';
+import { appConfig } from '../src/utils/appConfig';
 import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
 
 export const dynamic = 'force-dynamic';
@@ -31,7 +30,6 @@ export interface PageServerSideData {
   proposals: FinishedProposalForList[];
 }
 
-// TODO: need fix SSR
 export default async function Page({
   searchParams,
 }: {
@@ -89,14 +87,13 @@ export default async function Page({
   }
 
   const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-    appConfigForSSR.govCoreConfig.dataHelperContractAddress,
-    // @ts-ignore
-    providers[appConfigForSSR.govCoreChainId],
+    appConfig.govCoreConfig.dataHelperContractAddress,
+    appConfig.providers[appConfig.govCoreChainId],
   );
 
   const { configs, contractsConstants } = await getGovCoreConfigs(
     govCoreDataHelper,
-    appConfigForSSR.govCoreConfig.contractAddress,
+    appConfig.govCoreConfig.contractAddress,
   );
 
   const cachedProposalsData = cachedIdsByPage.map((id) => {

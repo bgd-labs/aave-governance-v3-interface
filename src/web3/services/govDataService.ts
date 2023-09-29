@@ -23,6 +23,19 @@ import {
   updateVotingMachineData,
   VotersData,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { IBaseVotingStrategy__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IBaseVotingStrategy__factory';
+import { IDataWarehouse__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IDataWarehouse__factory';
+import { IGovernanceCore } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore';
+import { IGovernanceCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore__factory';
+import { IGovernanceDataHelper } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper';
+import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
+import { IPayloadsControllerCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerCore__factory';
+import { IPayloadsControllerDataHelper } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerDataHelper';
+import { IPayloadsControllerDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerDataHelper__factory';
+import { IVotingMachineDataHelper } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineDataHelper';
+import { IVotingMachineDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineDataHelper__factory';
+import { IVotingMachineWithProofs } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineWithProofs';
+import { IVotingMachineWithProofs__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineWithProofs__factory';
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import {
@@ -36,19 +49,6 @@ import {
 } from 'ethers';
 import { hexZeroPad } from 'ethers/lib/utils';
 
-import { IBaseVotingStrategy__factory } from '../../contracts/IBaseVotingStrategy__factory';
-import { IDataWarehouse__factory } from '../../contracts/IDataWarehouse__factory';
-import { IGovernanceCore } from '../../contracts/IGovernanceCore';
-import { IGovernanceCore__factory } from '../../contracts/IGovernanceCore__factory';
-import { IGovernanceDataHelper } from '../../contracts/IGovernanceDataHelper';
-import { IGovernanceDataHelper__factory } from '../../contracts/IGovernanceDataHelper__factory';
-import { IPayloadsControllerCore__factory } from '../../contracts/IPayloadsControllerCore__factory';
-import { IPayloadsControllerDataHelper } from '../../contracts/IPayloadsControllerDataHelper';
-import { IPayloadsControllerDataHelper__factory } from '../../contracts/IPayloadsControllerDataHelper__factory';
-import { IVotingMachineDataHelper } from '../../contracts/IVotingMachineDataHelper';
-import { IVotingMachineDataHelper__factory } from '../../contracts/IVotingMachineDataHelper__factory';
-import { IVotingMachineWithProofs } from '../../contracts/IVotingMachineWithProofs';
-import { IVotingMachineWithProofs__factory } from '../../contracts/IVotingMachineWithProofs__factory';
 import {
   formatToProofRLP,
   getExtendedBlock,

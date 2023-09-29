@@ -1,4 +1,6 @@
-import { useLastTxLocalStatus as baseUseTxLocalStatus } from '@bgd-labs/frontend-web3-utils';
+'use client';
+
+import { useLastTxLocalStatus as baseUseTxLocalStatus } from '@bgd-labs/frontend-web3-utils/src';
 
 import { useStore } from '../../store';
 import { TransactionUnion } from '../store/transactionsSlice';
