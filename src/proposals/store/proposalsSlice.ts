@@ -16,8 +16,8 @@ import {
   VotersData,
   VotingBalance,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { produce } from 'immer';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';

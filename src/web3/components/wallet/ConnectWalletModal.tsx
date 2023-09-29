@@ -1,4 +1,4 @@
-import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils';
+import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils/src';
 import { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store';

@@ -22,7 +22,7 @@ import {
   ProposalData,
   updateVotingMachineData,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { IBaseVotingStrategy__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IBaseVotingStrategy__factory';
 import { IDataWarehouse__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IDataWarehouse__factory';
 import { IGovernanceCore } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore';

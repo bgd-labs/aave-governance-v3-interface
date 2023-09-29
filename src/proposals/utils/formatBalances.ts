@@ -1,4 +1,4 @@
-import { Balance } from '@bgd-labs/aave-governance-ui-helpers';
+import { Balance } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { ethers } from 'ethers';
 
 import { appConfig } from '../../utils/appConfig';

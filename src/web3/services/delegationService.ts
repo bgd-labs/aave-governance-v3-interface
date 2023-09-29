@@ -1,6 +1,6 @@
 'use client';
 
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { AaveTokenV3__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/AaveTokenV3__factory';
 import { ATokenWithDelegation__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/ATokenWithDelegation__factory';
 import { IMetaDelegateHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IMetaDelegateHelper__factory';

@@ -5,7 +5,7 @@ import {
   ProposalWithId,
   ProposalWithLoadings,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import Fuse from 'fuse.js';
 
 import { RootState } from '../../store';

@@ -1,4 +1,4 @@
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
 import { Box } from '@mui/system';
 import React from 'react';
 

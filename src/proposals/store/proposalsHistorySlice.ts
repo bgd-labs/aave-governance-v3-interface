@@ -7,8 +7,8 @@ import {
   Proposal,
   ProposalState,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { ethers } from 'ethers';
 import { produce } from 'immer';
 

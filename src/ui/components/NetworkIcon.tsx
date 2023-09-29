@@ -1,4 +1,4 @@
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers';
+import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { SxProps } from '@mui/system';
 
 import { chainInfoHelper } from '../../utils/configs';

@@ -1,4 +1,4 @@
-import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers';
+import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers/src';
 import dayjs from 'dayjs';
 
 import { appConfig } from '../../utils/appConfig';

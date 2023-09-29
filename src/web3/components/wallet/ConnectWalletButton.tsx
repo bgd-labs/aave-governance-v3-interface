@@ -3,7 +3,7 @@ import {
   selectAllTransactions,
   selectPendingTransactions,
   WalletType,
-} from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import makeBlockie from 'ethereum-blockies-base64';
 import React, { useEffect, useState } from 'react';

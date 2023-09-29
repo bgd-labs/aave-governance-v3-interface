@@ -1,4 +1,4 @@
-import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers';
+import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 

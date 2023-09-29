@@ -1,4 +1,4 @@
-import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils';
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src';
 import { BigNumber, BytesLike, ethers, utils } from 'ethers';
 import {
   defaultAbiCoder,

@@ -1,6 +1,6 @@
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { IERC20__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IERC20/IERC20__factory';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { constants } from 'ethers';
 import { produce } from 'immer';
 

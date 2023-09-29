@@ -1,4 +1,4 @@
-import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers';
+import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box } from '@mui/system';
 
 import { proposalStatuses } from '../utils/statuses';

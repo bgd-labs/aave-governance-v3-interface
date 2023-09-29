@@ -2,7 +2,7 @@ import {
   createWalletSlice,
   IWalletSlice,
   StoreSlice,
-} from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/frontend-web3-utils/src';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { chainInfoHelper } from '../../utils/configs';

@@ -1,4 +1,4 @@
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { ethers } from 'ethers';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';

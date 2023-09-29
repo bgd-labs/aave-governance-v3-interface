@@ -5,7 +5,7 @@ import {
   ProposalState,
   ProposalWithLoadings,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import { ethers } from 'ethers';

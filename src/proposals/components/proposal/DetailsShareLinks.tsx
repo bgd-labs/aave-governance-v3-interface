@@ -1,7 +1,7 @@
 import {
   ipfsGateway,
   ProposalMetadata,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, styled } from '@mui/system';
 import React from 'react';
 

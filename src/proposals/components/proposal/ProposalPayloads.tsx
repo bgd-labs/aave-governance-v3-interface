@@ -2,8 +2,8 @@ import {
   InitialPayload,
   Payload,
   PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';

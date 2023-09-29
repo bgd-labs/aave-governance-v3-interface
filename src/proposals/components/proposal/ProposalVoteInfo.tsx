@@ -1,7 +1,7 @@
 import {
   ProposalEstimatedState,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 

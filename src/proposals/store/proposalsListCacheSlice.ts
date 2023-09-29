@@ -1,5 +1,5 @@
-import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 
 export interface IProposalsListCacheSlice {
   loadingListCache: boolean;

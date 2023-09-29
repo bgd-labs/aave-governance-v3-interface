@@ -1,4 +1,4 @@
-import { WalletType } from '@bgd-labs/frontend-web3-utils';
+import { WalletType } from '@bgd-labs/frontend-web3-utils/src';
 import { Box } from '@mui/system';
 import React from 'react';
 

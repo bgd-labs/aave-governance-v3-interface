@@ -5,7 +5,7 @@ import {
   IWalletSlice,
   StoreSlice,
   WalletType,
-} from '@bgd-labs/frontend-web3-utils';
+} from '@bgd-labs/frontend-web3-utils/src';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
