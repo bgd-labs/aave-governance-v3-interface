@@ -2,14 +2,14 @@ import { Metadata } from 'next';
 import React from 'react';
 
 import { NotFoundPage } from '../src/ui/pages/NotFoundPage';
-import { texts } from '../src/ui/utils/texts';
+import { metaTexts } from '../src/ui/utils/metaTexts';
 
 export const metadata: Metadata = {
-  title: `${texts.meta.main}${texts.meta.notFoundPageMetaTitle}`,
-  description: texts.meta.notFoundPageMetaDescription,
+  title: `${metaTexts.main}${metaTexts.notFoundPageMetaTitle}`,
+  description: metaTexts.notFoundPageMetaDescription,
   openGraph: {
-    title: `${texts.meta.main}${texts.meta.notFoundPageMetaTitle}`,
-    description: texts.meta.notFoundPageMetaDescription,
+    title: `${metaTexts.main}${metaTexts.notFoundPageMetaTitle}`,
+    description: metaTexts.notFoundPageMetaDescription,
   },
 };
 

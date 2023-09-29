@@ -1,14 +1,14 @@
-import { Box, useTheme } from '@mui/system';
-import dayjs from 'dayjs';
-import React, { useEffect } from 'react';
-
 import {
   BasicProposalState,
   checkHash,
   ProposalState,
   VotingMachineProposalState,
-} from '../../../../lib/helpers/src';
-import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+import { Box, useTheme } from '@mui/system';
+import dayjs from 'dayjs';
+import React, { useEffect } from 'react';
+
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Timer } from '../../../ui';

@@ -1,3 +1,7 @@
+import {
+  getProposalStepsAndAmounts,
+  ProposalWithLoadings,
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -5,10 +9,6 @@ import React from 'react';
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import {
-  getProposalStepsAndAmounts,
-  ProposalWithLoadings,
-} from '../../../../lib/helpers/src';
 import { CopyToClipboard, Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';

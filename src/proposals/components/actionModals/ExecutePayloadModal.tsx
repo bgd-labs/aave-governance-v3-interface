@@ -1,7 +1,7 @@
+import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { InitialPayload } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { texts } from '../../../ui/utils/texts';

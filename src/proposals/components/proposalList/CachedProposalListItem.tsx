@@ -1,7 +1,7 @@
+import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
 
-import { CachedProposalDataItemWithId } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
 import { ROUTES } from '../../../ui/utils/routes';

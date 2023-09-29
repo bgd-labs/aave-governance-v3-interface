@@ -1,3 +1,7 @@
+import {
+  selectTxExplorerLink,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
@@ -5,7 +9,6 @@ import LinkIcon from '/public/images/icons/linkIcon.svg';
 import RocketError from '/public/images/rocketError.svg';
 import RocketSuccess from '/public/images/rocketSuccess.svg';
 
-import { selectTxExplorerLink, WalletType } from '../../../lib/web3/src';
 import { useStore } from '../../store';
 import { BigButton, Link } from '../../ui';
 import { RocketLoader } from '../../ui/components/RocketLoader';

@@ -1,10 +1,3 @@
-import { Box } from '@mui/system';
-import { BigNumber } from 'bignumber.js';
-import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
-
-import InfoIcon from '/public/images/icons/info.svg';
-
 import {
   Balance,
   formatProposal,
@@ -12,7 +5,14 @@ import {
   ProposalState,
   ProposalWithLoadings,
   valueToBigNumber,
-} from '../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { Box } from '@mui/system';
+import { BigNumber } from 'bignumber.js';
+import { ethers } from 'ethers';
+import React, { useEffect, useState } from 'react';
+
+import InfoIcon from '/public/images/icons/info.svg';
+
 import { EditVotingTokensContent } from '../../proposals/components/EditVotingTokensContent';
 import { ProposalEstimatedStatus } from '../../proposals/components/ProposalEstimatedStatus';
 import { VoteBar } from '../../proposals/components/VoteBar';

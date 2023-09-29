@@ -1,14 +1,14 @@
+import {
+  CachedProposalDataItemWithId,
+  ProposalEstimatedState,
+  ProposalWithId,
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';
 
 import NotFoundGhostImage from '/public/images/notFoundGhost.svg';
 
-import {
-  CachedProposalDataItemWithId,
-  ProposalEstimatedState,
-  ProposalWithId,
-} from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { BigButton, BoxWith3D, FilterDropdown } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';

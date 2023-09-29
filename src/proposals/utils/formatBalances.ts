@@ -1,6 +1,6 @@
+import { Balance } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { ethers } from 'ethers';
 
-import { Balance } from '../../../lib/helpers/src';
 import { appConfig } from '../../utils/appConfig';
 import { GovDataService } from '../../web3/services/govDataService';
 import {

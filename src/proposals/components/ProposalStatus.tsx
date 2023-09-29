@@ -1,6 +1,6 @@
+import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box } from '@mui/system';
 
-import { ProposalState } from '../../../lib/helpers/src';
 import { proposalStatuses } from '../utils/statuses';
 
 export interface ProposalStatusProps {

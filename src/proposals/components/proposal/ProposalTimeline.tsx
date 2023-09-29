@@ -1,3 +1,4 @@
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, styled, SxProps, useTheme } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import dayjs from 'dayjs';
@@ -6,7 +7,6 @@ import React, { ReactNode, useEffect, useRef } from 'react';
 import Rocket from '/public/images/rocket.svg';
 import RocketToTop from '/public/images/rocketToTop.svg';
 
-import { ProposalStateWithName } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { BoxWith3D, NoSSR, Timer } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';

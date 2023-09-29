@@ -2,14 +2,14 @@ import { Metadata } from 'next';
 import React from 'react';
 
 import { RepresentationsPage } from '../../src/representations/components/RepresentationsPage';
-import { texts } from '../../src/ui/utils/texts';
+import { metaTexts } from '../../src/ui/utils/metaTexts';
 
 export const metadata: Metadata = {
-  title: `${texts.meta.main}${texts.meta.representationsPageMetaTitle}`,
-  description: texts.meta.representationsPageMetaDescription,
+  title: `${metaTexts.main}${metaTexts.representationsPageMetaTitle}`,
+  description: metaTexts.representationsPageMetaDescription,
   openGraph: {
-    title: `${texts.meta.main}${texts.meta.representationsPageMetaTitle}`,
-    description: texts.meta.representationsPageMetaDescription,
+    title: `${metaTexts.main}${metaTexts.representationsPageMetaTitle}`,
+    description: metaTexts.representationsPageMetaDescription,
   },
 };
 

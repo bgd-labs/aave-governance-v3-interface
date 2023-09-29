@@ -1,14 +1,14 @@
-import { Metadata } from 'next';
-import React from 'react';
-
 import {
   CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
-} from '../lib/helpers/src';
-import { IGovernanceDataHelper__factory } from '../lib/helpers/src/contracts/IGovernanceDataHelper__factory';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
+import { Metadata } from 'next';
+import React from 'react';
+
 import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
-import { texts } from '../src/ui/utils/texts';
+import { metaTexts } from '../src/ui/utils/metaTexts';
 import { appConfig } from '../src/utils/appConfig';
 import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
 
@@ -17,11 +17,11 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
-  title: `${texts.meta.main}${texts.meta.proposalListMetaTitle}`,
-  description: texts.meta.proposalListMetaDescription,
+  title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
+  description: metaTexts.proposalListMetaDescription,
   openGraph: {
-    title: `${texts.meta.main}${texts.meta.proposalListMetaTitle}`,
-    description: texts.meta.proposalListMetaDescription,
+    title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
+    description: metaTexts.proposalListMetaDescription,
   },
 };
 
