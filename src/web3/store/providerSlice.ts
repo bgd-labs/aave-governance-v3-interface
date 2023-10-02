@@ -1,8 +1,8 @@
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src/utils/StaticJsonRpcBatchProvider';
 import { AddEthereumChainParameter } from '@web3-react/types';
 import { produce } from 'immer';
 
-import { StoreSlice } from '../../../lib/web3/src';
-import { StaticJsonRpcBatchProvider } from '../../../lib/web3/src/utils/StaticJsonRpcBatchProvider';
 import {
   getLocalStorageRpcUrls,
   setLocalStorageRpcUrls,
