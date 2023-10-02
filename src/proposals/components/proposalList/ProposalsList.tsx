@@ -1,21 +1,20 @@
-import { Box, useTheme } from '@mui/system';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react';
-
-import NoDataImage from '/public/images/noDataList.svg';
-import NotFoundGhostImage from '/public/images/notFoundGhost.svg';
-import NotFoundImage from '/public/images/notFoundList.svg';
-
 import {
   CachedProposalDataItemWithId,
   ProposalEstimatedState,
   ProposalWithId,
-} from '../../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { Box, useTheme } from '@mui/system';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import NotFoundGhostImage from '/public/images/notFoundGhost.svg';
+
 import { useStore } from '../../../store';
 import { BigButton, BoxWith3D, FilterDropdown } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { SearchButton } from '../../../ui/components/SearchButton';
 import { IconBox } from '../../../ui/primitives/IconBox';
+import { setRelativePath } from '../../../ui/utils/relativePath';
 import { texts } from '../../../ui/utils/texts';
 import { useDebounce } from '../../../ui/utils/useDebounce';
 import { isForIPFS } from '../../../utils/appConfig';
@@ -303,14 +302,21 @@ export function ProposalsList({
               flexDirection: 'column',
               p: 30,
             }}>
-            <IconBox
+            <Box
+              className="ProposalList__noData__image"
               sx={{
                 width: '100%',
-                maxHeight: 79,
-                '> svg': { width: '100%', maxHeight: 79 },
-              }}>
-              <NoDataImage />
-            </IconBox>
+                height: '100vh',
+                maxHeight: 100,
+                backgroundImage:
+                  theme.palette.mode === 'dark'
+                    ? `url(${setRelativePath('/images/noDataListDark.svg')})`
+                    : `url(${setRelativePath('/images/noDataList.svg')})`,
+                backgroundSize: 'contain',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
             <IconBox
               sx={(theme) => ({
                 width: 50,
@@ -374,14 +380,25 @@ export function ProposalsList({
                     flexDirection: 'column',
                     p: 30,
                   }}>
-                  <IconBox
+                  <Box
+                    className="ProposalList__notFound__image"
                     sx={{
                       width: '100%',
-                      maxHeight: 79,
-                      '> svg': { width: '100%', maxHeight: 79 },
-                    }}>
-                    <NotFoundImage />
-                  </IconBox>
+                      height: '100vh',
+                      maxHeight: 100,
+                      backgroundImage:
+                        theme.palette.mode === 'dark'
+                          ? `url(${setRelativePath(
+                              '/images/notFoundListDark.svg',
+                            )})`
+                          : `url(${setRelativePath(
+                              '/images/notFoundList.svg',
+                            )})`,
+                      backgroundSize: 'contain',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                    }}
+                  />
                   <IconBox
                     sx={(theme) => ({
                       width: 50,

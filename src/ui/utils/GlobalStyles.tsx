@@ -205,6 +205,34 @@ export function GlobalStyles() {
         borderTopColor: '#101423',
         borderLeftColor: '#101423',
       },
+
+      '.Branding': {
+        '.Branding__text': {
+          color: '#C6C3D1',
+        },
+        a: {
+          '&:hover': {
+            '.Branding__icon': {
+              svg: {
+                path: {
+                  fill: '#101423',
+                },
+              },
+            },
+          },
+        },
+        '.Branding__icon': {
+          '> svg': {
+            path: {
+              fill: '#C6C3D1',
+            },
+          },
+        },
+      },
+
+      '.ProposalList__noData__image': {
+        backgroundImage: 'url(/images/noDataList.svg)',
+      },
     },
     "[data-theme='dark']": {
       body: {
@@ -326,6 +354,34 @@ export function GlobalStyles() {
       '#nprogress .spinner-icon': {
         borderTopColor: '#ADAECF',
         borderLeftColor: '#ADAECF',
+      },
+
+      '.Branding': {
+        '.Branding__text': {
+          color: '#47557C',
+        },
+        a: {
+          '&:hover': {
+            '.Branding__icon': {
+              svg: {
+                path: {
+                  fill: '#ADAECF',
+                },
+              },
+            },
+          },
+        },
+        '.Branding__icon': {
+          '> svg': {
+            path: {
+              fill: '#47557C',
+            },
+          },
+        },
+      },
+
+      '.ProposalList__noData__image': {
+        backgroundImage: 'url(/images/noDataListDark.svg)',
       },
     },
   };

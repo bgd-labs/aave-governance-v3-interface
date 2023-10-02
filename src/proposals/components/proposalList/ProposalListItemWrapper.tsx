@@ -1,7 +1,7 @@
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import { ProposalEstimatedState } from '../../../../lib/helpers/src';
 import { BoxWith3D } from '../../../ui';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
@@ -22,11 +22,12 @@ export function ProposalListItemWrapper({
   disabled?: boolean;
 }) {
   const sm = useMediaQuery(media.sm);
+  const md = useMediaQuery(media.md);
   const theme = useTheme();
 
   return (
     <BoxWith3D
-      disabled={disabled}
+      disabled={md && disabled}
       alwaysWithBorders={isForHelpModal}
       withActions={!sm || !isForHelpModal}
       borderSize={10}

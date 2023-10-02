@@ -51,6 +51,7 @@ export function SmallButton({
         '&:disabled': {
           cursor: 'not-allowed',
           '.SmallButton__inner': {
+            cursor: 'not-allowed',
             borderTop: `1px solid transparent`,
             borderRight: `1px solid transparent`,
             backgroundColor: '$disabled',

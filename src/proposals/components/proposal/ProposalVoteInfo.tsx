@@ -1,10 +1,10 @@
-import { Box, useTheme } from '@mui/system';
-import React from 'react';
-
 import {
   ProposalEstimatedState,
   VotersData,
-} from '../../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { Box, useTheme } from '@mui/system';
+import React from 'react';
+
 import { useStore } from '../../../store';
 import { BoxWith3D, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';

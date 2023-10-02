@@ -1,3 +1,4 @@
+import { selectTxExplorerLink } from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -5,8 +6,8 @@ import React from 'react';
 import CheckIcon from '/public/images/icons/check.svg';
 import CopyIcon from '/public/images/icons/copy.svg';
 import CrossIcon from '/public/images/icons/cross.svg';
+import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { selectTxExplorerLink } from '../../../lib/web3/src';
 import { DelegatedText } from '../../delegate/components/DelegatedText';
 import { TxText } from '../../representations/components/TxText';
 import { useStore } from '../../store';
@@ -73,7 +74,12 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
             </Box>
           )}
           {tx.hash && (
-            <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                a: { lineHeight: 0 },
+              }}>
               <Link
                 href={selectTxExplorerLink(
                   state,
@@ -81,13 +87,49 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                   tx.hash,
                 )}
                 css={{
+                  display: 'inline-flex',
                   color: '$textSecondary',
-                  hover: { color: theme.palette.$text },
+                  alignItems: 'center',
+                  transition: 'all 0.2s ease',
+                  hover: {
+                    color: theme.palette.$text,
+                    svg: {
+                      path: {
+                        '&:first-of-type': {
+                          stroke: theme.palette.$text,
+                        },
+                        '&:last-of-type': {
+                          fill: theme.palette.$text,
+                        },
+                      },
+                    },
+                  },
                 }}
                 inNewWindow>
                 <Box component="p" sx={{ typography: 'descriptor' }}>
                   {textCenterEllipsis(tx.hash, 5, 5)}
                 </Box>
+                <IconBox
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    ml: 2,
+                    '> svg': {
+                      width: 10,
+                      height: 10,
+                      transition: 'all 0.2s ease',
+                      path: {
+                        '&:first-of-type': {
+                          stroke: theme.palette.$textSecondary,
+                        },
+                        '&:last-of-type': {
+                          fill: theme.palette.$textSecondary,
+                        },
+                      },
+                    },
+                  }}>
+                  <LinkIcon />
+                </IconBox>
               </Link>
 
               <CopyToClipboard copyText={tx.hash}>

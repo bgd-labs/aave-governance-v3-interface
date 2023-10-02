@@ -1,12 +1,12 @@
-import { createAlova } from 'alova';
-import GlobalFetch from 'alova/GlobalFetch';
-import ReactHook from 'alova/react';
-
 import {
   CachedDetails,
   FinishedProposalForList,
   VotersData,
-} from '../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { createAlova } from 'alova';
+import GlobalFetch from 'alova/GlobalFetch';
+import ReactHook from 'alova/react';
+
 import {
   cachedDetailsPath,
   cachedProposalsIdsPath,

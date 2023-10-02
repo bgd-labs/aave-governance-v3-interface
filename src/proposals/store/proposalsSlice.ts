@@ -1,5 +1,3 @@
-import { produce } from 'immer';
-
 import {
   Balance,
   BasicProposal,
@@ -18,8 +16,10 @@ import {
   VotersData,
   VotingBalance,
   VotingConfig,
-} from '../../../lib/helpers/src';
-import { IWalletSlice, StoreSlice } from '../../../lib/web3/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { produce } from 'immer';
+
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';

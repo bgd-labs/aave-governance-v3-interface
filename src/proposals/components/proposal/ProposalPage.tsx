@@ -1,8 +1,3 @@
-import { Box, useTheme } from '@mui/system';
-import dayjs from 'dayjs';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-
 import {
   BasicProposalState,
   formatProposal,
@@ -12,7 +7,12 @@ import {
   ProposalState,
   ProposalStateWithName,
   ProposalWithLoadings,
-} from '../../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { Box, useTheme } from '@mui/system';
+import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
 import { useStore } from '../../../store';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
@@ -28,6 +28,7 @@ import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
+import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
 import { ProposalTimeline } from './ProposalTimeline';
 import { ProposalVoteInfo } from './ProposalVoteInfo';
@@ -80,6 +81,14 @@ export function ProposalPage({
 
   useEffect(() => {
     const { forVotes, againstVotes } = formatProposal(proposalData.proposal);
+    const { isVotingActive } = getProposalStepsAndAmounts({
+      proposalData: proposal.data,
+      quorum: proposal.config.quorum,
+      differential: proposal.config.differential,
+      precisionDivider: proposal.precisionDivider,
+      cooldownPeriod: proposal.timings.cooldownPeriod,
+      executionPayloadTime: proposal.timings.executionPayloadTime,
+    });
 
     const startBlock =
       proposalData.proposal.data.votingMachineData.createdBlock;
@@ -88,12 +97,6 @@ export function ProposalPage({
         .votingClosedAndSentBlockNumber;
 
     const totalVotes = forVotes + againstVotes;
-
-    const isFinished =
-      proposalData.proposal.state === ProposalState.Executed ||
-      proposalData.proposal.state === ProposalState.Defeated ||
-      proposalData.proposal.state === ProposalState.Canceled ||
-      proposalData.proposal.state === ProposalState.Expired;
 
     if (startBlock > 0) {
       if (totalVotes > 0 && !proposal.data.prerender) {
@@ -106,7 +109,7 @@ export function ProposalPage({
         );
       }
 
-      if (!isFinished) {
+      if (isVotingActive) {
         startVotersPolling(
           proposal.data.id,
           proposal.data.votingChainId,
@@ -162,6 +165,7 @@ export function ProposalPage({
     lastPayloadCanceledAt,
     lastPayloadExecutedAt,
     lastPayloadExpiredAt,
+    isProposalExecuted,
   } = getProposalStepsAndAmounts({
     proposalData: proposal.data,
     quorum: proposal.config.quorum,
@@ -421,6 +425,15 @@ export function ProposalPage({
               </>
             </NoSSR>
 
+            <NoSSR>
+              <ProposalPayloads
+                proposalId={proposal.data.id}
+                isProposalExecuted={isProposalExecuted}
+                payloads={proposal.data.payloads}
+                setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+              />
+            </NoSSR>
+
             <Box
               sx={{
                 display: 'none',
@@ -465,9 +478,7 @@ export function ProposalPage({
                     proposal.data.votingMachineData.sentToGovernance
                   }
                   proposalQueuingTime={proposal.data.queuingTime}
-                  payloads={proposal.data.payloads}
                   cooldownPeriod={proposal.timings.cooldownPeriod}
-                  executionPayloadTime={proposal.timings.executionPayloadTime}
                   underlyingAssets={
                     proposal.data.votingMachineData.votingAssets
                   }
@@ -477,7 +488,6 @@ export function ProposalPage({
                   hasRequiredRoots={
                     proposal.data.votingMachineData.hasRequiredRoots
                   }
-                  setSelectedPayloadForExecute={setSelectedPayloadForExecute}
                 />
               </>
             </NoSSR>

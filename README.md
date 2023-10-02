@@ -57,18 +57,18 @@ git submodule update --remote --init
 
 You can deploy your version of the application using Vercel just by clicking on the following button, and following the instructions:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/bgd-labs/governance-v3-zustand)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbgd-labs%2Faave-governance-v3-interface)
 
 ### Hosted version
 
-We have our own hosted version from Vercel, you can access it on []() (TODO: need add domain link)
+We have our own hosted version from Vercel, you can access it on [https://vote.onaave.com/](https://vote.onaave.com/)
 
 <br>
 
 ## License
 
-Copyright © 2023, [BGD Labs](https://bgdlabs.com/).
+Copyright © 2023, Aave DAO, represented by its governance smart contracts.
 
-The contents of this repository are licensed under [BUSL1.1](./LICENSE).
+Created by BGD Labs.
 
 **IMPORTANT**. The BUSL1.1 license of this repository allows for any usage of the software, if respecting the *Additional Use Grant* limitations, forbidding any use case damaging anyhow the Aave DAO's interests.

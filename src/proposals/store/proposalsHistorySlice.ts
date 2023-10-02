@@ -1,6 +1,3 @@
-import { ethers } from 'ethers';
-import { produce } from 'immer';
-
 import {
   BasicProposalState,
   checkHash,
@@ -10,8 +7,11 @@ import {
   Proposal,
   ProposalState,
   ProposalWithLoadings,
-} from '../../../lib/helpers/src';
-import { StoreSlice } from '../../../lib/web3/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { ethers } from 'ethers';
+import { produce } from 'immer';
+
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { IWeb3Slice } from '../../web3/store/web3Slice';

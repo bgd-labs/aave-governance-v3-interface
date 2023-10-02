@@ -1,9 +1,14 @@
+import {
+  selectTxExplorerLink,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import LinkIcon from '/public/images/icons/link.svg';
+import LinkIcon from '/public/images/icons/linkIcon.svg';
+import RocketError from '/public/images/rocketError.svg';
+import RocketSuccess from '/public/images/rocketSuccess.svg';
 
-import { selectTxExplorerLink, WalletType } from '../../../lib/web3/src';
 import { useStore } from '../../store';
 import { BigButton, Link } from '../../ui';
 import { RocketLoader } from '../../ui/components/RocketLoader';
@@ -54,6 +59,8 @@ export function ActionModalContent({
   const theme = useTheme();
   const state = useStore();
 
+  const rocketSize = 77;
+
   return (
     <>
       {topBlock}
@@ -80,9 +87,36 @@ export function ActionModalContent({
               }}>
               {txPending && (
                 <Box sx={{ lineHeight: 0, ml: -13 }}>
-                  <RocketLoader />
+                  <RocketLoader size={rocketSize} />
                 </Box>
               )}
+              {isError && (
+                <IconBox
+                  sx={{
+                    width: rocketSize,
+                    height: rocketSize,
+                    '> svg': {
+                      width: rocketSize,
+                      height: rocketSize,
+                    },
+                  }}>
+                  <RocketError />
+                </IconBox>
+              )}
+              {txSuccess && (
+                <IconBox
+                  sx={{
+                    width: rocketSize,
+                    height: rocketSize,
+                    '> svg': {
+                      width: rocketSize,
+                      height: rocketSize,
+                    },
+                  }}>
+                  <RocketSuccess />
+                </IconBox>
+              )}
+
               <Box
                 component="h3"
                 sx={{
@@ -157,15 +191,14 @@ export function ActionModalContent({
                     </Box>
                     <IconBox
                       sx={{
-                        width: 10,
-                        height: 10,
+                        width: 12,
+                        height: 12,
                         '> svg': {
-                          width: 10,
-                          height: 10,
+                          width: 12,
+                          height: 12,
                         },
-                        ml: 3,
+                        ml: 4,
                         position: 'relative',
-                        bottom: 0.5,
                       }}>
                       <LinkIcon />
                     </IconBox>

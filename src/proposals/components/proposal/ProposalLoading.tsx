@@ -1,10 +1,10 @@
 'use client';
 
+import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import { ProposalMetadata } from '../../../../lib/helpers/src';
 import { BackButton3D, BoxWith3D, Container } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { Details } from './Details';
@@ -46,17 +46,6 @@ export function ProposalLoading({
               ) : (
                 <CustomSkeleton height={22} />
               )}
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                mb: 18,
-              }}>
-              <Box sx={{ mr: 12 }}>
-                <CustomSkeleton width={100} height={20} />
-              </Box>
-              <CustomSkeleton width={100} height={20} />
             </Box>
 
             {ipfsData ? (
@@ -222,9 +211,6 @@ export function ProposalLoading({
                     '.react-loading-skeleton': { width: 120 },
                   },
                 }}>
-                <Box sx={{ mr: 20 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
                 <Box sx={{ mr: 12 }}>
                   <CustomSkeleton height={20} />
                 </Box>
@@ -235,10 +221,9 @@ export function ProposalLoading({
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'column-reverse',
+                flexDirection: 'column',
                 mb: 28,
                 [theme.breakpoints.up('sm')]: {
-                  flexDirection: 'column',
                   mb: 0,
                 },
               }}>
@@ -255,9 +240,6 @@ export function ProposalLoading({
                     '.react-loading-skeleton': { width: 120 },
                   },
                 }}>
-                <Box sx={{ mr: 12 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
                 <Box sx={{ mr: 12 }}>
                   <CustomSkeleton height={20} />
                 </Box>

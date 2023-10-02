@@ -1,9 +1,9 @@
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
 
 import InfoIcon from '/public/images/icons/info.svg';
 
-import { selectLastTxByTypeAndPayload } from '../../../../lib/web3/src';
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
@@ -115,10 +115,6 @@ export function ProposalVotingPower({
               display: 'inline-flex',
               alignItems: 'center',
               position: 'relative',
-              top: 2,
-              [theme.breakpoints.up('xl')]: {
-                top: 1,
-              },
             }}>
             <RepresentationIcon
               address={representative.address}

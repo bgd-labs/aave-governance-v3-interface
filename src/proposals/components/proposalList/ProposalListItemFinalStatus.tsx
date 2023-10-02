@@ -1,10 +1,10 @@
+import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 
 import SuccessIcon from '/public/images/icons/check.svg';
 import ErrorIcon from '/public/images/icons/cross.svg';
 
-import { ProposalState } from '../../../../lib/helpers/src';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { proposalStatuses } from '../../utils/statuses';
 

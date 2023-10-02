@@ -1,12 +1,12 @@
-import { Box, useTheme } from '@mui/system';
-import { ethers } from 'ethers';
-import React, { useState } from 'react';
-
 import {
   formatProposal,
   ProposalState,
   ProposalWithLoadings,
-} from '../../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { Box, useTheme } from '@mui/system';
+import { ethers } from 'ethers';
+import React, { useState } from 'react';
+
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
 import { ChainNameWithIcon } from '../../../ui/components/ChainNameWithIcon';
@@ -124,6 +124,13 @@ export function ActiveProposalListItem({
           if (!isForHelpModal) {
             setIsClicked(true);
           }
+        }}
+        sx={{
+          '&:visited': {
+            '.VoteLine': {
+              borderColor: `${theme.palette.$mainElements} !important`,
+            },
+          },
         }}>
         <ProposalListItemWrapper
           isVotingActive={isVotingActive}

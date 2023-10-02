@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
-
 import {
   CachedProposalDataItemWithId,
   ContractsConstants,
   FinishedProposalForList,
   VotingConfig,
-} from '../../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import React, { useEffect } from 'react';
+
 import { useStore } from '../../../store';
 import { Container } from '../../../ui';
 import ProposalListWrapper from './ProposalListWrapper';

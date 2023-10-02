@@ -2,7 +2,7 @@ import createEmotionServer from '@emotion/server/create-instance';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import * as React from 'react';
 
-import { texts } from '../src/ui/utils/texts';
+import { metaTexts } from '../src/ui/utils/metaTexts';
 import { createEmotionCache } from '../src/ui/utils/themeMUI';
 
 const scriptForIpfs = `
@@ -40,34 +40,34 @@ export default class MyDocument extends Document {
 
           <script dangerouslySetInnerHTML={{ __html: scriptForIpfs }} />
 
-          <title>{texts.meta.ipfsTitle}</title>
+          <title>{metaTexts.ipfsTitle}</title>
           <meta
             name="description"
-            content={texts.meta.ipfsDescription}
+            content={metaTexts.ipfsDescription}
             key="description"
           />
           <meta
             property="og:title"
-            content={`${texts.meta.ipfsTitle}`}
+            content={`${metaTexts.ipfsTitle}`}
             key="title"
           />
           <meta
             property="og:description"
-            content={texts.meta.ipfsDescription}
+            content={metaTexts.ipfsDescription}
             key="ogdescription"
           />
           <meta property="twitter:card" content="summary" key="twittercard" />
           <meta
             name="twitter:title"
-            content={`${texts.meta.ipfsDescription}`}
+            content={`${metaTexts.ipfsDescription}`}
             key="twittertitle"
           />
           <meta
             name="twitter:description"
-            content={texts.meta.ipfsDescription}
+            content={metaTexts.ipfsDescription}
             key="twitterdescription"
           />
-          <meta name="keywords" key="keywords" content={texts.meta.keywords} />
+          <meta name="keywords" key="keywords" content={metaTexts.keywords} />
 
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"

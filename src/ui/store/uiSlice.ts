@@ -1,7 +1,7 @@
+import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { produce } from 'immer';
 
-import { ProposalWithLoadings } from '../../../lib/helpers/src';
-import { IWalletSlice, StoreSlice } from '../../../lib/web3/src';
 import { DelegateItem } from '../../delegate/types';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { isForIPFS } from '../../utils/appConfig';
