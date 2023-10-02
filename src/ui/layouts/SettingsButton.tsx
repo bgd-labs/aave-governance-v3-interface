@@ -6,7 +6,7 @@ import SettingsIcon from '/public/images/icons/settings.svg';
 import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
 
 import { useStore } from '../../store';
-import { isForIPFS } from '../../utils/appConfig';
+import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { BoxWith3D, Divider, ThemeSwitcher } from '../';
 import { IconBox } from '../primitives/IconBox';
 import { texts } from '../utils/texts';
@@ -122,7 +122,7 @@ export function SettingsButton() {
                 </Box>
                 <Divider sx={{ my: 10 }} />
                 <ThemeSwitcher />
-                {!isForIPFS && (
+                {!isForIPFS && isTermsAndConditionsVisible && (
                   <>
                     <Divider sx={{ my: 10 }} />
                     <Box
