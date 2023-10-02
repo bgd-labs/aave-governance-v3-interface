@@ -1,11 +1,12 @@
 import {
   appConfigInit,
-  ChainIdByName,
   CoreNetworkName,
   payloadsControllerChainIds,
   votingMachineChainIds,
-} from '../../lib/helpers/src';
-import { StaticJsonRpcBatchProvider } from '../../lib/web3/src/utils/StaticJsonRpcBatchProvider';
+} from '@bgd-labs/aave-governance-ui-helpers/src/helpers/appConfig';
+import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src/utils/StaticJsonRpcBatchProvider';
+
 import { chainInfoHelper } from './configs';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';

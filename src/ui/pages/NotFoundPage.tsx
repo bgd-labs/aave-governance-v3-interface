@@ -9,6 +9,7 @@ import { Link } from '../components/Link';
 import { NoDataWrapper } from '../components/NoDataWrapper';
 import { Container } from '../primitives/Container';
 import NoSSR from '../primitives/NoSSR';
+import { metaTexts } from '../utils/metaTexts';
 import { ROUTES } from '../utils/routes';
 import { texts } from '../utils/texts';
 
@@ -30,14 +31,14 @@ export function NotFoundPage() {
                 width="100%"
                 height="auto"
                 src="/404/404Dark.svg"
-                alt={`404 - ${texts.meta.notFoundPageMetaTitle}`}
+                alt={`404 - ${metaTexts.notFoundPageMetaTitle}`}
               />
             ) : (
               <img
                 width="100%"
                 height="auto"
                 src="/404/404.svg"
-                alt={`404 - ${texts.meta.notFoundPageMetaTitle}`}
+                alt={`404 - ${metaTexts.notFoundPageMetaTitle}`}
               />
             )}
           </NoSSR>

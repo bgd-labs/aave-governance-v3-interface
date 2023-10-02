@@ -1,3 +1,4 @@
+import { selectTxExplorerLink } from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -7,7 +8,6 @@ import CopyIcon from '/public/images/icons/copy.svg';
 import CrossIcon from '/public/images/icons/cross.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { selectTxExplorerLink } from '../../../lib/web3/src';
 import { DelegatedText } from '../../delegate/components/DelegatedText';
 import { TxText } from '../../representations/components/TxText';
 import { useStore } from '../../store';

@@ -1,6 +1,6 @@
+import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils/src';
 import React from 'react';
 
-import { selectAllTransactionsByWallet } from '../../../lib/web3/src';
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
 import { useStore } from '../../store';
 import { BasicModal } from '../../ui';

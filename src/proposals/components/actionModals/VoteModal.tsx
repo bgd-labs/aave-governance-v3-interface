@@ -1,3 +1,10 @@
+import {
+  Balance,
+  formatProposal,
+  getEstimatedState,
+  ProposalState,
+  valueToBigNumber,
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import {
   getSafeSingletonDeployment,
@@ -12,13 +19,6 @@ import React, { useEffect, useState } from 'react';
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
 import InfoIcon from '/public/images/icons/info.svg';
 
-import {
-  Balance,
-  formatProposal,
-  getEstimatedState,
-  ProposalState,
-  valueToBigNumber,
-} from '../../../../lib/helpers/src';
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
 import { useStore } from '../../../store';
 import { BasicActionModal } from '../../../transactions/components/BasicActionModal';

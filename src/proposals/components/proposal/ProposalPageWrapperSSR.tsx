@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-
 import {
   CachedDetails,
   getVotingMachineProposalState,
   ProposalData,
   ProposalWithLoadings,
   VotersData,
-} from '../../../../lib/helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers/src';
+import React, { useEffect } from 'react';
+
 import { useStore } from '../../../store';
 import { setProposalDetailsVoters } from '../../store/proposalsSelectors';
 import { ProposalPageWrapper } from './ProposalPageWrapper';

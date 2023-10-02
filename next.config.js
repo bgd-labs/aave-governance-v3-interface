@@ -31,6 +31,10 @@ const nextConfig = {
 
     return config;
   },
+  transpilePackages: [
+    '@bgd-labs/frontend-web3-utils',
+    '@bgd-labs/aave-governance-ui-helpers',
+  ],
   reactStrictMode: true,
   trailingSlash: true,
 };

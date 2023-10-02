@@ -1,10 +1,10 @@
+import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
 import { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 
-import { InitialPayload } from '../../../lib/helpers/src';
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { BigButton, BoxWith3D, Input } from '../../ui';

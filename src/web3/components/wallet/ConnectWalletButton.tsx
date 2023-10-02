@@ -1,3 +1,9 @@
+import {
+  LocalStorageKeys,
+  selectAllTransactions,
+  selectPendingTransactions,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import makeBlockie from 'ethereum-blockies-base64';
 import React, { useEffect, useState } from 'react';
@@ -5,12 +11,6 @@ import React, { useEffect, useState } from 'react';
 import SuccessIcon from '/public/images/icons/check.svg';
 import ErrorIcon from '/public/images/icons/cross.svg';
 
-import {
-  LocalStorageKeys,
-  selectAllTransactions,
-  selectPendingTransactions,
-  WalletType,
-} from '../../../../lib/web3/src';
 import { RepresentativeAddress } from '../../../representations/store/representationsSlice';
 import { useStore } from '../../../store';
 import { Image, Spinner } from '../../../ui';

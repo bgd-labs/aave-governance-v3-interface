@@ -1,7 +1,7 @@
+import { ProposalWaitForState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, SxProps } from '@mui/system';
 import dayjs from 'dayjs';
 
-import { ProposalWaitForState } from '../../../lib/helpers/src';
 import { ProposalStatus, ProposalStatusProps } from './ProposalStatus';
 
 export interface ProposalStatusWithDateProps extends ProposalStatusProps {

@@ -49,8 +49,20 @@ jobs:
           BUILD_LOCATION: './out'
           CID_VERSION: 1
 
-      - name: Create or update commit comment
-        uses: peter-evans/commit-comment@4a537e71b0d89d18c5534e8aaba515f828f7383b
+      - name: Amend ipfs link to release
+        uses: actions/github-script@v6
+        if: contains(github.event.head_commit.message, 'chore(main):')
         with:
-          sha: ${{ github.sha }}
-          body: ${{ steps.pinata.outputs.uri }}
+          retries: 3
+          script: |
+            const release = await github.rest.repos.getLatestRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            })
+
+            github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: release.data.id
+              body: release.data.body + `\nIpfs deployment: [${{steps.pinata.outputs.hash}}](${{steps.pinata.outputs.uri}})`
+            })

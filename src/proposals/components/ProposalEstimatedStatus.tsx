@@ -1,7 +1,7 @@
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, SxProps } from '@mui/system';
 import { useEffect } from 'react';
 
-import { ProposalEstimatedState } from '../../../lib/helpers/src';
 import { useStore } from '../../store';
 import { Timer } from '../../ui';
 

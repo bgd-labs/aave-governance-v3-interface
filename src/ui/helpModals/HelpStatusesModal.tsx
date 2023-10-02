@@ -1,3 +1,4 @@
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -5,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import BackArrow from '/public/images/icons/arrowToLeft.svg';
 import NextArrow from '/public/images/icons/arrowToRight.svg';
 
-import { ProposalStateWithName } from '../../../lib/helpers/src';
 import { ProposalTimeline } from '../../proposals/components/proposal/ProposalTimeline';
 import { useStore } from '../../store';
 import { BigButton } from '../';

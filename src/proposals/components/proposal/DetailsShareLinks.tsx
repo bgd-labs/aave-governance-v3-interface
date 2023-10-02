@@ -1,10 +1,13 @@
+import {
+  ipfsGateway,
+  ProposalMetadata,
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, styled } from '@mui/system';
 import React from 'react';
 
 import Download from '/public/images/icons/download.svg';
 import Twitter from '/public/images/icons/twitterX.svg';
 
-import { ipfsGateway, ProposalMetadata } from '../../../../lib/helpers/src';
 import { useStore } from '../../../store';
 import { Link, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';

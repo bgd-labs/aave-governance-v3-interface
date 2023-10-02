@@ -1,7 +1,7 @@
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import { ProposalEstimatedState } from '../../../../lib/helpers/src';
 import { BoxWith3D } from '../../../ui';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';

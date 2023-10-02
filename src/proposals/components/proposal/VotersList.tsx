@@ -1,7 +1,7 @@
+import { VotersData } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import { VotersData } from '../../../../lib/helpers/src';
 import { Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
