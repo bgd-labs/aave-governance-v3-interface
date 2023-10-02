@@ -31,13 +31,9 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 First run:
 
 ```sh
-git submodule init
-git submodule update --remote --init
-yarn
-
-yarn dev
+yarn && yarn dev
 // or
-yarn build && yarn start
+yarn && yarn build && yarn start
 ```
 
 After the first run:
@@ -45,12 +41,6 @@ After the first run:
 yarn dev
 // or
 yarn build && yarn start
-```
-
-For submodules update:
-
-```sh
-git submodule update --remote --init
 ```
 
 ### Deploy your own Vercel instance

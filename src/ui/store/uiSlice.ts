@@ -4,7 +4,7 @@ import { produce } from 'immer';
 
 import { DelegateItem } from '../../delegate/types';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
-import { isForIPFS } from '../../utils/appConfig';
+import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { getDelegateData } from '../helpModals/getDelegateData';
 import { getProposalData } from '../helpModals/getProposalData';
 import {
@@ -199,7 +199,11 @@ export const createUISlice: StoreSlice<
 
   isAppBlockedByTerms: false,
   checkIsAppBlockedByTerms: () => {
-    if (localStorage?.getItem('termsAccept') !== 'true' && !isForIPFS) {
+    if (
+      localStorage?.getItem('termsAccept') !== 'true' &&
+      !isForIPFS &&
+      isTermsAndConditionsVisible
+    ) {
       set({ isAppBlockedByTerms: true });
     } else {
       set({ isAppBlockedByTerms: false });
