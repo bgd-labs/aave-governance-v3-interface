@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Logo from '/public/images/logo.svg';
 
 import { useStore } from '../../store';
-import { isForIPFS } from '../../utils/appConfig';
+import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { WalletWidget } from '../../web3/components/wallet/WalletWidget';
 import { BoxWith3D } from '../components/BoxWith3D';
 import { Link } from '../components/Link';
@@ -478,7 +478,7 @@ export function AppHeader() {
                   )}
                 </React.Fragment>
               ))}
-              {!isForIPFS && (
+              {!isForIPFS && isTermsAndConditionsVisible && (
                 <Box
                   component="button"
                   type="button"

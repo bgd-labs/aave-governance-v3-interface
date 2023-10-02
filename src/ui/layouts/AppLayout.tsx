@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 
 import { RepresentationInfoModal } from '../../representations/components/RepresentationInfoModal';
 import { useStore } from '../../store';
-import { isForIPFS } from '../../utils/appConfig';
+import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import Web3HelperProvider from '../../web3/providers/Web3HelperProvider';
 import Web3Provider from '../../web3/providers/Web3Provider';
 import { TermsAndConditionsModal } from '../components/TermsAndConditionsModal';
@@ -39,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <HelpModalProvider />
       <RepresentationInfoModal />
 
-      {!isForIPFS && (
+      {!isForIPFS && isTermsAndConditionsVisible && (
         <>
           <TermsAndConditionsModal />
           <TermsPreAppModal />
