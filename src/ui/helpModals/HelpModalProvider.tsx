@@ -10,6 +10,7 @@ import { HelpDelegationPP } from './HelpDelegationPP';
 import { HelpDelegationVP } from './HelpDelegationVP';
 import { HelpModalNavigation, InfoType } from './HelpModalNavigation';
 import { HelpModalWrapper } from './HelpModalWrapper';
+import { HelpRepresentationModal } from './HelpRepresentationModal';
 import { HelpRepresentativeModal } from './HelpRepresentativeModal';
 import { HelpStatusesModal } from './HelpStatusesModal';
 import { HelpVotingBarsModal } from './HelpVotingBarsModal';
@@ -117,6 +118,7 @@ export function HelpModalProvider() {
           <HelpVotingModal />
           <HelpDelegateModal infoType={infoType} />
           <HelpRepresentativeModal />
+          <HelpRepresentationModal infoType={infoType} />
           <HelpStatusesModal infoType={infoType} />
           <HelpVotingPowerModal />
           <HelpVotingBarsModal />

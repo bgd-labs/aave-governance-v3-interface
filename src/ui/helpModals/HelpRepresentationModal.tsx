@@ -6,29 +6,29 @@ import { Form } from 'react-final-form';
 
 import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
 
-import { DelegateTableWrapper } from '../../delegate/components/DelegateTableWrapper';
-import { DelegateData } from '../../delegate/types';
+import { RepresentationsTableWrapper } from '../../representations/components/RepresentationsTableWrapper';
+import { RepresentationFormData } from '../../representations/store/representationsSlice';
 import { useStore } from '../../store';
-import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
+import { BigButton } from '../components/BigButton';
 import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
 import { useMediaQuery } from '../utils/useMediaQuery';
-import { HelpDelegateTx } from './HelpDelegateTx';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
 import { InfoType } from './HelpModalNavigation';
-import { HelpModalTextButton } from './HelpModalTextButton';
-import { HelpModalTooltip } from './HelpModalTooltip';
+import { HelpRepresentationsTx } from './HelpRepresentationsTx';
 import { HelpTxWrapper } from './HelpTxWrapper';
 
-interface HelpDelegateModalProps {
+interface HelpRepresentationModalProps {
   infoType?: InfoType;
 }
 
-export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
+export function HelpRepresentationModal({
+  infoType,
+}: HelpRepresentationModalProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
@@ -36,66 +36,60 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
   const [txSuccess, setTxSuccess] = useState(false);
   const [isFirstStepOnMobile, setIsFirstStepOnMobile] = useState(true);
 
+  const [formData, setFormData] = useState<RepresentationFormData[]>([]);
   const [isEdit, setIsEdit] = useState(false);
-  const [isDelegateChangedView, setIsDelegateChangedView] = useState(false);
-  const [formDelegateData, setFormDelegateData] = useState<DelegateData[]>([]);
+  const [isRepresentationsChangedView, setIsRepresentationsChangedView] =
+    useState(false);
 
   const {
+    helpRepresentationsData,
+    getHelpRepresentationsData,
+    setHelpRepresentationsData,
     isHelpModalClosed,
-    isHelpDelegateModalOpen,
-    setIsHelpDelegateModalOpen,
     setIsHelpNavigationModalOpen,
     setIsHelpWalletModalOpen,
-    helpDelegateData,
-    getHelpDelegateData,
-    setIsHelpDelegationVotingPowerModalOpen,
-    setIsHelpDelegationPropositionPowerModalOpen,
-    setHelpDelegateData,
     setIsHelpRepresentativeModalOpen,
+    setIsHelpRepresentationModalOpen,
+    isHelpRepresentationModalOpen,
   } = useStore();
 
   useEffect(() => {
-    getHelpDelegateData();
-    setFormDelegateData([]);
+    getHelpRepresentationsData();
+    setFormData([]);
     setIsEdit(false);
-    setIsDelegateChangedView(false);
+    setIsRepresentationsChangedView(false);
     setTxPending(false);
     setTxSuccess(false);
   }, [isHelpModalClosed]);
 
   useEffect(() => {
     if (!sm) {
-      setFormDelegateData([]);
+      setFormData([]);
       setIsEdit(false);
-      setIsDelegateChangedView(false);
+      setIsRepresentationsChangedView(false);
       setTxPending(false);
       setTxSuccess(false);
       setIsFirstStepOnMobile(true);
     }
   }, [sm]);
 
-  if (!helpDelegateData) return null;
+  if (!helpRepresentationsData) return null;
+
+  const initialData = Object.entries(helpRepresentationsData).map((data) => {
+    return {
+      chainId: +data[0],
+      representative: data[1].representative,
+    };
+  });
 
   const handleFormSubmit = ({
-    formDelegateData,
+    formData,
   }: {
-    formDelegateData: DelegateData[];
+    formData: RepresentationFormData[];
   }) => {
-    const formattedFormData = formDelegateData.map((data) => {
-      return {
-        underlyingAsset: data.underlyingAsset,
-        votingToAddress:
-          data.votingToAddress === undefined ? '' : data.votingToAddress,
-        propositionToAddress:
-          data.propositionToAddress === undefined
-            ? ''
-            : data.propositionToAddress,
-      };
-    });
-
-    setFormDelegateData(formattedFormData);
+    setFormData(formData);
     setIsEdit(false);
-    setIsDelegateChangedView(true);
+    setIsRepresentationsChangedView(true);
   };
 
   const handleDelegate = async () => {
@@ -103,25 +97,15 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
     setTimeout(() => {
       setTxPending(false);
       setTxSuccess(true);
-      setIsDelegateChangedView(false);
-      setHelpDelegateData(
-        helpDelegateData.map((item) => {
-          return {
-            symbol: item.symbol,
-            amount: item.amount,
-            underlyingAsset: formDelegateData[0].underlyingAsset,
-            votingToAddress: formDelegateData[0].votingToAddress,
-            propositionToAddress: formDelegateData[0].propositionToAddress,
-          };
-        }),
-      );
+      setIsRepresentationsChangedView(false);
+      setHelpRepresentationsData(formData);
     }, 3000);
   };
 
   const DelegateModalTexts = () => {
     return (
       <>
-        {!isEdit && !isDelegateChangedView && !txSuccess && (
+        {!isEdit && !isRepresentationsChangedView && !txSuccess && (
           <>
             <Box
               component="p"
@@ -186,7 +170,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
             </Box>
           </>
         )}
-        {isEdit && !isDelegateChangedView && !txSuccess && (
+        {isEdit && !isRepresentationsChangedView && !txSuccess && (
           <>
             <Box
               component="p"
@@ -228,7 +212,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
             </Box>
           </>
         )}
-        {!isEdit && isDelegateChangedView && !txSuccess && (
+        {!isEdit && isRepresentationsChangedView && !txSuccess && (
           <>
             <Box
               component="p"
@@ -257,7 +241,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
             </Box>
           </>
         )}
-        {!isEdit && !isDelegateChangedView && txSuccess && (
+        {!isEdit && !isRepresentationsChangedView && txSuccess && (
           <>
             <Box
               component="p"
@@ -293,27 +277,27 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
     <BasicModal
       withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
-      isOpen={isHelpDelegateModalOpen}
-      setIsOpen={setIsHelpDelegateModalOpen}
+      isOpen={isHelpRepresentationModalOpen}
+      setIsOpen={setIsHelpRepresentationModalOpen}
       withCloseButton
       onBackButtonClick={
         txSuccess
           ? () => {
-              setFormDelegateData([]);
+              setFormData([]);
               setTxPending(false);
               setTxSuccess(false);
             }
           : !isFirstStepOnMobile
           ? () => {
-              setFormDelegateData([]);
+              setFormData([]);
               setIsEdit(false);
-              setIsDelegateChangedView(false);
+              setIsRepresentationsChangedView(false);
               setTxPending(false);
               setTxSuccess(false);
               setIsFirstStepOnMobile(true);
             }
           : () => {
-              setIsHelpDelegateModalOpen(false);
+              setIsHelpRepresentationModalOpen(false);
               infoType === InfoType.WalletOptions
                 ? setIsHelpWalletModalOpen(true)
                 : infoType === InfoType.Representation
@@ -325,13 +309,13 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
         onMainButtonClick={
           txSuccess && !txPending
             ? () => {
-                getHelpDelegateData();
-                setFormDelegateData([]);
+                getHelpRepresentationsData();
+                setFormData([]);
                 setIsEdit(false);
-                setIsDelegateChangedView(false);
+                setIsRepresentationsChangedView(false);
                 setTxPending(false);
                 setTxSuccess(false);
-                setIsHelpDelegateModalOpen(false);
+                setIsHelpRepresentationModalOpen(false);
                 setIsHelpNavigationModalOpen(true);
                 setIsFirstStepOnMobile(true);
               }
@@ -343,12 +327,12 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
               caption={
                 txSuccess
                   ? texts.faq.delegate.delegated
-                  : isEdit && !isDelegateChangedView && !txSuccess
+                  : isEdit && !isRepresentationsChangedView && !txSuccess
                   ? texts.faq.delegate.editMode
-                  : !isEdit && isDelegateChangedView && !txSuccess
+                  : !isEdit && isRepresentationsChangedView && !txSuccess
                   ? texts.faq.delegate.confirmation
                   : !isEdit &&
-                    !isDelegateChangedView &&
+                    !isRepresentationsChangedView &&
                     !txSuccess &&
                     !isFirstStepOnMobile
                   ? texts.faq.delegate.delegationBar
@@ -363,7 +347,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                       theme.palette.mode === 'dark'
                         ? `url(${setRelativePath(
                             `/images/helpModals/${
-                              isDelegateChangedView
+                              isRepresentationsChangedView
                                 ? 'delegationChange'
                                 : isEdit
                                 ? 'delegationEdit'
@@ -372,7 +356,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                           )})`
                         : `url(${setRelativePath(
                             `/images/helpModals/${
-                              isDelegateChangedView
+                              isRepresentationsChangedView
                                 ? 'delegationChange'
                                 : isEdit
                                 ? 'delegationEdit'
@@ -384,7 +368,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     backgroundRepeat: 'no-repeat',
                     display:
                       !isEdit &&
-                      !isDelegateChangedView &&
+                      !isRepresentationsChangedView &&
                       !txSuccess &&
                       isFirstStepOnMobile
                         ? 'block'
@@ -425,224 +409,66 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
               }}>
               <Box
                 sx={{
-                  display: 'none',
-                  [theme.breakpoints.up('md')]: {
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    mb: -10,
-                  },
-                }}>
-                <Box sx={{ flex: 1 }} />
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flex: 2,
-                    ml: 20,
-                    [theme.breakpoints.up('lg')]: {
-                      ml: 45,
-                    },
-                  }}>
-                  <HelpModalTooltip maxWidth={270}>
-                    <Box component="p" sx={{ typography: 'body' }}>
-                      {texts.faq.delegate.tooltipFirstPart}{' '}
-                      <HelpModalTextButton
-                        white
-                        onClick={() => {
-                          setIsHelpDelegateModalOpen(false);
-                          setIsHelpDelegationVotingPowerModalOpen(true);
-                        }}>
-                        <>{texts.faq.delegate.votingPower}</>
-                      </HelpModalTextButton>
-                    </Box>
-                  </HelpModalTooltip>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flex: 2,
-                    mr: 30,
-                    [theme.breakpoints.up('lg')]: {
-                      mr: 50,
-                    },
-                  }}>
-                  <HelpModalTooltip maxWidth={270} countNumber={2}>
-                    <Box component="p" sx={{ typography: 'body' }}>
-                      {texts.faq.delegate.tooltipFirstPart}{' '}
-                      <HelpModalTextButton
-                        white
-                        onClick={() => {
-                          setIsHelpDelegateModalOpen(false);
-                          setIsHelpDelegationPropositionPowerModalOpen(true);
-                        }}>
-                        <>{texts.faq.delegate.propositionPower}</>
-                      </HelpModalTextButton>
-                    </Box>
-                  </HelpModalTooltip>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
                   width: '100%',
                   position: 'relative',
                 }}>
                 <Box
                   sx={{
-                    position: 'absolute',
-                    left: -5,
-                    top: 90,
-                    display:
-                      !isEdit && !isDelegateChangedView && !txSuccess
-                        ? 'block'
-                        : 'none',
-                    [theme.breakpoints.up('sm')]: {
-                      display: 'block',
-                      left: -5,
-                      top: 105,
-                    },
-                    [theme.breakpoints.up('md')]: {
-                      display: 'none',
-                    },
-                  }}>
-                  <HelpModalTooltip maxWidth={270} mobileBottomPadding={30}>
-                    <Box component="p" sx={{ typography: 'body' }}>
-                      {texts.faq.delegate.tooltipFirstPart}{' '}
-                      <HelpModalTextButton
-                        white
-                        onClick={() => {
-                          setIsHelpDelegateModalOpen(false);
-                          setIsHelpDelegationVotingPowerModalOpen(true);
-                        }}>
-                        <>{texts.faq.delegate.votingPower}</>
-                      </HelpModalTextButton>
-                    </Box>
-                  </HelpModalTooltip>
-                </Box>
-
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    left: -5,
-                    bottom: 95,
-                    display:
-                      !isEdit && !isDelegateChangedView && !txSuccess
-                        ? 'block'
-                        : 'none',
-                    [theme.breakpoints.up('sm')]: {
-                      display: 'block',
-                      left: -5,
-                      bottom: 110,
-                    },
-                    [theme.breakpoints.up('md')]: {
-                      display: 'none',
-                    },
-                  }}>
-                  <HelpModalTooltip
-                    maxWidth={270}
-                    countNumber={2}
-                    mobileBottomPadding={30}>
-                    <Box component="p" sx={{ typography: 'body' }}>
-                      {texts.faq.delegate.tooltipFirstPart}{' '}
-                      <HelpModalTextButton
-                        white
-                        onClick={() => {
-                          setIsHelpDelegateModalOpen(false);
-                          setIsHelpDelegationPropositionPowerModalOpen(true);
-                        }}>
-                        <>{texts.faq.delegate.propositionPower}</>
-                      </HelpModalTextButton>
-                    </Box>
-                  </HelpModalTooltip>
-                </Box>
-
-                <Box
-                  sx={{
                     pl:
-                      !isEdit && !isDelegateChangedView && !txSuccess ? 15 : 0,
+                      !isEdit && !isRepresentationsChangedView && !txSuccess
+                        ? 15
+                        : 0,
                     transition: 'all 0.2s ease',
                     [theme.breakpoints.up('sm')]: { pl: 0 },
                   }}>
-                  {!isEdit && isDelegateChangedView && (
-                    <DelegateTableWrapper
-                      forHelp
+                  {!isEdit && isRepresentationsChangedView && (
+                    <RepresentationsTableWrapper
                       loading={false}
-                      delegateData={helpDelegateData}
+                      representationData={helpRepresentationsData}
                       isEdit={isEdit}
-                      isViewChanges={isDelegateChangedView}
-                      formDelegateData={formDelegateData}>
+                      isViewChanges={isRepresentationsChangedView}
+                      formData={formData}>
                       <BigButton
                         alwaysWithBorders
                         color="white"
                         css={{ mr: 24 }}
                         onClick={() => {
-                          setFormDelegateData(
-                            helpDelegateData.map((data) => {
-                              return {
-                                underlyingAsset: data.underlyingAsset,
-                                votingToAddress: data.votingToAddress,
-                                propositionToAddress: data.propositionToAddress,
-                              };
-                            }),
-                          );
-                          setIsDelegateChangedView(false);
+                          setFormData(initialData);
+                          setIsRepresentationsChangedView(false);
                         }}>
                         {texts.other.cancel}
                       </BigButton>
                       <BigButton
                         alwaysWithBorders
                         onClick={handleDelegate}
-                        disabled={isEqual(
-                          helpDelegateData.map((data) => {
-                            return {
-                              underlyingAsset: data.underlyingAsset,
-                              votingToAddress: data.votingToAddress,
-                              propositionToAddress: data.propositionToAddress,
-                            };
-                          }),
-                          formDelegateData,
-                        )}>
+                        disabled={isEqual(initialData, formData)}>
                         {texts.other.confirm}
                       </BigButton>
-                    </DelegateTableWrapper>
+                    </RepresentationsTableWrapper>
                   )}
-                  {isEdit && !isDelegateChangedView && (
-                    <Form<{ formDelegateData: DelegateData[] }>
+                  {isEdit && !isRepresentationsChangedView && (
+                    <Form<{ formData: RepresentationFormData[] }>
                       mutators={{
                         ...arrayMutators,
                       }}
                       onSubmit={handleFormSubmit}
                       initialValues={{
-                        formDelegateData: formDelegateData,
+                        formData: formData,
                       }}>
-                      {({ handleSubmit, values }) => (
-                        <DelegateTableWrapper
-                          forHelp
+                      {({ handleSubmit, values, errors }) => (
+                        <RepresentationsTableWrapper
                           loading={false}
-                          delegateData={helpDelegateData}
+                          representationData={helpRepresentationsData}
                           isEdit={isEdit}
-                          isViewChanges={isDelegateChangedView}
-                          formDelegateData={formDelegateData}
+                          isViewChanges={isRepresentationsChangedView}
+                          formData={formData}
                           handleFormSubmit={handleSubmit}>
                           <BigButton
                             alwaysWithBorders
                             color="white"
                             css={{ mr: 24 }}
                             onClick={() => {
-                              setFormDelegateData(
-                                helpDelegateData.map((data) => {
-                                  return {
-                                    underlyingAsset: data.underlyingAsset,
-                                    votingToAddress: data.votingToAddress,
-                                    propositionToAddress:
-                                      data.propositionToAddress,
-                                  };
-                                }),
-                              );
+                              setFormData(initialData);
                               setIsEdit(false);
                             }}>
                             {texts.other.close}
@@ -651,52 +477,39 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                             alwaysWithBorders
                             type="submit"
                             disabled={isEqual(
-                              formDelegateData,
-                              values.formDelegateData.map((data) => {
+                              formData,
+                              values.formData.map((data) => {
                                 return {
-                                  underlyingAsset: data.underlyingAsset,
-                                  votingToAddress:
-                                    data.votingToAddress === undefined
+                                  chainId: data.chainId,
+                                  representative:
+                                    data.representative === undefined
                                       ? ''
-                                      : data.votingToAddress,
-                                  propositionToAddress:
-                                    data.propositionToAddress === undefined
-                                      ? ''
-                                      : data.propositionToAddress,
+                                      : data.representative,
                                 };
                               }),
                             )}>
                             {texts.delegatePage.viewChanges}
                           </BigButton>
-                        </DelegateTableWrapper>
+                        </RepresentationsTableWrapper>
                       )}
                     </Form>
                   )}
-                  {!isEdit && !isDelegateChangedView && (
-                    <DelegateTableWrapper
-                      forHelp
+                  {!isEdit && !isRepresentationsChangedView && (
+                    <RepresentationsTableWrapper
                       loading={false}
-                      delegateData={helpDelegateData}
+                      representationData={helpRepresentationsData}
                       isEdit={isEdit}
-                      isViewChanges={isDelegateChangedView}>
+                      isViewChanges={isRepresentationsChangedView}>
                       <BigButton
                         onClick={() => {
-                          setFormDelegateData(
-                            helpDelegateData.map((data) => {
-                              return {
-                                underlyingAsset: data.underlyingAsset,
-                                votingToAddress: data.votingToAddress,
-                                propositionToAddress: data.propositionToAddress,
-                              };
-                            }),
-                          );
+                          setFormData(initialData);
                           setIsEdit(true);
                           setTxSuccess(false);
                         }}
                         alwaysWithBorders>
                         {texts.other.edit}
                       </BigButton>
-                    </DelegateTableWrapper>
+                    </RepresentationsTableWrapper>
                   )}
                 </Box>
               </Box>
@@ -726,16 +539,16 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
             txEndImageMobile="images/helpModals/txLoadingMobile.svg"
             withTxOnMobile
             txBlock={
-              <HelpDelegateTx
+              <HelpRepresentationsTx
                 txPending={txPending}
                 txSuccess={txSuccess}
-                formDelegateData={formDelegateData}
-                delegateData={helpDelegateData}
+                initialData={initialData}
+                formData={formData}
                 handleCancelClick={() => {
                   setTxPending(false);
                   setTxSuccess(false);
-                  setIsDelegateChangedView(false);
-                  setHelpDelegateData([]);
+                  setIsRepresentationsChangedView(false);
+                  setHelpRepresentationsData([]);
                 }}
               />
             }>
