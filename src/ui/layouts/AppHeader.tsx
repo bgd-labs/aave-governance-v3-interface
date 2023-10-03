@@ -50,13 +50,13 @@ export function AppHeader() {
     setActivePage,
     activeWallet,
     checkAppMode,
-    checkTutorialStartButtonClick,
     appMode,
     isModalOpen,
-
+    isAppBlockedByTerms,
     isClickedOnStartButtonOnHelpModal,
     setIsTermModalOpen,
     setIsRepresentationInfoModalOpen,
+    closeHelpModals,
   } = useStore();
 
   const { scrollDirection } = useScrollDirection();
@@ -69,6 +69,8 @@ export function AppHeader() {
     }
     setMobileMenuOpen(true);
     setIsRepresentationInfoModalOpen(false);
+    setIsTermModalOpen(false);
+    closeHelpModals();
   };
 
   const handleCloseMobileMenu = () => {
@@ -85,7 +87,6 @@ export function AppHeader() {
   });
 
   useEffect(() => {
-    checkTutorialStartButtonClick();
     checkAppMode();
   }, [activeWallet?.isActive]);
 
@@ -114,7 +115,12 @@ export function AppHeader() {
         component="header"
         sx={{
           position: 'sticky',
-          top: scrollDirection === 'down' ? (isModalOpen ? 0 : -82) : 0,
+          top:
+            scrollDirection === 'down'
+              ? isModalOpen || isAppBlockedByTerms
+                ? 0
+                : -82
+              : 0,
           py: mobileMenuOpen ? 0 : 12,
           zIndex: 110,
           mb: 12,
@@ -224,7 +230,10 @@ export function AppHeader() {
                     {item.title === texts.header.navTutorial ? (
                       <Box
                         component="button"
-                        onClick={() => setIsHelpModalOpen(true)}
+                        onClick={() => {
+                          closeHelpModals();
+                          setIsHelpModalOpen(true);
+                        }}
                         sx={{
                           color: '$textLight',
                           mr: 15,
@@ -440,6 +449,8 @@ export function AppHeader() {
                       component="button"
                       type="button"
                       onClick={() => {
+                        closeHelpModals();
+                        setIsTermModalOpen(false);
                         setIsHelpModalOpen(true);
                         handleCloseMobileMenu();
                       }}
@@ -478,6 +489,7 @@ export function AppHeader() {
                   component="button"
                   type="button"
                   onClick={() => {
+                    closeHelpModals();
                     setIsTermModalOpen(true);
                     handleCloseMobileMenu();
                   }}

@@ -27,7 +27,8 @@ export function formatRepresentedAddresses(
   representedAddresses: RepresentedAddress[],
 ) {
   const addresses: RepresentativeAddress[] = [];
-  const onlyUniqueAddresses: RepresentativeAddress[] = [];
+  const addressesWithMultipleChains: RepresentativeAddress[] = [];
+
   for (let i = 0; i < representedAddresses.length; i++) {
     const representedAddress: RepresentedAddress = representedAddresses[i];
     const optionsItem = addresses.find(
@@ -42,7 +43,27 @@ export function formatRepresentedAddresses(
         (option) => option.address === optionsItem.address,
       );
       const lastFilteredOption = filteredOptions[filteredOptions.length - 1];
-      onlyUniqueAddresses.push(lastFilteredOption);
+
+      const multipleChainsAddress = addressesWithMultipleChains.find(
+        (address) => address.address === lastFilteredOption.address,
+      );
+      if (multipleChainsAddress) {
+        const multipleChainsAddressIndex = addressesWithMultipleChains.indexOf(
+          multipleChainsAddress,
+          0,
+        );
+        const multipleChainsAddressFinalChains = {
+          chainsIds: [
+            ...multipleChainsAddress.chainsIds,
+            ...lastFilteredOption.chainsIds,
+          ],
+          address: multipleChainsAddress.address,
+        };
+        addressesWithMultipleChains.splice(multipleChainsAddressIndex, 1);
+        addressesWithMultipleChains.push(multipleChainsAddressFinalChains);
+      } else {
+        addressesWithMultipleChains.push(lastFilteredOption);
+      }
     } else {
       addresses.push({
         chainsIds: [representedAddress.chainId],
@@ -51,6 +72,25 @@ export function formatRepresentedAddresses(
     }
   }
 
+  const onlyUniqueAddresses: RepresentativeAddress[] = [];
+  // pushed addresses with multiple chains to onlyUniqueAddresses and checked whether onlyUniqueAddresses already had this address
+  for (let i = 0; i < addressesWithMultipleChains.length; i++) {
+    let found = false;
+    for (let j = 0; j < onlyUniqueAddresses.length; j++) {
+      if (
+        addressesWithMultipleChains[i].address ===
+        onlyUniqueAddresses[j].address
+      ) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      onlyUniqueAddresses.push(addressesWithMultipleChains[i]);
+    }
+  }
+  // pushed addresses with only one chain to onlyUniqueAddresses and checked whether onlyUniqueAddresses already had this address
   for (let i = 0; i < addresses.length; i++) {
     let found = false;
     for (let j = 0; j < onlyUniqueAddresses.length; j++) {
@@ -65,6 +105,7 @@ export function formatRepresentedAddresses(
     }
   }
 
+  // formatted chains to get only unique chains for every address
   const formattedAddresses: RepresentativeAddress[] = onlyUniqueAddresses.map(
     (option) => {
       const onlyUniqueChainsIds = option.chainsIds.filter(

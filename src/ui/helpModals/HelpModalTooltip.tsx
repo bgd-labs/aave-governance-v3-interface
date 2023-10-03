@@ -40,10 +40,11 @@ export function HelpModalTooltip({
           alwaysWithBorders
           withActions
           borderSize={6}
-          leftBorderColor="$secondary"
-          bottomBorderColor="$headerGray"
+          contentColor="$mainStable"
+          leftBorderColor="$buttonBorderLeft"
+          bottomBorderColor="$buttonBorderBottom"
           disabled={isMouseEnter}
-          borderLinesColor={isMouseEnter ? '$textLight' : '$middleLight'}
+          borderLinesColor={isMouseEnter ? '$lightStable' : '$mainBorder'}
           css={{
             color: '$textWhite',
             display: 'flex',
@@ -63,6 +64,7 @@ export function HelpModalTooltip({
       </Box>
 
       <Box
+        className="HelpModalTooltip__content"
         sx={{
           position: 'absolute',
           opacity: isMouseEnter ? 1 : 0,
@@ -72,7 +74,7 @@ export function HelpModalTooltip({
           width: '95vw',
           bottom: 0,
           left: 0,
-          borderColor: '$mainElements',
+          borderColor: '$mainBorder',
           borderStyle: 'solid',
           borderWidth: '3px',
           pb: mobileBottomPadding || 10,
@@ -82,7 +84,7 @@ export function HelpModalTooltip({
           [theme.breakpoints.up('sm')]: {
             border: 'none',
             p: '17px 17px 17px 25px',
-            backgroundColor: '$mainElements',
+            backgroundColor: '$mainBorder',
             bottom: 10,
             left: position === 'left' ? 'calc(100% - 20px)' : 'auto',
             right: position === 'right' ? 'calc(100% - 20px)' : 'auto',
@@ -92,7 +94,7 @@ export function HelpModalTooltip({
         <Box
           sx={{
             position: 'relative',
-            backgroundColor: '$mainElements',
+            backgroundColor: '$mainBorder',
             color: '$textWhite',
             p: '15px 40px 15px 15px',
             [theme.breakpoints.up('sm')]: {

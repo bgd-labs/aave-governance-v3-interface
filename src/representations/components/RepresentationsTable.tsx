@@ -7,7 +7,6 @@ import {
   RepresentationDataItem,
   RepresentationFormData,
 } from '../store/representationsSlice';
-import { MobileCard } from './MobileCard';
 import { TableItem } from './TableItem';
 
 interface RepresentationsTableProps {
@@ -48,13 +47,12 @@ export function RepresentationsTable({
     <>
       <Box
         sx={{
-          display: 'none',
-          px: 24,
-          [theme.breakpoints.up('md')]: {
-            display: 'block',
+          px: 12,
+          [theme.breakpoints.up('xsm')]: {
+            px: 18,
           },
-          [theme.breakpoints.up('lg')]: {
-            px: 48,
+          [theme.breakpoints.up('md')]: {
+            px: 30,
           },
         }}>
         <Box sx={{ pt: 15 }}>
@@ -67,16 +65,38 @@ export function RepresentationsTable({
             <TableHeaderTitle
               title="Chain"
               css={{
-                maxWidth: 300,
-                minWidth: 300,
+                maxWidth: 250,
+                display: !isEdit ? 'block' : 'none',
+                [theme.breakpoints.up('sm')]: {
+                  display: 'block',
+                  minWidth: 250,
+                },
+                [theme.breakpoints.up('md')]: {
+                  maxWidth: 300,
+                  minWidth: 300,
+                },
               }}
             />
             <TableHeaderTitle
+              css={{
+                display: isEdit ? 'block' : 'none',
+                [theme.breakpoints.up('sm')]: { display: 'none' },
+              }}
+              title={texts.other.edit}
+              center
+            />
+            <TableHeaderTitle
+              css={{
+                display: !isEdit ? 'block' : 'none',
+                [theme.breakpoints.up('sm')]: {
+                  display: 'block',
+                },
+              }}
               title={texts.representationsPage.tableHeaderRepresented}
               right
             />
           </Box>
-          <Divider />
+          <Divider sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }} />
         </Box>
 
         {isEdit ? (
@@ -113,49 +133,6 @@ export function RepresentationsTable({
             )}
           </>
         )}
-      </Box>
-
-      <Box
-        sx={{
-          display: 'block',
-          [theme.breakpoints.up('md')]: { display: 'none' },
-        }}>
-        <>
-          {isEdit ? (
-            dataForInputs.length &&
-            dataForInputs.map((item) => {
-              return (
-                <MobileCard
-                  key={item.inputName}
-                  isEdit={isEdit}
-                  isViewChanges={isViewChanges}
-                  loading={loading}
-                  chainId={item.chainId}
-                  representativeAddress={item.representative}
-                  inputName={item.inputName}
-                />
-              );
-            })
-          ) : (
-            <>
-              {loading ? (
-                <MobileCard loading={loading} />
-              ) : (
-                Object.entries(representationData).map((data) => (
-                  <MobileCard
-                    key={data[0]}
-                    isEdit={isEdit}
-                    isViewChanges={isViewChanges}
-                    loading={loading}
-                    chainId={+data[0]}
-                    representativeAddress={data[1].representative}
-                    formData={formData}
-                  />
-                ))
-              )}
-            </>
-          )}
-        </>
       </Box>
     </>
   );

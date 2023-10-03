@@ -18,6 +18,8 @@ export function HelpVotingBarsModal() {
   } = useStore();
   const config = useStore((state) => selectConfigByAccessLevel(state, 1));
 
+  if (!config) return null;
+
   const handleClick = () => {
     setIsHelpVotingBarsModalOpen(false);
     setIsHelpVotingModalOpen(true);

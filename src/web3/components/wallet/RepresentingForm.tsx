@@ -1,3 +1,4 @@
+import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
 import { Listbox } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
@@ -23,18 +24,32 @@ import { ChainsIcons } from './ChainsIcons';
 
 interface RepresentingFormProps {
   representedAddresses: RepresentedAddress[];
+  isForTest?: boolean;
 }
+
+const testInitialAddress = {
+  chainsIds: [
+    ChainIdByName.Avalanche,
+    ChainIdByName.EthereumMainnet,
+    ChainIdByName.Polygon,
+  ],
+  address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b',
+};
 
 export function RepresentingForm({
   representedAddresses,
+  isForTest,
 }: RepresentingFormProps) {
   const theme = useTheme();
   const store = useStore();
   const { setRepresentativeAddress, activeWallet, representative, ensData } =
     store;
-  const [localAddress, setLocalAddress] = useState(representative);
+  const [localAddress, setLocalAddress] = useState(
+    isForTest ? testInitialAddress : representative,
+  );
 
-  if (!representedAddresses.length || !activeWallet?.isActive) return null;
+  if (!representedAddresses.length || (!activeWallet?.isActive && !isForTest))
+    return null;
 
   const formattedOptions = formatRepresentedAddresses(representedAddresses);
   formattedOptions.unshift({
@@ -73,7 +88,9 @@ export function RepresentingForm({
             value={localAddress}
             onChange={(value: RepresentativeAddress) => {
               setLocalAddress(value);
-              setRepresentativeAddress(value.address, value.chainsIds);
+              if (!isForTest) {
+                setRepresentativeAddress(value.address, value.chainsIds);
+              }
             }}>
             {({ open }) => (
               <>
@@ -85,14 +102,18 @@ export function RepresentingForm({
                     justifyContent: 'space-between',
                     width: '100%',
                     fontWeight: '400',
-                    fontSize: 11,
-                    lineHeight: '14px',
+                    fontSize: 10,
+                    lineHeight: '12px',
                     p: '7px 5px',
                     border: `1px solid ${theme.palette.$disabled}`,
                     borderColor: open ? '$main' : '$disabled',
                     color: '$text',
                     transition: 'all 0.2s ease',
                     cursor: 'pointer',
+                    [theme.breakpoints.up('sm')]: {
+                      fontSize: 11,
+                      lineHeight: '14px',
+                    },
                     [theme.breakpoints.up('lg')]: {
                       p: '8px 10px',
                     },
@@ -160,8 +181,8 @@ export function RepresentingForm({
                       sx={{
                         width: '100%',
                         fontWeight: '400',
-                        fontSize: 11,
-                        lineHeight: '14px',
+                        fontSize: 10,
+                        lineHeight: '12px',
                         p: '7px 5px',
                         color: '$text',
                         transition: 'all 0.2s ease',
@@ -175,6 +196,10 @@ export function RepresentingForm({
                           localAddress.address.toLowerCase()
                             ? '$disabled'
                             : '$mainLight',
+                        [theme.breakpoints.up('sm')]: {
+                          fontSize: 11,
+                          lineHeight: '14px',
+                        },
                         [theme.breakpoints.up('lg')]: {
                           p: '8px 10px',
                         },
