@@ -1,7 +1,6 @@
 // TODO: need fix texts
 
 import { appConfig } from '../../utils/appConfig';
-import { HelpRepresentativeModal } from '../helpModals/HelpRepresentativeModal';
 import { getChainName } from './getChainName';
 
 export const texts = {
