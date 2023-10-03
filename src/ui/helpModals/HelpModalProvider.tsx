@@ -28,9 +28,10 @@ export function HelpModalProvider() {
     setIsClickedOnStartButtonOnHelpModal,
     isAppBlockedByTerms,
     isRendered,
+    closeHelpModals,
+    isClickedOnStartButtonOnHelpModal,
   } = useStore();
 
-  const [isStartClick, setIsStartClick] = useState(false);
   const [infoType, setInfoType] = useState<InfoType | undefined>(undefined);
 
   useEffect(() => {
@@ -40,14 +41,12 @@ export function HelpModalProvider() {
 
     if (isHelpModalVisible && !isAppBlockedByTerms) {
       setIsHelpModalOpen(isHelpModalVisible === 'true');
-    } else {
+    } else if (!isClickedOnStartButtonOnHelpModal) {
       setIsHelpModalOpen(!isAppBlockedByTerms);
     }
-    return () => setInfoType(undefined);
   }, [isRendered]);
 
   useEffect(() => {
-    setIsStartClick(false);
     setInfoType(undefined);
   }, [isModalOpen]);
 
@@ -90,8 +89,9 @@ export function HelpModalProvider() {
               alwaysWithBorders
               color="white"
               onClick={() => {
-                setIsHelpModalOpen(false);
                 localStorage?.setItem('isHelpModalVisible', 'false');
+                closeHelpModals();
+                setIsHelpModalOpen(false);
               }}>
               {texts.faq.welcome.closeButtonTitle}
             </BigButton>
@@ -99,8 +99,8 @@ export function HelpModalProvider() {
               alwaysWithBorders
               css={{ ml: 8 }}
               onClick={() => {
+                localStorage?.setItem('isHelpModalVisible', 'false');
                 setIsClickedOnStartButtonOnHelpModal(true);
-                setIsStartClick(true);
                 setIsHelpNavigationModalOpen(true);
               }}>
               {texts.faq.welcome.nextButtonTitle}
@@ -111,7 +111,7 @@ export function HelpModalProvider() {
 
       <HelpModalNavigation setInfoType={setInfoType} />
 
-      {isStartClick && (
+      {isClickedOnStartButtonOnHelpModal && (
         <>
           <HelpWalletModal infoType={infoType} />
           <HelpVotingModal />

@@ -66,7 +66,9 @@ export function RepresentationsTable({
               title="Chain"
               css={{
                 maxWidth: 250,
+                display: !isEdit ? 'block' : 'none',
                 [theme.breakpoints.up('sm')]: {
+                  display: 'block',
                   minWidth: 250,
                 },
                 [theme.breakpoints.up('md')]: {
@@ -76,6 +78,20 @@ export function RepresentationsTable({
               }}
             />
             <TableHeaderTitle
+              css={{
+                display: isEdit ? 'block' : 'none',
+                [theme.breakpoints.up('sm')]: { display: 'none' },
+              }}
+              title={texts.other.edit}
+              center
+            />
+            <TableHeaderTitle
+              css={{
+                display: !isEdit ? 'block' : 'none',
+                [theme.breakpoints.up('sm')]: {
+                  display: 'block',
+                },
+              }}
               title={texts.representationsPage.tableHeaderRepresented}
               right
             />

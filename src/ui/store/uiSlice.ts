@@ -172,6 +172,8 @@ export interface IUISlice {
 
   isRepresentationInfoModalOpen: boolean;
   setIsRepresentationInfoModalOpen: (value: boolean) => void;
+
+  closeHelpModals: () => void;
 }
 
 export const createUISlice: StoreSlice<
@@ -484,9 +486,18 @@ export const createUISlice: StoreSlice<
 
   isHelpModalOpen: false,
   setIsHelpModalOpen: (value) => {
-    set({ isModalOpen: value, isHelpModalOpen: value });
-    if (!get().isHelpModalOpen) {
-      closeHelpModal(get());
+    if (get().isClickedOnStartButtonOnHelpModal) {
+      set({ isModalOpen: value, isHelpNavigationModalOpen: value });
+
+      if (!get().isHelpNavigationModalOpen) {
+        closeHelpModal(get());
+      }
+    } else {
+      set({ isModalOpen: value, isHelpModalOpen: value });
+
+      if (!get().isHelpModalOpen) {
+        closeHelpModal(get());
+      }
     }
   },
 
@@ -630,6 +641,24 @@ export const createUISlice: StoreSlice<
     if (!get().isHelpDelegationPropositionPowerModalOpen) {
       closeHelpModal(get());
     }
+  },
+
+  closeHelpModals: () => {
+    set({
+      isHelpNavigationModalOpen: false,
+      isHelpModalOpen: false,
+      isHelpWalletModalOpen: false,
+      isHelpVotingModalOpen: false,
+      isHelpDelegateModalOpen: false,
+      isHelpRepresentationModalOpen: false,
+      isHelpRepresentativeModalOpen: false,
+      isHelpStatusesModalOpen: false,
+      isHelpVotingPowerModalOpen: false,
+      isHelpVotingBarsModalOpen: false,
+      isHelpDelegationVotingPowerModalOpen: false,
+      isHelpDelegationPropositionPowerModalOpen: false,
+    });
+    closeHelpModal(get());
   },
 
   isRepresentationsModalOpen: false,

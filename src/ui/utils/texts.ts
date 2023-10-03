@@ -268,6 +268,7 @@ export const texts = {
     representations: 'Manage representations',
     disconnect: 'Disconnect',
     allTransactions: 'View all',
+    transactions: 'Transactions',
     lastTransaction: (count: number) =>
       count > 1 ? 'Last transactions' : 'Last transaction',
     transactionsEmpty: 'The list of your transactions is currently empty',
@@ -529,6 +530,14 @@ export const texts = {
       title: 'Representatives',
       description:
         'Being representative of an Ethereum address on another network means that, for any proposal with voting running on that network, you can vote on behalf of said Ethereum address.If you have connected a wallet that was chosen as representative, on your account screen you can choose if you want to represent yourself, or any other address who selected you.This is just an interface feature, so no worries, will not do any blockchain transaction!',
+      descriptionMobileFirst:
+        'Being representative of an Ethereum address on another network means that, for any proposal with voting running on that network, you can vote on behalf of said Ethereum address.',
+      descriptionMobileSecond:
+        'If you have connected a wallet that was chosen as representative, on your account screen you can choose if you want to represent yourself, or any other address who selected you.This is just an interface feature, so no worries, will not do any blockchain transaction!',
+      firstTooltip:
+        'By clicking on the "Manage representations" button, you can go to the representations interface, where you can change your representatives for each voting network',
+      secondTooltip:
+        'In this drop-down list you can select who you will represent, or unset the representation.',
     },
     other: {
       gotIt: 'Got it!',
