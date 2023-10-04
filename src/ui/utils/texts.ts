@@ -67,7 +67,7 @@ export const texts = {
       executedAt: 'Executed at',
       execution: 'Ready for execution',
       cancelledAt: 'Cancelled at',
-      expired: 'Expired',
+      expired: 'Expired at',
       expiredIn: 'Expired in',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status details',

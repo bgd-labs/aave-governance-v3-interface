@@ -181,12 +181,14 @@ function PayloadItem({
               <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm')}</>
             </PayloadItemStatusInfo>
           )}
-          {!isPayloadOnInitialState && !isPayloadReadyForExecution && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.executedIn}>
-              <Timer timestamp={payloadExecutionTime} />
-            </PayloadItemStatusInfo>
-          )}
+          {!isPayloadOnInitialState &&
+            !isPayloadReadyForExecution &&
+            !isFinalStatus && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.executedIn}>
+                <Timer timestamp={payloadExecutionTime} />
+              </PayloadItemStatusInfo>
+            )}
 
           {isPayloadReadyForExecution && !isExecuted && (
             <>
@@ -231,8 +233,17 @@ function PayloadItem({
           )}
 
           {payload.state === PayloadState.Expired && (
-            <PayloadItemStatusInfo>
-              {texts.proposals.payloadsDetails.expired}
+            <PayloadItemStatusInfo
+              title={texts.proposals.payloadsDetails.expired}>
+              <>
+                {dayjs
+                  .unix(
+                    payload.queuedAt <= 0
+                      ? payload.expirationTime
+                      : payload.queuedAt + payload.delay + payload.gracePeriod,
+                  )
+                  .format('MMM D, YYYY, , h:mm')}
+              </>
             </PayloadItemStatusInfo>
           )}
         </Box>
