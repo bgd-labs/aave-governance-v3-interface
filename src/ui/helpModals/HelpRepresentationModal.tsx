@@ -4,21 +4,17 @@ import isEqual from 'lodash/isEqual';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
-
 import { RepresentationsTableWrapper } from '../../representations/components/RepresentationsTableWrapper';
 import { RepresentationFormData } from '../../representations/store/representationsSlice';
 import { useStore } from '../../store';
 import { BasicModal } from '../components/BasicModal';
 import { BigButton } from '../components/BigButton';
-import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
-import { media } from '../utils/themeMUI';
-import { useMediaQuery } from '../utils/useMediaQuery';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
 import { InfoType } from './HelpModalNavigation';
+import { HelpModalText } from './HelpModalText';
 import { HelpRepresentationsTx } from './HelpRepresentationsTx';
 import { HelpTxWrapper } from './HelpTxWrapper';
 
@@ -30,11 +26,9 @@ export function HelpRepresentationModal({
   infoType,
 }: HelpRepresentationModalProps) {
   const theme = useTheme();
-  const sm = useMediaQuery(media.sm);
 
   const [txPending, setTxPending] = useState(false);
   const [txSuccess, setTxSuccess] = useState(false);
-  const [isFirstStepOnMobile, setIsFirstStepOnMobile] = useState(true);
 
   const [formData, setFormData] = useState<RepresentationFormData[]>([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -62,23 +56,15 @@ export function HelpRepresentationModal({
     setTxSuccess(false);
   }, [isHelpModalClosed]);
 
-  useEffect(() => {
-    if (!sm) {
-      setFormData([]);
-      setIsEdit(false);
-      setIsRepresentationsChangedView(false);
-      setTxPending(false);
-      setTxSuccess(false);
-      setIsFirstStepOnMobile(true);
-    }
-  }, [sm]);
-
   if (!helpRepresentationsData) return null;
 
   const initialData = Object.entries(helpRepresentationsData).map((data) => {
     return {
       chainId: +data[0],
-      representative: data[1].representative,
+      representative:
+        typeof data[1].representative === 'undefined'
+          ? ''
+          : data[1].representative,
     };
   });
 
@@ -102,171 +88,47 @@ export function HelpRepresentationModal({
     }, 3000);
   };
 
-  const DelegateModalTexts = () => {
+  const Texts = () => {
     return (
       <>
         {!isEdit && !isRepresentationsChangedView && !txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                mb: 12,
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.startFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.startSecondDescription}
-            </Box>
-            <Box
-              sx={{
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                display: isFirstStepOnMobile ? 'flex' : 'none',
-                mt: 24,
-                [theme.breakpoints.up('sm')]: {
-                  display: 'none',
-                },
-              }}>
-              <BigButton
-                alwaysWithBorders
-                onClick={() => setIsFirstStepOnMobile(false)}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    svg: { path: { fill: theme.palette.$textWhite } },
-                  }}>
-                  <Box component="p" sx={{ typography: 'body' }}>
-                    {texts.faq.other.next}
-                  </Box>
-                  <IconBox
-                    sx={{
-                      width: 20,
-                      height: 20,
-                      ml: 10,
-                      '> svg': { width: 20, height: 20 },
-                    }}>
-                    <ArrowToRight />
-                  </IconBox>
-                </Box>
-              </BigButton>
-            </Box>
+            <HelpModalText mb={12}>
+              {texts.faq.representations.startFirstDescription}
+            </HelpModalText>
+            <HelpModalText mb={12}>
+              <b>{texts.faq.representations.startSecondDescription}</b>
+            </HelpModalText>
+            <HelpModalText>
+              {texts.faq.representations.startThirdDescription}
+            </HelpModalText>
           </>
         )}
         {isEdit && !isRepresentationsChangedView && !txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.editFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.editSecondDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.editThirdDescription}
-            </Box>
+            <HelpModalText mb={12}>
+              {texts.faq.representations.editFirstDescription}
+            </HelpModalText>
+            <HelpModalText>
+              {texts.faq.representations.editSecondDescription}
+            </HelpModalText>
           </>
         )}
         {!isEdit && isRepresentationsChangedView && !txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.confirmFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.confirmSecondDescription}
-            </Box>
+            <HelpModalText mb={12}>
+              {texts.faq.representations.confirmFirstDescription}
+            </HelpModalText>
+            <HelpModalText>
+              {texts.faq.representations.confirmSecondDescription}
+            </HelpModalText>
           </>
         )}
         {!isEdit && !isRepresentationsChangedView && txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.delegatedFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
-              {texts.faq.delegate.delegatedSecondDescription}
-            </Box>
+            <HelpModalText>
+              {texts.faq.representations.doneDescription}
+            </HelpModalText>
           </>
         )}
       </>
@@ -286,15 +148,6 @@ export function HelpRepresentationModal({
               setFormData([]);
               setTxPending(false);
               setTxSuccess(false);
-            }
-          : !isFirstStepOnMobile
-          ? () => {
-              setFormData([]);
-              setIsEdit(false);
-              setIsRepresentationsChangedView(false);
-              setTxPending(false);
-              setTxSuccess(false);
-              setIsFirstStepOnMobile(true);
             }
           : () => {
               setIsHelpRepresentationModalOpen(false);
@@ -317,7 +170,6 @@ export function HelpRepresentationModal({
                 setTxSuccess(false);
                 setIsHelpRepresentationModalOpen(false);
                 setIsHelpNavigationModalOpen(true);
-                setIsFirstStepOnMobile(true);
               }
             : undefined
         }>
@@ -326,17 +178,12 @@ export function HelpRepresentationModal({
             <HelpModalCaption
               caption={
                 txSuccess
-                  ? texts.faq.delegate.delegated
+                  ? texts.faq.representations.selected
                   : isEdit && !isRepresentationsChangedView && !txSuccess
-                  ? texts.faq.delegate.editMode
+                  ? texts.faq.representations.edit
                   : !isEdit && isRepresentationsChangedView && !txSuccess
-                  ? texts.faq.delegate.confirmation
-                  : !isEdit &&
-                    !isRepresentationsChangedView &&
-                    !txSuccess &&
-                    !isFirstStepOnMobile
-                  ? texts.faq.delegate.delegationBar
-                  : texts.faq.delegate.delegation
+                  ? texts.faq.representations.confirmation
+                  : texts.faq.representations.manage
               }
               image={
                 <Box
@@ -346,33 +193,31 @@ export function HelpRepresentationModal({
                     background:
                       theme.palette.mode === 'dark'
                         ? `url(${setRelativePath(
-                            `/images/helpModals/${
-                              isRepresentationsChangedView
-                                ? 'delegationChange'
+                            `/images/helpModals/representatives${
+                              txSuccess
+                                ? 'Done'
+                                : isRepresentationsChangedView
+                                ? 'Confirmation'
                                 : isEdit
-                                ? 'delegationEdit'
-                                : 'delegationMain'
+                                ? 'Edit'
+                                : 'Manage'
                             }Dark.svg`,
                           )})`
                         : `url(${setRelativePath(
-                            `/images/helpModals/${
-                              isRepresentationsChangedView
-                                ? 'delegationChange'
+                            `/images/helpModals/representatives${
+                              txSuccess
+                                ? 'Done'
+                                : isRepresentationsChangedView
+                                ? 'Confirmation'
                                 : isEdit
-                                ? 'delegationEdit'
-                                : 'delegationMain'
+                                ? 'Edit'
+                                : 'Manage'
                             }.svg`,
                           )})`,
                     backgroundSize: 'contain',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
-                    display:
-                      !isEdit &&
-                      !isRepresentationsChangedView &&
-                      !txSuccess &&
-                      isFirstStepOnMobile
-                        ? 'block'
-                        : 'none',
+                    display: 'none',
                     [theme.breakpoints.up('sm')]: {
                       width: 235,
                       height: 265,
@@ -390,22 +235,17 @@ export function HelpRepresentationModal({
                     display: 'block',
                   },
                 }}>
-                <DelegateModalTexts />
+                <Texts />
               </Box>
             </HelpModalCaption>
 
             <Box
               sx={{
                 position: 'relative',
-                display: isFirstStepOnMobile ? 'none' : 'block',
-                [theme.breakpoints.up('sm')]: {
-                  display: 'block',
-                },
                 [theme.breakpoints.up('md')]: {
-                  maxWidth: 940,
+                  maxWidth: 870,
                   margin: '0 auto',
                 },
-                [theme.breakpoints.up('lg')]: { maxWidth: 'unset' },
               }}>
               <Box
                 sx={{
@@ -414,15 +254,12 @@ export function HelpRepresentationModal({
                 }}>
                 <Box
                   sx={{
-                    pl:
-                      !isEdit && !isRepresentationsChangedView && !txSuccess
-                        ? 15
-                        : 0,
                     transition: 'all 0.2s ease',
                     [theme.breakpoints.up('sm')]: { pl: 0 },
                   }}>
                   {!isEdit && isRepresentationsChangedView && (
                     <RepresentationsTableWrapper
+                      forHelp
                       loading={false}
                       representationData={helpRepresentationsData}
                       isEdit={isEdit}
@@ -433,10 +270,10 @@ export function HelpRepresentationModal({
                         color="white"
                         css={{ mr: 24 }}
                         onClick={() => {
-                          setFormData(initialData);
+                          setIsEdit(true);
                           setIsRepresentationsChangedView(false);
                         }}>
-                        {texts.other.cancel}
+                        {texts.other.backToEdit}
                       </BigButton>
                       <BigButton
                         alwaysWithBorders
@@ -457,6 +294,7 @@ export function HelpRepresentationModal({
                       }}>
                       {({ handleSubmit, values, errors }) => (
                         <RepresentationsTableWrapper
+                          forHelp
                           loading={false}
                           representationData={helpRepresentationsData}
                           isEdit={isEdit}
@@ -476,18 +314,20 @@ export function HelpRepresentationModal({
                           <BigButton
                             alwaysWithBorders
                             type="submit"
-                            disabled={isEqual(
-                              formData,
-                              values.formData.map((data) => {
-                                return {
-                                  chainId: data.chainId,
-                                  representative:
-                                    data.representative === undefined
-                                      ? ''
-                                      : data.representative,
-                                };
-                              }),
-                            )}>
+                            disabled={
+                              isEqual(
+                                initialData,
+                                values.formData.map((data) => {
+                                  return {
+                                    chainId: data.chainId,
+                                    representative:
+                                      data.representative === undefined
+                                        ? ''
+                                        : data.representative,
+                                  };
+                                }),
+                              ) || !!Object.keys(errors || {}).length
+                            }>
                             {texts.delegatePage.viewChanges}
                           </BigButton>
                         </RepresentationsTableWrapper>
@@ -496,6 +336,7 @@ export function HelpRepresentationModal({
                   )}
                   {!isEdit && !isRepresentationsChangedView && (
                     <RepresentationsTableWrapper
+                      forHelp
                       loading={false}
                       representationData={helpRepresentationsData}
                       isEdit={isEdit}
@@ -525,7 +366,7 @@ export function HelpRepresentationModal({
                 flexDirection: 'column',
                 [theme.breakpoints.up('sm')]: { display: 'none' },
               }}>
-              <DelegateModalTexts />
+              <Texts />
             </Box>
           </>
         )}
@@ -563,12 +404,12 @@ export function HelpRepresentationModal({
                     display: 'block',
                   },
                 }}>
-                {texts.faq.delegate.txPendingTitle}
+                {texts.faq.representations.txPendingTitle}
               </Box>
               <Box
                 component="p"
                 sx={{ typography: 'body', lineHeight: '26px !important' }}>
-                {texts.faq.delegate.txPendingDescription}
+                {texts.faq.representations.txPendingDescription}
               </Box>
             </>
           </HelpTxWrapper>

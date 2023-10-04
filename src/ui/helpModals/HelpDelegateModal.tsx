@@ -20,6 +20,7 @@ import { HelpDelegateTx } from './HelpDelegateTx';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
 import { InfoType } from './HelpModalNavigation';
+import { HelpModalText } from './HelpModalText';
 import { HelpModalTextButton } from './HelpModalTextButton';
 import { HelpModalTooltip } from './HelpModalTooltip';
 import { HelpTxWrapper } from './HelpTxWrapper';
@@ -76,6 +77,14 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
 
   if (!helpDelegateData) return null;
 
+  const initialData = helpDelegateData.map((data) => {
+    return {
+      underlyingAsset: data.underlyingAsset,
+      votingToAddress: data.votingToAddress,
+      propositionToAddress: data.propositionToAddress,
+    };
+  });
+
   const handleFormSubmit = ({
     formDelegateData,
   }: {
@@ -123,31 +132,12 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
       <>
         {!isEdit && !isDelegateChangedView && !txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                mb: 12,
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.startFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText>
               {texts.faq.delegate.startSecondDescription}
-            </Box>
+            </HelpModalText>
             <Box
               sx={{
                 width: '100%',
@@ -188,101 +178,35 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
         )}
         {isEdit && !isDelegateChangedView && !txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.editFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.editSecondDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText>
               {texts.faq.delegate.editThirdDescription}
-            </Box>
+            </HelpModalText>
           </>
         )}
         {!isEdit && isDelegateChangedView && !txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.confirmFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText>
               {texts.faq.delegate.confirmSecondDescription}
-            </Box>
+            </HelpModalText>
           </>
         )}
         {!isEdit && !isDelegateChangedView && txSuccess && (
           <>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.delegatedFirstDescription}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText>
               {texts.faq.delegate.delegatedSecondDescription}
-            </Box>
+            </HelpModalText>
           </>
         )}
       </>
@@ -580,32 +504,15 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                         color="white"
                         css={{ mr: 24 }}
                         onClick={() => {
-                          setFormDelegateData(
-                            helpDelegateData.map((data) => {
-                              return {
-                                underlyingAsset: data.underlyingAsset,
-                                votingToAddress: data.votingToAddress,
-                                propositionToAddress: data.propositionToAddress,
-                              };
-                            }),
-                          );
+                          setIsEdit(true);
                           setIsDelegateChangedView(false);
                         }}>
-                        {texts.other.cancel}
+                        {texts.other.backToEdit}
                       </BigButton>
                       <BigButton
                         alwaysWithBorders
                         onClick={handleDelegate}
-                        disabled={isEqual(
-                          helpDelegateData.map((data) => {
-                            return {
-                              underlyingAsset: data.underlyingAsset,
-                              votingToAddress: data.votingToAddress,
-                              propositionToAddress: data.propositionToAddress,
-                            };
-                          }),
-                          formDelegateData,
-                        )}>
+                        disabled={isEqual(initialData, formDelegateData)}>
                         {texts.other.confirm}
                       </BigButton>
                     </DelegateTableWrapper>
@@ -619,7 +526,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                       initialValues={{
                         formDelegateData: formDelegateData,
                       }}>
-                      {({ handleSubmit, values }) => (
+                      {({ handleSubmit, values, errors }) => (
                         <DelegateTableWrapper
                           forHelp
                           loading={false}
@@ -633,16 +540,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                             color="white"
                             css={{ mr: 24 }}
                             onClick={() => {
-                              setFormDelegateData(
-                                helpDelegateData.map((data) => {
-                                  return {
-                                    underlyingAsset: data.underlyingAsset,
-                                    votingToAddress: data.votingToAddress,
-                                    propositionToAddress:
-                                      data.propositionToAddress,
-                                  };
-                                }),
-                              );
+                              setFormDelegateData(initialData);
                               setIsEdit(false);
                             }}>
                             {texts.other.close}
@@ -650,22 +548,24 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                           <BigButton
                             alwaysWithBorders
                             type="submit"
-                            disabled={isEqual(
-                              formDelegateData,
-                              values.formDelegateData.map((data) => {
-                                return {
-                                  underlyingAsset: data.underlyingAsset,
-                                  votingToAddress:
-                                    data.votingToAddress === undefined
-                                      ? ''
-                                      : data.votingToAddress,
-                                  propositionToAddress:
-                                    data.propositionToAddress === undefined
-                                      ? ''
-                                      : data.propositionToAddress,
-                                };
-                              }),
-                            )}>
+                            disabled={
+                              isEqual(
+                                initialData,
+                                values.formDelegateData.map((data) => {
+                                  return {
+                                    underlyingAsset: data.underlyingAsset,
+                                    votingToAddress:
+                                      data.votingToAddress === undefined
+                                        ? ''
+                                        : data.votingToAddress,
+                                    propositionToAddress:
+                                      data.propositionToAddress === undefined
+                                        ? ''
+                                        : data.propositionToAddress,
+                                  };
+                                }),
+                              ) || !!Object.keys(errors || {}).length
+                            }>
                             {texts.delegatePage.viewChanges}
                           </BigButton>
                         </DelegateTableWrapper>
@@ -681,15 +581,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                       isViewChanges={isDelegateChangedView}>
                       <BigButton
                         onClick={() => {
-                          setFormDelegateData(
-                            helpDelegateData.map((data) => {
-                              return {
-                                underlyingAsset: data.underlyingAsset,
-                                votingToAddress: data.votingToAddress,
-                                propositionToAddress: data.propositionToAddress,
-                              };
-                            }),
-                          );
+                          setFormDelegateData(initialData);
                           setIsEdit(true);
                           setTxSuccess(false);
                         }}

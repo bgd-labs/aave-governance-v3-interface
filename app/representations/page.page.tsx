@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: `${metaTexts.main}${metaTexts.representationsPageMetaTitle}`,
   description: metaTexts.representationsPageMetaDescription,
   openGraph: {
+    images: ['/metaLogo.jpg'],
     title: `${metaTexts.main}${metaTexts.representationsPageMetaTitle}`,
     description: metaTexts.representationsPageMetaDescription,
   },

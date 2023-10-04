@@ -18,15 +18,22 @@ interface RepresentationsTableWrapperProps {
   formData?: RepresentationFormData[];
   children: ReactNode;
   handleFormSubmit?: (data: any) => void;
+  forHelp?: boolean;
 }
 
-const ChildrenWrapper = ({ children }: { children: ReactNode }) => {
+const ChildrenWrapper = ({
+  children,
+  forTest,
+}: {
+  children: ReactNode;
+  forTest?: boolean;
+}) => {
   return (
     <Box
       sx={{
         display: 'flex',
         justifyContent: 'center',
-        mt: 40,
+        mt: forTest ? 20 : 40,
       }}>
       {children}
     </Box>
@@ -42,6 +49,7 @@ export function RepresentationsTableWrapper({
   children,
   formData,
   handleFormSubmit,
+  forHelp,
 }: RepresentationsTableWrapperProps) {
   const theme = useTheme();
   return (
@@ -49,14 +57,15 @@ export function RepresentationsTableWrapper({
       borderSize={10}
       contentColor="$mainLight"
       css={{
-        pb: 40,
-        [theme.breakpoints.up('sm')]: { pb: 34 },
+        pb: forHelp ? 20 : 40,
+        [theme.breakpoints.up('sm')]: { pb: forHelp ? 20 : 34 },
       }}>
       {typeof handleFormSubmit === 'function' ? (
         <Box component="form" onSubmit={handleFormSubmit}>
           <FieldArray name="formData">
             {({ fields }) => (
               <RepresentationsTable
+                forHelp={forHelp}
                 loading={loading}
                 representationData={representationData}
                 isEdit={isEdit}
@@ -65,11 +74,12 @@ export function RepresentationsTableWrapper({
               />
             )}
           </FieldArray>
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+          <ChildrenWrapper forTest={forHelp}>{children}</ChildrenWrapper>
         </Box>
       ) : (
         <>
           <RepresentationsTable
+            forHelp={forHelp}
             loading={loading}
             representationData={representationData}
             isEdit={isEdit}
@@ -77,7 +87,7 @@ export function RepresentationsTableWrapper({
             fields={fields}
             formData={formData}
           />
-          <ChildrenWrapper>{children}</ChildrenWrapper>
+          <ChildrenWrapper forTest={forHelp}>{children}</ChildrenWrapper>
         </>
       )}
     </BoxWith3D>

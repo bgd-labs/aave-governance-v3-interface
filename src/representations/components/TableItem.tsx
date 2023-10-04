@@ -17,6 +17,7 @@ export interface TableItemProps {
   isViewChanges?: boolean;
   formData?: RepresentationFormData[];
   inputName?: string;
+  forHelp?: boolean;
 }
 
 export function TableItem({
@@ -27,6 +28,7 @@ export function TableItem({
   isEdit,
   isViewChanges,
   inputName,
+  forHelp,
 }: TableItemProps) {
   const theme = useTheme();
   const { representationDataLoading } = useStore();
@@ -55,10 +57,10 @@ export function TableItem({
             py: 0,
           },
           [theme.breakpoints.up('md')]: {
-            height: 110,
+            height: forHelp ? 85 : 110,
           },
           [theme.breakpoints.up('lg')]: {
-            height: 115,
+            height: forHelp ? 90 : 115,
           },
         }}>
         <Box

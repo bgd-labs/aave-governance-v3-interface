@@ -17,6 +17,7 @@ import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
 import { useMediaQuery } from '../utils/useMediaQuery';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
+import { HelpModalText } from './HelpModalText';
 import { HelpModalTooltip } from './HelpModalTooltip';
 
 const testRepresentedAddresses: RepresentedAddress[] = [
@@ -129,18 +130,9 @@ export function HelpRepresentativeModal() {
               }}
             />
           </Box>
-          <Box
-            component="p"
-            sx={{
-              typography: 'body',
-              lineHeight: '20px',
-              [theme.breakpoints.up('lg')]: {
-                typography: 'body',
-                lineHeight: '26px',
-              },
-            }}>
+          <HelpModalText>
             {texts.faq.representative.descriptionMobileFirst}
-          </Box>
+          </HelpModalText>
           <BigButton
             alwaysWithBorders
             onClick={() => setIsFirstStepOnMobile(false)}

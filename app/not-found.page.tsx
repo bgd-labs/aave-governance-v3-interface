@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: `${metaTexts.main}${metaTexts.notFoundPageMetaTitle}`,
   description: metaTexts.notFoundPageMetaDescription,
   openGraph: {
+    images: ['/metaLogo.jpg'],
     title: `${metaTexts.main}${metaTexts.notFoundPageMetaTitle}`,
     description: metaTexts.notFoundPageMetaDescription,
   },

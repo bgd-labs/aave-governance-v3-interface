@@ -9,6 +9,7 @@ import { HelpDelegateModal } from './HelpDelegateModal';
 import { HelpDelegationPP } from './HelpDelegationPP';
 import { HelpDelegationVP } from './HelpDelegationVP';
 import { HelpModalNavigation, InfoType } from './HelpModalNavigation';
+import { HelpModalText } from './HelpModalText';
 import { HelpModalWrapper } from './HelpModalWrapper';
 import { HelpRepresentationModal } from './HelpRepresentationModal';
 import { HelpRepresentativeModal } from './HelpRepresentativeModal';
@@ -73,18 +74,7 @@ export function HelpModalProvider() {
           <Box component="h2" sx={{ typography: 'h1', mb: 12 }}>
             {texts.faq.welcome.title}
           </Box>
-          <Box
-            component="p"
-            sx={{
-              typography: 'body',
-              lineHeight: '20px',
-              [theme.breakpoints.up('lg')]: {
-                typography: 'body',
-                lineHeight: '26px',
-              },
-            }}>
-            {texts.faq.welcome.description}
-          </Box>
+          <HelpModalText>{texts.faq.welcome.description}</HelpModalText>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 32 }}>
             <BigButton
               alwaysWithBorders
