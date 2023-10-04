@@ -337,15 +337,12 @@ export function ProposalPage({
               width: '100%',
               mb: 20,
               [theme.breakpoints.up('sm')]: {
-                width: 260,
+                width: 290,
                 mb: 0,
                 mr: 15,
                 position: 'sticky',
                 transition: 'all 0.5s ease',
                 top: 50,
-              },
-              [theme.breakpoints.up('md')]: {
-                width: 290,
               },
               [theme.breakpoints.up('lg')]: {
                 width: 340,
@@ -523,9 +520,6 @@ export function ProposalPage({
               flex: 1,
               maxWidth: '100%',
               [theme.breakpoints.up('sm')]: {
-                maxWidth: 'calc(100% - 275px)',
-              },
-              [theme.breakpoints.up('md')]: {
                 maxWidth: 'calc(100% - 305px)',
               },
               [theme.breakpoints.up('lg')]: {

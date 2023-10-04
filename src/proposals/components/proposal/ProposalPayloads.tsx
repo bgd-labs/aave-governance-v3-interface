@@ -178,7 +178,7 @@ function PayloadItem({
           {isPayloadOnInitialState && (
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.created}>
-              <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm')}</>
+              <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')}</>
             </PayloadItemStatusInfo>
           )}
           {!isPayloadOnInitialState &&
@@ -218,7 +218,7 @@ function PayloadItem({
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.executedAt}>
               <>
-                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm')}
+                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
@@ -227,7 +227,9 @@ function PayloadItem({
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.cancelledAt}>
               <>
-                {dayjs.unix(payload.cancelledAt).format('MMM D, YYYY, , h:mm')}
+                {dayjs
+                  .unix(payload.cancelledAt)
+                  .format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
@@ -242,7 +244,7 @@ function PayloadItem({
                       ? payload.expirationTime
                       : payload.queuedAt + payload.delay + payload.gracePeriod,
                   )
-                  .format('MMM D, YYYY, , h:mm')}
+                  .format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
