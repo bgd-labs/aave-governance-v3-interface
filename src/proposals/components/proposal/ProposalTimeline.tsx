@@ -620,7 +620,7 @@ export function ProposalTimeline({
           overflowX: 'auto',
           px: 40,
           width: '100%',
-          '@media only screen and (min-width: 900px)': { overflowX: 'hidden' },
+          '@media only screen and (min-width: 920px)': { overflowX: 'hidden' },
         }}>
         <Box
           sx={{
@@ -632,7 +632,7 @@ export function ProposalTimeline({
             pb: 57,
             pt: 35,
             minWidth: 500,
-            '@media only screen and (min-width: 900px)': {
+            '@media only screen and (min-width: 920px)': {
               minWidth: 'unset',
             },
           }}>

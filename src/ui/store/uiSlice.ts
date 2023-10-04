@@ -3,10 +3,15 @@ import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { produce } from 'immer';
 
 import { DelegateItem } from '../../delegate/types';
+import {
+  RepresentationDataItem,
+  RepresentationFormData,
+} from '../../representations/store/representationsSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { getDelegateData } from '../helpModals/getDelegateData';
 import { getProposalData } from '../helpModals/getProposalData';
+import { getRepresentationsData } from '../helpModals/getRepresentationsData';
 import {
   generateStatus,
   getTestTransactionsPool,
@@ -48,6 +53,12 @@ export interface IUISlice {
   getTestTransactionsPool: () => void;
   addTestTransaction: (timestamp: number) => void;
   resetTestTransactionsPool: () => void;
+
+  helpRepresentationsData: Record<number, RepresentationDataItem>;
+  setHelpRepresentationsData: (
+    representationsData: RepresentationFormData[],
+  ) => void;
+  getHelpRepresentationsData: () => void;
 
   isModalOpen: boolean;
   setModalOpen: (value: boolean) => void;
@@ -338,6 +349,26 @@ export const createUISlice: StoreSlice<
   },
   resetTestTransactionsPool: () => {
     set({ testTransactionsPool: {} });
+  },
+
+  helpRepresentationsData: [],
+  setHelpRepresentationsData: (representationsData) => {
+    const formattedRepresentationsData = representationsData.reduce<
+      Record<number, RepresentationDataItem>
+    >((accumulator, representationFormData) => {
+      accumulator[representationFormData.chainId] = {
+        representative: representationFormData.representative,
+        represented: [],
+      };
+
+      return accumulator;
+    }, {});
+
+    set({ helpRepresentationsData: formattedRepresentationsData });
+  },
+  getHelpRepresentationsData: () => {
+    const representationsData = getRepresentationsData();
+    set({ helpRepresentationsData: representationsData });
   },
 
   isModalOpen: false,

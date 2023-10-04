@@ -178,15 +178,17 @@ function PayloadItem({
           {isPayloadOnInitialState && (
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.created}>
-              <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm')}</>
+              <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')}</>
             </PayloadItemStatusInfo>
           )}
-          {!isPayloadOnInitialState && !isPayloadReadyForExecution && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.executedIn}>
-              <Timer timestamp={payloadExecutionTime} />
-            </PayloadItemStatusInfo>
-          )}
+          {!isPayloadOnInitialState &&
+            !isPayloadReadyForExecution &&
+            !isFinalStatus && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.executedIn}>
+                <Timer timestamp={payloadExecutionTime} />
+              </PayloadItemStatusInfo>
+            )}
 
           {isPayloadReadyForExecution && !isExecuted && (
             <>
@@ -216,7 +218,7 @@ function PayloadItem({
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.executedAt}>
               <>
-                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm')}
+                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
@@ -225,14 +227,25 @@ function PayloadItem({
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.cancelledAt}>
               <>
-                {dayjs.unix(payload.cancelledAt).format('MMM D, YYYY, , h:mm')}
+                {dayjs
+                  .unix(payload.cancelledAt)
+                  .format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
 
           {payload.state === PayloadState.Expired && (
-            <PayloadItemStatusInfo>
-              {texts.proposals.payloadsDetails.expired}
+            <PayloadItemStatusInfo
+              title={texts.proposals.payloadsDetails.expired}>
+              <>
+                {dayjs
+                  .unix(
+                    payload.queuedAt <= 0
+                      ? payload.expirationTime
+                      : payload.queuedAt + payload.delay + payload.gracePeriod,
+                  )
+                  .format('MMM D, YYYY, , h:mm A')}
+              </>
             </PayloadItemStatusInfo>
           )}
         </Box>

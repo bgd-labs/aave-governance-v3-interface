@@ -56,6 +56,7 @@ export default class MyDocument extends Document {
             content={metaTexts.ipfsDescription}
             key="ogdescription"
           />
+          <meta property="og:image" content="/metaLogo.jpg" />
           <meta property="twitter:card" content="summary" key="twittercard" />
           <meta
             name="twitter:title"
@@ -67,6 +68,8 @@ export default class MyDocument extends Document {
             content={metaTexts.ipfsDescription}
             key="twitterdescription"
           />
+          <meta name="twitter:image" content="/metaLogo.jpg" />
+
           <meta name="keywords" key="keywords" content={metaTexts.keywords} />
 
           <link

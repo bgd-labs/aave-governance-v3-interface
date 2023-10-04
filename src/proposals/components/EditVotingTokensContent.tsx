@@ -29,7 +29,7 @@ function CheckBox({ isActive }: { isActive: boolean }) {
         width: 14,
         height: 14,
         backgroundColor: '$disabled',
-        display: 'none', // TODO: maybe change to flex later
+        display: 'none',
       }}>
       <Box
         sx={{

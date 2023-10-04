@@ -67,7 +67,7 @@ export const texts = {
       executedAt: 'Executed at',
       execution: 'Ready for execution',
       cancelledAt: 'Cancelled at',
-      expired: 'Expired',
+      expired: 'Expired at',
       expiredIn: 'Expired in',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status details',
@@ -537,6 +537,29 @@ export const texts = {
         'By clicking on the "Manage representations" button, you can go to the representations interface, where you can change your representatives for each voting network',
       secondTooltip:
         'In this drop-down list you can select who you will represent, or unset the representation.',
+    },
+    representations: {
+      manage: 'Manage',
+      edit: 'Edit',
+      confirmation: 'Confirmation',
+      selected: 'Representative selected',
+      startFirstDescription:
+        'In this screen, with your Ethereum address with voting power connected, you can choose representatives for all available voting networks.',
+      startSecondDescription: 'Click Edit to choose a representative',
+      startThirdDescription:
+        '(THIS IS JUST A MOCK, YOU WILL NOT CHOOSE A REAL REPRESENTATIVE)',
+      editFirstDescription:
+        'Now you can input a representative address for any of the available networks. Remember to always validate that the address you select exists in that network and is the one intended!',
+      editSecondDescription:
+        'P.S. if you want to remove a representative, you can just click the "x" icon on the input',
+      confirmFirstDescription:
+        'You can now view the summary about the representative/s you are choosing, and the network/s.If you are sure of your choice, click the confirmation button.',
+      confirmSecondDescription:
+        '(AGAIN, THIS IS JUST A MOCK, YOU WILL NOT CHOOSE A REAL REPRESENTATIVE)',
+      txPendingTitle: 'Almost there!',
+      txPendingDescription: 'Your representations is being processed',
+      doneDescription:
+        'Now the table shows the representatives you have chosen, and you can change them at any time',
     },
     other: {
       gotIt: 'Got it!',

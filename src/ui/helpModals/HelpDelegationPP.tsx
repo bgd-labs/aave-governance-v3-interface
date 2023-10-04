@@ -7,6 +7,7 @@ import { texts } from '../utils/texts';
 import { assets } from './assets';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
+import { HelpModalText } from './HelpModalText';
 
 export function HelpDelegationPP() {
   const theme = useTheme();
@@ -53,46 +54,16 @@ export function HelpDelegationPP() {
             />
           }>
           <Box sx={{ maxWidth: 480 }}>
-            <Box
-              component="p"
-              sx={{
-                mb: 12,
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.entireBalance(assets)}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                mb: 12,
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText mb={12}>
               <b>{texts.faq.delegate.warning}</b>{' '}
               {texts.faq.delegate.propositionPowerFirstWarning}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                mb: 12,
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.propositionPowerSecondWarning}
-            </Box>
+            </HelpModalText>
 
             <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
               {texts.faq.other.gotIt}

@@ -57,6 +57,8 @@ export async function generateMetadata({
     description: metaTexts.ipfsDescription,
     openGraph: {
       images: ['/metaLogo.jpg'],
+      title: `${metaTexts.ipfsTitle}`,
+      description: metaTexts.ipfsDescription,
     },
   };
 }

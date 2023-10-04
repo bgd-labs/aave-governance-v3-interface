@@ -20,6 +20,7 @@ import { media } from '../utils/themeMUI';
 import { useMediaQuery } from '../utils/useMediaQuery';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
+import { HelpModalText } from './HelpModalText';
 import { HelpModalTextButton } from './HelpModalTextButton';
 import { HelpModalTooltip } from './HelpModalTooltip';
 import { HelpTxWrapper } from './HelpTxWrapper';
@@ -603,29 +604,10 @@ export function HelpVotingModal() {
               )}
               {!txPending && txSuccess && (
                 <>
-                  <Box
-                    component="p"
-                    sx={{
-                      typography: 'body',
-                      lineHeight: '20px !important',
-                      mb: 12,
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '26px !important',
-                      },
-                    }}>
+                  <HelpModalText mb={12}>
                     {texts.faq.voting.txSuccessFirstDescription}
-                  </Box>
-                  <Box
-                    component="p"
-                    sx={{
-                      typography: 'body',
-                      lineHeight: '20px !important',
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '26px !important',
-                      },
-                    }}>
+                  </HelpModalText>
+                  <HelpModalText>
                     {texts.faq.voting.txSuccessSecondDescription}{' '}
                     <HelpModalTextButton
                       onClick={() => {
@@ -635,7 +617,7 @@ export function HelpVotingModal() {
                       <>{texts.faq.voting.proposalLifeCycle}</>
                     </HelpModalTextButton>
                     .
-                  </Box>
+                  </HelpModalText>
                 </>
               )}
             </>

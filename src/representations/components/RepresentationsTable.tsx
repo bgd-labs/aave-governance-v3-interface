@@ -16,6 +16,7 @@ interface RepresentationsTableProps {
   isViewChanges: boolean;
   fields?: any;
   formData?: RepresentationFormData[];
+  forHelp?: boolean;
 }
 
 export function RepresentationsTable({
@@ -25,6 +26,7 @@ export function RepresentationsTable({
   isViewChanges,
   fields,
   formData,
+  forHelp,
 }: RepresentationsTableProps) {
   const theme = useTheme();
 
@@ -111,6 +113,7 @@ export function RepresentationsTable({
                 chainId={item.chainId}
                 representativeAddress={item.representative}
                 inputName={item.inputName}
+                forHelp={forHelp}
               />
             );
           })
@@ -128,6 +131,7 @@ export function RepresentationsTable({
                   chainId={+data[0]}
                   representativeAddress={data[1].representative}
                   formData={formData}
+                  forHelp={forHelp}
                 />
               ))
             )}
