@@ -563,13 +563,10 @@ export class GovDataService {
     slot: string;
     blockNumber: number;
   }) {
-    const rawProofData = await this.providers[
-      appConfig.govCoreChainId
-    ].send('eth_getProof', [
-      underlyingAsset,
-      [slot],
-      BigNumber.from(blockNumber).toHexString(),
-    ]);
+    const rawProofData = await this.providers[appConfig.govCoreChainId].send(
+      'eth_getProof',
+      [underlyingAsset, [slot], BigNumber.from(blockNumber).toHexString()],
+    );
 
     return formatToProofRLP(rawProofData.storageProof[0].proof);
   }
