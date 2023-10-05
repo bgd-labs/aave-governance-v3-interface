@@ -219,6 +219,7 @@ export const texts = {
     notConnectedWalletDescription:
       'Please connect wallet first, to see representations info',
     notConnectedWalletButtonTitle: 'Connect wallet',
+    tableHeaderFirstTitle: 'Network',
     tableHeaderRepresented: 'Represented by',
     myself: 'Myself',
     represented: 'Represented',
@@ -336,7 +337,7 @@ export const texts = {
     wallet: 'Wallet',
     off: 'Off',
     on: 'On',
-    copyError: 'Copy error',
+    copyError: 'Copy error text',
   },
   terms: {
     description:
