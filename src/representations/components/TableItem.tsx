@@ -133,6 +133,7 @@ export function TableItem({
               inputName={`${inputName}.representative`}
               address={representativeAddress}
               addressTo={formRepresentativeAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>

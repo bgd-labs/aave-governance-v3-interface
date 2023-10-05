@@ -21,6 +21,7 @@ export function MobileCard({
   underlyingAsset,
   formDelegateData,
   loading,
+  forHelp,
 }: TableItemProps) {
   const theme = useTheme();
   const { delegateDataLoading } = useStore();
@@ -118,6 +119,7 @@ export function MobileCard({
               inputName={`${inputName}.votingToAddress`}
               address={votingToAddress}
               addressTo={formVotingToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>
@@ -162,6 +164,7 @@ export function MobileCard({
               inputName={`${inputName}.propositionToAddress`}
               address={propositionToAddress}
               addressTo={formPropositionToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>

@@ -116,6 +116,7 @@ export function TableItem({
               inputName={`${inputName}.votingToAddress`}
               address={votingToAddress}
               addressTo={formVotingToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>
@@ -130,6 +131,7 @@ export function TableItem({
               inputName={`${inputName}.propositionToAddress`}
               address={propositionToAddress}
               addressTo={formPropositionToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>
