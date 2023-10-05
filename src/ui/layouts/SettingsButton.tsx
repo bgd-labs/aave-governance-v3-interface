@@ -7,8 +7,9 @@ import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
 
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
-import { BoxWith3D, Divider, ThemeSwitcher } from '../';
+import { BoxWith3D, Divider, Link, ThemeSwitcher } from '../';
 import { IconBox } from '../primitives/IconBox';
+import { ROUTES } from '../utils/routes';
 import { texts } from '../utils/texts';
 
 export function SettingsButton() {
@@ -122,9 +123,21 @@ export function SettingsButton() {
                 </Box>
                 <Divider sx={{ my: 10 }} />
                 <ThemeSwitcher />
+                <Divider sx={{ my: 10 }} />
+                <Link
+                  href={ROUTES.rpcSwitcher}
+                  css={{
+                    color: '$textLight',
+                    lineHeight: 1,
+                    hover: { color: theme.palette.$textWhite },
+                  }}
+                  onClick={close}>
+                  <Box component="p" sx={{ typography: 'descriptor' }}>
+                    {texts.header.changeRPC}
+                  </Box>
+                </Link>
                 {!isForIPFS && isTermsAndConditionsVisible && (
                   <>
-                    <Divider sx={{ my: 10 }} />
                     <Box
                       component="button"
                       type="button"

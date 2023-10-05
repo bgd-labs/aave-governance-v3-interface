@@ -14,6 +14,8 @@ export const metaTexts = {
   representationsPageMetaTitle: 'Representations',
   representationsPageMetaDescription:
     'Management of representations and representatives',
+  rpcSwitcherPageMetaTitle: 'RPC Switcher',
+  rpcSwitcherPageMetaDescription: 'Management of RPC URLs',
   proposalId: (id: string) => `Proposal ${id}`,
   ipfsTitle: 'Aave Governance',
   ipfsDescription: 'Vote on the Aave ecosystem',

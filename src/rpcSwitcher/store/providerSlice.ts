@@ -33,16 +33,15 @@ export type ChainInfo = {
 
 export interface IProviderSlice {
   appProviders: Record<number, AppProvider>;
+  appProvidersForm: Record<number, AppProviderStorage>;
   initProviders: (
     providers: ChainInfo,
     appUsedNetworks: ChainIdByName[],
   ) => void;
-  // setProviders: (providers: Record<number, string>) => void;
   updateProviders: (formData: RpcSwitcherFormData) => void;
   syncLocalStorage: () => void;
   syncDataServices: () => void;
-  appProvidersStorage: Record<number, AppProviderStorage>;
-  syncAppProviderStorage: () => void;
+  syncAppProviderForm: () => void;
 }
 
 export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
@@ -50,7 +49,7 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
   get,
 ) => ({
   appProviders: {},
-  appProvidersStorage: {},
+  appProvidersForm: {},
   initProviders: (providers, appUsedNetworks) => {
     set((state) =>
       produce(state, (draft) => {
@@ -98,7 +97,7 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
     }
     get().syncLocalStorage();
     get().syncDataServices();
-    get().syncAppProviderStorage();
+    get().syncAppProviderForm();
   },
   updateProviders: (formData) => {
     formData.forEach(({ chainId, rpcUrl }) => {
@@ -114,7 +113,7 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
 
     get().syncLocalStorage();
     get().syncDataServices();
-    get().syncAppProviderStorage();
+    get().syncAppProviderForm();
   },
   syncLocalStorage: () => {
     const parsedProvidersForLocalStorage = Object.entries(
@@ -139,7 +138,7 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
     );
     get().initDataServices(providers);
   },
-  syncAppProviderStorage: () => {
+  syncAppProviderForm: () => {
     const parsedProvidersForLocalStorage = Object.entries(
       get().appProviders,
     ).reduce(
@@ -150,6 +149,6 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
       {} as Record<string, AppProviderStorage>,
     );
 
-    set({ appProvidersStorage: parsedProvidersForLocalStorage });
+    set({ appProvidersForm: parsedProvidersForLocalStorage });
   },
 });

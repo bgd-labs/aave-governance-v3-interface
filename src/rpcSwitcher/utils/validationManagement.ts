@@ -1,6 +1,8 @@
 import { RpcSwitcherFormData } from '../store/providerSlice';
 
 export let initialForm: RpcSwitcherFormData = [];
+
+// form with changed and validated values
 export let checkedForm: { [chainId: number]: string } = {};
 
 const toMap = (arr: RpcSwitcherFormData) => {
@@ -36,6 +38,7 @@ const getChangedUrls = (
   return changed;
 };
 
+// check if values were changed
 export const checkValues = (
   initialArray: RpcSwitcherFormData,
   currentArray: RpcSwitcherFormData,
@@ -53,6 +56,7 @@ export const setInitialForm = (form: RpcSwitcherFormData) => {
   initialForm = form;
 };
 
+// get input name index
 export const extractIndexFromInputName = (inputName: string): number | null => {
   const match = inputName.match(/\[(\d+)\]/);
   if (match && match[1]) {
@@ -61,6 +65,7 @@ export const extractIndexFromInputName = (inputName: string): number | null => {
   return null;
 };
 
+// debounce for async functions
 export const debounceAsync = <T extends (...args: any[]) => Promise<any>>(
   func: T,
   wait: number,

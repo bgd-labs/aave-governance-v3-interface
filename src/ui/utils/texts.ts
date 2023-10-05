@@ -233,6 +233,14 @@ export const texts = {
     representationInfo:
       'This is the voting power of the address you are representing. Remember that the representative role is by network, so if not able to vote on other proposals, try to change who you are representing',
   },
+  rpcSwitcherPage: {
+    tableHeaderSwitcher: 'RPC URL',
+    tableHeaderNetwork: 'Network',
+    notConnectedWallet: 'Wallet is not connected',
+    notConnectedWalletDescription: 'Please connect wallet first, to manage RPC',
+    notConnectedWalletButtonTitle: 'Connect wallet',
+    placeholder: 'Enter RPC URL',
+  },
   notFoundPage: {
     title: 'Page not found',
     descriptionFirst: `Sorry, we couldn't find the page you were looking for.`,
@@ -293,6 +301,7 @@ export const texts = {
     navTutorial: 'Tutorial',
     navCreate: 'Create',
     termsAndConditions: 'Terms and conditions',
+    changeRPC: 'Change RPC',
     appMode: 'App mode',
     theme: 'Theme',
     appModeDefault: 'Default',

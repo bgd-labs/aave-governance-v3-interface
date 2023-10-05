@@ -5,11 +5,12 @@ import { RpcSwitcherPage } from '../../src/rpcSwitcher/components/RpcSwitcherPag
 import { metaTexts } from '../../src/ui/utils/metaTexts';
 
 export const metadata: Metadata = {
-  title: `${metaTexts.main}${metaTexts.representationsPageMetaTitle}`,
-  description: metaTexts.representationsPageMetaDescription,
+  title: `${metaTexts.main}${metaTexts.rpcSwitcherPageMetaTitle}`,
+  description: metaTexts.rpcSwitcherPageMetaDescription,
   openGraph: {
-    title: `${metaTexts.main}${metaTexts.representationsPageMetaTitle}`,
-    description: metaTexts.representationsPageMetaDescription,
+    images: ['/metaLogo.jpg'],
+    title: `${metaTexts.main}${metaTexts.rpcSwitcherPageMetaTitle}`,
+    description: metaTexts.rpcSwitcherPageMetaDescription,
   },
 };
 

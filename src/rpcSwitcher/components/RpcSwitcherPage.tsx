@@ -3,7 +3,7 @@
 import { Box, useTheme } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 
 import { useStore } from '../../store';
@@ -27,13 +27,13 @@ export function RpcSwitcherPage() {
     setConnectWalletModalOpen,
     activeWallet,
     appProviders,
-    appProvidersStorage,
-    updateProviders
+    appProvidersForm,
+    updateProviders,
   } = store;
 
   const [loadingData, setLoadingData] = useState(true);
   const [formData, setFormData] = useState<RpcSwitcherFormData>([]);
-  const [changedValues, setChangedValues] = useState<RpcSwitcherFormData>([]);
+  const formValuesRef = useRef<RpcSwitcherFormData | null>(null);
   const initialData: RpcSwitcherFormData = Object.entries(appProviders).map(
     ([key, value]) => {
       return {
@@ -71,12 +71,14 @@ export function RpcSwitcherPage() {
   }: {
     formData: RpcSwitcherFormData;
   }) => {
-    updateProviders(formData)
+    updateProviders(formData);
   };
 
   useEffect(() => {
-    checkValues(initialForm, changedValues);
-  }, [changedValues]);
+    if (formValuesRef.current) {
+      checkValues(initialForm, formValuesRef.current);
+    }
+  }, [formValuesRef.current]);
 
   return (
     <>
@@ -109,20 +111,25 @@ export function RpcSwitcherPage() {
               initialValues={{
                 formData: formData,
               }}>
-              {({ handleSubmit, values, errors }) => {
-                setChangedValues(values.formData);
+              {({ handleSubmit, values, errors, validating }) => {
+                formValuesRef.current = values.formData;
                 return (
-                  <RpcSwitcherTableWrapper
-                    loading={loadingData}
-                    rpcSwitcherData={appProvidersStorage}
-                    formData={formData}
-                    handleFormSubmit={handleSubmit}>
-                    <BigButton
-                      type="submit"
-                      disabled={!!Object.keys(errors || {}).length}>
-                      {texts.other.confirm}
-                    </BigButton>
-                  </RpcSwitcherTableWrapper>
+                  <>
+                    <RpcSwitcherTableWrapper
+                      loading={loadingData}
+                      rpcSwitcherData={appProvidersForm}
+                      formData={formData}
+                      handleFormSubmit={handleSubmit}>
+                      <BigButton
+                        type="submit"
+                        loading={validating}
+                        disabled={
+                          !!Object.keys(errors || {}).length || validating
+                        }>
+                        {texts.other.confirm}
+                      </BigButton>
+                    </RpcSwitcherTableWrapper>
+                  </>
                 );
               }}
             </Form>
@@ -130,16 +137,16 @@ export function RpcSwitcherPage() {
         ) : (
           <NoDataWrapper>
             <Box component="h2" sx={{ typography: 'h1', mt: 8 }}>
-              {texts.representationsPage.notConnectedWallet}
+              {texts.rpcSwitcherPage.notConnectedWallet}
             </Box>
             <Box
               component="p"
               sx={{ typography: 'body', mt: 12, mb: 20, maxWidth: 480 }}>
-              {texts.representationsPage.notConnectedWalletDescription}
+              {texts.rpcSwitcherPage.notConnectedWalletDescription}
             </Box>
 
             <BigButton onClick={() => setConnectWalletModalOpen(true)}>
-              {texts.representationsPage.notConnectedWalletButtonTitle}
+              {texts.rpcSwitcherPage.notConnectedWalletButtonTitle}
             </BigButton>
           </NoDataWrapper>
         )}

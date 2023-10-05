@@ -85,7 +85,7 @@ export function RpcSwitcherTable({
                   display: 'block',
                 },
               }}
-              title={texts.representationsPage.tableHeaderRepresented}
+              title={texts.rpcSwitcherPage.tableHeaderSwitcher}
               right
             />
           </Box>

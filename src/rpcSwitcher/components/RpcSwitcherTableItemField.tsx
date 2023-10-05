@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React from 'react';
 import { Field } from 'react-final-form';
 
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
@@ -43,7 +43,7 @@ export function RpcSwitcherTableItemField({
               error={props.meta.error}>
               <InputWithAnimation
                 type="text"
-                animatedPlaceholder={texts.representationsPage.notRepresented}
+                animatedPlaceholder={texts.rpcSwitcherPage.placeholder}
                 {...props.input}
               />
             </InputWrapper>
