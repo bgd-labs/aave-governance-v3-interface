@@ -21,6 +21,7 @@ export function MobileCard({
   underlyingAsset,
   formDelegateData,
   loading,
+  forHelp,
 }: TableItemProps) {
   const theme = useTheme();
   const { delegateDataLoading } = useStore();
@@ -33,6 +34,8 @@ export function MobileCard({
       formDelegateData,
     },
   );
+
+  const dataLoading = forHelp ? false : delegateDataLoading;
 
   return (
     <Box sx={{ mb: 30 }}>
@@ -70,7 +73,7 @@ export function MobileCard({
               </Box>
             )}
           </Box>
-          {(!amount && amount !== 0) || delegateDataLoading ? (
+          {(!amount && amount !== 0) || dataLoading ? (
             <CustomSkeleton width={30} height={16} />
           ) : (
             <FormattedNumber value={amount} variant="h3" visibleDecimals={2} />
@@ -109,7 +112,7 @@ export function MobileCard({
             },
             [theme.breakpoints.up('md')]: { flex: 'auto' },
           }}>
-          {loading || delegateDataLoading ? (
+          {loading || dataLoading ? (
             <CustomSkeleton width={150} height={16} />
           ) : (
             <DelegateTableItemAddress
@@ -118,6 +121,7 @@ export function MobileCard({
               inputName={`${inputName}.votingToAddress`}
               address={votingToAddress}
               addressTo={formVotingToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>
@@ -153,7 +157,7 @@ export function MobileCard({
             },
             [theme.breakpoints.up('md')]: { flex: 'auto' },
           }}>
-          {loading || delegateDataLoading ? (
+          {loading || dataLoading ? (
             <CustomSkeleton width={150} height={16} />
           ) : (
             <DelegateTableItemAddress
@@ -162,6 +166,7 @@ export function MobileCard({
               inputName={`${inputName}.propositionToAddress`}
               address={propositionToAddress}
               addressTo={formPropositionToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>

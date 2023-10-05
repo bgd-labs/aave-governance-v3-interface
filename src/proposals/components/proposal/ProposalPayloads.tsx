@@ -102,12 +102,13 @@ function PayloadItem({
 
   const isExecuted = payload.executedAt > 0;
 
-  let payloadExpiredTime = 0;
-  if (payload?.state && payload.state === PayloadState.Created) {
-    payloadExpiredTime = payload.expirationTime;
-  } else if (payload?.state && payload.state === PayloadState.Queued) {
-    payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
-  }
+  // TODO: will need in future
+  // let payloadExpiredTime = 0;
+  // if (payload?.state && payload.state === PayloadState.Created) {
+  //   payloadExpiredTime = payload.expirationTime;
+  // } else if (payload?.state && payload.state === PayloadState.Queued) {
+  //   payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
+  // }
 
   let payloadNumber =
     totalPayloadsCount > 1 ? `${payloadCount}/${totalPayloadsCount}` : '';
@@ -347,22 +348,22 @@ function PayloadItem({
               ))}
             </Box>
           </Box>
-
-          {!isFinalStatus && (
-            <Box
-              sx={{
-                display: 'inline-flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-              }}>
-              <Box sx={{ typography: 'descriptorAccent' }}>
-                {texts.proposals.payloadsDetails.expiredIn}
-              </Box>
-              <Box sx={{ typography: 'descriptor' }}>
-                <Timer timestamp={payloadExpiredTime} />
-              </Box>
-            </Box>
-          )}
+          {/*TODO: will need in future*/}
+          {/*{!isFinalStatus && (*/}
+          {/*  <Box*/}
+          {/*    sx={{*/}
+          {/*      display: 'inline-flex',*/}
+          {/*      flexDirection: 'column',*/}
+          {/*      alignItems: 'flex-end',*/}
+          {/*    }}>*/}
+          {/*    <Box sx={{ typography: 'descriptorAccent' }}>*/}
+          {/*      {texts.proposals.payloadsDetails.expiredIn}*/}
+          {/*    </Box>*/}
+          {/*    <Box sx={{ typography: 'descriptor' }}>*/}
+          {/*      <Timer timestamp={payloadExpiredTime} />*/}
+          {/*    </Box>*/}
+          {/*  </Box>*/}
+          {/*)}*/}
         </Box>
       )}
     </Box>

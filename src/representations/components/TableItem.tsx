@@ -38,6 +38,8 @@ export function TableItem({
     formData,
   });
 
+  const dataLoading = forHelp ? false : representationDataLoading;
+
   return (
     <Box>
       <Box
@@ -99,7 +101,7 @@ export function TableItem({
                 <CustomSkeleton width={30} height={20} />
               </Box>
             ) : (
-              <Box component="h2" sx={{ typography: 'h2' }}>
+              <Box component="h3" sx={{ typography: 'h3', fontWeight: 600 }}>
                 {getChainName(chainId)}
               </Box>
             )}
@@ -124,7 +126,7 @@ export function TableItem({
               pr: 7,
             },
           }}>
-          {loading || representationDataLoading ? (
+          {loading || dataLoading ? (
             <CustomSkeleton width={150} height={20} />
           ) : (
             <RepresentationsTableItemField
@@ -133,6 +135,7 @@ export function TableItem({
               inputName={`${inputName}.representative`}
               address={representativeAddress}
               addressTo={formRepresentativeAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>

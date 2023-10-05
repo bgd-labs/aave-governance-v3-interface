@@ -7,6 +7,7 @@ import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
 import {
+  addressValidator,
   composeValidators,
   ensNameOrAddressValidator,
 } from '../../ui/utils/inputValidation';
@@ -50,7 +51,11 @@ const Text = ({
               [theme.breakpoints.up('lg')]: { top: 1 },
             })}>
             to{' '}
-            {isEnsName ? shownAddress : textCenterEllipsis(shownAddress, 5, 4)}
+            {isEnsName
+              ? shownAddress.length > 20
+                ? textCenterEllipsis(shownAddress, 14, 6)
+                : shownAddress
+              : textCenterEllipsis(shownAddress, 5, 4)}
           </Box>
         )}
       </>
@@ -64,6 +69,7 @@ interface DelegateTableItemAddressProps {
   inputName: string;
   address?: string;
   addressTo?: string;
+  forHelp?: boolean;
 }
 
 export function DelegateTableItemAddress({
@@ -72,6 +78,7 @@ export function DelegateTableItemAddress({
   inputName,
   address,
   addressTo,
+  forHelp,
 }: DelegateTableItemAddressProps) {
   const {
     fetchEnsNameByAddress,
@@ -162,7 +169,11 @@ export function DelegateTableItemAddress({
       {isEdit && !isViewChanges && (
         <Field
           name={inputName}
-          validate={composeValidators(ensNameOrAddressValidator)}>
+          validate={
+            forHelp
+              ? composeValidators(addressValidator)
+              : composeValidators(ensNameOrAddressValidator)
+          }>
           {(props) => (
             <InputWrapper
               onCrossClick={

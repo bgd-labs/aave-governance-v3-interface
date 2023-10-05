@@ -65,7 +65,7 @@ export function RepresentationsTable({
               alignItems: 'center',
             }}>
             <TableHeaderTitle
-              title="Chain"
+              title={texts.representationsPage.tableHeaderFirstTitle}
               css={{
                 maxWidth: 250,
                 display: !isEdit ? 'block' : 'none',

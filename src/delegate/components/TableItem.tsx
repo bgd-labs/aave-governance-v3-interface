@@ -49,6 +49,8 @@ export function TableItem({
     },
   );
 
+  const dataLoading = forHelp ? false : delegateDataLoading;
+
   return (
     <Box>
       <Box
@@ -94,7 +96,7 @@ export function TableItem({
                 {symbol}
               </Box>
             )}
-            {(!amount && amount !== 0) || delegateDataLoading ? (
+            {(!amount && amount !== 0) || dataLoading ? (
               <CustomSkeleton width={30} height={18} />
             ) : (
               <FormattedNumber
@@ -107,7 +109,7 @@ export function TableItem({
         </Box>
 
         <Box sx={{ display: 'flex', flex: 2, justifyContent: 'center', pr: 7 }}>
-          {loading || delegateDataLoading ? (
+          {loading || dataLoading ? (
             <CustomSkeleton width={150} height={20} />
           ) : (
             <DelegateTableItemAddress
@@ -116,12 +118,13 @@ export function TableItem({
               inputName={`${inputName}.votingToAddress`}
               address={votingToAddress}
               addressTo={formVotingToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>
 
         <Box sx={{ display: 'flex', flex: 2, justifyContent: 'center', pl: 7 }}>
-          {loading || delegateDataLoading ? (
+          {loading || dataLoading ? (
             <CustomSkeleton width={150} height={20} />
           ) : (
             <DelegateTableItemAddress
@@ -130,6 +133,7 @@ export function TableItem({
               inputName={`${inputName}.propositionToAddress`}
               address={propositionToAddress}
               addressTo={formPropositionToAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>

@@ -374,9 +374,9 @@ export function VoteModal({
                   }}
                   sx={{
                     cursor: 'pointer',
-                    width: 14,
-                    height: 14,
-                    ml: 7,
+                    width: 12,
+                    height: 12,
+                    ml: 4,
                     hover: { opacity: '0.7' },
                   }}>
                   <IconBox
