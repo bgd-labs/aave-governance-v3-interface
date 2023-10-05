@@ -25,15 +25,15 @@ import {
   IRepresentationsSlice,
 } from '../representations/store/representationsSlice';
 import {
+  createProviderSlice,
+  IProviderSlice,
+} from '../rpcSwitcher/store/providerSlice';
+import {
   createTransactionsSlice,
   TransactionsSlice,
 } from '../transactions/store/transactionsSlice';
 import { createUISlice, IUISlice } from '../ui/store/uiSlice';
 import { createEnsSlice, IEnsSlice } from '../web3/store/ensSlice';
-import {
-  createProviderSlice,
-  IProviderSlice,
-} from '../web3/store/providerSlice';
 import { createWeb3Slice, IWeb3Slice } from '../web3/store/web3Slice';
 
 export type RootState = IProposalsSlice &

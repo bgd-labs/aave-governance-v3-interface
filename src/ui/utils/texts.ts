@@ -322,6 +322,7 @@ export const texts = {
     requiredValidation: 'Required field',
     addressValidation: 'Wrong Ethereum address format',
     ensNameValidation: 'Wrong Ethereum address format or ENS name',
+    rpcUrlValidation: 'RPC is either incorrect or unavailable',
     appLoading:
       'The application is loading the required data, please wait a moment',
     fetchFromIpfsError:

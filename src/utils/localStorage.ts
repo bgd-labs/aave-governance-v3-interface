@@ -1,5 +1,5 @@
+import { AppProviderStorage } from '../rpcSwitcher/store/providerSlice';
 import { EnsDataItem } from '../web3/store/ensSlice';
-import { AppProviderStorage } from '../web3/store/providerSlice';
 
 export enum LocalStorageKeys {
   EnsAddresses = 'EnsAddresses',

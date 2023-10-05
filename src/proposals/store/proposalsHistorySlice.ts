@@ -12,6 +12,7 @@ import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { ethers } from 'ethers';
 import { produce } from 'immer';
 
+import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
@@ -113,7 +114,7 @@ export interface IProposalsHistorySlice {
 
 export const createProposalsHistorySlice: StoreSlice<
   IProposalsHistorySlice,
-  IWeb3Slice
+  IWeb3Slice & IProviderSlice
 > = (set, get) => ({
   // initial
   proposalHistory: {},
@@ -462,7 +463,7 @@ export const createProposalsHistorySlice: StoreSlice<
           await getBlockNumberByTimestamp(
             txInfo.chainId,
             historyItem.timestamp,
-            appConfig.providers[txInfo.chainId],
+            get().appProviders[txInfo.chainId].instance,
           );
         const events = await get().govDataService.getPayloadsCreatedEvents(
           txInfo.chainId,
@@ -500,7 +501,7 @@ export const createProposalsHistorySlice: StoreSlice<
           await getBlockNumberByTimestamp(
             txInfo.chainId,
             historyItem.timestamp,
-            appConfig.providers[txInfo.chainId],
+            get().appProviders[txInfo.chainId].instance,
           );
         const events = await get().govDataService.getProposalCreatedEvents(
           minBlockNumber,
@@ -535,7 +536,7 @@ export const createProposalsHistorySlice: StoreSlice<
           await getBlockNumberByTimestamp(
             txInfo.chainId,
             historyItem.timestamp,
-            appConfig.providers[txInfo.chainId],
+            get().appProviders[txInfo.chainId].instance,
           );
         const events = await get().govDataService.getProposalActivatedEvents(
           minBlockNumber,
@@ -636,7 +637,7 @@ export const createProposalsHistorySlice: StoreSlice<
           await getBlockNumberByTimestamp(
             txInfo.chainId,
             historyItem.timestamp,
-            appConfig.providers[txInfo.chainId],
+            get().appProviders[txInfo.chainId].instance,
           );
         const events = await get().govDataService.getProposalQueuedEvents(
           minBlockNumber,
@@ -677,7 +678,7 @@ export const createProposalsHistorySlice: StoreSlice<
           await getBlockNumberByTimestamp(
             txInfo.chainId,
             historyItem.timestamp,
-            appConfig.providers[txInfo.chainId],
+            get().appProviders[txInfo.chainId].instance,
           );
         const events = await get().govDataService.getPayloadsQueuedEvents(
           txInfo.chainId,
@@ -721,7 +722,7 @@ export const createProposalsHistorySlice: StoreSlice<
           await getBlockNumberByTimestamp(
             txInfo.chainId,
             historyItem.timestamp,
-            appConfig.providers[txInfo.chainId],
+            get().appProviders[txInfo.chainId].instance,
           );
         const events = await get().govDataService.getPayloadsExecutedEvents(
           txInfo.chainId,

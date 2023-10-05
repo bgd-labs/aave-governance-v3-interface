@@ -17,10 +17,10 @@ import {
   IRepresentationsSlice,
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
+import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
 import { IEnsSlice } from '../../web3/store/ensSlice';
-import { IProviderSlice } from '../../web3/store/providerSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 type BaseTx = BT & {

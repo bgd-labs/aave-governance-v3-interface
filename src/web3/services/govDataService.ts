@@ -60,6 +60,8 @@ import { getVoteSignatureParams } from '../utils/signatures';
 
 import RepresentativeInputStruct = IGovernanceCore.RepresentativeInputStruct;
 
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src';
+
 import { appConfig, isTestnet } from '../../utils/appConfig';
 
 export const PAGE_SIZE = 10;
@@ -79,16 +81,19 @@ export class GovDataService {
   >;
 
   private signer: providers.JsonRpcSigner | undefined;
-  constructor() {
+  private providers: Record<number, StaticJsonRpcBatchProvider>;
+
+  constructor(providers: Record<number, StaticJsonRpcBatchProvider>) {
+    this.providers = providers;
     // contracts
     // core
     this.govCore = IGovernanceCore__factory.connect(
       appConfig.govCoreConfig.contractAddress,
-      appConfig.providers[appConfig.govCoreChainId],
+      this.providers[appConfig.govCoreChainId],
     );
     this.govCoreDataHelper = IGovernanceDataHelper__factory.connect(
       appConfig.govCoreConfig.dataHelperContractAddress,
-      appConfig.providers[appConfig.govCoreChainId],
+      this.providers[appConfig.govCoreChainId],
     );
     // voting
     const initialVotingMachineContracts: Record<
@@ -100,7 +105,7 @@ export class GovDataService {
       initialVotingMachineContracts[chainId] =
         IVotingMachineWithProofs__factory.connect(
           votingMachineConfig.contractAddress,
-          appConfig.providers[chainId],
+          this.providers[chainId],
         );
     });
     this.votingMachines = initialVotingMachineContracts;
@@ -113,7 +118,7 @@ export class GovDataService {
       initialVotingMachineDataHelperContracts[chainId] =
         IVotingMachineDataHelper__factory.connect(
           votingMachineConfig.dataHelperContractAddress,
-          appConfig.providers[chainId],
+          this.providers[chainId],
         );
     });
     this.votingMachineDataHelpers = initialVotingMachineDataHelperContracts;
@@ -128,7 +133,7 @@ export class GovDataService {
       initialPayloadsControllerDataHelperContracts[chainId] =
         IPayloadsControllerDataHelper__factory.connect(
           payloadsControllerConfig.dataHelperContractAddress,
-          appConfig.providers[chainId],
+          this.providers[chainId],
         );
     });
     this.payloadsControllerDataHelpers =
@@ -157,7 +162,7 @@ export class GovDataService {
   ): Promise<number> {
     const payloadsControllerContract = IPayloadsControllerCore__factory.connect(
       payloadsController,
-      appConfig.providers[chainId],
+      this.providers[chainId],
     );
 
     return await payloadsControllerContract.getPayloadsCount();
@@ -316,7 +321,7 @@ export class GovDataService {
     lastBlockNumber: number | undefined,
   ): Promise<VotersData[]> {
     const currentBlock =
-      (await appConfig.providers[votingChainId].getBlockNumber()) || 0;
+      (await this.providers[votingChainId].getBlockNumber()) || 0;
 
     const { startBlock, endBlock } = getBlocksForEvents(
       currentBlock,
@@ -348,7 +353,7 @@ export class GovDataService {
 
     return IBaseVotingStrategy__factory.connect(
       votingStrategyAddress,
-      appConfig.providers[appConfig.govCoreChainId],
+      this.providers[appConfig.govCoreChainId],
     );
   }
 
@@ -394,7 +399,7 @@ export class GovDataService {
   ) {
     if (this.signer) {
       const blockData = await getExtendedBlock(
-        appConfig.providers[appConfig.govCoreChainId],
+        this.providers[appConfig.govCoreChainId],
         blockNumber,
       );
       const blockHeaderRLP = prepareBLockRLP(blockData);
@@ -432,7 +437,7 @@ export class GovDataService {
 
       if (AAVEAddress) {
         const rawAccountProofData = await getProof(
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
           AAVEAddress,
           [slot],
           blockNumber,
@@ -452,7 +457,7 @@ export class GovDataService {
 
       if (aAAVEAddress) {
         const rawAccountProofData = await getProof(
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
           aAAVEAddress,
           [slot, delegatedStateSlot],
           blockNumber,
@@ -472,7 +477,7 @@ export class GovDataService {
 
       if (STKAAVEAddress && !withSlot) {
         const rawAccountProofData = await getProof(
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
           STKAAVEAddress,
           [slot, exchangeRateSlot],
           blockNumber,
@@ -492,7 +497,7 @@ export class GovDataService {
 
       if (STKAAVEAddress && withSlot) {
         const slotProof = await getProof(
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
           STKAAVEAddress,
           [exchangeRateSlot],
           blockNumber,
@@ -515,7 +520,7 @@ export class GovDataService {
         );
 
         const rawAccountProofData = await getProof(
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
           RepresentationsAddress,
           [representationsSlot],
           blockNumber,
@@ -545,9 +550,8 @@ export class GovDataService {
 
   // proofs for vote
   async getCoreBlockNumber(blockHash: string) {
-    return (
-      await appConfig.providers[appConfig.govCoreChainId].getBlock(blockHash)
-    ).number;
+    return (await this.providers[appConfig.govCoreChainId].getBlock(blockHash))
+      .number;
   }
 
   async getProofs({
@@ -559,7 +563,7 @@ export class GovDataService {
     slot: string;
     blockNumber: number;
   }) {
-    const rawProofData = await appConfig.providers[
+    const rawProofData = await this.providers[
       appConfig.govCoreChainId
     ].send('eth_getProof', [
       underlyingAsset,
@@ -741,7 +745,7 @@ export class GovDataService {
   ) {
     let connectedPayloadsController = IPayloadsControllerCore__factory.connect(
       payloadsController,
-      appConfig.providers[chainId],
+      this.providers[chainId],
     );
     if (this.signer) {
       connectedPayloadsController = connectedPayloadsController.connect(
@@ -758,7 +762,7 @@ export class GovDataService {
   ) {
     let connectedPayloadsController = IPayloadsControllerCore__factory.connect(
       payloadsController,
-      appConfig.providers[chainId],
+      this.providers[chainId],
     );
 
     const formattedPayloadActions = payloadActions.map((payloadData) => {
@@ -832,7 +836,7 @@ export class GovDataService {
   ) {
     const payloadsController = IPayloadsControllerCore__factory.connect(
       address,
-      appConfig.providers[chainId],
+      this.providers[chainId],
     );
 
     return getPayloadsCreated(
@@ -881,7 +885,7 @@ export class GovDataService {
   ) {
     const payloadsController = IPayloadsControllerCore__factory.connect(
       address,
-      appConfig.providers[chainId],
+      this.providers[chainId],
     );
 
     return getPayloadsQueued(
@@ -901,7 +905,7 @@ export class GovDataService {
   ) {
     const payloadsController = IPayloadsControllerCore__factory.connect(
       address,
-      appConfig.providers[chainId],
+      this.providers[chainId],
     );
 
     return getPayloadsExecuted(

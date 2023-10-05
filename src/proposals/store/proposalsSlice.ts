@@ -22,6 +22,7 @@ import { produce } from 'immer';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
+import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
@@ -29,7 +30,6 @@ import { appConfig } from '../../utils/appConfig';
 import { ipfsGateway } from '../../utils/configs';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
-import { IProviderSlice } from '../../web3/store/providerSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import {
   generateProofsRepresentativeByChain,
@@ -1068,9 +1068,9 @@ export const createProposalsSlice: StoreSlice<
       const proposalData = get().detailedProposalsData[proposalId];
 
       if (checkHash(proposalData.snapshotBlockHash).notZero) {
-        const block = await appConfig.providers[
+        const block = await get().appProviders[
           appConfig.govCoreChainId
-        ].getBlock(proposalData.snapshotBlockHash);
+        ].instance.getBlock(proposalData.snapshotBlockHash);
 
         await get().executeTx({
           body: () => {
@@ -1150,7 +1150,7 @@ export const createProposalsSlice: StoreSlice<
 
             const proofOfRepresentative =
               await generateProofsRepresentativeByChain(
-                appConfig.providers[appConfig.govCoreChainId],
+                get().appProviders[appConfig.govCoreChainId].instance,
                 appConfig.govCoreConfig.contractAddress,
                 slots[appConfig.govCoreConfig.contractAddress.toLowerCase()]
                   .balance,
