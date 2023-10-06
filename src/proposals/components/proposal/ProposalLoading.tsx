@@ -34,7 +34,7 @@ export function ProposalLoading({
         <Box
           sx={{
             position: 'relative',
-            mb: 18,
+            mb: 12,
             [theme.breakpoints.up('sm')]: { display: 'none' },
           }}>
           <Box sx={{ position: 'relative', zIndex: 2 }}>
@@ -93,17 +93,12 @@ export function ProposalLoading({
           <Box
             sx={{
               width: '100%',
-              mb: 30,
               [theme.breakpoints.up('sm')]: {
-                width: 260,
-                mb: 0,
+                width: 290,
                 mr: 15,
                 position: 'sticky',
                 transition: 'all 0.5s ease',
                 top: 50,
-              },
-              [theme.breakpoints.up('md')]: {
-                width: 290,
               },
               [theme.breakpoints.up('lg')]: {
                 width: 340,
@@ -169,9 +164,6 @@ export function ProposalLoading({
               flex: 1,
               maxWidth: '100%',
               [theme.breakpoints.up('sm')]: {
-                maxWidth: 'calc(100% - 275px)',
-              },
-              [theme.breakpoints.up('md')]: {
                 maxWidth: 'calc(100% - 305px)',
               },
               [theme.breakpoints.up('lg')]: {
@@ -222,19 +214,15 @@ export function ProposalLoading({
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                mb: 28,
-                [theme.breakpoints.up('sm')]: {
-                  mb: 0,
-                },
               }}>
-              <Box sx={{ mb: 21 }}>
+              <Box sx={{ mb: 20 }}>
                 <CustomSkeleton height={80} />
               </Box>
 
               <Box
                 sx={{
                   display: 'flex',
-                  mb: 20,
+                  mb: 12,
                   '.react-loading-skeleton': { width: 70 },
                   [theme.breakpoints.up('lg')]: {
                     '.react-loading-skeleton': { width: 120 },
