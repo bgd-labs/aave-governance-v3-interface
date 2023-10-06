@@ -42,6 +42,7 @@ const Text = ({
               typography: 'h3',
               ml: 4,
               position: 'relative',
+              textAlign: 'right',
             }}>
             {rpcUrl}
           </Box>
