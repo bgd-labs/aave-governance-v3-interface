@@ -12,6 +12,8 @@ import { RpcSwitcherTable } from './RpcSwitcherTable';
 interface RpcSwitcherTableWrapperProps {
   loading: boolean;
   rpcSwitcherData: Record<number, AppProviderStorage>;
+  isEdit: boolean;
+  isViewChanges: boolean;
   fields?: any;
   formData?: RpcSwitcherFormData;
   children: ReactNode;
@@ -34,6 +36,8 @@ const ChildrenWrapper = ({ children }: { children: ReactNode }) => {
 export function RpcSwitcherTableWrapper({
   rpcSwitcherData,
   loading,
+  isEdit,
+  isViewChanges,
   fields,
   children,
   formData,
@@ -56,6 +60,8 @@ export function RpcSwitcherTableWrapper({
                 loading={loading}
                 rpcSwitcherData={rpcSwitcherData}
                 fields={fields}
+                isEdit={isEdit}
+                isViewChanges={isViewChanges}
               />
             )}
           </FieldArray>
@@ -66,6 +72,8 @@ export function RpcSwitcherTableWrapper({
           <RpcSwitcherTable
             loading={loading}
             rpcSwitcherData={rpcSwitcherData}
+            isEdit={isEdit}
+            isViewChanges={isViewChanges}
             fields={fields}
             formData={formData}
           />

@@ -12,6 +12,8 @@ import { TableItem } from './TableItem';
 interface RepresentationsTableProps {
   loading: boolean;
   rpcSwitcherData: Record<number, AppProviderStorage>;
+  isEdit: boolean;
+  isViewChanges: boolean;
   fields?: any;
   formData?: RpcSwitcherFormData;
 }
@@ -19,7 +21,10 @@ interface RepresentationsTableProps {
 export function RpcSwitcherTable({
   loading,
   rpcSwitcherData,
+  isEdit,
+  isViewChanges,
   fields,
+  formData,
 }: RepresentationsTableProps) {
   const theme = useTheme();
 
@@ -91,8 +96,8 @@ export function RpcSwitcherTable({
           </Box>
           <Divider sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }} />
         </Box>
-
-        {dataForInputs.length &&
+        {isEdit ? (
+          dataForInputs.length &&
           dataForInputs.map((item) => {
             return (
               <TableItem
@@ -100,9 +105,31 @@ export function RpcSwitcherTable({
                 loading={loading}
                 chainId={item.chainId}
                 inputName={item.inputName}
+                isEdit={isEdit}
+                isViewChanges={isViewChanges}
+                rpcUrl={item.rpcUrl}
               />
             );
-          })}
+          })
+        ) : (
+          <>
+            {loading ? (
+              <TableItem loading={loading} />
+            ) : (
+              Object.entries(rpcSwitcherData).map((data) => (
+                <TableItem
+                  key={data[0]}
+                  isEdit={isEdit}
+                  isViewChanges={isViewChanges}
+                  loading={loading}
+                  chainId={+data[0]}
+                  rpcUrl={data[1].rpcUrl}
+                  formData={formData}
+                />
+              ))
+            )}
+          </>
+        )}
       </Box>
     </>
   );

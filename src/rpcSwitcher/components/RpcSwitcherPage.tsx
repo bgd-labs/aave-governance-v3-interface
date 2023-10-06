@@ -2,20 +2,16 @@
 
 import { Box, useTheme } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
+import { isEqual } from 'lodash';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
 import { useStore } from '../../store';
 import { BackButton3D, BigButton, Container } from '../../ui';
-import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
+import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { texts } from '../../ui/utils/texts';
 import { RpcSwitcherFormData } from '../store/providerSlice';
-import {
-  checkValues,
-  initialForm,
-  setInitialForm,
-} from '../utils/validationManagement';
 import { RpcSwitcherTableWrapper } from './RpcSwitcherTableWrapper';
 
 export function RpcSwitcherPage() {
@@ -24,16 +20,18 @@ export function RpcSwitcherPage() {
 
   const store = useStore();
   const {
-    setConnectWalletModalOpen,
     activeWallet,
     appProviders,
     appProvidersForm,
     updateProviders,
+    isRpcSwitcherChangedView,
+    setIsRpcSwitcherChangedView,
   } = store;
 
+  const [isEdit, setIsEdit] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [formData, setFormData] = useState<RpcSwitcherFormData>([]);
-  const formValuesRef = useRef<RpcSwitcherFormData | null>(null);
+
   const initialData: RpcSwitcherFormData = Object.entries(appProviders).map(
     ([key, value]) => {
       return {
@@ -44,15 +42,13 @@ export function RpcSwitcherPage() {
   );
 
   useEffect(() => {
-    setInitialForm(
-      Object.entries(appProviders).map(([key, value]) => {
-        return {
-          chainId: +key,
-          rpcUrl: value.rpcUrl,
-        };
-      }),
-    );
-  }, []);
+    setIsEdit(false);
+    setIsRpcSwitcherChangedView(false);
+  }, [activeWallet?.accounts[0]]);
+
+  useEffect(() => {
+    setFormData(initialData);
+  }, [activeWallet?.accounts[0], appProviders]);
 
   useEffect(() => {
     if (!!Object.keys(appProviders).length) {
@@ -71,14 +67,16 @@ export function RpcSwitcherPage() {
   }: {
     formData: RpcSwitcherFormData;
   }) => {
-    updateProviders(formData);
+    setFormData(formData);
+    setIsEdit(false);
+    setIsRpcSwitcherChangedView(true);
   };
 
-  useEffect(() => {
-    if (formValuesRef.current) {
-      checkValues(initialForm, formValuesRef.current);
-    }
-  }, [formValuesRef.current]);
+  const handleUpdateProviders = async () => {
+    updateProviders(formData);
+    setIsEdit(false);
+    setIsRpcSwitcherChangedView(false);
+  };
 
   return (
     <>
@@ -101,8 +99,48 @@ export function RpcSwitcherPage() {
             maxWidth: 900,
           },
         }}>
-        {activeWallet?.isActive ? (
-          <>
+        <>
+          {!isEdit && isRpcSwitcherChangedView && (
+            <RpcSwitcherTableWrapper
+              loading={loadingData}
+              rpcSwitcherData={appProvidersForm}
+              isEdit={isEdit}
+              isViewChanges={isRpcSwitcherChangedView}
+              formData={formData}>
+              <BigButton
+                color="white"
+                css={{ mr: 24 }}
+                onClick={() => {
+                  setIsEdit(true);
+                  setIsRpcSwitcherChangedView(false);
+                }}>
+                {texts.other.backToEdit}
+              </BigButton>
+              <BigButton
+                onClick={async () => {
+                  if (isEqual(initialData, formData)) {
+                    setIsEdit(false);
+                    setIsRpcSwitcherChangedView(false);
+                  } else {
+                    await handleUpdateProviders();
+                  }
+                }}
+                // loading={loading || txPending}
+                disabled={
+                  isEqual(initialData, formData)
+                  // incorrectRepresentationFields.length > 0 ||
+                  // formData.some((data) =>
+                  //   checkIsGetAddressByENSNamePending(
+                  //     store,
+                  //     data.representative,
+                  //   ),
+                  // )
+                }>
+                {texts.other.confirm}
+              </BigButton>
+            </RpcSwitcherTableWrapper>
+          )}
+          {isEdit && !isRpcSwitcherChangedView && (
             <Form<{ formData: RpcSwitcherFormData }>
               mutators={{
                 ...arrayMutators,
@@ -112,14 +150,24 @@ export function RpcSwitcherPage() {
                 formData: formData,
               }}>
               {({ handleSubmit, values, errors, validating }) => {
-                formValuesRef.current = values.formData;
                 return (
                   <>
                     <RpcSwitcherTableWrapper
+                      isEdit={isEdit}
+                      isViewChanges={isRpcSwitcherChangedView}
                       loading={loadingData}
                       rpcSwitcherData={appProvidersForm}
                       formData={formData}
                       handleFormSubmit={handleSubmit}>
+                      <BigButton
+                        color="white"
+                        css={{ mr: 24 }}
+                        onClick={() => {
+                          setFormData(initialData);
+                          setIsEdit(false);
+                        }}>
+                        {texts.other.close}
+                      </BigButton>
                       <BigButton
                         type="submit"
                         loading={validating}
@@ -133,23 +181,23 @@ export function RpcSwitcherPage() {
                 );
               }}
             </Form>
-          </>
-        ) : (
-          <NoDataWrapper>
-            <Box component="h2" sx={{ typography: 'h1', mt: 8 }}>
-              {texts.rpcSwitcherPage.notConnectedWallet}
-            </Box>
-            <Box
-              component="p"
-              sx={{ typography: 'body', mt: 12, mb: 20, maxWidth: 480 }}>
-              {texts.rpcSwitcherPage.notConnectedWalletDescription}
-            </Box>
-
-            <BigButton onClick={() => setConnectWalletModalOpen(true)}>
-              {texts.rpcSwitcherPage.notConnectedWalletButtonTitle}
-            </BigButton>
-          </NoDataWrapper>
-        )}
+          )}
+          {!isEdit && !isRpcSwitcherChangedView && (
+            <RpcSwitcherTableWrapper
+              loading={loadingData}
+              rpcSwitcherData={appProvidersForm}
+              isEdit={isEdit}
+              isViewChanges={isRpcSwitcherChangedView}>
+              {loadingData ? (
+                <CustomSkeleton width={156} height={50} />
+              ) : (
+                <BigButton onClick={() => setIsEdit(true)}>
+                  {texts.other.edit}
+                </BigButton>
+              )}
+            </RpcSwitcherTableWrapper>
+          )}
+        </>
       </Container>
     </>
   );

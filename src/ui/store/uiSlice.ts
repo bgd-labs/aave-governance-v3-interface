@@ -178,6 +178,9 @@ export interface IUISlice {
   isRepresentationsChangedView: boolean;
   setIsRepresentationsChangedView: (value: boolean) => void;
 
+  isRpcSwitcherChangedView: boolean;
+  setIsRpcSwitcherChangedView: (value: boolean) => void;
+
   isTermModalOpen: boolean;
   setIsTermModalOpen: (value: boolean) => void;
 
@@ -700,6 +703,11 @@ export const createUISlice: StoreSlice<
   isRepresentationsChangedView: false,
   setIsRepresentationsChangedView: (value) => {
     set({ isRepresentationsChangedView: value });
+  },
+
+  isRpcSwitcherChangedView: false,
+  setIsRpcSwitcherChangedView: (value) => {
+    set({ isRpcSwitcherChangedView: value });
   },
 
   isTermModalOpen: false,

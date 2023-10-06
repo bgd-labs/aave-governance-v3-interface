@@ -1,9 +1,9 @@
 import {
   createWalletSlice,
   IWalletSlice,
+  StaticJsonRpcBatchProvider,
   StoreSlice,
 } from '@bgd-labs/frontend-web3-utils/src';
-import { StaticJsonRpcBatchProvider } from 'bgd-fe-utils';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';

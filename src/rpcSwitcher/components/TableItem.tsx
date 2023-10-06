@@ -4,16 +4,30 @@ import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { getChainName } from '../../ui/utils/getChainName';
+import { RpcSwitcherFormData } from '../store/providerSlice';
 import { RpcSwitcherTableItemField } from './RpcSwitcherTableItemField';
 
 export interface TableItemProps {
-  chainId: number;
+  rpcUrl?: string;
+  chainId?: number;
   loading?: boolean;
   inputName?: string;
+  isEdit?: boolean;
+  isViewChanges?: boolean;
+  formData?: RpcSwitcherFormData;
 }
 
-export function TableItem({ chainId, loading, inputName }: TableItemProps) {
+export function TableItem({
+  chainId,
+  loading,
+  inputName,
+  isEdit,
+  isViewChanges,
+  formData,
+  rpcUrl,
+}: TableItemProps) {
   const theme = useTheme();
+  const formRpcUrl = formData?.find((item) => item.chainId === chainId)?.rpcUrl;
   return (
     <Box>
       <Box
@@ -103,7 +117,14 @@ export function TableItem({ chainId, loading, inputName }: TableItemProps) {
           {loading ? (
             <CustomSkeleton width={150} height={20} />
           ) : (
-            <RpcSwitcherTableItemField inputName={`${inputName}.rpcUrl`} />
+            <RpcSwitcherTableItemField
+              isEdit={!!isEdit}
+              isViewChanges={!!isViewChanges}
+              inputName={`${inputName}.rpcUrl`}
+              rpcUrl={rpcUrl}
+              rpcUrlTo={formRpcUrl}
+              chainId={chainId}
+            />
           )}
         </Box>
       </Box>
