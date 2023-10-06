@@ -258,7 +258,7 @@ function PayloadItem({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            mt: 2,
+            mt: 4,
           }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
@@ -276,7 +276,7 @@ function PayloadItem({
               }}>
               {payload.actionAddresses.map((address, index) => (
                 <Box
-                  sx={{ display: 'inline-flex', alignItems: 'center' }}
+                  sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
                   key={index}>
                   <Link
                     css={{ display: 'inline-flex', alignItems: 'center' }}
@@ -291,12 +291,8 @@ function PayloadItem({
                     <Box
                       component="li"
                       sx={{
-                        mb: 2,
                         typography: 'descriptor',
                         transition: 'all 0.2s ease',
-                        '&:last-of-type': {
-                          mb: 0,
-                        },
                         hover: { opacity: 0.7 },
                       }}>
                       {textCenterEllipsis(address, 6, 6)}
