@@ -36,6 +36,7 @@ const Text = ({
       isCrossed={isCrossed}
       alwaysGray={alwaysGray}
       isError={isError}
+      errorMessage={texts.delegatePage.userNotFound}
       address={address}
       isErrorOnRight>
       <>

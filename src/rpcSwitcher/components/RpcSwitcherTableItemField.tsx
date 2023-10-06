@@ -26,11 +26,13 @@ const Text = ({
 }) => {
   return (
     <TableText
-      topText={texts.representationsPage.notRepresented}
+      topText={''}
       isCrossed={isCrossed}
       alwaysGray={alwaysGray}
       isError={isError}
       address={rpcUrl}
+      errorMessage={texts.rpcSwitcherPage.rpcIsNotSupported}
+      removeHover
       isErrorOnRight>
       <>
         {!!rpcUrl && (

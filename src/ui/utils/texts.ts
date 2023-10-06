@@ -240,6 +240,7 @@ export const texts = {
     notConnectedWalletDescription: 'Please connect wallet first, to manage RPC',
     notConnectedWalletButtonTitle: 'Connect wallet',
     placeholder: 'Enter RPC URL',
+    rpcIsNotSupported: "This RPC doesn't support our contracts logic",
   },
   notFoundPage: {
     title: 'Page not found',

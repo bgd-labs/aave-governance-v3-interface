@@ -15,7 +15,9 @@ interface TableTextProps {
   isCrossed?: boolean;
   alwaysGray?: boolean;
   isError?: boolean;
+  errorMessage?: string;
   isErrorOnRight?: boolean;
+  removeHover?: boolean;
 }
 export function TableText({
   topText,
@@ -25,6 +27,8 @@ export function TableText({
   alwaysGray,
   isError,
   isErrorOnRight,
+  errorMessage,
+  removeHover,
 }: TableTextProps) {
   const store = useStore();
   const sm = useMediaQuery(media.sm);
@@ -57,24 +61,27 @@ export function TableText({
         [theme.breakpoints.up('md')]: {
           mb: isCrossed ? 12 : 0,
         },
-        hover: {
-          '.TableText__hovered': {
-            display: isActionsAvailable && !isClick && sm ? 'block' : 'none',
-          },
-          '.TableText__content': {
-            display:
-              isActionsAvailable && !isClick && sm && !!address
-                ? 'none'
-                : 'inline-flex',
-          },
-        },
+        hover: removeHover
+          ? {}
+          : {
+              '.TableText__hovered': {
+                display:
+                  isActionsAvailable && !isClick && sm ? 'block' : 'none',
+              },
+              '.TableText__content': {
+                display:
+                  isActionsAvailable && !isClick && sm && !!address
+                    ? 'none'
+                    : 'inline-flex',
+              },
+            },
       })}>
       {address === ethers.constants.AddressZero ||
       address === store.activeWallet?.accounts[0] ? (
         topText
       ) : (
         <>
-          {isClick && !!address ? (
+          {isClick && !!address && !removeHover ? (
             <Box
               component="h3"
               sx={(theme) => ({
@@ -138,7 +145,7 @@ export function TableText({
                       position: 'relative',
                       color: '$error',
                     }}>
-                    {texts.delegatePage.userNotFound}
+                    {errorMessage}
                   </Box>
                 )}
               </Box>

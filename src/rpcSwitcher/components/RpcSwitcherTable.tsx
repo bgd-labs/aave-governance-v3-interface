@@ -9,7 +9,7 @@ import {
 } from '../store/providerSlice';
 import { TableItem } from './TableItem';
 
-interface RepresentationsTableProps {
+interface RpcSwitcherTableProps {
   loading: boolean;
   rpcSwitcherData: Record<number, AppProviderStorage>;
   isEdit: boolean;
@@ -25,7 +25,7 @@ export function RpcSwitcherTable({
   isViewChanges,
   fields,
   formData,
-}: RepresentationsTableProps) {
+}: RpcSwitcherTableProps) {
   const theme = useTheme();
 
   const dataForInputs: {
@@ -61,10 +61,10 @@ export function RpcSwitcherTable({
               alignItems: 'center',
             }}>
             <TableHeaderTitle
-              title="Chain"
+              title={texts.rpcSwitcherPage.tableHeaderNetwork}
               css={{
                 maxWidth: 250,
-                display: 'block',
+                display: !isEdit ? 'block' : 'none',
                 [theme.breakpoints.up('sm')]: {
                   display: 'block',
                   minWidth: 250,
@@ -77,15 +77,15 @@ export function RpcSwitcherTable({
             />
             <TableHeaderTitle
               css={{
-                display: 'block',
+                display: isEdit ? 'block' : 'none',
                 [theme.breakpoints.up('sm')]: { display: 'none' },
               }}
-              title={texts.other.edit}
+              title={texts.rpcSwitcherPage.tableHeaderSwitcher}
               center
             />
             <TableHeaderTitle
               css={{
-                display: 'none',
+                display: !isEdit ? 'block' : 'none',
                 [theme.breakpoints.up('sm')]: {
                   display: 'block',
                 },

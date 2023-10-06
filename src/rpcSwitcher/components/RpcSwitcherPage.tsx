@@ -20,12 +20,12 @@ export function RpcSwitcherPage() {
 
   const store = useStore();
   const {
-    activeWallet,
     appProviders,
     appProvidersForm,
     updateProviders,
     isRpcSwitcherChangedView,
     setIsRpcSwitcherChangedView,
+    rpcHasError,
   } = store;
 
   const [isEdit, setIsEdit] = useState(false);
@@ -42,13 +42,8 @@ export function RpcSwitcherPage() {
   );
 
   useEffect(() => {
-    setIsEdit(false);
-    setIsRpcSwitcherChangedView(false);
-  }, [activeWallet?.accounts[0]]);
-
-  useEffect(() => {
     setFormData(initialData);
-  }, [activeWallet?.accounts[0], appProviders]);
+  }, [appProviders]);
 
   useEffect(() => {
     if (!!Object.keys(appProviders).length) {
@@ -57,10 +52,6 @@ export function RpcSwitcherPage() {
       setLoadingData(true);
     }
   }, [Object.keys(appProviders).length]);
-
-  useEffect(() => {
-    setFormData(initialData);
-  }, [activeWallet?.accounts[0], appProviders]);
 
   const handleFormSubmit = ({
     formData,
@@ -117,24 +108,18 @@ export function RpcSwitcherPage() {
                 {texts.other.backToEdit}
               </BigButton>
               <BigButton
-                onClick={async () => {
-                  if (isEqual(initialData, formData)) {
-                    setIsEdit(false);
-                    setIsRpcSwitcherChangedView(false);
-                  } else {
-                    await handleUpdateProviders();
-                  }
-                }}
-                // loading={loading || txPending}
+                onClick={handleUpdateProviders}
                 disabled={
-                  isEqual(initialData, formData)
-                  // incorrectRepresentationFields.length > 0 ||
-                  // formData.some((data) =>
-                  //   checkIsGetAddressByENSNamePending(
-                  //     store,
-                  //     data.representative,
-                  //   ),
-                  // )
+                  isEqual(initialData, formData) ||
+                  formData.some((item) => {
+                    if (rpcHasError.hasOwnProperty(item.rpcUrl)) {
+                      return (
+                        rpcHasError[item.rpcUrl].error ||
+                        rpcHasError[item.rpcUrl].chainId !== item.chainId
+                      );
+                    }
+                    return false;
+                  })
                 }>
                 {texts.other.confirm}
               </BigButton>
@@ -149,7 +134,7 @@ export function RpcSwitcherPage() {
               initialValues={{
                 formData: formData,
               }}>
-              {({ handleSubmit, values, errors, validating }) => {
+              {({ handleSubmit, errors }) => {
                 return (
                   <>
                     <RpcSwitcherTableWrapper
@@ -170,11 +155,8 @@ export function RpcSwitcherPage() {
                       </BigButton>
                       <BigButton
                         type="submit"
-                        loading={validating}
-                        disabled={
-                          !!Object.keys(errors || {}).length || validating
-                        }>
-                        {texts.other.confirm}
+                        disabled={!!Object.keys(errors || {}).length}>
+                        {texts.delegatePage.viewChanges}
                       </BigButton>
                     </RpcSwitcherTableWrapper>
                   </>
