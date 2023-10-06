@@ -9,7 +9,10 @@ import { HelpDelegateModal } from './HelpDelegateModal';
 import { HelpDelegationPP } from './HelpDelegationPP';
 import { HelpDelegationVP } from './HelpDelegationVP';
 import { HelpModalNavigation, InfoType } from './HelpModalNavigation';
+import { HelpModalText } from './HelpModalText';
 import { HelpModalWrapper } from './HelpModalWrapper';
+import { HelpRepresentationModal } from './HelpRepresentationModal';
+import { HelpRepresentativeModal } from './HelpRepresentativeModal';
 import { HelpStatusesModal } from './HelpStatusesModal';
 import { HelpVotingBarsModal } from './HelpVotingBarsModal';
 import { HelpVotingModal } from './HelpVotingModal';
@@ -27,9 +30,10 @@ export function HelpModalProvider() {
     setIsClickedOnStartButtonOnHelpModal,
     isAppBlockedByTerms,
     isRendered,
+    closeHelpModals,
+    isClickedOnStartButtonOnHelpModal,
   } = useStore();
 
-  const [isStartClick, setIsStartClick] = useState(false);
   const [infoType, setInfoType] = useState<InfoType | undefined>(undefined);
 
   useEffect(() => {
@@ -39,14 +43,12 @@ export function HelpModalProvider() {
 
     if (isHelpModalVisible && !isAppBlockedByTerms) {
       setIsHelpModalOpen(isHelpModalVisible === 'true');
-    } else {
+    } else if (!isClickedOnStartButtonOnHelpModal) {
       setIsHelpModalOpen(!isAppBlockedByTerms);
     }
-    return () => setInfoType(undefined);
   }, [isRendered]);
 
   useEffect(() => {
-    setIsStartClick(false);
     setInfoType(undefined);
   }, [isModalOpen]);
 
@@ -72,26 +74,15 @@ export function HelpModalProvider() {
           <Box component="h2" sx={{ typography: 'h1', mb: 12 }}>
             {texts.faq.welcome.title}
           </Box>
-          <Box
-            component="p"
-            sx={{
-              typography: 'body',
-              lineHeight: '20px',
-              [theme.breakpoints.up('lg')]: {
-                typography: 'body',
-                lineHeight: '26px',
-              },
-            }}>
-            {texts.faq.welcome.description}
-          </Box>
+          <HelpModalText>{texts.faq.welcome.description}</HelpModalText>
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 32 }}>
             <BigButton
               alwaysWithBorders
               color="white"
               onClick={() => {
-                setIsHelpModalOpen(false);
-
                 localStorage?.setItem('isHelpModalVisible', 'false');
+                closeHelpModals();
+                setIsHelpModalOpen(false);
               }}>
               {texts.faq.welcome.closeButtonTitle}
             </BigButton>
@@ -99,8 +90,8 @@ export function HelpModalProvider() {
               alwaysWithBorders
               css={{ ml: 8 }}
               onClick={() => {
+                localStorage?.setItem('isHelpModalVisible', 'false');
                 setIsClickedOnStartButtonOnHelpModal(true);
-                setIsStartClick(true);
                 setIsHelpNavigationModalOpen(true);
               }}>
               {texts.faq.welcome.nextButtonTitle}
@@ -111,11 +102,13 @@ export function HelpModalProvider() {
 
       <HelpModalNavigation setInfoType={setInfoType} />
 
-      {isStartClick && (
+      {isClickedOnStartButtonOnHelpModal && (
         <>
           <HelpWalletModal infoType={infoType} />
           <HelpVotingModal />
           <HelpDelegateModal infoType={infoType} />
+          <HelpRepresentativeModal />
+          <HelpRepresentationModal infoType={infoType} />
           <HelpStatusesModal infoType={infoType} />
           <HelpVotingPowerModal />
           <HelpVotingBarsModal />

@@ -72,7 +72,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       <AppHeader />
 
-      <Box component="main" sx={{ position: 'relative', zIndex: 2 }}>
+      <Box component="main" sx={{ position: 'relative', zIndex: 3 }}>
         {store.loadingListCache && !isForIPFS ? (
           children
         ) : (

@@ -17,6 +17,7 @@ export interface TableItemProps {
   isViewChanges?: boolean;
   formData?: RepresentationFormData[];
   inputName?: string;
+  forHelp?: boolean;
 }
 
 export function TableItem({
@@ -27,6 +28,7 @@ export function TableItem({
   isEdit,
   isViewChanges,
   inputName,
+  forHelp,
 }: TableItemProps) {
   const theme = useTheme();
   const { representationDataLoading } = useStore();
@@ -36,21 +38,31 @@ export function TableItem({
     formData,
   });
 
+  const dataLoading = forHelp ? false : representationDataLoading;
+
   return (
     <Box>
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          flexDirection: 'column',
+          py: 20,
+          [theme.breakpoints.up('xsm')]: {
+            flexDirection: isEdit ? 'column' : 'row',
+            alignItems: isEdit ? 'flex-start' : 'center',
+          },
           [theme.breakpoints.up('sm')]: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             height: 85,
+            py: 0,
           },
           [theme.breakpoints.up('md')]: {
-            height: 110,
+            height: forHelp ? 85 : 110,
           },
           [theme.breakpoints.up('lg')]: {
-            height: 115,
+            height: forHelp ? 90 : 115,
           },
         }}>
         <Box
@@ -59,8 +71,14 @@ export function TableItem({
             alignItems: 'center',
             justifyContent: 'flex-start',
             flex: 1,
-            maxWidth: 300,
-            minWidth: 300,
+            maxWidth: 250,
+            [theme.breakpoints.up('sm')]: {
+              minWidth: 250,
+            },
+            [theme.breakpoints.up('md')]: {
+              maxWidth: 300,
+              minWidth: 300,
+            },
           }}>
           {!chainId ? (
             <Box sx={{ mr: 20 }}>
@@ -83,7 +101,7 @@ export function TableItem({
                 <CustomSkeleton width={30} height={20} />
               </Box>
             ) : (
-              <Box component="h2" sx={{ typography: 'h2' }}>
+              <Box component="h3" sx={{ typography: 'h3', fontWeight: 600 }}>
                 {getChainName(chainId)}
               </Box>
             )}
@@ -91,8 +109,24 @@ export function TableItem({
         </Box>
 
         <Box
-          sx={{ display: 'flex', flex: 2, justifyContent: 'flex-end', pr: 7 }}>
-          {loading || representationDataLoading ? (
+          sx={{
+            display: 'flex',
+            flex: 2,
+            justifyContent: 'flex-end',
+            width: '100%',
+            mt: 12,
+            [theme.breakpoints.up('xsm')]: {
+              mt: isEdit ? 12 : 0,
+              width: isEdit ? '100%' : 'unset',
+              pr: isEdit ? 0 : 7,
+            },
+            [theme.breakpoints.up('sm')]: {
+              mt: 0,
+              width: 'unset',
+              pr: 7,
+            },
+          }}>
+          {loading || dataLoading ? (
             <CustomSkeleton width={150} height={20} />
           ) : (
             <RepresentationsTableItemField
@@ -101,6 +135,7 @@ export function TableItem({
               inputName={`${inputName}.representative`}
               address={representativeAddress}
               addressTo={formRepresentativeAddress}
+              forHelp={forHelp}
             />
           )}
         </Box>

@@ -7,6 +7,7 @@ import { texts } from '../utils/texts';
 import { assets } from './assets';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
+import { HelpModalText } from './HelpModalText';
 
 export function HelpDelegationVP() {
   const theme = useTheme();
@@ -53,33 +54,13 @@ export function HelpDelegationVP() {
             />
           }>
           <Box sx={{ maxWidth: 480 }}>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.delegate.entireBalance(assets)}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText mb={12}>
               <b>{texts.faq.delegate.warning}</b>{' '}
               {texts.faq.delegate.votingPowerWarning}
-            </Box>
+            </HelpModalText>
 
             <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
               {texts.faq.other.gotIt}

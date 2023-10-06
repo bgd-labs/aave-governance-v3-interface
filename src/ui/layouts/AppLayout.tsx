@@ -18,9 +18,11 @@ import { HelpModalProvider } from '../helpModals/HelpModalProvider';
 import { MainLayout } from './MainLayout';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { checkIsAppBlockedByTerms } = useStore();
+  const { checkIsAppBlockedByTerms, checkTutorialStartButtonClick } =
+    useStore();
 
   useEffect(() => {
+    checkTutorialStartButtonClick();
     checkIsAppBlockedByTerms();
   }, []);
 

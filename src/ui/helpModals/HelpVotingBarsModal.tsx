@@ -7,6 +7,7 @@ import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
+import { HelpModalText } from './HelpModalText';
 
 export function HelpVotingBarsModal() {
   const theme = useTheme();
@@ -17,6 +18,8 @@ export function HelpVotingBarsModal() {
     setIsHelpVotingModalOpen,
   } = useStore();
   const config = useStore((state) => selectConfigByAccessLevel(state, 1));
+
+  if (!config) return null;
 
   const handleClick = () => {
     setIsHelpVotingBarsModalOpen(false);
@@ -54,29 +57,10 @@ export function HelpVotingBarsModal() {
             />
           }>
           <Box sx={{ maxWidth: 480 }}>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                mb: 12,
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText mb={12}>
               {texts.faq.votingBars.description}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            </HelpModalText>
+            <HelpModalText>
               <span
                 dangerouslySetInnerHTML={{
                   __html: texts.faq.votingBars.secondDescription(
@@ -85,7 +69,7 @@ export function HelpVotingBarsModal() {
                   ),
                 }}
               />
-            </Box>
+            </HelpModalText>
 
             <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
               {texts.faq.other.gotIt}

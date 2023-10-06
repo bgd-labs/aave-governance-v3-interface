@@ -24,6 +24,7 @@ import { media } from '../utils/themeMUI';
 import { useMediaQuery } from '../utils/useMediaQuery';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
 import { InfoType } from './HelpModalNavigation';
+import { HelpModalText } from './HelpModalText';
 
 interface HelpWalletModalProps {
   infoType?: InfoType;
@@ -42,6 +43,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
     setIsHelpNavigationModalOpen,
     resetTestTransactionsPool,
     addTestTransaction,
+    setIsHelpRepresentationModalOpen,
   } = useStore();
 
   const allTestTransaction = useStore((state) =>
@@ -145,18 +147,9 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
               }}
             />
           </Box>
-          <Box
-            component="p"
-            sx={{
-              typography: 'body',
-              lineHeight: '20px',
-              [theme.breakpoints.up('lg')]: {
-                typography: 'body',
-                lineHeight: '26px',
-              },
-            }}>
+          <HelpModalText>
             {texts.faq.wallet.transactionsViewDescription}
-          </Box>
+          </HelpModalText>
           <BigButton
             alwaysWithBorders
             onClick={() => setIsFirstStepOnMobile(false)}
@@ -290,6 +283,8 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                         isActive={true}
                         allTransactions={allTestTransaction}
                         onDelegateButtonClick={() => {
+                          setActiveWallet('');
+                          setWalletActivating(false);
                           setIsHelpWalletModalOpen(false);
                           setIsHelpDelegateModalOpen(true);
                         }}
@@ -297,9 +292,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                           setActiveWallet('');
                           setWalletActivating(false);
                           setIsHelpWalletModalOpen(false);
-                          console.log(
-                            'TODO: need FAQ modal with representations texts',
-                          );
+                          setIsHelpRepresentationModalOpen(true);
                         }}
                         onDisconnectButtonClick={() => {
                           setActiveWallet('');
@@ -347,19 +340,9 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
             </Box>
             {!activeWallet ? (
               <>
-                <Box
-                  component="p"
-                  sx={{
-                    typography: 'body',
-                    lineHeight: '20px !important',
-                    mb: 12,
-                    [theme.breakpoints.up('lg')]: {
-                      typography: 'body',
-                      lineHeight: '26px !important',
-                    },
-                  }}>
+                <HelpModalText mb={12}>
                   {texts.faq.wallet.description}
-                </Box>
+                </HelpModalText>
                 <Box
                   component="p"
                   sx={{

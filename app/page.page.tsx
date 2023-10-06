@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
   description: metaTexts.proposalListMetaDescription,
   openGraph: {
+    images: ['/metaLogo.jpg'],
     title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
     description: metaTexts.proposalListMetaDescription,
   },

@@ -34,18 +34,24 @@ export function SmallButton({
         position: 'relative',
         hover: {
           '.SmallButton__inner': {
-            borderTop: `1px solid ${theme.palette.$main}`,
-            borderRight: `1px solid ${theme.palette.$main}`,
+            borderTop: `1px solid ${theme.palette.$mainBorder}`,
+            borderRight: `1px solid ${theme.palette.$mainBorder}`,
             width: 'calc(100% - 2px)',
             height: 'calc(100% - 2px)',
+          },
+          '.SmallButton__rotateLine': {
+            backgroundColor: `${theme.palette.$mainBorder} !important`,
           },
         },
         '&:active': {
           '.SmallButton__inner': {
-            borderTop: `1px solid ${theme.palette.$main}`,
-            borderRight: `1px solid ${theme.palette.$main}`,
+            borderTop: `1px solid ${theme.palette.$mainBorder}`,
+            borderRight: `1px solid ${theme.palette.$mainBorder}`,
             width: 'calc(100% - 4px)',
             height: 'calc(100% - 4px)',
+          },
+          '.SmallButton__rotateLine': {
+            backgroundColor: '$mainBorder',
           },
         },
         '&:disabled': {
@@ -102,7 +108,9 @@ export function SmallButton({
         }}
       />
       <Box
+        className="SmallButton__rotateLine"
         sx={{
+          transition: 'all 0.2s ease',
           position: 'absolute',
           right: '-2px',
           top: 2,

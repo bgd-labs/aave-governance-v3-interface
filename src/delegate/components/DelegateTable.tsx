@@ -68,10 +68,12 @@ export function DelegateTable({
               }}
             />
             <TableHeaderTitle
+              css={{ pr: 7 }}
               title={texts.delegatePage.tableHeaderVoting}
               center
             />
             <TableHeaderTitle
+              css={{ pl: 7 }}
               title={texts.delegatePage.tableHeaderProposition}
               center
             />

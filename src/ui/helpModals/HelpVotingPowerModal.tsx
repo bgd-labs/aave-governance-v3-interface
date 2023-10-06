@@ -7,6 +7,7 @@ import { texts } from '../utils/texts';
 import { assets } from './assets';
 import { HelpModalCaption } from './HelpModalCaption';
 import { HelpModalContainer, helpModalWidth } from './HelpModalContainer';
+import { HelpModalText } from './HelpModalText';
 
 export function HelpVotingPowerModal() {
   const theme = useTheme();
@@ -53,18 +54,9 @@ export function HelpVotingPowerModal() {
             />
           }>
           <Box sx={{ maxWidth: 480 }}>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
-                [theme.breakpoints.up('lg')]: {
-                  typography: 'body',
-                  lineHeight: '26px !important',
-                },
-              }}>
+            <HelpModalText>
               {texts.faq.votingPower.description(assets)}
-            </Box>
+            </HelpModalText>
 
             <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
               {texts.faq.other.gotIt}

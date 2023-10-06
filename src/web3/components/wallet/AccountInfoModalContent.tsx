@@ -214,7 +214,10 @@ export function AccountInfoModalContent({
       </Box>
 
       {typeof representedAddresses !== 'undefined' && (
-        <RepresentingForm representedAddresses={representedAddresses} />
+        <RepresentingForm
+          representedAddresses={representedAddresses}
+          isForTest={forTest}
+        />
       )}
 
       {isActive ? (
@@ -231,10 +234,8 @@ export function AccountInfoModalContent({
             <Box
               component="h3"
               sx={{ typography: 'h3', textAlign: 'center', fontWeight: 600 }}>
-              {allTransactions.length >= 2
-                ? texts.walletConnect.lastTransaction(allTransactions.length)
-                : allTransactions.length === 0
-                ? texts.walletConnect.allTransactions
+              {allTransactions.length === 0
+                ? texts.walletConnect.transactions
                 : texts.walletConnect.lastTransaction(allTransactions.length)}
             </Box>
 

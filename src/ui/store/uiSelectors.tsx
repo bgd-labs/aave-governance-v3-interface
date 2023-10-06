@@ -5,3 +5,8 @@ export const selectAllTestTransactions = (state: IUISlice) => {
     (a, b) => b.localTimestamp - a.localTimestamp,
   );
 };
+
+export const closeHelpModal = (state: IUISlice) => {
+  state.setIsHelpModalClosed(true);
+  setTimeout(() => state.setIsHelpModalClosed(false), 1000);
+};

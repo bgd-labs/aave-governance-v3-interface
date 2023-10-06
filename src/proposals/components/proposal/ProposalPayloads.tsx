@@ -102,12 +102,13 @@ function PayloadItem({
 
   const isExecuted = payload.executedAt > 0;
 
-  let payloadExpiredTime = 0;
-  if (payload?.state && payload.state === PayloadState.Created) {
-    payloadExpiredTime = payload.expirationTime;
-  } else if (payload?.state && payload.state === PayloadState.Queued) {
-    payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
-  }
+  // TODO: will need in future
+  // let payloadExpiredTime = 0;
+  // if (payload?.state && payload.state === PayloadState.Created) {
+  //   payloadExpiredTime = payload.expirationTime;
+  // } else if (payload?.state && payload.state === PayloadState.Queued) {
+  //   payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
+  // }
 
   let payloadNumber =
     totalPayloadsCount > 1 ? `${payloadCount}/${totalPayloadsCount}` : '';
@@ -178,15 +179,17 @@ function PayloadItem({
           {isPayloadOnInitialState && (
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.created}>
-              <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm')}</>
+              <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')}</>
             </PayloadItemStatusInfo>
           )}
-          {!isPayloadOnInitialState && !isPayloadReadyForExecution && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.executedIn}>
-              <Timer timestamp={payloadExecutionTime} />
-            </PayloadItemStatusInfo>
-          )}
+          {!isPayloadOnInitialState &&
+            !isPayloadReadyForExecution &&
+            !isFinalStatus && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.executedIn}>
+                <Timer timestamp={payloadExecutionTime} />
+              </PayloadItemStatusInfo>
+            )}
 
           {isPayloadReadyForExecution && !isExecuted && (
             <>
@@ -216,7 +219,7 @@ function PayloadItem({
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.executedAt}>
               <>
-                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm')}
+                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
@@ -225,14 +228,25 @@ function PayloadItem({
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.cancelledAt}>
               <>
-                {dayjs.unix(payload.cancelledAt).format('MMM D, YYYY, , h:mm')}
+                {dayjs
+                  .unix(payload.cancelledAt)
+                  .format('MMM D, YYYY, , h:mm A')}
               </>
             </PayloadItemStatusInfo>
           )}
 
           {payload.state === PayloadState.Expired && (
-            <PayloadItemStatusInfo>
-              {texts.proposals.payloadsDetails.expired}
+            <PayloadItemStatusInfo
+              title={texts.proposals.payloadsDetails.expired}>
+              <>
+                {dayjs
+                  .unix(
+                    payload.queuedAt <= 0
+                      ? payload.expirationTime
+                      : payload.queuedAt + payload.delay + payload.gracePeriod,
+                  )
+                  .format('MMM D, YYYY, , h:mm A')}
+              </>
             </PayloadItemStatusInfo>
           )}
         </Box>
@@ -244,7 +258,7 @@ function PayloadItem({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'space-between',
-            mt: 2,
+            mt: 4,
           }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
@@ -262,7 +276,7 @@ function PayloadItem({
               }}>
               {payload.actionAddresses.map((address, index) => (
                 <Box
-                  sx={{ display: 'inline-flex', alignItems: 'center' }}
+                  sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
                   key={index}>
                   <Link
                     css={{ display: 'inline-flex', alignItems: 'center' }}
@@ -277,12 +291,8 @@ function PayloadItem({
                     <Box
                       component="li"
                       sx={{
-                        mb: 2,
                         typography: 'descriptor',
                         transition: 'all 0.2s ease',
-                        '&:last-of-type': {
-                          mb: 0,
-                        },
                         hover: { opacity: 0.7 },
                       }}>
                       {textCenterEllipsis(address, 6, 6)}
@@ -334,22 +344,22 @@ function PayloadItem({
               ))}
             </Box>
           </Box>
-
-          {!isFinalStatus && (
-            <Box
-              sx={{
-                display: 'inline-flex',
-                flexDirection: 'column',
-                alignItems: 'flex-end',
-              }}>
-              <Box sx={{ typography: 'descriptorAccent' }}>
-                {texts.proposals.payloadsDetails.expiredIn}
-              </Box>
-              <Box sx={{ typography: 'descriptor' }}>
-                <Timer timestamp={payloadExpiredTime} />
-              </Box>
-            </Box>
-          )}
+          {/*TODO: will need in future*/}
+          {/*{!isFinalStatus && (*/}
+          {/*  <Box*/}
+          {/*    sx={{*/}
+          {/*      display: 'inline-flex',*/}
+          {/*      flexDirection: 'column',*/}
+          {/*      alignItems: 'flex-end',*/}
+          {/*    }}>*/}
+          {/*    <Box sx={{ typography: 'descriptorAccent' }}>*/}
+          {/*      {texts.proposals.payloadsDetails.expiredIn}*/}
+          {/*    </Box>*/}
+          {/*    <Box sx={{ typography: 'descriptor' }}>*/}
+          {/*      <Timer timestamp={payloadExpiredTime} />*/}
+          {/*    </Box>*/}
+          {/*  </Box>*/}
+          {/*)}*/}
         </Box>
       )}
     </Box>

@@ -7,6 +7,7 @@ import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
 import {
+  addressValidator,
   composeValidators,
   ensNameOrAddressValidator,
 } from '../../ui/utils/inputValidation';
@@ -27,6 +28,8 @@ const Text = ({
   isError?: boolean;
   ensName?: string;
 }) => {
+  const ens = ensName || '';
+
   return (
     <TableText
       topText={texts.representationsPage.notRepresented}
@@ -48,8 +51,10 @@ const Text = ({
               position: 'relative',
             }}>
             by{' '}
-            {isEnsName(ensName || '')
-              ? ensName
+            {isEnsName(ens)
+              ? ens.length > 15
+                ? textCenterEllipsis(ens, 9, 6)
+                : ens
               : textCenterEllipsis(address, 5, 4)}
           </Box>
         )}
@@ -58,14 +63,13 @@ const Text = ({
   );
 };
 
-interface DelegateTableItemAddressProps {
+interface RepresentationsTableItemFieldProps {
   isEdit: boolean;
   isViewChanges: boolean;
   inputName: string;
   address?: string;
   addressTo?: string;
-  withSelect?: boolean;
-  selectAddresses?: string[];
+  forHelp?: boolean;
 }
 
 export function RepresentationsTableItemField({
@@ -74,7 +78,8 @@ export function RepresentationsTableItemField({
   inputName,
   address,
   addressTo,
-}: DelegateTableItemAddressProps) {
+  forHelp,
+}: RepresentationsTableItemFieldProps) {
   const isAddressToVisible = address !== addressTo;
 
   const {
@@ -163,7 +168,11 @@ export function RepresentationsTableItemField({
       {isEdit && !isViewChanges && (
         <Field
           name={inputName}
-          validate={composeValidators(ensNameOrAddressValidator)}>
+          validate={
+            forHelp
+              ? composeValidators(addressValidator)
+              : composeValidators(ensNameOrAddressValidator)
+          }>
           {(props) => (
             <InputWrapper
               onCrossClick={

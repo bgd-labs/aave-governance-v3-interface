@@ -67,7 +67,7 @@ export const texts = {
       executedAt: 'Executed at',
       execution: 'Ready for execution',
       cancelledAt: 'Cancelled at',
-      expired: 'Expired',
+      expired: 'Expired at',
       expiredIn: 'Expired in',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status details',
@@ -219,6 +219,7 @@ export const texts = {
     notConnectedWalletDescription:
       'Please connect wallet first, to see representations info',
     notConnectedWalletButtonTitle: 'Connect wallet',
+    tableHeaderFirstTitle: 'Network',
     tableHeaderRepresented: 'Represented by',
     myself: 'Myself',
     represented: 'Represented',
@@ -267,6 +268,7 @@ export const texts = {
     representations: 'Manage representations',
     disconnect: 'Disconnect',
     allTransactions: 'View all',
+    transactions: 'Transactions',
     lastTransaction: (count: number) =>
       count > 1 ? 'Last transactions' : 'Last transaction',
     transactionsEmpty: 'The list of your transactions is currently empty',
@@ -335,7 +337,7 @@ export const texts = {
     wallet: 'Wallet',
     off: 'Off',
     on: 'On',
-    copyError: 'Copy error',
+    copyError: 'Copy error text',
   },
   terms: {
     description:
@@ -357,6 +359,7 @@ export const texts = {
       wallet: 'How to connect and manage my wallet?',
       vote: 'How to vote?',
       delegate: 'How to delegate?',
+      representation: 'How do representation work?',
       lifeCycle: 'Proposal life cycle description',
     },
     wallet: {
@@ -522,6 +525,42 @@ export const texts = {
           'If at any stage the proposal or all of the associated payloads were canceled by the proposer, then the proposal will have the status ‘canceled’.',
         prevButtonTitle: 'Defeated',
       },
+    },
+    representative: {
+      title: 'Representatives',
+      description:
+        'Being representative of an Ethereum address on another network means that, for any proposal with voting running on that network, you can vote on behalf of said Ethereum address.If you have connected a wallet that was chosen as representative, on your account screen you can choose if you want to represent yourself, or any other address who selected you.This is just an interface feature, so no worries, will not do any blockchain transaction!',
+      descriptionMobileFirst:
+        'Being representative of an Ethereum address on another network means that, for any proposal with voting running on that network, you can vote on behalf of said Ethereum address.',
+      descriptionMobileSecond:
+        'If you have connected a wallet that was chosen as representative, on your account screen you can choose if you want to represent yourself, or any other address who selected you.This is just an interface feature, so no worries, will not do any blockchain transaction!',
+      firstTooltip:
+        'By clicking on the "Manage representations" button, you can go to the representations interface, where you can change your representatives for each voting network',
+      secondTooltip:
+        'In this drop-down list you can select who you will represent, or unset the representation.',
+    },
+    representations: {
+      manage: 'Manage',
+      edit: 'Edit',
+      confirmation: 'Confirmation',
+      selected: 'Representative selected',
+      startFirstDescription:
+        'In this screen, with your Ethereum address with voting power connected, you can choose representatives for all available voting networks.',
+      startSecondDescription: 'Click Edit to choose a representative',
+      startThirdDescription:
+        '(THIS IS JUST A MOCK, YOU WILL NOT CHOOSE A REAL REPRESENTATIVE)',
+      editFirstDescription:
+        'Now you can input a representative address for any of the available networks. Remember to always validate that the address you select exists in that network and is the one intended!',
+      editSecondDescription:
+        'P.S. if you want to remove a representative, you can just click the "x" icon on the input',
+      confirmFirstDescription:
+        'You can now view the summary about the representative/s you are choosing, and the network/s.If you are sure of your choice, click the confirmation button.',
+      confirmSecondDescription:
+        '(AGAIN, THIS IS JUST A MOCK, YOU WILL NOT CHOOSE A REAL REPRESENTATIVE)',
+      txPendingTitle: 'Almost there!',
+      txPendingDescription: 'Your representations is being processed',
+      doneDescription:
+        'Now the table shows the representatives you have chosen, and you can change them at any time',
     },
     other: {
       gotIt: 'Got it!',
