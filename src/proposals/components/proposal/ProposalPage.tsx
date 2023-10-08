@@ -335,10 +335,8 @@ export function ProposalPage({
           <Box
             sx={{
               width: '100%',
-              mb: 20,
               [theme.breakpoints.up('sm')]: {
                 width: 290,
-                mb: 0,
                 mr: 15,
                 position: 'sticky',
                 transition: 'all 0.5s ease',
@@ -496,7 +494,7 @@ export function ProposalPage({
             borderSize={10}
             wrapperCss={{
               display: 'block',
-              mb: 20,
+              mb: 12,
               [theme.breakpoints.up('sm')]: { display: 'none' },
             }}
             css={{ display: 'flex', flexDirection: 'column', py: 20 }}>

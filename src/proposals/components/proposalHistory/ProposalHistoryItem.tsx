@@ -167,7 +167,7 @@ export function ProposalHistoryItem({
                 }}>
                 {item.addresses.map((address, index) => (
                   <Box
-                    sx={{ display: 'inline-flex', alignItems: 'center' }}
+                    sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
                     key={index}>
                     <Link
                       css={{ display: 'inline-flex', alignItems: 'center' }}
@@ -182,7 +182,6 @@ export function ProposalHistoryItem({
                       <Box
                         component="li"
                         sx={{
-                          mt: 2,
                           transition: 'all 0.2s ease',
                           hover: { opacity: 0.7 },
                         }}>
