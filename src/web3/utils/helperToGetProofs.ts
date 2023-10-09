@@ -48,7 +48,9 @@ export const getProof = async (
 };
 
 export const getExtendedBlock = async (
-  provider: ethers.providers.JsonRpcBatchProvider,
+  provider:
+    | ethers.providers.JsonRpcBatchProvider
+    | ethers.providers.JsonRpcProvider,
   blockNumber: number,
 ) => {
   return provider.send('eth_getBlockByNumber', [
