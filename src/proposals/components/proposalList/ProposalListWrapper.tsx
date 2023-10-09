@@ -1,10 +1,14 @@
 import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers/src';
-import { useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { useCallback, useEffect } from 'react';
 
 import { useStore } from '../../../store';
 import { isForIPFS } from '../../../utils/appConfig';
-import { selectPaginatedProposalsData } from '../../store/proposalsSelectors';
+import {
+  selectPaginatedProposalsData,
+  selectProposalsPages,
+} from '../../store/proposalsSelectors';
+import { proposalStatuses } from '../../utils/statuses';
 import { ProposalsList } from './ProposalsList';
 
 interface ProposalListWrapperProps {
@@ -19,14 +23,51 @@ export default function ProposalListWrapper({
   cachedActiveIds,
 }: ProposalListWrapperProps) {
   const store = useStore();
-
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const totalPages = selectProposalsPages(store).length;
+  const totalStatuses = proposalStatuses.length;
+
+  const isActivePageWrong =
+    Number(searchParams?.get('activePage')) > totalPages ||
+    isNaN(Number(searchParams?.get('activePage')));
+  const isFilteredStateWrong =
+    Number(searchParams?.get('filteredState')) > totalStatuses ||
+    isNaN(Number(searchParams?.get('filteredState')));
+
   const activePage = isForIPFS
     ? store.activePage
+    : isActivePageWrong
+    ? 0
     : Number(searchParams?.get('activePage'));
   const filteredState = isForIPFS
     ? store.filteredState
+    : isFilteredStateWrong
+    ? null
     : searchParams?.get('filteredState');
+
+  const createQueryString = useCallback(
+    ({
+      removeActivePage,
+      removeFilteredState,
+    }: {
+      removeActivePage?: boolean;
+      removeFilteredState?: boolean;
+    }) => {
+      // @ts-ignore
+      const params = new URLSearchParams(searchParams);
+      if (removeActivePage) {
+        params.delete('activePage');
+      }
+      if (removeFilteredState) {
+        params.delete('filteredState');
+      }
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   // initial data loading
   useEffect(() => {
@@ -71,6 +112,14 @@ export default function ProposalListWrapper({
       if (!!activePage && activePage !== 1) {
         store.setActivePage(activePage - 1);
       }
+      if (isActivePageWrong) {
+        router.replace(
+          pathname + '?' + createQueryString({ removeActivePage: true }),
+          {
+            scroll: false,
+          },
+        );
+      }
     }
   }, [activePage]);
 
@@ -80,6 +129,14 @@ export default function ProposalListWrapper({
         store.setFilteredState(Number(filteredState));
       } else {
         store.setFilteredState(null);
+      }
+      if (isFilteredStateWrong) {
+        router.replace(
+          pathname + '?' + createQueryString({ removeFilteredState: true }),
+          {
+            scroll: false,
+          },
+        );
       }
     }
   }, [store.isInitialLoading, store.loadingListCache]);
