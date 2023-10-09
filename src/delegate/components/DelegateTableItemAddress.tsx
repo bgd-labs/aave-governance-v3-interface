@@ -33,10 +33,10 @@ const Text = ({
   return (
     <TableText
       topText={texts.delegatePage.tableItemNotDelegated}
-      address={address}
+      value={address}
       isCrossed={isCrossed}
       alwaysGray={alwaysGray}
-      errorMessage={texts.delegatePage.userNotFound}
+      errorMessage={texts.other.userNotFound}
       isError={isError}>
       <>
         {!!shownAddress

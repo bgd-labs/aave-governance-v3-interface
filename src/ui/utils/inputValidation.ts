@@ -26,7 +26,7 @@ export const composeValidators =
     );
 
 export const rpcUrlValidator = (value: string) => {
-  if (value && value.startsWith('http')) {
+  if (value && value.startsWith('https://')) {
     try {
       new URL(value);
       return undefined;

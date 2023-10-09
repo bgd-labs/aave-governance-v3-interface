@@ -181,25 +181,23 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
         rpcUrl,
         chainId,
       );
-      await Promise.all(
-        appConfig.payloadsControllerConfig[chainId].contractAddresses.map(
-          async (payloadsController) => {
-            const payloadsControllerContract =
-              IPayloadsControllerCore__factory.connect(
-                payloadsController,
-                provider,
-              );
-            await payloadsControllerContract.getPayloadsCount();
-            set((state) =>
-              produce(state, (draft) => {
-                draft.rpcHasError[rpcUrl] = {
-                  error: false,
-                  chainId: chainId,
-                };
-              }),
-            );
-          },
-        ),
+      const contractAddresses =
+        appConfig.payloadsControllerConfig[chainId].contractAddresses;
+      const lastPayloadsController =
+        contractAddresses[contractAddresses.length - 1];
+      const payloadsControllerContract =
+        IPayloadsControllerCore__factory.connect(
+          lastPayloadsController,
+          provider,
+        );
+      await payloadsControllerContract.getPayloadsCount();
+      set((state) =>
+        produce(state, (draft) => {
+          draft.rpcHasError[rpcUrl] = {
+            error: false,
+            chainId: chainId,
+          };
+        }),
       );
     } catch {
       set((state) =>

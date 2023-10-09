@@ -30,9 +30,9 @@ const Text = ({
       isCrossed={isCrossed}
       alwaysGray={alwaysGray}
       isError={isError}
-      address={rpcUrl}
-      errorMessage={texts.rpcSwitcherPage.rpcIsNotSupported}
-      removeHover
+      value={rpcUrl}
+      errorMessage={texts.other.rpcIsNotSupported}
+      withoutHover
       isErrorOnRight>
       <>
         {!!rpcUrl && (
@@ -134,7 +134,7 @@ export function RpcSwitcherTableItemField({
                   ? rpcHasError.hasOwnProperty(rpcUrlTo)
                     ? rpcHasError[rpcUrlTo].error === true ||
                       rpcHasError[rpcUrlTo].chainId !== chainId
-                    : true
+                    : false
                   : false
               }
             />

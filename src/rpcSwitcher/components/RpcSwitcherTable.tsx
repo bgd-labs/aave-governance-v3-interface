@@ -80,7 +80,7 @@ export function RpcSwitcherTable({
                 display: isEdit ? 'block' : 'none',
                 [theme.breakpoints.up('sm')]: { display: 'none' },
               }}
-              title={texts.rpcSwitcherPage.tableHeaderSwitcher}
+              title={texts.other.edit}
               center
             />
             <TableHeaderTitle

@@ -211,7 +211,6 @@ export const texts = {
     tableHeaderProposition: 'Proposition',
     tableItemDelegated: 'Delegated',
     tableItemNotDelegated: 'Not Delegated',
-    userNotFound: 'User not found',
   },
   representationsPage: {
     txError: 'Error during the representations',
@@ -236,11 +235,7 @@ export const texts = {
   rpcSwitcherPage: {
     tableHeaderSwitcher: 'RPC URL',
     tableHeaderNetwork: 'Network',
-    notConnectedWallet: 'Wallet is not connected',
-    notConnectedWalletDescription: 'Please connect wallet first, to manage RPC',
-    notConnectedWalletButtonTitle: 'Connect wallet',
     placeholder: 'Enter RPC URL',
-    rpcIsNotSupported: "This RPC doesn't support our contracts logic",
   },
   notFoundPage: {
     title: 'Page not found',
@@ -349,6 +344,8 @@ export const texts = {
     off: 'Off',
     on: 'On',
     copyError: 'Copy error text',
+    userNotFound: 'User not found',
+    rpcIsNotSupported: "This RPC doesn't support our contracts logic",
   },
   terms: {
     description:

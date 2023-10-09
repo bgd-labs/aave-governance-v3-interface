@@ -116,6 +116,19 @@ export function SettingsButton() {
                 leftBorderColor="$secondary"
                 bottomBorderColor="$headerGray"
                 css={{ width: 150, p: 10, color: '$textWhite' }}>
+                <Link
+                  href={ROUTES.rpcSwitcher}
+                  css={{
+                    color: '$textDisabled',
+                    lineHeight: 1,
+                    hover: { color: theme.palette.$textWhite },
+                    mb: 15,
+                  }}
+                  onClick={close}>
+                  <Box sx={{ typography: 'buttonSmall' }}>
+                    {texts.header.changeRPC}
+                  </Box>
+                </Link>
                 <Box
                   component="p"
                   sx={{ typography: 'headline', color: '$textLight' }}>
@@ -123,21 +136,9 @@ export function SettingsButton() {
                 </Box>
                 <Divider sx={{ my: 10 }} />
                 <ThemeSwitcher />
-                <Divider sx={{ my: 10 }} />
-                <Link
-                  href={ROUTES.rpcSwitcher}
-                  css={{
-                    color: '$textLight',
-                    lineHeight: 1,
-                    hover: { color: theme.palette.$textWhite },
-                  }}
-                  onClick={close}>
-                  <Box component="p" sx={{ typography: 'descriptor' }}>
-                    {texts.header.changeRPC}
-                  </Box>
-                </Link>
                 {!isForIPFS && isTermsAndConditionsVisible && (
                   <>
+                    <Divider sx={{ my: 10 }} />
                     <Box
                       component="button"
                       type="button"

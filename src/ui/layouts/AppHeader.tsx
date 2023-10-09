@@ -484,6 +484,20 @@ export function AppHeader() {
                   )}
                 </React.Fragment>
               ))}
+              <Link
+                href={ROUTES.rpcSwitcher}
+                onClick={() => handleCloseMobileMenu()}
+                css={{
+                  color: '$textLight',
+                  mb: 15,
+                  display: 'block',
+                }}>
+                <Box
+                  component="p"
+                  sx={{ typography: 'body', color: '$textLight' }}>
+                  {texts.header.changeRPC}
+                </Box>
+              </Link>
               {!isForIPFS && isTermsAndConditionsVisible && (
                 <Box
                   component="button"
@@ -521,21 +535,6 @@ export function AppHeader() {
                 </Box>
                 <Divider sx={{ my: 15 }} />
                 <ThemeSwitcher />
-                <Divider sx={{ my: 15 }} />
-                <Link
-                  href={ROUTES.rpcSwitcher}
-                  onClick={() => handleCloseMobileMenu()}
-                  css={{
-                    color: '$textLight',
-                    mb: 15,
-                    display: 'block',
-                  }}>
-                  <Box
-                    component="p"
-                    sx={{ typography: 'body', color: '$textLight' }}>
-                    {texts.header.changeRPC}
-                  </Box>
-                </Link>
               </Box>
             </Box>
           </Box>

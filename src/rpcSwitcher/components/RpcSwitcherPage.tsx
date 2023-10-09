@@ -58,7 +58,15 @@ export function RpcSwitcherPage() {
   }: {
     formData: RpcSwitcherFormData;
   }) => {
-    setFormData(formData);
+    const editedFormData: RpcSwitcherFormData = formData.map((item) => {
+      // remove slash in the end if it exists
+      const rpcUrl = item.rpcUrl.replace(/\/$/, '');
+      return {
+        ...item,
+        rpcUrl,
+      };
+    });
+    setFormData(editedFormData);
     setIsEdit(false);
     setIsRpcSwitcherChangedView(true);
   };
@@ -118,7 +126,7 @@ export function RpcSwitcherPage() {
                         rpcHasError[item.rpcUrl].chainId !== item.chainId
                       );
                     }
-                    return false;
+                    return true;
                   })
                 }>
                 {texts.other.confirm}
@@ -134,7 +142,7 @@ export function RpcSwitcherPage() {
               initialValues={{
                 formData: formData,
               }}>
-              {({ handleSubmit, errors }) => {
+              {({ handleSubmit, errors, values }) => {
                 return (
                   <>
                     <RpcSwitcherTableWrapper
@@ -155,7 +163,10 @@ export function RpcSwitcherPage() {
                       </BigButton>
                       <BigButton
                         type="submit"
-                        disabled={!!Object.keys(errors || {}).length}>
+                        disabled={
+                          !!Object.keys(errors || {}).length ||
+                          isEqual(initialData, values.formData)
+                        }>
                         {texts.delegatePage.viewChanges}
                       </BigButton>
                     </RpcSwitcherTableWrapper>
