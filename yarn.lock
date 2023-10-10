@@ -1138,16 +1138,16 @@
 
 "@bgd-labs/aave-governance-ui-helpers@bgd-labs/aave-governance-ui-helpers":
   version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/f9b37dd0787700535771d874930aae1d004f4b40"
+  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/2d003e7f34c55ba805866b684e9c8e58c8ccedeb"
   dependencies:
     "@bgd-labs/aave-address-book" "^2.6.0"
     "@web3-react/core" "^8.2.2"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
 
-"@bgd-labs/frontend-web3-utils@bgd-labs/fe-shared#fix/types":
+"@bgd-labs/frontend-web3-utils@bgd-labs/fe-shared":
   version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/fe-shared/tar.gz/881f4cdf7f5c1df87b878cf8cc19524d7893af35"
+  resolved "https://codeload.github.com/bgd-labs/fe-shared/tar.gz/19f92663326a58db1268f88a58938e5907c9a38f"
   dependencies:
     "@coinbase/wallet-sdk" "^3.7.1"
     "@walletconnect/ethereum-provider" "^2.10.0"
