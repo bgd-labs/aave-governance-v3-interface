@@ -134,17 +134,7 @@ export function HelpVotingModal() {
                   />
                 }>
                 <Box sx={{ maxWidth: 460 }}>
-                  <Box
-                    component="p"
-                    sx={{
-                      typography: 'body',
-                      mb: 12,
-                      lineHeight: '20px !important',
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '26px !important',
-                      },
-                    }}>
+                  <HelpModalText mb={12}>
                     {texts.faq.voting.firstDescriptionFirstPart}{' '}
                     <HelpModalTextButton
                       onClick={() => {
@@ -154,7 +144,7 @@ export function HelpVotingModal() {
                       <>{texts.faq.voting.connectWallet}</>
                     </HelpModalTextButton>{' '}
                     {texts.faq.voting.firstDescriptionSecondPart}
-                  </Box>
+                  </HelpModalText>
                   <Box
                     component="p"
                     sx={{
@@ -168,7 +158,7 @@ export function HelpVotingModal() {
                       },
                       [theme.breakpoints.up('lg')]: {
                         typography: 'body',
-                        lineHeight: '26px !important',
+                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.secondDescription}
@@ -426,7 +416,7 @@ export function HelpVotingModal() {
                   },
                   [theme.breakpoints.up('lg')]: {
                     typography: 'body',
-                    lineHeight: '26px !important',
+                    lineHeight: '24px !important',
                   },
                 }}>
                 {texts.faq.voting.secondDescription}
@@ -517,7 +507,7 @@ export function HelpVotingModal() {
                       },
                       [theme.breakpoints.up('lg')]: {
                         typography: 'body',
-                        lineHeight: '26px !important',
+                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.txStartFirstDescription}
@@ -535,7 +525,7 @@ export function HelpVotingModal() {
                       },
                       [theme.breakpoints.up('lg')]: {
                         typography: 'body',
-                        lineHeight: '26px !important',
+                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.txStartSecondDescription}
@@ -552,7 +542,7 @@ export function HelpVotingModal() {
                       },
                       [theme.breakpoints.up('lg')]: {
                         typography: 'body',
-                        lineHeight: '26px !important',
+                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.txStartThirdDescription}
@@ -596,11 +586,9 @@ export function HelpVotingModal() {
                 </>
               )}
               {txPending && !txSuccess && (
-                <Box
-                  component="p"
-                  sx={{ typography: 'body', lineHeight: '26px' }}>
+                <HelpModalText>
                   {texts.faq.voting.txPendingDescription}
-                </Box>
+                </HelpModalText>
               )}
               {!txPending && txSuccess && (
                 <>

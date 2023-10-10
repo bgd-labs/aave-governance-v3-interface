@@ -33,7 +33,9 @@ export function formatToProofRLP(rawData: string[]): string {
 }
 
 export const getProof = async (
-  provider: ethers.providers.JsonRpcBatchProvider,
+  provider:
+    | ethers.providers.JsonRpcBatchProvider
+    | ethers.providers.JsonRpcProvider,
   address: string,
   storageKeys: string[],
   blockNumber: number,
@@ -46,7 +48,9 @@ export const getProof = async (
 };
 
 export const getExtendedBlock = async (
-  provider: ethers.providers.JsonRpcBatchProvider,
+  provider:
+    | ethers.providers.JsonRpcBatchProvider
+    | ethers.providers.JsonRpcProvider,
   blockNumber: number,
 ) => {
   return provider.send('eth_getBlockByNumber', [
@@ -134,7 +138,7 @@ export function getVoteBalanceSlot(
 }
 
 const generateProofs = async (
-  provider: StaticJsonRpcBatchProvider,
+  provider: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider,
   token: string,
   slot: string,
   blockNumber: number,
@@ -151,7 +155,7 @@ const generateProofs = async (
 };
 
 export const generateProofsRepresentativeByChain = async (
-  provider: StaticJsonRpcBatchProvider,
+  provider: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider,
   token: string,
   rawSlot: number,
   voter: string,

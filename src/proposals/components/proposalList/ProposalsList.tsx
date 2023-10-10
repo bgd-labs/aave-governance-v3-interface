@@ -70,6 +70,7 @@ export function ProposalsList({
     filteredState,
     setFilteredState,
     ipfsDataErrors,
+    getPaginatedProposalsData,
   } = useStore();
 
   const isVoteModalOpen = useStore((state) => state.isVoteModalOpen);
@@ -439,6 +440,7 @@ export function ProposalsList({
                     handleSearchValueChange('');
                     setIsSearchButtonOpen(false);
                     setFilteredStateLocal(null);
+                    getPaginatedProposalsData();
                   }}>
                   {texts.proposals.viewAll}
                 </BigButton>

@@ -1132,13 +1132,13 @@
     to-fast-properties "^2.0.0"
 
 "@bgd-labs/aave-address-book@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.6.0.tgz#c79391e2c39cfe773edd29e1973edcecd7489b43"
-  integrity sha512-rnJq+zyx1gxyO7t0oGwHGEvX1l11NEtV9iSh6bKTeptTsyJPCpgXmXLQL571vznIRozRUPmYbyOdxq4d1TQNiQ==
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.7.0.tgz#ae26abb1a340fe795b9a2febd87f842c2ed06a99"
+  integrity sha512-TYErogNQIecHnnr7NXxGSnr1d/QuXNP9o5L8wRzx0+GIJiCi7Dmy9dlJxQO/nEky/Nq512l09xYKjRVnTz37Tg==
 
 "@bgd-labs/aave-governance-ui-helpers@bgd-labs/aave-governance-ui-helpers":
-  version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/8319d4488bc0e56b8adbcc8b06d55ba3e0796b97"
+  version "0.1.1"
+  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/5bca962186f415bb603a793eb5a15e6cfb3c0a68"
   dependencies:
     "@bgd-labs/aave-address-book" "^2.6.0"
     "@web3-react/core" "^8.2.2"
@@ -1146,8 +1146,8 @@
     gray-matter "^4.0.3"
 
 "@bgd-labs/frontend-web3-utils@bgd-labs/fe-shared":
-  version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/fe-shared/tar.gz/53b0b4d8eac3ad06d66625ca66e7d1f06496cf3e"
+  version "0.1.1"
+  resolved "https://codeload.github.com/bgd-labs/fe-shared/tar.gz/17db59a90b1fa7a1d071154461e270e1de6c7e0f"
   dependencies:
     "@coinbase/wallet-sdk" "^3.7.1"
     "@walletconnect/ethereum-provider" "^2.10.0"

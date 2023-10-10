@@ -143,16 +143,16 @@ export function ActionModalContent({
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
+                    my: 12,
                   }}>
-                  <Box
-                    sx={{
-                      typography: 'body',
-                      mt: 12,
-                      color: '$textSecondary',
-                      wordBreak: 'break-all',
-                    }}>
-                    {error}
-                  </Box>
+                  {/*<Box*/}
+                  {/*  sx={{*/}
+                  {/*    typography: 'body',*/}
+                  {/*    color: '$textSecondary',*/}
+                  {/*    wordBreak: 'break-all',*/}
+                  {/*  }}>*/}
+                  {/*  {error}*/}
+                  {/*</Box>*/}
                   {fullTxErrorMessage && (
                     <CopyErrorButton errorMessage={fullTxErrorMessage} />
                   )}

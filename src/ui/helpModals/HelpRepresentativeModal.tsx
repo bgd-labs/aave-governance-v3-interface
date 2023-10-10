@@ -131,7 +131,7 @@ export function HelpRepresentativeModal() {
             />
           </Box>
           <HelpModalText>
-            {texts.faq.representative.descriptionMobileFirst}
+            {texts.faq.representative.descriptionFirst}
           </HelpModalText>
           <BigButton
             alwaysWithBorders
@@ -244,12 +244,24 @@ export function HelpRepresentativeModal() {
                   mobileBottomPadding={25}
                   css={{
                     position: 'absolute',
-                    left: -15,
+                    left: 100,
                     top: 95,
-                    [theme.breakpoints.up('lg')]: { left: -10, top: 100 },
+                    [theme.breakpoints.up('sm')]: { left: 115, top: 95 },
+                    [theme.breakpoints.up('lg')]: { left: 130, top: 100 },
                     '.HelpModalTooltip__content': {
-                      width: 390,
-                      [theme.breakpoints.up('sm')]: { width: 400 },
+                      width: 170,
+                      '> div': {
+                        p: '15px 5px 10px 5px',
+                        [theme.breakpoints.up('sm')]: {
+                          p: '0',
+                        },
+                      },
+                      [theme.breakpoints.up('sm')]: {
+                        width: 283,
+                      },
+                      [theme.breakpoints.up('lg')]: {
+                        width: 310,
+                      },
                     },
                   }}>
                   <Box component="p" sx={{ typography: 'body' }}>
@@ -347,15 +359,32 @@ export function HelpRepresentativeModal() {
                 typography: 'body',
                 lineHeight: '20px !important',
                 display: 'none',
+                mb: 12,
                 [theme.breakpoints.up('sm')]: {
                   display: 'inline-block',
                 },
                 [theme.breakpoints.up('lg')]: {
                   typography: 'body',
-                  lineHeight: '26px !important',
+                  lineHeight: '24px !important',
                 },
               }}>
-              {texts.faq.representative.description}
+              {texts.faq.representative.descriptionFirst}
+            </Box>
+            <Box
+              component="p"
+              sx={{
+                typography: 'body',
+                lineHeight: '20px !important',
+                display: 'none',
+                [theme.breakpoints.up('sm')]: {
+                  display: 'inline-block',
+                },
+                [theme.breakpoints.up('lg')]: {
+                  typography: 'body',
+                  lineHeight: '24px !important',
+                },
+              }}>
+              {texts.faq.representative.descriptionSecond}
             </Box>
             <Box
               component="p"
@@ -366,7 +395,7 @@ export function HelpRepresentativeModal() {
                   display: 'none',
                 },
               }}>
-              {texts.faq.representative.descriptionMobileSecond}
+              {texts.faq.representative.descriptionSecond}
             </Box>
           </Box>
         </Box>

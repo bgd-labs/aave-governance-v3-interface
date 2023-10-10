@@ -81,9 +81,17 @@ export class GovDataService {
   >;
 
   private signer: providers.JsonRpcSigner | undefined;
-  private providers: Record<number, StaticJsonRpcBatchProvider>;
+  private providers: Record<
+    number,
+    StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+  >;
 
-  constructor(providers: Record<number, StaticJsonRpcBatchProvider>) {
+  constructor(
+    providers: Record<
+      number,
+      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+    >,
+  ) {
     this.providers = providers;
     // contracts
     // core

@@ -426,6 +426,7 @@ export function ProposalPage({
                 isProposalExecuted={isProposalExecuted}
                 payloads={proposal.data.payloads}
                 setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+                proposalQueuingTime={proposal.data.queuingTime}
               />
             </NoSSR>
 

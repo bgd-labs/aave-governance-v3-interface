@@ -132,22 +132,6 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
         break;
       case 4:
         setStatusInfo({
-          image: 'statusCoolDownPeriod',
-          caption: texts.faq.lifeCycles.coolDownPeriod.title,
-          statusInfoText: texts.faq.lifeCycles.coolDownPeriod.description,
-          buttonText: texts.faq.lifeCycles.coolDownPeriod.nextButtonTitle,
-          backButtonText: texts.faq.lifeCycles.coolDownPeriod.prevButtonTitle,
-          state: ProposalStateWithName.Succeed,
-          createdTimestamp: now - 60 * 4,
-          openToVoteTimestamp: now - 60 * 2,
-          votingClosedTimestamp: now,
-          payloadsExecutedTimestamp:
-            initialStatusInfo.payloadsExecutedTimestamp,
-          finishedTimestamp: initialStatusInfo.finishedTimestamp,
-        });
-        break;
-      case 5:
-        setStatusInfo({
           image: 'statusProposalExecuted',
           caption: texts.faq.lifeCycles.proposalExecuted.title,
           statusInfoText: texts.faq.lifeCycles.proposalExecuted.description,
@@ -163,7 +147,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
           finishedTimestamp: initialStatusInfo.finishedTimestamp,
         });
         break;
-      case 6:
+      case 5:
         setStatusInfo({
           image: 'statusFinishedExecuted',
           caption: texts.faq.lifeCycles.finishedExecuted.title,
@@ -178,7 +162,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
           finishedTimestamp: now,
         });
         break;
-      case 7:
+      case 6:
         setStatusInfo({
           image: 'statusFinishedFailed',
           caption: texts.faq.lifeCycles.finishedFailed.title,
@@ -193,7 +177,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
           finishedTimestamp: now,
         });
         break;
-      case 8:
+      case 7:
         setStatusInfo({
           image: 'statusFinishedCanceled',
           caption: texts.faq.lifeCycles.finishedCanceled.title,
@@ -222,10 +206,10 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
     statusInfo.state === ProposalStateWithName.Expired;
 
   const handleNextClick = () => {
-    if (currentStep > 7) {
+    if (currentStep > 6) {
       resetToDefault();
     }
-    if (currentStep < 8) {
+    if (currentStep < 7) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -284,7 +268,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
               maxWidth: 460,
               [theme.breakpoints.up('sm')]: { minHeight: 180 },
             }}>
-            <Box sx={{ typography: 'body', lineHeight: '26px !important' }}>
+            <Box sx={{ typography: 'body', lineHeight: '24px !important' }}>
               {statusInfo.statusInfoText}
               {statusInfo.additionalText && (
                 <Box
@@ -293,7 +277,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
                     typography: 'body',
                     mt: 12,
                     display: 'block',
-                    lineHeight: '26px !important',
+                    lineHeight: '24px !important',
                   }}>
                   {statusInfo.additionalText}
                 </Box>
@@ -376,7 +360,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
               </Box>
             </BigButton>
 
-            {currentStep === 8 ? (
+            {currentStep === 7 ? (
               <Box
                 onClick={() => {
                   setIsHelpStatusesModalOpen(false);

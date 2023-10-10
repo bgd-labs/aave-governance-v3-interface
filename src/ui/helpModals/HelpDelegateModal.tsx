@@ -646,7 +646,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
               </Box>
               <Box
                 component="p"
-                sx={{ typography: 'body', lineHeight: '26px !important' }}>
+                sx={{ typography: 'body', lineHeight: '24px !important' }}>
                 {texts.faq.delegate.txPendingDescription}
               </Box>
             </>

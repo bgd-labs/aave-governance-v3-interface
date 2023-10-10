@@ -22,7 +22,6 @@ export function CloseVotingModal({
     <ActionModal
       type="closeAndSendVote"
       payload={{ proposalId }}
-      errorMessage={texts.proposalActions.closeVotingError}
       callbackFunction={async () =>
         await closeAndSendVote(votingChainId, proposalId)
       }

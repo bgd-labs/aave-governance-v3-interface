@@ -1,10 +1,11 @@
 import {
   LocalStorageKeys,
   selectAllTransactions,
-  selectPendingTransactions,
+  selectPendingTransactionByWallet,
   WalletType,
 } from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
+import dayjs from 'dayjs';
 import makeBlockie from 'ethereum-blockies-base64';
 import React, { useEffect, useState } from 'react';
 
@@ -47,9 +48,7 @@ export function ConnectWalletButton({
   const walletActivating = useStore((state) => state.walletActivating);
   const getActiveAddress = useStore((state) => state.getActiveAddress);
   const allTransactions = useStore((state) => selectAllTransactions(state));
-  const allPendingTransactions = useStore((state) =>
-    selectPendingTransactions(state),
-  );
+
   const activeWallet = useStore(selectActiveWallet);
 
   const isActive = activeWallet?.isActive;
@@ -88,6 +87,15 @@ export function ConnectWalletButton({
       setLoading(false);
     }
   }, [lastConnectedWallet]);
+
+  // get all pending tx's from connected wallet
+  const allPendingTransactions = useStore((state) =>
+    selectPendingTransactionByWallet(state, activeAddress),
+  );
+  // filtered pending tx's, if now > tx.timestamp + 30 min, than remove tx from pending array to not show loading spinner in connect wallet button
+  const filteredPendingTx = allPendingTransactions.filter(
+    (tx) => dayjs().unix() <= dayjs(tx.localTimestamp).unix() + 1800,
+  );
 
   return (
     <>
@@ -320,7 +328,7 @@ export function ConnectWalletButton({
                       width: 26,
                     },
                   }}>
-                  {!!allPendingTransactions.length && (
+                  {!!filteredPendingTx.length && (
                     <Spinner
                       size={lg ? 26 : 22}
                       loaderLineColor="$light"
