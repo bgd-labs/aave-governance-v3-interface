@@ -195,7 +195,7 @@ export function CreateProposalForm() {
     setIsCreateProposalModalOpen(true);
 
     await executeTxWithLocalStatuses({
-      errorMessage: texts.createPage.createProposalError,
+      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await createProposal(
           appConfig.govCoreConfig.votingPortals[votingChainId],

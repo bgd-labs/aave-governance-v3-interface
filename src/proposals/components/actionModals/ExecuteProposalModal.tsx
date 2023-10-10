@@ -21,7 +21,6 @@ export function ExecuteProposalModal({
     <ActionModal
       type="executeProposal"
       payload={{ proposalId }}
-      errorMessage={texts.proposalActions.executeProposalError}
       callbackFunction={async () => await executeProposal(proposalId)}
       isOpen={isOpen}
       setIsOpen={setIsOpen}

@@ -16,7 +16,7 @@ export function HelpModalText({ children, mb }: HelpModalTextProps) {
         mb,
         [theme.breakpoints.up('lg')]: {
           typography: 'body',
-          lineHeight: '26px !important',
+          lineHeight: '24px !important',
         },
       })}>
       {children}

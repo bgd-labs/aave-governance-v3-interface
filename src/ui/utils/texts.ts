@@ -1,5 +1,3 @@
-// TODO: need fix texts
-
 import { appConfig } from '../../utils/appConfig';
 import { getChainName } from './getChainName';
 
@@ -12,7 +10,7 @@ export const texts = {
     totalVotingPower: 'Total voting power',
     detailsModalTitle: (id: number) => `Proposal #${id} life cycle details`,
     vote: 'Vote',
-    notEnoughPower: 'You don’t have enough voting power to vote',
+    notEnoughPower: "You don't have voting power",
     notEnough: 'Not enough',
     toVote: 'to vote',
     viewAll: 'View all',
@@ -21,10 +19,10 @@ export const texts = {
     votingNotStartedStart: 'Voting on',
     votingNotStartedEnd: 'has not started yet',
     walletNotConnected: 'Wallet is not connected',
-    notVoted: 'You didn’t voted on this proposal',
+    notVoted: "You didn't vote on this proposal",
     author: 'Author',
     canBeClosedByPropositionPower:
-      'Proposal can be closed because of creator proposition power not enough',
+      'Proposal can be closed because the proposition power of the creator is not enough',
     detailsLinkForumDiscussion: 'Forum discussion',
     detailsLinkSnapshotVoting: 'Snapshot voting',
     detailsLinkBGDReport: 'BGD Report',
@@ -42,7 +40,7 @@ export const texts = {
     votersListFinishedNoDataTitle: 'No one has voted for this proposal',
     votersListNoDataTitle: 'So far, no one has voted for this proposal',
     votersListShowAll: 'Show all',
-    votersListTopVoters: 'Top voters',
+    votersListVoters: 'Voters',
     votersListVotingPower: 'Voting power',
     votersListSupport: 'Support',
     gelatoNotAvailableGnosis:
@@ -57,20 +55,22 @@ export const texts = {
       'On Governance v3, you can vote for free via gas-less transactions, thanks to the Aave Gelato gas tank. Enable gas-less mode as in the picture, and you will only need to do a signature on your wallet to emit a vote',
     fallbackVoteTitle: 'Fallback vote',
     fallbackVoteDescription:
-      "If you don't want to relay your vote via Gelato, it is always possible to submit and pay for your own vote transaction by disabling the gas-less mode. Beware that you will need to pay on the gas token of the voting network (e.g. MATIC for Polygon",
+      "If you don't want to relay your vote via Gelato, it is always possible to submit and pay for your own vote transaction by disabling the gas-less mode. Beware that you will need to pay on the gas token of the voting network (e.g. MATIC for Polygon)",
     noVotersData: (type: 'for' | 'against') => `No votes '${type}'`,
     payloadsDetails: {
       payload: 'Payload',
+      payloads: 'Payloads',
       created: 'Created at',
       executedIn: 'Executed in',
       execute: 'Execute',
       executedAt: 'Executed at',
       execution: 'Ready for execution',
+      timeLocked: 'Time-locked',
       cancelledAt: 'Cancelled at',
       expired: 'Expired at',
       expiredIn: 'Expired in',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
-      details: 'Status details',
+      details: 'Status',
       more: (active: boolean) => (active ? 'Hide' : 'Show more'),
     },
   },
@@ -85,6 +85,7 @@ export const texts = {
     closeVoting: 'Close voting',
     votingClosedResultsSent: 'Voting closed and results sent',
     proposalTimeLocked: 'Proposal is time-locked',
+    proposalCanBeExecuted: 'Proposal can be executed',
     executeProposal: 'Execute proposal',
     executeProposalTimer: 'for proposal execution',
     proposalExecuted: 'Proposal executed',
@@ -94,11 +95,8 @@ export const texts = {
     executePayloadsTimer: 'for payloads execution',
     noWalletTitle: 'Connect wallet to do actions',
     noWalletButtonTitle: 'Connect wallet',
-    activateVotingError: 'Error during the activate voting',
     activateVotingDescription: 'Voting will be activate',
     cancelProposal: 'Cancel proposal',
-    cancelProposalError: 'Error during the cancel proposal',
-    closeVotingError: 'Error during the close voting',
     closeVotingDescription: 'Voting will be closed and result sent',
     createPayload: 'Create payload',
     createPayloadDescription: (id: number) => `Payload #${id} will be created`,
@@ -107,12 +105,8 @@ export const texts = {
     createProposalDescription: (id: number) =>
       `Proposal #${id} will be created`,
     createProposalSuccess: (id: number) => `Proposal #${id} created`,
-    executePayloadError: 'Error during the execute payload',
     executePayloadDescription: 'Payload will be executed',
-    executeProposalError: 'Error during the execute proposal',
     executeProposalDescription: 'Proposal will be executed',
-    sendProofsError: 'Error during the sending proof',
-    voteError: 'Error during the vote',
     voteSmallButtonTitle: 'Normal vote',
   },
   proposalHistory: {
@@ -154,7 +148,7 @@ export const texts = {
     payloadExpired: (count: number, length: number, chainId: number) =>
       `Payload ${length > 1 ? count : ''}${
         length > 1 ? `/${length}` : ''
-      } was expired (${getChainName(chainId)})`,
+      } expired (${getChainName(chainId)})`,
     proposalCanceled: (id: number) => `Proposal #${id} was canceled`,
     proposalExpired: (id: number) =>
       `Proposal #${id} expired, because no one performed the action to execute the proposal or payloads`,
@@ -170,9 +164,7 @@ export const texts = {
     appModeDescriptionSecond: `We suggest you to change app mode or back to the proposal list.`,
     appModeButtonTitle: `Back to list`,
     createProposalTitle: 'Create proposal',
-    createProposalError: 'Error during the create proposal',
     createPayloadTitle: 'Create payload',
-    createPayloadError: 'Error during the create payload',
     payloadChainIdPlaceholder: 'Payload network',
     payloadsControllerPlaceholder: 'Payloads controller',
     ipfsHashPlaceholder: 'Ipfs hash',
@@ -192,7 +184,6 @@ export const texts = {
     payloadIdPlaceholder: 'Payload id',
   },
   delegatePage: {
-    delegateTxError: 'Error during the delegation',
     viewChanges: 'View changes',
     notConnectedWallet: 'Wallet is not connected',
     notConnectedWalletDescription:
@@ -214,7 +205,6 @@ export const texts = {
     userNotFound: 'User not found',
   },
   representationsPage: {
-    txError: 'Error during the representations',
     notConnectedWallet: 'Wallet is not connected',
     notConnectedWalletDescription:
       'Please connect wallet first, to see representations info',
@@ -242,11 +232,11 @@ export const texts = {
   transactions: {
     allTransactions: 'All Transactions',
     pending: 'Pending...',
-    pendingDescription: 'Waiting while transaction executing',
+    pendingDescription: 'Waiting while the transaction is getting executed',
     success: 'Success',
     error: 'Error',
     executed: 'Transaction executed',
-    notExecuted: `Transaction didn’t execute`,
+    notExecuted: `The transaction failed`,
     tryAgain: 'Try again',
     testTransaction: 'You made test transaction',
     createPayloadTx: 'You create payload',
@@ -271,8 +261,8 @@ export const texts = {
     transactions: 'Transactions',
     lastTransaction: (count: number) =>
       count > 1 ? 'Last transactions' : 'Last transaction',
-    transactionsEmpty: 'The list of your transactions is currently empty',
-    transactionsNoWallet: 'Connect your wallet to see the list of transactions',
+    transactionsEmpty: "You don't have any governance transaction",
+    transactionsNoWallet: 'Connect your wallet to see governance transactions',
     connectButtonConnecting: 'Connecting',
     connectButtonConnect: 'Connect wallet',
     connectWallet: 'Connect a wallet',
@@ -326,12 +316,12 @@ export const texts = {
     appLoading:
       'The application is loading the required data, please wait a moment',
     fetchFromIpfsError:
-      'An error occurred while fetching proposal metadata from IPFS. Try again later or try using a VPN.',
+      'An error occurred while fetching proposal metadata from IPFS, try again later.',
     fetchFromIpfsIncorrectHash: `An error occurred while fetching proposal metadata from IPFS. It seems that the ipfs hash is incorrect or the content by this hash does not match the desired one.`,
     explorer: 'Explorer',
     votingNotAvailableForGnosis:
       'Voting on this chain is not available for Gnosis safe wallet',
-    unset: 'Unset',
+    yourself: 'Yourself',
     backToEdit: 'Back to edit',
     notAvailable: 'Not available',
     wallet: 'Wallet',
@@ -359,7 +349,7 @@ export const texts = {
       wallet: 'How to connect and manage my wallet?',
       vote: 'How to vote?',
       delegate: 'How to delegate?',
-      representation: 'How do representation work?',
+      representation: 'How do representations work?',
       lifeCycle: 'Proposal life cycle description',
     },
     wallet: {
@@ -381,7 +371,7 @@ export const texts = {
       secondDescription:
         'You can vote directly from the list or click on a proposal to learn more before making your choice.',
       firstTooltip:
-        'Here you can check the current stage of the proposal and its expected stage',
+        'Here you can see the current stage of the proposal and its expected outcome',
       secondTooltipFirstPart: 'Here you can see your',
       votingPower: 'voting power',
       secondTooltipSecondPart: 'and vote directly on the proposal',
@@ -430,11 +420,11 @@ export const texts = {
       startSecondDescription:
         'Delegating voting power means giving someone else the power to vote on proposals on your behalf. Delegating proposition power means giving someone else the power to create proposals on your behalf.',
       editFirstDescription:
-        "Proposition and voting powers are tied to individual assets, meaning each asset carries its own proposition and voting power. The extent of a user's proposition and voting power per asset is determined by the number of that specific asset they hold.",
+        "Proposition and voting powers are tied to individual assets, meaning each asset carries its own proposition and voting power. The extent of an user's powers is determined by the number of that specific asset they hold, plus delegation they receive.",
       editSecondDescription:
-        'Here you can delegate your power to someone else or receive it back. You can delegate proposition, voting power or both.',
+        "Here you can delegate your power to someone else or receive it back. You can delegate proposition, voting, or both. To do so, just input the recipient's wallet address/ENS.",
       editThirdDescription:
-        "To do so, enter the recipient's wallet number to the input you need.",
+        'To remove delegation from somebody, leave the input empty.',
       confirmFirstDescription:
         'You can now view information about what you are going to delegate and to whom.',
       confirmSecondDescription:
@@ -485,32 +475,25 @@ export const texts = {
       votingClosed: {
         title: 'Voting closed',
         description:
-          'At the end of the voting period, the results of the vote become live, and the proposal is either passed or rejected.',
-        nextButtonTitle: 'Cool-down period',
-        prevButtonTitle: 'Open for vote',
-      },
-      coolDownPeriod: {
-        title: 'Cool-down period',
-        description:
-          'Next, the cool-down period begins, during which the proposal is locked for a specified amount of time. This time is used to validate the legitimacy of the proposal.',
+          'At the end of the voting period, the proposal is either passed or rejected. The result is then forwarded to Ethereum.',
         nextButtonTitle: 'Execute proposal',
-        prevButtonTitle: 'Voting closed',
+        prevButtonTitle: 'Open for vote',
       },
       proposalExecuted: {
         title: 'Proposal executed',
         description:
           'Once the cool-down period has passed, the proposal can be executed.',
         additionDescription:
-          'After the proposal is executed, the time-lock for the associated payloads begins. Once the payloads have passed the time-lock, they can be executed.',
+          'After receiving the proposal results, the proposal gets executed on Ethereum, which means that all payloads in the different networks enter in time-lock. Once they pass their respective time-locks, they can be executed.',
         nextButtonTitle: 'Execute payloads',
-        prevButtonTitle: 'Cool-down period',
+        prevButtonTitle: 'Voting closed',
       },
       finishedExecuted: {
         title: 'Proposal finished',
         description:
           'After all the payloads of the proposal have been executed, the proposal is considered to be fully executed or finished.',
         nextButtonTitle: 'Voting failed',
-        prevButtonTitle: 'Execute proposal',
+        prevButtonTitle: 'Execute payloads',
       },
       finishedFailed: {
         title: 'Proposal failed',
@@ -522,17 +505,15 @@ export const texts = {
       finishedCanceled: {
         title: 'Proposal canceled',
         description:
-          'If at any stage the proposal or all of the associated payloads were canceled by the proposer, then the proposal will have the status ‘canceled’.',
+          'If at any stage the proposal or all of the associated payloads were canceled by the proposer, then the proposal will have the status "Canceled".',
         prevButtonTitle: 'Defeated',
       },
     },
     representative: {
       title: 'Representatives',
-      description:
-        'Being representative of an Ethereum address on another network means that, for any proposal with voting running on that network, you can vote on behalf of said Ethereum address.If you have connected a wallet that was chosen as representative, on your account screen you can choose if you want to represent yourself, or any other address who selected you.This is just an interface feature, so no worries, will not do any blockchain transaction!',
-      descriptionMobileFirst:
+      descriptionFirst:
         'Being representative of an Ethereum address on another network means that, for any proposal with voting running on that network, you can vote on behalf of said Ethereum address.',
-      descriptionMobileSecond:
+      descriptionSecond:
         'If you have connected a wallet that was chosen as representative, on your account screen you can choose if you want to represent yourself, or any other address who selected you.This is just an interface feature, so no worries, will not do any blockchain transaction!',
       firstTooltip:
         'By clicking on the "Manage representations" button, you can go to the representations interface, where you can change your representatives for each voting network',
@@ -548,17 +529,17 @@ export const texts = {
         'In this screen, with your Ethereum address with voting power connected, you can choose representatives for all available voting networks.',
       startSecondDescription: 'Click Edit to choose a representative',
       startThirdDescription:
-        '(THIS IS JUST A MOCK, YOU WILL NOT CHOOSE A REAL REPRESENTATIVE)',
+        '(This is just a mock, you will not choose a real representative)',
       editFirstDescription:
         'Now you can input a representative address for any of the available networks. Remember to always validate that the address you select exists in that network and is the one intended!',
       editSecondDescription:
         'P.S. if you want to remove a representative, you can just click the "x" icon on the input',
       confirmFirstDescription:
-        'You can now view the summary about the representative/s you are choosing, and the network/s.If you are sure of your choice, click the confirmation button.',
+        'You can now view the summary about the representative/s you are choosing, and the network/s. If you are sure of your choice, click the confirmation button.',
       confirmSecondDescription:
-        '(AGAIN, THIS IS JUST A MOCK, YOU WILL NOT CHOOSE A REAL REPRESENTATIVE)',
+        '(Again, this is just a mock, you will not choose a real representative)',
       txPendingTitle: 'Almost there!',
-      txPendingDescription: 'Your representations is being processed',
+      txPendingDescription: 'Your representations are being processed',
       doneDescription:
         'Now the table shows the representatives you have chosen, and you can change them at any time',
     },

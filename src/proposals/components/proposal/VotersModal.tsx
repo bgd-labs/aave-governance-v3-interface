@@ -95,7 +95,7 @@ export function VotersModal({
           justifyContent: 'center',
           p: 20,
         }}>
-        <Box sx={{ typography: 'h2' }}>
+        <Box sx={{ typography: 'h3', fontWeight: 600 }}>
           {texts.proposals.noVotersData(type)}
         </Box>
       </Box>
@@ -130,7 +130,7 @@ export function VotersModal({
       withCloseButton
       maxWidth={695}>
       <Box sx={{ px: 16, [theme.breakpoints.up('sm')]: { px: 0 } }}>
-        <Box component="h3" sx={{ typography: 'h3', mb: 24, fontWeight: 600 }}>
+        <Box component="h2" sx={{ typography: 'h2', mb: 24, fontWeight: 600 }}>
           {title}
         </Box>
         <Box

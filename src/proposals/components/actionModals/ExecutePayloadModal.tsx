@@ -29,7 +29,6 @@ export function ExecutePayloadModal({
         payloadId: payload.id,
         chainId: payload.chainId,
       }}
-      errorMessage={texts.proposalActions.executePayloadError}
       callbackFunction={async () => await executePayload(proposalId, payload)}
       isOpen={isOpen}
       setIsOpen={setIsOpen}

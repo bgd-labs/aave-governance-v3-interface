@@ -134,7 +134,7 @@ export function DelegatePage() {
     setDelegateModalOpen(true);
     if (!!stateDelegateData.length && !!submittedFormData.length) {
       await executeTxWithLocalStatuses({
-        errorMessage: texts.delegatePage.delegateTxError,
+        errorMessage: 'Tx error',
         callbackFunction: async () =>
           await delegate(stateDelegateData, formDelegateData, timestampTx),
       });

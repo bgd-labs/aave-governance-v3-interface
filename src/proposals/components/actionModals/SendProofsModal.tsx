@@ -35,7 +35,6 @@ export function SendProofsModal({
     <ActionModal
       type="sendProofs"
       payload={{ proposalId, blockHash, underlyingAsset, withSlot }}
-      errorMessage={texts.proposalActions.sendProofsError}
       callbackFunction={async () =>
         await sendProofs(
           votingChainId,

@@ -218,28 +218,34 @@ export function ActiveProposalListItem({
                           />
                         </Box>
                       )}
-
-                      {isVotingFinished && isVoted && (
-                        <>
-                          {isFinished ? (
-                            <VotedState css={{ mt: 8 }} support={support} />
-                          ) : (
-                            <VotedState
-                              css={{
-                                display: 'none',
-                                mt: 8,
-                                [theme.breakpoints.up('md')]: {
-                                  display: 'block',
-                                },
-                              }}
-                              support={support}
-                            />
-                          )}
-                        </>
-                      )}
                     </Box>
                   )}
                 </Box>
+
+                {isVotingFinished && isVoted && (
+                  <Box
+                    sx={{
+                      display: 'none',
+                      [theme.breakpoints.up('md')]: {
+                        display: 'block',
+                      },
+                    }}>
+                    <VotedState
+                      isBig
+                      css={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        span: {
+                          display: 'block',
+                          mt: 5,
+                          color: '$text',
+                        },
+                      }}
+                      support={support}
+                    />
+                  </Box>
+                )}
 
                 {!isVotingFinished && (
                   <Box

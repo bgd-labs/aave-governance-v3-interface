@@ -351,7 +351,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                     fontWeight: 600,
                     [theme.breakpoints.up('lg')]: {
                       typography: 'body',
-                      lineHeight: '26px !important',
+                      lineHeight: '24px !important',
                       fontWeight: 600,
                     },
                   }}>
@@ -372,7 +372,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                     },
                     [theme.breakpoints.up('lg')]: {
                       typography: 'body',
-                      lineHeight: '26px !important',
+                      lineHeight: '24px !important',
                     },
                   }}>
                   {texts.faq.wallet.transactionsViewDescription}

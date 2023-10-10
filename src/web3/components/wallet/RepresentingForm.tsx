@@ -140,7 +140,7 @@ export function RepresentingForm({
                     )}
                     <Box>
                       {localAddress.address === ''
-                        ? texts.other.unset
+                        ? texts.other.yourself
                         : ENSDataExists(
                             store,
                             localAddress.address,
@@ -223,7 +223,7 @@ export function RepresentingForm({
                         )}
                         <Box>
                           {option.address === ''
-                            ? texts.other.unset
+                            ? texts.other.yourself
                             : ENSDataExists(
                                 store,
                                 option.address,

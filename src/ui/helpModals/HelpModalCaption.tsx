@@ -61,7 +61,7 @@ export function HelpModalCaption({
               typography: 'h1',
               display: 'block',
             },
-            [theme.breakpoints.up('md')]: { typography: 'h1', mb: 24 },
+            [theme.breakpoints.up('md')]: { typography: 'h1', mb: 16 },
           }}>
           {caption}
         </Box>

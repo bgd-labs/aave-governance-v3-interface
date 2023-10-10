@@ -389,7 +389,7 @@ export function ProposalStatusDetails({
         !isExecuted
       ) {
         const returnObject = {
-          title: texts.proposalActions.proposalTimeLocked,
+          title: texts.proposalActions.proposalCanBeExecuted,
         };
 
         if (
