@@ -1137,8 +1137,8 @@
   integrity sha512-TYErogNQIecHnnr7NXxGSnr1d/QuXNP9o5L8wRzx0+GIJiCi7Dmy9dlJxQO/nEky/Nq512l09xYKjRVnTz37Tg==
 
 "@bgd-labs/aave-governance-ui-helpers@bgd-labs/aave-governance-ui-helpers":
-  version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/2d003e7f34c55ba805866b684e9c8e58c8ccedeb"
+  version "0.1.1"
+  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/5bca962186f415bb603a793eb5a15e6cfb3c0a68"
   dependencies:
     "@bgd-labs/aave-address-book" "^2.6.0"
     "@web3-react/core" "^8.2.2"
@@ -1146,8 +1146,8 @@
     gray-matter "^4.0.3"
 
 "@bgd-labs/frontend-web3-utils@bgd-labs/fe-shared":
-  version "0.1.0"
-  resolved "https://codeload.github.com/bgd-labs/fe-shared/tar.gz/19f92663326a58db1268f88a58938e5907c9a38f"
+  version "0.1.1"
+  resolved "https://codeload.github.com/bgd-labs/fe-shared/tar.gz/17db59a90b1fa7a1d071154461e270e1de6c7e0f"
   dependencies:
     "@coinbase/wallet-sdk" "^3.7.1"
     "@walletconnect/ethereum-provider" "^2.10.0"
