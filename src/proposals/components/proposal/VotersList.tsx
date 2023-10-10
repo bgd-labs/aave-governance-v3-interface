@@ -15,7 +15,8 @@ export interface VotersListProps {
   isStarted: boolean;
 }
 
-export const votersCountForViewAll = 5;
+export const votersCountForViewAll = 1;
+export const votersVisibleCount = 5;
 
 export function VotersListWrapper({ children }: { children: ReactNode }) {
   return (
@@ -41,7 +42,7 @@ export function VotersListHeader() {
           textAlign: 'left',
           flex: 1,
         }}>
-        {texts.proposals.votersListTopVoters}
+        {texts.proposals.votersListVoters}
       </Box>
       <Box
         component="p"
@@ -214,7 +215,7 @@ export function VotersList({
               <VotersListHeader />
               {voters
                 .sort((a, b) => b.votingPower - a.votingPower)
-                .slice(0, votersCountForViewAll)
+                .slice(0, votersVisibleCount)
                 .map((vote, index) => (
                   <VotersListItem vote={vote} key={index} />
                 ))}

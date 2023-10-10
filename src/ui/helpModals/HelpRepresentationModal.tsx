@@ -408,7 +408,7 @@ export function HelpRepresentationModal({
               </Box>
               <Box
                 component="p"
-                sx={{ typography: 'body', lineHeight: '26px !important' }}>
+                sx={{ typography: 'body', lineHeight: '24px !important' }}>
                 {texts.faq.representations.txPendingDescription}
               </Box>
             </>

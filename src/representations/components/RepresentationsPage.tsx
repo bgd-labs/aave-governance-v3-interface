@@ -118,7 +118,7 @@ export function RepresentationsPage() {
     setRepresentationsModalOpen(true);
     if (!!submittedFormData.length && !!stateInitialData.length) {
       await executeTxWithLocalStatuses({
-        errorMessage: texts.representationsPage.txError,
+        errorMessage: 'Tx error',
         callbackFunction: async () =>
           await updateRepresentatives(
             stateInitialData,

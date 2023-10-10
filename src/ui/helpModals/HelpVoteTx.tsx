@@ -197,7 +197,7 @@ export function HelpVoteTx({
                 minHeight: 20,
               }}>
               {isTxStart ? (
-                <VotedState support={!support} isBig inProcess={txPending} />
+                <VotedState support={!support} isBig />
               ) : (
                 <ProposalEstimatedStatus
                   proposalId={proposalData.proposal.data.id}

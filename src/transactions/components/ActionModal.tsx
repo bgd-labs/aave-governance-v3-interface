@@ -10,7 +10,6 @@ import { BasicActionModal } from './BasicActionModal';
 interface ActionModalProps
   extends Pick<BigButtonProps, 'activeColorType'>,
     Pick<TransactionUnion, 'type' | 'payload'> {
-  errorMessage: string;
   callbackFunction: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
@@ -22,7 +21,6 @@ interface ActionModalProps
 }
 
 export function ActionModal({
-  errorMessage,
   callbackFunction,
   isOpen,
   setIsOpen,
@@ -55,7 +53,7 @@ export function ActionModal({
 
   const handleClick = async () =>
     await executeTxWithLocalStatuses({
-      errorMessage,
+      errorMessage: 'Tx error',
       callbackFunction,
     });
 

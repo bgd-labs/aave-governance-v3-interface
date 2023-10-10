@@ -204,7 +204,7 @@ export function VoteModal({
   const handleVote = async (gelato?: boolean) => {
     store.stopDetailedProposalDataPolling();
     return await executeTxWithLocalStatuses({
-      errorMessage: texts.proposalActions.voteError,
+      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await vote({
           votingChainId: proposal.data.votingChainId,
@@ -282,11 +282,7 @@ export function VoteModal({
                 minHeight: 20,
               }}>
               {isTxStart ? (
-                <VotedState
-                  support={!support}
-                  isBig
-                  inProcess={txPending || isError}
-                />
+                <VotedState support={!support} isBig inProcess={isError} />
               ) : (
                 <ProposalEstimatedStatus
                   proposalId={proposalId}

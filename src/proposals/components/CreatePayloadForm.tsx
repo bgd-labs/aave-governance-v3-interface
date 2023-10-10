@@ -81,7 +81,7 @@ export function CreatePayloadForm() {
   }: FormProperties) => {
     setIsCreatePayloadModalOpen(true);
     await executeTxWithLocalStatuses({
-      errorMessage: texts.createPage.createPayloadError,
+      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await createPayload(
           chainId,

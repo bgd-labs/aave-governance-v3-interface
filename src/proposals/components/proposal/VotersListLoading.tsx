@@ -10,6 +10,7 @@ import {
   VotersListProps,
   VotersListViewAllButton,
   VotersListWrapper,
+  votersVisibleCount,
 } from './VotersList';
 
 interface VotersLoadingProps
@@ -33,7 +34,7 @@ export function VotersListLoading({
           <VotersListHeader />
           {voters
             .sort((a, b) => b.votingPower - a.votingPower)
-            .slice(0, votersCountForViewAll)
+            .slice(0, votersVisibleCount)
             .map((vote, index) => (
               <VotersListItem vote={vote} key={index} />
             ))}

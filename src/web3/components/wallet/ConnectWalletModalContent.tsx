@@ -1,7 +1,7 @@
-import { Box, useTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import React from 'react';
 
-import { BoxWith3D, Link } from '../../../ui';
+import { BoxWith3D } from '../../../ui';
 import { RocketLoader } from '../../../ui/components/RocketLoader';
 import { texts } from '../../../ui/utils/texts';
 import { ImpersonatedForm } from './ImpersonatedForm';
@@ -26,8 +26,6 @@ export function ConnectWalletModalContent({
   walletConnectionError,
   withoutHelpText,
 }: ConnectWalletModalContentProps) {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
@@ -142,19 +140,6 @@ export function ConnectWalletModalContent({
             justifyContent: 'center',
             textAlign: 'center',
           }}>
-          <Box sx={{ typography: 'body', mb: 28 }}>
-            {texts.walletConnect.needHelpTitle}{' '}
-            <Link
-              href="https://docs.aave.com/faq/troubleshooting" // TODO: maybe need change link
-              css={{
-                color: '$main',
-                textDecoration: 'underline',
-                hover: { color: theme.palette.$textSecondary },
-              }}
-              inNewWindow>
-              {texts.walletConnect.needHelpFAQ}
-            </Link>
-          </Box>
           <Box
             component="p"
             sx={{ typography: 'descriptor', color: '$textSecondary' }}>

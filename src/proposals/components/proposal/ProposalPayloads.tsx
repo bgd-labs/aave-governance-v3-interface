@@ -31,6 +31,7 @@ import { chainInfoHelper } from '../../../utils/configs';
 
 interface ProposalPayloadsProps {
   proposalId: number;
+  proposalQueuingTime: number;
   isProposalExecuted: boolean;
   payloads: Payload[];
   setSelectedPayloadForExecute: (payload: InitialPayload | undefined) => void;
@@ -64,12 +65,16 @@ function PayloadItem({
   isProposalExecuted,
   payloadCount,
   totalPayloadsCount,
+  proposalQueuingTime,
   isFullView,
   inList,
   setSelectedPayloadForExecute,
 }: Pick<
   ProposalPayloadsProps,
-  'setSelectedPayloadForExecute' | 'isProposalExecuted' | 'proposalId'
+  | 'setSelectedPayloadForExecute'
+  | 'isProposalExecuted'
+  | 'proposalId'
+  | 'proposalQueuingTime'
 > & {
   payload: Payload;
   payloadCount: number;
@@ -93,9 +98,20 @@ function PayloadItem({
     payload.cancelledAt <= 0 &&
     payload.state !== PayloadState.Expired;
 
-  const payloadExecutionTime = payload.queuedAt + payload.delay;
+  const isPayloadTimeLocked =
+    payload.queuedAt <= 0 &&
+    isProposalExecuted &&
+    payload.cancelledAt <= 0 &&
+    payload.state !== PayloadState.Expired;
+
+  const payloadExecutionTime =
+    payload.queuedAt <= 0
+      ? proposalQueuingTime + payload.delay
+      : payload.queuedAt + payload.delay;
+
   const isPayloadReadyForExecution =
     isProposalExecuted &&
+    payload.queuedAt > 0 &&
     now > payload.queuedAt + payload.delay &&
     payload.cancelledAt <= 0 &&
     payload.state !== PayloadState.Expired;
@@ -182,8 +198,19 @@ function PayloadItem({
               <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')}</>
             </PayloadItemStatusInfo>
           )}
+
+          {!isPayloadOnInitialState &&
+            isPayloadTimeLocked &&
+            !isFinalStatus &&
+            !isPayloadReadyForExecution && (
+              <PayloadItemStatusInfo>
+                {texts.proposals.payloadsDetails.timeLocked}
+              </PayloadItemStatusInfo>
+            )}
+
           {!isPayloadOnInitialState &&
             !isPayloadReadyForExecution &&
+            !isPayloadTimeLocked &&
             !isFinalStatus && (
               <PayloadItemStatusInfo
                 title={texts.proposals.payloadsDetails.executedIn}>
@@ -371,6 +398,7 @@ export function ProposalPayloads({
   isProposalExecuted,
   payloads,
   setSelectedPayloadForExecute,
+  proposalQueuingTime,
 }: ProposalPayloadsProps) {
   const theme = useTheme();
 
@@ -396,7 +424,7 @@ export function ProposalPayloads({
           pr: 20,
         }}>
         <Box sx={{ typography: 'headline' }}>
-          {texts.proposals.payloadsDetails.payload}
+          {texts.proposals.payloadsDetails.payloads}
         </Box>
         <Box sx={{ typography: 'headline' }}>
           {texts.proposals.payloadsDetails.details}
@@ -420,6 +448,7 @@ export function ProposalPayloads({
           isProposalExecuted={isProposalExecuted}
           isFullView={isFullView}
           setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+          proposalQueuingTime={proposalQueuingTime}
         />
 
         {!!formattedPayloadsForList.length && isFullView && (
@@ -435,6 +464,7 @@ export function ProposalPayloads({
                 isFullView={false}
                 inList
                 setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+                proposalQueuingTime={proposalQueuingTime}
               />
             ))}
           </>

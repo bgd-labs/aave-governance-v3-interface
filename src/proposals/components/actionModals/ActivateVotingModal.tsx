@@ -21,7 +21,6 @@ export function ActivateVotingModal({
     <ActionModal
       type="activateVoting"
       payload={{ proposalId }}
-      errorMessage={texts.proposalActions.activateVotingError}
       callbackFunction={async () => await activateVoting(proposalId)}
       isOpen={isOpen}
       setIsOpen={setIsOpen}

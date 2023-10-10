@@ -25,7 +25,6 @@ export function ActivateVotingOnVotingMachineModal({
     <ActionModal
       type="activateVotingOnVotingMachine"
       payload={{ proposalId }}
-      errorMessage={texts.proposalActions.activateVotingError}
       callbackFunction={async () =>
         await activateVotingOnVotingMachine(votingChainId, proposalId)
       }
