@@ -4,6 +4,7 @@ import {
   StaticJsonRpcBatchProvider,
   StoreSlice,
 } from '@bgd-labs/frontend-web3-utils/src';
+import { ethers } from 'ethers';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';
@@ -21,7 +22,10 @@ export type IWeb3Slice = IWalletSlice & {
 
   connectSigner: () => void;
   initDataServices: (
-    providers: Record<string, StaticJsonRpcBatchProvider>,
+    providers: Record<
+      string,
+      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+    >,
   ) => void;
 };
 

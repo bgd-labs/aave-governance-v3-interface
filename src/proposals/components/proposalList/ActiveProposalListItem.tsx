@@ -222,7 +222,7 @@ export function ActiveProposalListItem({
                   )}
                 </Box>
 
-                {isVotingFinished && isVoted && (
+                {isVotingFinished && isVoted && !isFinished && (
                   <Box
                     sx={{
                       display: 'none',

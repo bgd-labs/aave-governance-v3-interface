@@ -14,7 +14,7 @@ import {
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 export type AppProvider = {
-  instance: StaticJsonRpcBatchProvider;
+  instance: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider;
   rpcUrl: string;
 };
 
@@ -28,7 +28,7 @@ export type ChainInfo = {
   };
   providerInstances: {
     [chainId: number]: {
-      instance: StaticJsonRpcBatchProvider;
+      instance: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider;
     };
   };
   getChainParameters: (chainId: number) => AddEthereumChainParameter;
@@ -152,7 +152,10 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
         acc[key] = value.instance;
         return acc;
       },
-      {} as Record<string, StaticJsonRpcBatchProvider>,
+      {} as Record<
+        string,
+        StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+      >,
     );
     get().initDataServices(providers);
   },
