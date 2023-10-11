@@ -46,6 +46,7 @@ export function RpcSwitcherTableWrapper({
   const theme = useTheme();
   return (
     <BoxWith3D
+      className="NoDataWrapper"
       borderSize={10}
       contentColor="$mainLight"
       css={{

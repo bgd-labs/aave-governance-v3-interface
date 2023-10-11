@@ -94,7 +94,10 @@ export function RpcSwitcherTable({
               right
             />
           </Box>
-          <Divider sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }} />
+          <Divider
+            className="Divider"
+            sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }}
+          />
         </Box>
         {isEdit ? (
           dataForInputs.length &&

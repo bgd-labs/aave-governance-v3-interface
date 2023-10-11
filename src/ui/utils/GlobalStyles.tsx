@@ -206,6 +206,10 @@ export function GlobalStyles() {
         borderLeftColor: '#101423',
       },
 
+      '.Divider': {
+        borderBottomColor: '#C6C3D1',
+      },
+
       '.Branding': {
         '.Branding__text': {
           color: '#C6C3D1',
@@ -354,6 +358,10 @@ export function GlobalStyles() {
       '#nprogress .spinner-icon': {
         borderTopColor: '#ADAECF',
         borderLeftColor: '#ADAECF',
+      },
+
+      '.Divider': {
+        borderBottomColor: '#47557C',
       },
 
       '.Branding': {

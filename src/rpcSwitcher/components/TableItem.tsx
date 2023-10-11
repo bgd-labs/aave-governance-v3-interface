@@ -89,7 +89,7 @@ export function TableItem({
                 <CustomSkeleton width={30} height={20} />
               </Box>
             ) : (
-              <Box component="h2" sx={{ typography: 'h2' }}>
+              <Box component="h3" sx={{ typography: 'h3', fontWeight: 600 }}>
                 {getChainName(chainId)}
               </Box>
             )}
@@ -128,7 +128,7 @@ export function TableItem({
           )}
         </Box>
       </Box>
-      <Divider />
+      <Divider className="Divider" />
     </Box>
   );
 }
