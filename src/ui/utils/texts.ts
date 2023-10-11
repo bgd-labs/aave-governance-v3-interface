@@ -226,6 +226,7 @@ export const texts = {
     tableHeaderSwitcher: 'RPC URL',
     tableHeaderNetwork: 'Network',
     placeholder: 'Enter RPC URL',
+    reset: 'Reset to default',
   },
   notFoundPage: {
     title: 'Page not found',
