@@ -2,6 +2,10 @@ import { Box, useTheme } from '@mui/system';
 import { useEffect, useState } from 'react';
 
 import { useStore } from '../../store';
+import {
+  getLocalStorageIsHelpModalVisible,
+  setLocalStorageIsHelpModalVisible,
+} from '../../utils/localStorage';
 import { BigButton } from '../components/BigButton';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -19,7 +23,7 @@ import { HelpVotingModal } from './HelpVotingModal';
 import { HelpVotingPowerModal } from './HelpVotingPowerModal';
 import { HelpWalletModal } from './HelpWalletModal';
 
-type IsHelpModalVisible = 'true' | 'false';
+export type IsHelpModalVisible = 'true' | 'false';
 
 export function HelpModalProvider() {
   const theme = useTheme();
@@ -37,9 +41,7 @@ export function HelpModalProvider() {
   const [infoType, setInfoType] = useState<InfoType | undefined>(undefined);
 
   useEffect(() => {
-    const isHelpModalVisible = localStorage?.getItem(
-      'isHelpModalVisible',
-    ) as IsHelpModalVisible;
+    const isHelpModalVisible = getLocalStorageIsHelpModalVisible();
 
     if (isHelpModalVisible && !isAppBlockedByTerms) {
       setIsHelpModalOpen(isHelpModalVisible === 'true');
@@ -80,7 +82,7 @@ export function HelpModalProvider() {
               alwaysWithBorders
               color="white"
               onClick={() => {
-                localStorage?.setItem('isHelpModalVisible', 'false');
+                setLocalStorageIsHelpModalVisible('false');
                 closeHelpModals();
                 setIsHelpModalOpen(false);
               }}>
@@ -90,7 +92,7 @@ export function HelpModalProvider() {
               alwaysWithBorders
               css={{ ml: 8 }}
               onClick={() => {
-                localStorage?.setItem('isHelpModalVisible', 'false');
+                setLocalStorageIsHelpModalVisible('false');
                 setIsClickedOnStartButtonOnHelpModal(true);
                 setIsHelpNavigationModalOpen(true);
               }}>
