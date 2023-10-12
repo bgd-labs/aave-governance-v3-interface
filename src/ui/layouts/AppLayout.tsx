@@ -36,6 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       <Web3Provider />
       <Web3HelperProvider />
+
       <MainLayout>{children}</MainLayout>
 
       <HelpModalProvider />

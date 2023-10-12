@@ -5,9 +5,6 @@ import {
   votingMachineChainIds,
 } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/appConfig';
 import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
-import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src/utils/StaticJsonRpcBatchProvider';
-
-import { chainInfoHelper } from './configs';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 export const isTermsAndConditionsVisible =
@@ -25,9 +22,4 @@ export const appUsedNetworks: ChainIdByName[] = [
   ...payloadsControllerChainIds[coreName],
 ].filter((value, index, self) => self.indexOf(value) === index);
 
-const providers: Record<number, StaticJsonRpcBatchProvider> = {};
-appUsedNetworks.forEach((chain) => {
-  providers[chain] = chainInfoHelper.providerInstances[chain].instance;
-});
-
-export const appConfig = appConfigInit(providers, coreName);
+export const appConfig = appConfigInit(coreName);

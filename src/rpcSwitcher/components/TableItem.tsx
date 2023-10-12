@@ -43,8 +43,11 @@ export function TableItem({
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            height: 110,
+            height: 85,
             py: 0,
+          },
+          [theme.breakpoints.up('md')]: {
+            height: 110,
           },
           [theme.breakpoints.up('lg')]: {
             height: 115,

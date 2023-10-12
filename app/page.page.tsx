@@ -11,6 +11,7 @@ import { ProposalPageSSR } from '../src/proposals/components/proposalList/Propos
 import { metaTexts } from '../src/ui/utils/metaTexts';
 import { appConfig } from '../src/utils/appConfig';
 import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
+import { initialProviders } from '../src/utils/initialProviders';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -89,7 +90,7 @@ export default async function Page({
 
   const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
     appConfig.govCoreConfig.dataHelperContractAddress,
-    appConfig.providers[appConfig.govCoreChainId],
+    initialProviders[appConfig.govCoreChainId],
   );
 
   const { configs, contractsConstants } = await getGovCoreConfigs(

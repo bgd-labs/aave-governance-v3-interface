@@ -12,6 +12,7 @@ import {
   setLocalStorageRpcUrls,
 } from '../../utils/localStorage';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
+import { selectAppProviders } from './providerSelectors';
 
 export type AppProvider = {
   instance: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider;
@@ -37,6 +38,7 @@ export type ChainInfo = {
 export interface IProviderSlice {
   appProviders: Record<number, AppProvider>;
   appProvidersForm: Record<number, AppProviderStorage>;
+  initProvidersLoaded: boolean;
   initProviders: (
     providers: ChainInfo,
     appUsedNetworks: ChainIdByName[],
@@ -56,24 +58,14 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
 ) => ({
   appProviders: {},
   appProvidersForm: {},
+  initProvidersLoaded: false,
   initProviders: (providers, appUsedNetworks) => {
-    set((state) =>
-      produce(state, (draft) => {
-        Object.keys(providers.urls)
-          .filter((chainId) => appUsedNetworks.includes(Number(chainId)))
-          .forEach((chainId) => {
-            const chainIdNumber = Number(chainId);
-
-            draft.appProviders[chainIdNumber] = {
-              rpcUrl: providers.getChainParameters(chainIdNumber).rpcUrls[0],
-              instance: providers.providerInstances[chainIdNumber].instance,
-            };
-          });
-      }),
-    );
-
     const rpcUrlsFromStorage = getLocalStorageRpcUrls();
-    if (rpcUrlsFromStorage !== null && rpcUrlsFromStorage !== undefined) {
+    if (
+      rpcUrlsFromStorage !== null &&
+      rpcUrlsFromStorage !== undefined &&
+      !!Object.keys(JSON.parse(rpcUrlsFromStorage)).length
+    ) {
       const parsedRpcUrlsFromStorage = JSON.parse(rpcUrlsFromStorage) as Record<
         number,
         AppProviderStorage
@@ -85,24 +77,33 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
             .filter((chainId) => appUsedNetworks.includes(Number(chainId)))
             .forEach((chainId) => {
               const chainIdNumber = Number(chainId);
-              if (
-                draft.appProviders[chainIdNumber] &&
-                draft.appProviders[chainIdNumber].rpcUrl !==
-                  parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl
-              ) {
-                draft.appProviders[chainIdNumber].rpcUrl =
-                  parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl;
-                draft.appProviders[chainIdNumber].instance =
-                  new StaticJsonRpcBatchProvider(
-                    parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                  );
-              }
+
+              draft.appProviders[chainIdNumber] = {
+                rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                instance: new StaticJsonRpcBatchProvider(
+                  parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                ),
+              };
+            });
+        }),
+      );
+    } else {
+      set((state) =>
+        produce(state, (draft) => {
+          Object.keys(providers.urls)
+            .filter((chainId) => appUsedNetworks.includes(Number(chainId)))
+            .forEach((chainId) => {
+              const chainIdNumber = Number(chainId);
+
+              draft.appProviders[chainIdNumber] = {
+                rpcUrl: providers.getChainParameters(chainIdNumber).rpcUrls[0],
+                instance: providers.providerInstances[chainIdNumber].instance,
+              };
             });
         }),
       );
     }
 
-    get().syncLocalStorage();
     get().syncDataServices();
     get().syncAppProviderForm();
     Object.keys(get().appProvidersForm).forEach((chainId) => {
@@ -116,6 +117,8 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
         }),
       );
     });
+
+    set({ initProvidersLoaded: true });
   },
   updateProviders: (formData) => {
     formData.forEach(({ chainId, rpcUrl }) => {
@@ -147,16 +150,7 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
     setLocalStorageRpcUrls(parsedProvidersForLocalStorage);
   },
   syncDataServices: () => {
-    const providers = Object.entries(get().appProviders).reduce(
-      (acc, [key, value]) => {
-        acc[key] = value.instance;
-        return acc;
-      },
-      {} as Record<
-        string,
-        StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
-      >,
-    );
+    const providers = selectAppProviders(get());
     get().initDataServices(providers);
   },
   syncAppProviderForm: () => {

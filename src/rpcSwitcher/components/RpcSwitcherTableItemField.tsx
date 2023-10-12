@@ -87,56 +87,27 @@ export function RpcSwitcherTableItemField({
         <Field name={inputName} validate={composeValidators(rpcUrlValidator)}>
           {(props) => {
             return (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-end',
-                  width: '100%',
-                  position: 'relative',
-                }}>
-                <InputWrapper
-                  css={{ width: '100%' }}
-                  onCrossClick={
-                    props.input.value !== ''
-                      ? () => {
-                          props.input.onChange('');
-                        }
-                      : undefined
-                  }
-                  isError={props.meta.error}
-                  error={props.meta.error}>
-                  <InputWithAnimation
-                    type="text"
-                    animatedPlaceholder={texts.rpcSwitcherPage.placeholder}
-                    {...props.input}
-                  />
-                </InputWrapper>
-
-                {chainId &&
+              <InputWrapper
+                onCrossClick={
+                  chainId &&
                   props.input.value !==
-                    chainInfoHelper.getChainParameters(chainId).rpcUrls[0] && (
-                    <Box
-                      onClick={() =>
+                    chainInfoHelper.getChainParameters(chainId).rpcUrls[0]
+                    ? () => {
                         props.input.onChange(
                           chainInfoHelper.getChainParameters(chainId)
                             .rpcUrls[0],
-                        )
+                        );
                       }
-                      sx={{
-                        position: 'absolute',
-                        top: !!props.meta.error
-                          ? 'calc(100% + 24px)'
-                          : 'calc(100% + 4px)',
-                        typography: 'descriptorAccent',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                        hover: { opacity: '0.7' },
-                      }}>
-                      {texts.rpcSwitcherPage.reset}
-                    </Box>
-                  )}
-              </Box>
+                    : undefined
+                }
+                isError={props.meta.error}
+                error={props.meta.error}>
+                <InputWithAnimation
+                  type="text"
+                  animatedPlaceholder={texts.rpcSwitcherPage.placeholder}
+                  {...props.input}
+                />
+              </InputWrapper>
             );
           }}
         </Field>

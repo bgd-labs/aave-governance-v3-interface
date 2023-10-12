@@ -1137,8 +1137,8 @@
   integrity sha512-TYErogNQIecHnnr7NXxGSnr1d/QuXNP9o5L8wRzx0+GIJiCi7Dmy9dlJxQO/nEky/Nq512l09xYKjRVnTz37Tg==
 
 "@bgd-labs/aave-governance-ui-helpers@bgd-labs/aave-governance-ui-helpers":
-  version "0.1.1"
-  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/5bca962186f415bb603a793eb5a15e6cfb3c0a68"
+  version "0.1.3"
+  resolved "https://codeload.github.com/bgd-labs/aave-governance-ui-helpers/tar.gz/d0f875524eff5b5fb6e76bf1bffd1fd216ad0aa7"
   dependencies:
     "@bgd-labs/aave-address-book" "^2.6.0"
     "@web3-react/core" "^8.2.2"

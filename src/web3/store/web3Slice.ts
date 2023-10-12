@@ -7,7 +7,6 @@ import {
 import { ethers } from 'ethers';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
-import { appConfig } from '../../utils/appConfig';
 import { chainInfoHelper } from '../../utils/configs';
 import { DelegationService } from '../services/delegationService';
 import { GovDataService } from '../services/govDataService';
@@ -39,8 +38,8 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
     },
     getChainParameters: chainInfoHelper.getChainParameters,
   })(set, get),
-  govDataService: new GovDataService(appConfig.providers),
-  delegationService: new DelegationService(appConfig.providers),
+  govDataService: new GovDataService({}),
+  delegationService: new DelegationService({}),
 
   connectSigner() {
     const activeWallet = get().activeWallet;
