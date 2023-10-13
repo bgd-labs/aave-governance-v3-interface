@@ -58,6 +58,8 @@ export function DetailsLinks({
         sx={{
           display: 'flex',
           mb: 20,
+          px: 20,
+          [theme.breakpoints.up('sm')]: { px: 0, mb: 28 },
           '.react-loading-skeleton': { width: 70 },
           [theme.breakpoints.up('lg')]: {
             '.react-loading-skeleton': { width: 120 },

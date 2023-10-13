@@ -210,6 +210,22 @@ export function GlobalStyles() {
         borderBottomColor: '#C6C3D1',
       },
 
+      '.ProposalListItemFinalStatus__text': {
+        color: '#555069',
+      },
+
+      '.ProposalListItemFinalStatus__box': {
+        color: '#C6C3D1',
+        [`@media only screen and (${media.sm})`]: {
+          borderColor: '#C6C3D1',
+        },
+        svg: {
+          path: {
+            stroke: '#C6C3D1',
+          },
+        },
+      },
+
       '.Branding': {
         '.Branding__text': {
           color: '#C6C3D1',
@@ -362,6 +378,22 @@ export function GlobalStyles() {
 
       '.Divider': {
         borderBottomColor: '#47557C',
+      },
+
+      '.ProposalListItemFinalStatus__text': {
+        color: '#6A76A6',
+      },
+
+      '.ProposalListItemFinalStatus__box': {
+        color: '#47557C',
+        [`@media only screen and (${media.sm})`]: {
+          borderColor: '#47557C',
+        },
+        svg: {
+          path: {
+            stroke: '#47557C',
+          },
+        },
       },
 
       '.Branding': {
