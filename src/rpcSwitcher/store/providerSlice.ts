@@ -1,4 +1,7 @@
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src';
+import {
+  blockLimit,
+  ChainIdByName,
+} from '@bgd-labs/aave-governance-ui-helpers/src';
 import { IPayloadsControllerCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerCore__factory';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
 import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src/utils/StaticJsonRpcBatchProvider';
@@ -61,10 +64,14 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
   initProvidersLoaded: false,
   initProviders: (providers, appUsedNetworks) => {
     const rpcUrlsFromStorage = getLocalStorageRpcUrls();
+
     if (
       rpcUrlsFromStorage !== null &&
       rpcUrlsFromStorage !== undefined &&
-      !!Object.keys(JSON.parse(rpcUrlsFromStorage)).length
+      !!Object.keys(JSON.parse(rpcUrlsFromStorage)).length &&
+      Object.keys(JSON.parse(rpcUrlsFromStorage)).every((chainId) =>
+        appUsedNetworks.includes(Number(chainId)),
+      )
     ) {
       const parsedRpcUrlsFromStorage = JSON.parse(rpcUrlsFromStorage) as Record<
         number,
@@ -102,6 +109,7 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
             });
         }),
       );
+      get().syncLocalStorage();
     }
 
     get().syncDataServices();
@@ -173,30 +181,20 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
     ) {
       return;
     }
-    try {
-      const provider = new ethers.providers.StaticJsonRpcProvider(
-        rpcUrl,
-        chainId,
-      );
-      const contractAddresses =
-        appConfig.payloadsControllerConfig[chainId].contractAddresses;
-      const lastPayloadsController =
-        contractAddresses[contractAddresses.length - 1];
-      const payloadsControllerContract =
-        IPayloadsControllerCore__factory.connect(
-          lastPayloadsController,
-          provider,
-        );
-      await payloadsControllerContract.getPayloadsCount();
-      set((state) =>
-        produce(state, (draft) => {
-          draft.rpcHasError[rpcUrl] = {
-            error: false,
-            chainId: chainId,
-          };
-        }),
-      );
-    } catch {
+    const provider = new ethers.providers.StaticJsonRpcProvider(
+      rpcUrl,
+      chainId,
+    );
+    const contractAddresses =
+      appConfig.payloadsControllerConfig[chainId].contractAddresses;
+    const lastPayloadsController =
+      contractAddresses[contractAddresses.length - 1];
+    const payloadsControllerContract = IPayloadsControllerCore__factory.connect(
+      lastPayloadsController,
+      provider,
+    );
+
+    const setError = () => {
       set((state) =>
         produce(state, (draft) => {
           draft.rpcHasError[rpcUrl] = {
@@ -205,6 +203,32 @@ export const createProviderSlice: StoreSlice<IProviderSlice, IWeb3Slice> = (
           };
         }),
       );
+    };
+
+    try {
+      // initial request to our contract
+      await payloadsControllerContract.getPayloadsCount();
+      // check get logs if initial request success
+      try {
+        const currentBlock = await provider.getBlock('latest');
+        await payloadsControllerContract.queryFilter(
+          payloadsControllerContract.filters.PayloadCreated(),
+          currentBlock.number - blockLimit,
+          currentBlock.number,
+        );
+        set((state) =>
+          produce(state, (draft) => {
+            draft.rpcHasError[rpcUrl] = {
+              error: false,
+              chainId: chainId,
+            };
+          }),
+        );
+      } catch {
+        setError();
+      }
+    } catch {
+      setError();
     }
   },
   rpcHasError: {},
