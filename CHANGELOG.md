@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.0.0...v1.0.1) (2023-10-13)
+
+
+### Features
+
+* migrate from submodules to packages ([#15](https://github.com/bgd-labs/aave-governance-v3-interface/issues/15)) ([434f0e4](https://github.com/bgd-labs/aave-governance-v3-interface/commit/434f0e4c7f215f83acb71bf00e57a5d36a466848))
+
+
+### Bug Fixes
+
+* [@bgd-labs](https://github.com/bgd-labs) packages version ([5030efa](https://github.com/bgd-labs/aave-governance-v3-interface/commit/5030efaf40a456db3aabd8831b281e9bb1dddf87))
+* readme and T&C visibility ([#17](https://github.com/bgd-labs/aave-governance-v3-interface/issues/17)) ([3989eb8](https://github.com/bgd-labs/aave-governance-v3-interface/commit/3989eb88ba9cd5991a17320c8a4d55891d856977))
+
 ## 1.0.0 (2023-09-28)
 
 
