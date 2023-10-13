@@ -25,6 +25,10 @@ import {
   IRepresentationsSlice,
 } from '../representations/store/representationsSlice';
 import {
+  createProviderSlice,
+  IProviderSlice,
+} from '../rpcSwitcher/store/providerSlice';
+import {
   createTransactionsSlice,
   TransactionsSlice,
 } from '../transactions/store/transactionsSlice';
@@ -41,7 +45,8 @@ export type RootState = IProposalsSlice &
   IUISlice &
   IProposalsHistorySlice &
   IRepresentationsSlice &
-  IEnsSlice;
+  IEnsSlice &
+  IProviderSlice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -56,6 +61,7 @@ const createRootSlice = (
   ...createProposalsHistorySlice(set, get),
   ...createRepresentationsSlice(set, get),
   ...createEnsSlice(set, get),
+  ...createProviderSlice(set, get),
 });
 
 export const useStore = create(devtools(createRootSlice, { serialize: true }));

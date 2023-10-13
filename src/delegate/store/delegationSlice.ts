@@ -5,6 +5,7 @@ import { constants } from 'ethers';
 import { produce } from 'immer';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
+import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
@@ -36,7 +37,12 @@ export interface IDelegationSlice {
 
 export const createDelegationSlice: StoreSlice<
   IDelegationSlice,
-  IWeb3Slice & TransactionsSlice & IProposalsSlice & IUISlice & IEnsSlice
+  IWeb3Slice &
+    TransactionsSlice &
+    IProposalsSlice &
+    IUISlice &
+    IEnsSlice &
+    IProviderSlice
 > = (set, get) => ({
   delegateData: [],
   delegateDataLoading: false,
@@ -54,7 +60,7 @@ export const createDelegationSlice: StoreSlice<
         underlyingAssets.map(async (underlyingAsset) => {
           const erc20 = IERC20__factory.connect(
             underlyingAsset,
-            appConfig.providers[appConfig.govCoreChainId],
+            get().appProviders[appConfig.govCoreChainId].instance,
           );
           const symbol = getTokenName(underlyingAsset) as Token;
           const balance = await erc20.balanceOf(activeAddress);

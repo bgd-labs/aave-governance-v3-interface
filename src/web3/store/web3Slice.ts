@@ -1,8 +1,10 @@
 import {
   createWalletSlice,
   IWalletSlice,
+  StaticJsonRpcBatchProvider,
   StoreSlice,
 } from '@bgd-labs/frontend-web3-utils/src';
+import { ethers } from 'ethers';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { chainInfoHelper } from '../../utils/configs';
@@ -18,6 +20,12 @@ export type IWeb3Slice = IWalletSlice & {
   delegationService: DelegationService;
 
   connectSigner: () => void;
+  initDataServices: (
+    providers: Record<
+      string,
+      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+    >,
+  ) => void;
 };
 
 export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
@@ -30,14 +38,22 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
     },
     getChainParameters: chainInfoHelper.getChainParameters,
   })(set, get),
-  govDataService: new GovDataService(),
-  delegationService: new DelegationService(),
+  govDataService: new GovDataService({}),
+  delegationService: new DelegationService({}),
 
   connectSigner() {
     const activeWallet = get().activeWallet;
     if (activeWallet?.signer) {
       get().govDataService.connectSigner(activeWallet.signer);
       get().delegationService.connectSigner(activeWallet.signer);
+    }
+  },
+  initDataServices(providers) {
+    set({ delegationService: new DelegationService(providers) });
+    set({ govDataService: new GovDataService(providers) });
+    if (this.activeWallet?.signer) {
+      get().govDataService.connectSigner(this.activeWallet.signer);
+      get().delegationService.connectSigner(this.activeWallet.signer);
     }
   },
 });

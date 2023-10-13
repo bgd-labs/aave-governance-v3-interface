@@ -9,6 +9,16 @@ import {
 } from '../../representations/store/representationsSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
+import {
+  getLocalStorageAppMode,
+  getLocalStorageGaslessVote,
+  getLocalStorageTermsAccept,
+  getLocalStorageTutorialStartButtonClicked,
+  setLocalStorageAppMode,
+  setLocalStorageGaslessVote,
+  setLocalStorageTermsAccept,
+  setLocalStorageTutorialStartButtonClicked,
+} from '../../utils/localStorage';
 import { getDelegateData } from '../helpModals/getDelegateData';
 import { getProposalData } from '../helpModals/getProposalData';
 import { getRepresentationsData } from '../helpModals/getRepresentationsData';
@@ -21,6 +31,7 @@ import {
 import { closeHelpModal } from './uiSelectors';
 
 export type AppModeType = 'default' | 'dev' | 'expert';
+export type IsGaslessVote = 'on' | 'off';
 
 export interface IUISlice {
   isGaslessVote: boolean;
@@ -178,6 +189,9 @@ export interface IUISlice {
   isRepresentationsChangedView: boolean;
   setIsRepresentationsChangedView: (value: boolean) => void;
 
+  isRpcSwitcherChangedView: boolean;
+  setIsRpcSwitcherChangedView: (value: boolean) => void;
+
   isTermModalOpen: boolean;
   setIsTermModalOpen: (value: boolean) => void;
 
@@ -194,7 +208,7 @@ export const createUISlice: StoreSlice<
   isGaslessVote: true,
   checkIsGaslessVote: () => {
     if (
-      localStorage?.getItem('isGaslessVote') === 'on' &&
+      getLocalStorageGaslessVote() === 'on' &&
       get().isGelatoAvailable &&
       !get().activeWallet?.isContractAddress
     ) {
@@ -204,7 +218,7 @@ export const createUISlice: StoreSlice<
     }
   },
   setIsGaslessVote: (value) => {
-    localStorage?.setItem('isGaslessVote', value ? 'on' : 'off');
+    setLocalStorageGaslessVote(value ? 'on' : 'off');
     set({ isGaslessVote: value });
   },
 
@@ -220,7 +234,7 @@ export const createUISlice: StoreSlice<
   isAppBlockedByTerms: false,
   checkIsAppBlockedByTerms: () => {
     if (
-      localStorage?.getItem('termsAccept') !== 'true' &&
+      getLocalStorageTermsAccept() !== 'true' &&
       !isForIPFS &&
       isTermsAndConditionsVisible
     ) {
@@ -231,7 +245,7 @@ export const createUISlice: StoreSlice<
   },
   setIsTermsAccept: (value: boolean) => {
     if (value) {
-      localStorage?.setItem('termsAccept', 'true');
+      setLocalStorageTermsAccept('true');
       set({ isAppBlockedByTerms: false });
     }
   },
@@ -239,27 +253,24 @@ export const createUISlice: StoreSlice<
   appMode: 'default',
   checkAppMode: () => {
     if (get().activeWallet?.isContractAddress) {
-      localStorage?.setItem('appMode', 'default');
+      setLocalStorageAppMode('default');
       set({ appMode: 'default' });
     } else {
-      const localStorageAppMode = localStorage?.getItem(
-        'appMode',
-      ) as AppModeType;
-
+      const localStorageAppMode = getLocalStorageAppMode();
       if (localStorageAppMode) {
         set({ appMode: localStorageAppMode });
       } else {
-        localStorage?.setItem('appMode', 'default');
+        setLocalStorageAppMode('default');
         set({ appMode: 'default' });
       }
     }
   },
   setAppMode: (appMode) => {
     if (get().activeWallet?.isContractAddress) {
-      localStorage?.setItem('appMode', 'default');
+      setLocalStorageAppMode('default');
       set({ appMode: 'default' });
     } else {
-      localStorage?.setItem('appMode', appMode);
+      setLocalStorageAppMode(appMode);
       set({ appMode });
     }
   },
@@ -491,9 +502,8 @@ export const createUISlice: StoreSlice<
 
   isClickedOnStartButtonOnHelpModal: false,
   checkTutorialStartButtonClick: () => {
-    const localStorageTutorialStartButtonClick = localStorage?.getItem(
-      'tutorialStartButtonClicked',
-    );
+    const localStorageTutorialStartButtonClick =
+      getLocalStorageTutorialStartButtonClicked();
 
     if (localStorageTutorialStartButtonClick) {
       set({
@@ -501,12 +511,12 @@ export const createUISlice: StoreSlice<
           localStorageTutorialStartButtonClick === 'true',
       });
     } else {
-      localStorage?.setItem('tutorialStartButtonClicked', 'false');
+      setLocalStorageTutorialStartButtonClicked('false');
       set({ isClickedOnStartButtonOnHelpModal: false });
     }
   },
   setIsClickedOnStartButtonOnHelpModal: (value) => {
-    localStorage?.setItem('tutorialStartButtonClicked', `${value}`);
+    setLocalStorageTutorialStartButtonClicked(`${value}`);
     set({ isClickedOnStartButtonOnHelpModal: value });
   },
 
@@ -700,6 +710,11 @@ export const createUISlice: StoreSlice<
   isRepresentationsChangedView: false,
   setIsRepresentationsChangedView: (value) => {
     set({ isRepresentationsChangedView: value });
+  },
+
+  isRpcSwitcherChangedView: false,
+  setIsRpcSwitcherChangedView: (value) => {
+    set({ isRpcSwitcherChangedView: value });
   },
 
   isTermModalOpen: false,

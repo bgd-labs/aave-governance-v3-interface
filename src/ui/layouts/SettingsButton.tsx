@@ -7,8 +7,9 @@ import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
 
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
-import { BoxWith3D, Divider, ThemeSwitcher } from '../';
+import { BoxWith3D, Divider, Link, ThemeSwitcher } from '../';
 import { IconBox } from '../primitives/IconBox';
+import { ROUTES } from '../utils/routes';
 import { texts } from '../utils/texts';
 
 export function SettingsButton() {
@@ -115,6 +116,19 @@ export function SettingsButton() {
                 leftBorderColor="$secondary"
                 bottomBorderColor="$headerGray"
                 css={{ width: 150, p: 10, color: '$textWhite' }}>
+                <Link
+                  href={ROUTES.rpcSwitcher}
+                  css={{
+                    color: '$textDisabled',
+                    lineHeight: 1,
+                    hover: { color: theme.palette.$textWhite },
+                    mb: 15,
+                  }}
+                  onClick={close}>
+                  <Box sx={{ typography: 'buttonSmall' }}>
+                    {texts.header.changeRPC}
+                  </Box>
+                </Link>
                 <Box
                   component="p"
                   sx={{ typography: 'headline', color: '$textLight' }}>

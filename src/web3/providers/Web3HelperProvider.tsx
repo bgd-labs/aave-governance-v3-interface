@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 
 import { useStore } from '../../store';
+import { appUsedNetworks } from '../../utils/appConfig';
+import { chainInfoHelper } from '../../utils/configs';
 
 function Child() {
   const {
@@ -11,10 +13,12 @@ function Child() {
     representationData,
     getRepresentationData,
     initEns,
+    initProviders,
   } = useStore();
 
   useEffect(() => {
     initEns();
+    initProviders(chainInfoHelper, appUsedNetworks);
   }, []);
 
   useEffect(() => {

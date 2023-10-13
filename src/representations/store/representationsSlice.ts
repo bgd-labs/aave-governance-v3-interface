@@ -7,6 +7,10 @@ import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
+import {
+  getLocalStorageRepresentingAddresses,
+  setLocalStorageRepresentingAddresses,
+} from '../../utils/localStorage';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { getFormattedRepresentedAddresses } from '../utils/getRepresentedAddresses';
@@ -63,13 +67,12 @@ export const createRepresentationsSlice: StoreSlice<
     set({ representativeLoading: true });
 
     const activeAddress = get().activeWallet?.accounts[0];
-    const addresses = localStorage.getItem('representingAddresses');
+    const addresses = getLocalStorageRepresentingAddresses();
     const data = get().representationData;
 
     if (activeAddress && !!Object.keys(data).length) {
-      const addressesObject = !!addresses ? JSON.parse(addresses) : {};
       const walletRepresentative: RepresentativeAddress | undefined =
-        addressesObject[activeAddress] as RepresentativeAddress;
+        addresses[activeAddress];
 
       const formattedRepresentedAddresses =
         getFormattedRepresentedAddresses(data);
@@ -100,22 +103,21 @@ export const createRepresentationsSlice: StoreSlice<
         };
       }),
     );
-    const addresses = localStorage.getItem('representingAddresses');
-    if (addresses && activeAddress) {
-      const addressesObject = JSON.parse(addresses);
-      const stringifiedAddresses = JSON.stringify({
-        ...addressesObject,
+    const addresses = getLocalStorageRepresentingAddresses();
+    if (!!Object.keys(addresses).length && activeAddress) {
+      const newAddresses = {
+        ...addresses,
         [activeAddress]: {
           chainsIds,
           address: formattedAddress,
         },
-      });
-      localStorage.setItem('representingAddresses', stringifiedAddresses);
+      };
+      setLocalStorageRepresentingAddresses(newAddresses);
     } else if (activeAddress) {
-      const stringifiedAddresses = JSON.stringify({
+      const newAddresses = {
         [activeAddress]: { chainsIds, address: formattedAddress },
-      });
-      localStorage.setItem('representingAddresses', stringifiedAddresses);
+      };
+      setLocalStorageRepresentingAddresses(newAddresses);
     }
   },
 

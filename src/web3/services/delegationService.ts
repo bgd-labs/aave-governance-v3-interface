@@ -4,6 +4,7 @@ import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { AaveTokenV3__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/AaveTokenV3__factory';
 import { ATokenWithDelegation__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/ATokenWithDelegation__factory';
 import { IMetaDelegateHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IMetaDelegateHelper__factory';
+import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src';
 import { ethers, providers } from 'ethers';
 
 import { appConfig } from '../../utils/appConfig';
@@ -33,6 +34,19 @@ export type BatchMetaDelegateParams = {
 
 export class DelegationService {
   private signer: providers.JsonRpcSigner | undefined;
+  private providers: Record<
+    number,
+    StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+  >;
+
+  constructor(
+    providers: Record<
+      number,
+      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
+    >,
+  ) {
+    this.providers = providers;
+  }
 
   connectSigner(signer: providers.JsonRpcSigner) {
     this.signer = signer;
@@ -41,7 +55,7 @@ export class DelegationService {
   async getDelegates(underlyingAsset: string, delegator: string) {
     const assetContract = AaveTokenV3__factory.connect(
       underlyingAsset,
-      appConfig.providers[appConfig.govCoreChainId],
+      this.providers[appConfig.govCoreChainId],
     );
 
     return await Promise.all([
@@ -61,7 +75,7 @@ export class DelegationService {
       return {
         contract: AaveTokenV3__factory.connect(
           asset,
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
         ),
         underlyingAsset: asset,
       };
@@ -88,13 +102,13 @@ export class DelegationService {
     underlyingAssets: string[],
   ) {
     const blockNumber = (
-      await appConfig.providers[appConfig.govCoreChainId].getBlock(blockHash)
+      await this.providers[appConfig.govCoreChainId].getBlock(blockHash)
     ).number;
     const contracts = underlyingAssets.map((asset) => {
       return {
         contract: AaveTokenV3__factory.connect(
           asset,
-          appConfig.providers[appConfig.govCoreChainId],
+          this.providers[appConfig.govCoreChainId],
         ),
         underlyingAsset: asset,
       };
@@ -142,11 +156,11 @@ export class DelegationService {
 
       const normalAssetContract = AaveTokenV3__factory.connect(
         underlyingAsset,
-        appConfig.providers[appConfig.govCoreChainId],
+        this.providers[appConfig.govCoreChainId],
       );
       const aAssetContract = ATokenWithDelegation__factory.connect(
         underlyingAsset,
-        appConfig.providers[appConfig.govCoreChainId],
+        this.providers[appConfig.govCoreChainId],
       );
 
       // TODO: maybe need fix name
@@ -238,7 +252,7 @@ export class DelegationService {
   async batchMetaDelegate(sigs: BatchMetaDelegateParams[]) {
     const delegateHelperContract = IMetaDelegateHelper__factory.connect(
       appConfig.additional.delegationHelper,
-      appConfig.providers[appConfig.govCoreChainId],
+      this.providers[appConfig.govCoreChainId],
     );
 
     // TODO: maybe don't need to increase gas limit for mainnets

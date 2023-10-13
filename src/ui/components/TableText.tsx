@@ -1,5 +1,6 @@
 import { Box } from '@mui/system';
 import { ethers } from 'ethers';
+import { isAddress } from 'ethers/lib/utils';
 import React, { ReactNode, useState } from 'react';
 import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 
@@ -10,21 +11,25 @@ import { useMediaQuery } from '../utils/useMediaQuery';
 
 interface TableTextProps {
   children: ReactNode;
-  topText: string;
-  address?: string;
+  topText?: string;
+  value?: string;
   isCrossed?: boolean;
   alwaysGray?: boolean;
   isError?: boolean;
+  errorMessage?: string;
   isErrorOnRight?: boolean;
+  withoutHover?: boolean;
 }
 export function TableText({
   topText,
   children,
-  address,
+  value,
   isCrossed,
   alwaysGray,
   isError,
   isErrorOnRight,
+  errorMessage,
+  withoutHover,
 }: TableTextProps) {
   const store = useStore();
   const sm = useMediaQuery(media.sm);
@@ -57,24 +62,30 @@ export function TableText({
         [theme.breakpoints.up('md')]: {
           mb: isCrossed ? 12 : 0,
         },
-        hover: {
-          '.TableText__hovered': {
-            display: isActionsAvailable && !isClick && sm ? 'block' : 'none',
-          },
-          '.TableText__content': {
-            display:
-              isActionsAvailable && !isClick && sm && !!address
-                ? 'none'
-                : 'inline-flex',
-          },
-        },
+        hover: withoutHover
+          ? {}
+          : {
+              '.TableText__hovered': {
+                display:
+                  isActionsAvailable && !isClick && sm ? 'block' : 'none',
+              },
+              '.TableText__content': {
+                display:
+                  isActionsAvailable && !isClick && sm && !!value
+                    ? 'none'
+                    : 'inline-flex',
+              },
+            },
       })}>
-      {address === ethers.constants.AddressZero ||
-      address === store.activeWallet?.accounts[0] ? (
+      {value &&
+      isAddress(value) &&
+      topText &&
+      (value === ethers.constants.AddressZero ||
+        value === store.activeWallet?.accounts[0]) ? (
         topText
       ) : (
         <>
-          {isClick && !!address ? (
+          {isClick && !!value && !withoutHover ? (
             <Box
               component="h3"
               sx={(theme) => ({
@@ -93,9 +104,9 @@ export function TableText({
             </Box>
           ) : (
             <>
-              {!!address && (
+              {!!value && (
                 <Box className="TableText__hovered" sx={{ display: 'none' }}>
-                  <CTC text={address}>
+                  <CTC text={value}>
                     <Box
                       component="p"
                       sx={(theme) => ({
@@ -111,7 +122,7 @@ export function TableText({
                           top: 1,
                         },
                       })}>
-                      {address}
+                      {value}
                     </Box>
                   </CTC>
                 </Box>
@@ -138,7 +149,7 @@ export function TableText({
                       position: 'relative',
                       color: '$error',
                     }}>
-                    {texts.delegatePage.userNotFound}
+                    {errorMessage}
                   </Box>
                 )}
               </Box>

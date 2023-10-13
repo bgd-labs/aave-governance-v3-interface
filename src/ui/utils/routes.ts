@@ -4,4 +4,5 @@ export const ROUTES = {
   representations: '/representations',
   proposal: (proposalId: number, ipfsHash: string) =>
     `/proposal?proposalId=${proposalId}&ipfsHash=${ipfsHash}`,
+  rpcSwitcher: '/rpc-switcher',
 };

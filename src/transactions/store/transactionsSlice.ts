@@ -17,8 +17,9 @@ import {
   IRepresentationsSlice,
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
+import { selectAppProviders } from '../../rpcSwitcher/store/providerSelectors';
+import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
-import { appConfig } from '../../utils/appConfig';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
@@ -156,7 +157,8 @@ export const createTransactionsSlice: StoreSlice<
     IUISlice &
     IProposalsHistorySlice &
     IRepresentationsSlice &
-    IEnsSlice
+    IEnsSlice &
+    IProviderSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
@@ -227,6 +229,8 @@ export const createTransactionsSlice: StoreSlice<
           break;
       }
     },
-    defaultProviders: appConfig.providers,
+    defaultProviders: get()?.initProvidersLoaded
+      ? selectAppProviders(get())
+      : {},
   })(set, get),
 });

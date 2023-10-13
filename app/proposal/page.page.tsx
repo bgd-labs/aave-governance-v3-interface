@@ -20,6 +20,7 @@ import {
   cachedVotesPath,
   githubStartUrl,
 } from '../../src/utils/cacheGithubLinks';
+import { initialProviders } from '../../src/utils/initialProviders';
 
 export const revalidate = 0;
 
@@ -80,11 +81,11 @@ export default async function ProposalPage({
   // contracts
   const govCore = IGovernanceCore__factory.connect(
     appConfig.govCoreConfig.contractAddress,
-    appConfig.providers[appConfig.govCoreChainId],
+    initialProviders[appConfig.govCoreChainId],
   );
   const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
     appConfig.govCoreConfig.dataHelperContractAddress,
-    appConfig.providers[appConfig.govCoreChainId],
+    initialProviders[appConfig.govCoreChainId],
   );
 
   // cached data

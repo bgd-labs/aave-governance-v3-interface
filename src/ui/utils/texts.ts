@@ -202,7 +202,6 @@ export const texts = {
     tableHeaderProposition: 'Proposition',
     tableItemDelegated: 'Delegated',
     tableItemNotDelegated: 'Not Delegated',
-    userNotFound: 'User not found',
   },
   representationsPage: {
     notConnectedWallet: 'Wallet is not connected',
@@ -222,6 +221,11 @@ export const texts = {
     notRepresented: 'Not represented',
     representationInfo:
       'This is the voting power of the address you are representing. Remember that the representative role is by network, so if not able to vote on other proposals, try to change who you are representing',
+  },
+  rpcSwitcherPage: {
+    tableHeaderSwitcher: 'RPC URL',
+    tableHeaderNetwork: 'Network',
+    placeholder: 'Enter RPC URL',
   },
   notFoundPage: {
     title: 'Page not found',
@@ -283,6 +287,7 @@ export const texts = {
     navTutorial: 'Tutorial',
     navCreate: 'Create',
     termsAndConditions: 'Terms and conditions',
+    changeRPC: 'Change RPC',
     appMode: 'App mode',
     theme: 'Theme',
     appModeDefault: 'Default',
@@ -313,6 +318,7 @@ export const texts = {
     requiredValidation: 'Required field',
     addressValidation: 'Wrong Ethereum address format',
     ensNameValidation: 'Wrong Ethereum address format or ENS name',
+    rpcUrlValidation: 'RPC is either incorrect or unavailable',
     appLoading:
       'The application is loading the required data, please wait a moment',
     fetchFromIpfsError:
@@ -328,6 +334,8 @@ export const texts = {
     off: 'Off',
     on: 'On',
     copyError: 'Copy error text',
+    userNotFound: 'User not found',
+    rpcIsNotSupported: "This RPC doesn't support our contracts logic",
   },
   terms: {
     description:

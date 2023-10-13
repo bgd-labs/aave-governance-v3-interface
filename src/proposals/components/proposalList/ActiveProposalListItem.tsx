@@ -36,7 +36,7 @@ export function ActiveProposalListItem({
   isForHelpModal,
 }: ActiveProposalListItemProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+  const { isRendered, appProviders } = useStore();
   let activeWallet = useStore((state) => state.activeWallet);
 
   const [isClicked, setIsClicked] = useState(false);
@@ -46,8 +46,8 @@ export function ActiveProposalListItem({
       walletType: 'Metamask',
       accounts: [ethers.constants.AddressZero],
       chainId: appConfig.govCoreChainId,
-      provider: appConfig.providers[appConfig.govCoreChainId],
-      signer: appConfig.providers[appConfig.govCoreChainId].getSigner(
+      provider: appProviders[appConfig.govCoreChainId].instance,
+      signer: appProviders[appConfig.govCoreChainId].instance.getSigner(
         ethers.constants.AddressZero,
       ),
       isActive: true,
@@ -222,7 +222,7 @@ export function ActiveProposalListItem({
                   )}
                 </Box>
 
-                {isVotingFinished && isVoted && (
+                {isVotingFinished && isVoted && !isFinished && (
                   <Box
                     sx={{
                       display: 'none',

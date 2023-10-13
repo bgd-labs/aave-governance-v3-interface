@@ -7,7 +7,6 @@ import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
 import {
-  addressValidator,
   composeValidators,
   ensNameOrAddressValidator,
 } from '../../ui/utils/inputValidation';
@@ -21,12 +20,14 @@ const Text = ({
   alwaysGray,
   isError,
   ensName,
+  forHelp,
 }: {
   address?: string;
   isCrossed?: boolean;
   alwaysGray?: boolean;
   isError?: boolean;
   ensName?: string;
+  forHelp?: boolean;
 }) => {
   const ens = ensName || '';
 
@@ -36,7 +37,9 @@ const Text = ({
       isCrossed={isCrossed}
       alwaysGray={alwaysGray}
       isError={isError}
-      address={address}
+      errorMessage={texts.other.userNotFound}
+      value={address}
+      withoutHover={forHelp}
       isErrorOnRight>
       <>
         {!!address
@@ -127,7 +130,7 @@ export function RepresentationsTableItemField({
     if (!addressTo) {
       setShownAddressTo(undefined);
     }
-    if (addressTo) {
+    if (addressTo && !forHelp) {
       if (isAddress(addressTo)) {
         fetchEnsNameByAddress(addressTo).then(() => {
           const addressData = ensData[addressTo.toLocaleLowerCase()];
@@ -151,7 +154,7 @@ export function RepresentationsTableItemField({
         });
       }
     }
-  }, [ensData, addressTo]);
+  }, [ensData, addressTo, forHelp]);
 
   // clean on unmount
   useEffect(() => {
@@ -163,16 +166,12 @@ export function RepresentationsTableItemField({
   return (
     <>
       {!isEdit && !isViewChanges && (
-        <Text address={address} ensName={shownAddress} />
+        <Text forHelp={forHelp} address={address} ensName={shownAddress} />
       )}
       {isEdit && !isViewChanges && (
         <Field
           name={inputName}
-          validate={
-            forHelp
-              ? composeValidators(addressValidator)
-              : composeValidators(ensNameOrAddressValidator)
-          }>
+          validate={composeValidators(ensNameOrAddressValidator)}>
           {(props) => (
             <InputWrapper
               onCrossClick={
@@ -213,6 +212,7 @@ export function RepresentationsTableItemField({
             },
           })}>
           <Text
+            forHelp={forHelp}
             address={address}
             isCrossed={isAddressToVisible}
             alwaysGray
@@ -220,6 +220,7 @@ export function RepresentationsTableItemField({
           />
           {isAddressToVisible && (
             <Text
+              forHelp={forHelp}
               address={addressToFromEns}
               ensName={shownAddressTo}
               isError={isEnsToIncorrect}

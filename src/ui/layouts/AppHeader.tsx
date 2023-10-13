@@ -484,6 +484,20 @@ export function AppHeader() {
                   )}
                 </React.Fragment>
               ))}
+              <Link
+                href={ROUTES.rpcSwitcher}
+                onClick={() => handleCloseMobileMenu()}
+                css={{
+                  color: '$textLight',
+                  mb: 15,
+                  display: 'block',
+                }}>
+                <Box
+                  component="p"
+                  sx={{ typography: 'body', color: '$textLight' }}>
+                  {texts.header.changeRPC}
+                </Box>
+              </Link>
               {!isForIPFS && isTermsAndConditionsVisible && (
                 <Box
                   component="button"

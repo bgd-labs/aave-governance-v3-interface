@@ -24,3 +24,15 @@ export const composeValidators =
       (error: any, validator: any) => error || validator(value),
       undefined,
     );
+
+export const rpcUrlValidator = (value: string) => {
+  if (value && value.startsWith('https://')) {
+    try {
+      new URL(value);
+      return undefined;
+    } catch {
+      return texts.other.rpcUrlValidation;
+    }
+  }
+  return texts.other.rpcUrlValidation;
+};

@@ -48,6 +48,7 @@ export function ProposalListItemFinalStatus({
           [theme.breakpoints.up('lg')]: { mr: 50 },
         }}>
         <Box
+          className="ProposalListItemFinalStatus__text"
           component="p"
           sx={{
             typography: 'body',
@@ -58,6 +59,9 @@ export function ProposalListItemFinalStatus({
       </Box>
 
       <Box
+        className={
+          color === '$disabled' ? 'ProposalListItemFinalStatus__box' : undefined
+        }
         sx={{
           display: 'inline-flex',
           alignItems: 'center',

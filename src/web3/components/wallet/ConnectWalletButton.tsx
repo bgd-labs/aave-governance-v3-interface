@@ -1,8 +1,6 @@
 import {
-  LocalStorageKeys,
   selectAllTransactions,
   selectPendingTransactionByWallet,
-  WalletType,
 } from '@bgd-labs/frontend-web3-utils/src';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
@@ -23,6 +21,7 @@ import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
+import { getLocalStorageLastConnectedWallet } from '../../../utils/localStorage';
 import { selectActiveWallet } from '../../store/web3Selectors';
 import { RepresentingButton } from './RepresentingButton';
 
@@ -76,11 +75,7 @@ export function ConnectWalletButton({
     }
   }, [lastTransaction]);
 
-  const lastConnectedWallet =
-    typeof localStorage !== 'undefined' &&
-    (localStorage.getItem(LocalStorageKeys.LastConnectedWallet) as
-      | WalletType
-      | undefined);
+  const lastConnectedWallet = getLocalStorageLastConnectedWallet();
 
   useEffect(() => {
     if (!!lastConnectedWallet || !activeWallet) {

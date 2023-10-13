@@ -7,7 +7,6 @@ import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
 import {
-  addressValidator,
   composeValidators,
   ensNameOrAddressValidator,
 } from '../../ui/utils/inputValidation';
@@ -22,6 +21,7 @@ const Text = ({
   alwaysGray,
   isEnsName,
   isError,
+  forHelp,
 }: {
   address?: string;
   shownAddress?: string;
@@ -29,13 +29,16 @@ const Text = ({
   alwaysGray?: boolean;
   isEnsName?: boolean;
   isError?: boolean;
+  forHelp?: boolean;
 }) => {
   return (
     <TableText
       topText={texts.delegatePage.tableItemNotDelegated}
-      address={address}
+      value={address}
       isCrossed={isCrossed}
       alwaysGray={alwaysGray}
+      errorMessage={texts.other.userNotFound}
+      withoutHover={forHelp}
       isError={isError}>
       <>
         {!!shownAddress
@@ -124,7 +127,7 @@ export function DelegateTableItemAddress({
     if (!addressTo) {
       setShownAddressTo(undefined);
     }
-    if (addressTo) {
+    if (addressTo && !forHelp) {
       if (isAddress(addressTo)) {
         fetchEnsNameByAddress(addressTo).then(() => {
           const addressData = ensData[addressTo.toLocaleLowerCase()];
@@ -161,6 +164,7 @@ export function DelegateTableItemAddress({
     <>
       {!isEdit && !isViewChanges && (
         <Text
+          forHelp={forHelp}
           address={address}
           shownAddress={shownAddress}
           isEnsName={isEnsName(shownAddress || '')}
@@ -169,11 +173,7 @@ export function DelegateTableItemAddress({
       {isEdit && !isViewChanges && (
         <Field
           name={inputName}
-          validate={
-            forHelp
-              ? composeValidators(addressValidator)
-              : composeValidators(ensNameOrAddressValidator)
-          }>
+          validate={composeValidators(ensNameOrAddressValidator)}>
           {(props) => (
             <InputWrapper
               onCrossClick={
@@ -214,6 +214,7 @@ export function DelegateTableItemAddress({
             },
           })}>
           <Text
+            forHelp={forHelp}
             address={address}
             shownAddress={shownAddress}
             isCrossed={isAddressToVisible}
@@ -222,6 +223,7 @@ export function DelegateTableItemAddress({
           />
           {isAddressToVisible && (
             <Text
+              forHelp={forHelp}
               address={
                 isEnsName(addressTo || '') ? hoveredAddressTo : addressTo
               }
