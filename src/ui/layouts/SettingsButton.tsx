@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react';
-import { Box, useTheme } from '@mui/system';
-import React from 'react';
+import { Box, SxProps, useTheme } from '@mui/system';
+import React, { ReactNode } from 'react';
 
 import SettingsIcon from '/public/images/icons/settings.svg';
 import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
@@ -15,6 +15,41 @@ import { texts } from '../utils/texts';
 export function SettingsButton() {
   const theme = useTheme();
   const { setIsTermModalOpen } = useStore();
+
+  const SettingButtonIconWrapper = ({
+    children,
+    sx,
+  }: {
+    children: ReactNode;
+    sx: SxProps;
+  }) => {
+    return (
+      <IconBox
+        sx={{
+          width: 16,
+          height: 16,
+          transition: 'all 0.2s ease',
+          path: {
+            stroke: theme.palette.$textLight,
+          },
+          ...sx,
+          '> svg': {
+            width: 16,
+            height: 16,
+            [theme.breakpoints.up('lg')]: {
+              width: 22,
+              height: 22,
+            },
+          },
+          [theme.breakpoints.up('lg')]: {
+            width: 22,
+            height: 22,
+          },
+        }}>
+        {children}
+      </IconBox>
+    );
+  };
 
   return (
     <>
@@ -33,8 +68,9 @@ export function SettingsButton() {
                 lineHeight: '0.5',
                 position: 'relative',
                 px: 10,
+                ml: 2,
                 [theme.breakpoints.up('lg')]: {
-                  ml: 10,
+                  ml: 8,
                 },
                 hover: {
                   '> div': {
@@ -47,59 +83,22 @@ export function SettingsButton() {
                   },
                 },
               }}>
-              <IconBox
+              <SettingButtonIconWrapper
                 sx={{
-                  width: 16,
-                  height: 16,
-
                   opacity: open ? 0 : 1,
                   position: 'absolute',
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  transition: 'all 0.2s ease',
-                  path: {
-                    stroke: theme.palette.$textLight,
-                  },
-                  '> svg': {
-                    width: 16,
-                    height: 16,
-                    [theme.breakpoints.up('lg')]: {
-                      width: 21,
-                      height: 21,
-                    },
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    width: 21,
-                    height: 21,
-                  },
                 }}>
                 <SettingsBordersIcon />
-              </IconBox>
-              <IconBox
+              </SettingButtonIconWrapper>
+              <SettingButtonIconWrapper
                 sx={{
-                  width: 16,
-                  height: 16,
                   opacity: open ? 1 : 0,
-                  transition: 'all 0.2s ease',
-                  path: {
-                    fill: theme.palette.$textLight,
-                  },
-                  '> svg': {
-                    width: 16,
-                    height: 16,
-                    [theme.breakpoints.up('lg')]: {
-                      width: 21,
-                      height: 21,
-                    },
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    width: 21,
-                    height: 21,
-                  },
                 }}>
                 <SettingsIcon />
-              </IconBox>
+              </SettingButtonIconWrapper>
             </Menu.Button>
 
             <Menu.Items

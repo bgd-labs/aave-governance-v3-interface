@@ -18,12 +18,12 @@ export function GlobalStyles() {
     body: {
       fontFamily: FONT,
       minWidth: 365,
-      fontWeight: '300',
-      fontSize: 13,
-      lineHeight: '15px',
+      fontWeight: '400',
+      fontSize: 12,
+      lineHeight: '20px',
       [`@media only screen and (${media.lg})`]: {
         fontSize: 15,
-        lineHeight: '18px',
+        lineHeight: '22px',
       },
     },
 

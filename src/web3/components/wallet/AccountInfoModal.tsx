@@ -48,7 +48,7 @@ export function AccountInfoModal({
   return (
     <BasicModal
       isOpen={isOpen}
-      setIsOpen={setIsOpen}
+      setIsOpen={(value) => setTimeout(() => setIsOpen(value), 1)}
       withCloseButton
       withoutAnimationWhenOpen>
       <AccountInfoModalContent

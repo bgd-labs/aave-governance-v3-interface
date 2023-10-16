@@ -63,7 +63,9 @@ export function WalletWidget() {
 
   const handleButtonClick = () => {
     if (activeWallet?.isActive) {
-      setAccountInfoModalOpen(true);
+      if (!accountInfoModalOpen) {
+        setAccountInfoModalOpen(true);
+      }
     } else {
       setConnectWalletModalOpen(true);
     }

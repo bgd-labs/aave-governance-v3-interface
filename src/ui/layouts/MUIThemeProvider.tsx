@@ -40,14 +40,14 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
     fontSize: 15,
     lineHeight: '18px',
     [currentTheme.breakpoints.up('lg')]: {
-      fontSize: 20,
-      lineHeight: '26px',
+      fontSize: 18,
+      lineHeight: '23px',
     },
   };
   // @ts-ignore
   currentTheme.typography.h3 = {
     fontFamily: FONT,
-    fontWeight: '300',
+    fontWeight: '400',
     letterSpacing: '0.02em',
     fontSize: 14,
     lineHeight: '17px',
@@ -60,8 +60,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   currentTheme.typography.headline = {
     fontFamily: FONT,
     fontWeight: '600',
-    fontSize: 13,
-    lineHeight: '15px',
+    fontSize: 12,
+    lineHeight: '14px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 15,
       lineHeight: '18px',
@@ -70,13 +70,34 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   // @ts-ignore
   currentTheme.typography.body = {
     fontFamily: FONT,
-    fontWeight: '300',
-    letterSpacing: '0.01em',
-    fontSize: 13,
-    lineHeight: '15px',
+    fontWeight: '400',
+    fontSize: 12,
+    lineHeight: '20px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 15,
-      lineHeight: '18px',
+      lineHeight: '22px',
+    },
+  };
+  // @ts-ignore
+  currentTheme.typography.descriptor = {
+    fontFamily: FONT,
+    fontWeight: '400',
+    fontSize: 9,
+    lineHeight: '11px',
+    [currentTheme.breakpoints.up('lg')]: {
+      fontSize: 11,
+      lineHeight: '13px',
+    },
+  };
+  // @ts-ignore
+  currentTheme.typography.descriptorAccent = {
+    fontFamily: FONT,
+    fontWeight: '700',
+    fontSize: 9,
+    lineHeight: '11px',
+    [currentTheme.breakpoints.up('lg')]: {
+      fontSize: 11,
+      lineHeight: '13px',
     },
   };
   // @ts-ignore

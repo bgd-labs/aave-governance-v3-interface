@@ -138,11 +138,13 @@ export function AppHeader() {
         }}>
         <Container
           sx={{
-            px: mobileMenuOpen ? 0 : 12,
+            paddingLeft: mobileMenuOpen ? 0 : 8,
+            paddingRight: mobileMenuOpen ? 0 : 8,
             transition: 'padding 0.2s ease',
             overflow: 'hidden',
             [theme.breakpoints.up('sm')]: {
-              px: 20,
+              paddingLeft: 24,
+              paddingRight: 24,
               overflow: 'unset',
             },
           }}>
@@ -176,7 +178,7 @@ export function AppHeader() {
                 ? 'transparent !important'
                 : `${theme.palette.$mainBorder} !important`,
               [theme.breakpoints.up('lg')]: {
-                p: '8px 12px 8px 22px',
+                p: '8px 20px 8px 30px',
                 height: 66,
               },
             }}>
