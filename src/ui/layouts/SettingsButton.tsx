@@ -67,10 +67,14 @@ export function SettingsButton() {
                 cursor: 'pointer',
                 lineHeight: '0.5',
                 position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
                 px: 10,
                 ml: 2,
+                height: 52,
                 [theme.breakpoints.up('lg')]: {
                   ml: 8,
+                  height: 66,
                 },
                 hover: {
                   '> div': {
@@ -108,7 +112,7 @@ export function SettingsButton() {
                 flexDirection: 'column',
                 position: 'absolute',
                 right: 0,
-                top: '100%',
+                top: 'calc(100% - 1px)',
               }}>
               <BoxWith3D
                 borderSize={10}
@@ -121,7 +125,7 @@ export function SettingsButton() {
                     color: '$textDisabled',
                     lineHeight: 1,
                     hover: { color: theme.palette.$textWhite },
-                    mb: 15,
+                    mb: 14,
                   }}
                   onClick={close}>
                   <Box sx={{ typography: 'buttonSmall' }}>
@@ -133,11 +137,11 @@ export function SettingsButton() {
                   sx={{ typography: 'headline', color: '$textLight' }}>
                   {texts.header.theme}
                 </Box>
-                <Divider sx={{ my: 10 }} />
+                <Divider sx={{ mt: 8, mb: 14 }} />
                 <ThemeSwitcher />
                 {!isForIPFS && isTermsAndConditionsVisible && (
                   <>
-                    <Divider sx={{ my: 10 }} />
+                    <Divider sx={{ my: 14 }} />
                     <Box
                       component="button"
                       type="button"

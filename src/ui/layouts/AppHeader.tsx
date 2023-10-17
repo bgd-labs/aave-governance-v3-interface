@@ -121,9 +121,10 @@ export function AppHeader() {
                 ? 0
                 : -82
               : 0,
-          py: mobileMenuOpen ? 0 : 12,
+          pt: mobileMenuOpen ? 0 : 8,
+          pb: mobileMenuOpen ? 0 : 8,
           zIndex: 110,
-          mb: 12,
+          mb: 10,
           backgroundColor: isRendered
             ? `${theme.palette.$paper} !important`
             : theme.palette.$paper,
@@ -131,9 +132,11 @@ export function AppHeader() {
           [theme.breakpoints.up('sm')]: {
             position: 'relative',
             backgroundColor: 'transparent !important',
+            pt: mobileMenuOpen ? 0 : 12,
             pb: 0,
             top: 0,
             zIndex: 90,
+            mb: 24,
           },
         }}>
         <Container
@@ -169,7 +172,7 @@ export function AppHeader() {
               },
             }}
             css={{
-              p: '6px 0 6px 12px',
+              p: '4px 8px 4px 18px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -177,6 +180,9 @@ export function AppHeader() {
               borderColor: mobileMenuOpen
                 ? 'transparent !important'
                 : `${theme.palette.$mainBorder} !important`,
+              [theme.breakpoints.up('md')]: {
+                p: '4px 14px 4px 24px',
+              },
               [theme.breakpoints.up('lg')]: {
                 p: '8px 20px 8px 30px',
                 height: 66,
@@ -200,19 +206,19 @@ export function AppHeader() {
                 }}>
                 <IconBox
                   sx={{
-                    width: 61,
-                    height: 28,
-                    '> svg': {
-                      width: 61,
-                      height: 28,
-                      [theme.breakpoints.up('lg')]: {
-                        width: 66,
-                        height: 32,
-                      },
-                    },
+                    width: 59,
+                    height: 26,
                     [theme.breakpoints.up('lg')]: {
-                      width: 66,
-                      height: 32,
+                      width: 80,
+                      height: 35,
+                    },
+                    '> svg': {
+                      width: 59,
+                      height: 26,
+                      [theme.breakpoints.up('lg')]: {
+                        width: 80,
+                        height: 35,
+                      },
                     },
                   }}>
                   <Logo />
@@ -237,6 +243,7 @@ export function AppHeader() {
                           setIsHelpModalOpen(true);
                         }}
                         sx={{
+                          typography: 'buttonSmall',
                           color: '$textLight',
                           mr: 15,
                           transition: 'all 0.2s ease',
@@ -257,7 +264,7 @@ export function AppHeader() {
                           component="p"
                           className="Header__navItem"
                           sx={{
-                            typography: 'body',
+                            typography: 'buttonSmall',
                             color: isRendered
                               ? `${theme.palette.$textLight} !important`
                               : theme.palette.$textLight,
@@ -309,7 +316,7 @@ export function AppHeader() {
                           component="p"
                           className="Header__navItem"
                           sx={{
-                            typography: 'body',
+                            typography: 'buttonSmall',
                             color: isRendered
                               ? `${theme.palette.$textLight} !important`
                               : theme.palette.$textLight,
@@ -474,7 +481,7 @@ export function AppHeader() {
                       inNewWindow={item.title !== 'Create'}
                       css={{
                         color: '$textLight',
-                        mb: 15,
+                        mb: 14,
                         display: 'block',
                       }}>
                       <Box
@@ -491,7 +498,7 @@ export function AppHeader() {
                 onClick={() => handleCloseMobileMenu()}
                 css={{
                   color: '$textLight',
-                  mb: 15,
+                  mb: 14,
                   display: 'block',
                 }}>
                 <Box
@@ -512,7 +519,7 @@ export function AppHeader() {
                   sx={{
                     textAlign: 'left',
                     color: '$textLight',
-                    mb: 15,
+                    mb: 14,
                     display: 'block',
                   }}>
                   <Box sx={{ typography: 'body' }}>
@@ -524,6 +531,7 @@ export function AppHeader() {
                 sx={{
                   color: '$textLight',
                   whiteSpace: 'nowrap',
+                  mt: 28,
                 }}>
                 <Box
                   sx={{
@@ -535,7 +543,7 @@ export function AppHeader() {
                     {texts.header.theme}
                   </Box>
                 </Box>
-                <Divider sx={{ my: 15 }} />
+                <Divider sx={{ mt: 8, mb: 16 }} />
                 <ThemeSwitcher />
               </Box>
             </Box>

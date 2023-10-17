@@ -186,6 +186,7 @@ export function ConnectWalletButton({
                     display: 'none',
                     [theme.breakpoints.up('sm')]: {
                       display: 'block !important',
+                      typography: 'buttonSmall',
                     },
                   },
                   '.NetworkIcon': {
