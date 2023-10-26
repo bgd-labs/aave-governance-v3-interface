@@ -1,4 +1,4 @@
-import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, SxProps, useTheme } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import dayjs from 'dayjs';

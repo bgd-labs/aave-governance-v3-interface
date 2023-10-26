@@ -3,7 +3,7 @@ import {
   ProposalState,
   ProposalWithLoadings,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store';
@@ -55,7 +55,7 @@ export function ProposalPageWrapper({
 
   useEffect(() => {
     store.setDetailedProposalsDataLoadings(id);
-  }, [store.representative.address, store.activeWallet?.accounts[0]]);
+  }, [store.representative.address, store.activeWallet?.address]);
 
   useEffect(() => {
     if (!!proposalDataFromStore) {
@@ -142,7 +142,7 @@ export function ProposalPageWrapper({
   }, [
     id,
     proposalData?.loading,
-    store.activeWallet?.accounts[0],
+    store.activeWallet?.address,
     store.detailedProposalsDataLoading,
     store.representativeLoading,
     store.representative.address,

@@ -4,16 +4,16 @@ import {
   getEstimatedState,
   ProposalState,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import {
   getSafeSingletonDeployment,
   SingletonDeployment,
 } from '@safe-global/safe-deployments';
 import { BigNumber } from 'bignumber.js';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 // @ts-ignore
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
@@ -114,10 +114,7 @@ export function VoteModal({
     payload: {
       proposalId,
       support: !support,
-      voter:
-        representative.address ||
-        activeWallet?.accounts[0] ||
-        ethers.constants.AddressZero,
+      voter: representative.address || activeWallet?.address || zeroAddress,
     },
   });
 

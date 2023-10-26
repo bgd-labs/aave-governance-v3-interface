@@ -1,4 +1,4 @@
-import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 

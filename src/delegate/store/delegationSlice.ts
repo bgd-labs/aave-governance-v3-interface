@@ -1,11 +1,13 @@
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IERC20__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IERC20/IERC20__factory';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
-import { constants } from 'ethers';
+import {
+  erc20Contract,
+  normalizeBN,
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
-import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
@@ -42,28 +44,28 @@ export const createDelegationSlice: StoreSlice<
     IProposalsSlice &
     IUISlice &
     IEnsSlice &
-    IProviderSlice
+    IRpcSwitcherSlice
 > = (set, get) => ({
   delegateData: [],
   delegateDataLoading: false,
   getDelegateData: async () => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
       set({ delegateDataLoading: true });
 
       const votingStrategy =
         await get().govDataService.getVotingStrategyContract();
-      const underlyingAssets = await votingStrategy.getVotingAssetList();
+      const underlyingAssets = await votingStrategy.read.getVotingAssetList();
 
       const delegateData = await Promise.all(
         underlyingAssets.map(async (underlyingAsset) => {
-          const erc20 = IERC20__factory.connect(
-            underlyingAsset,
-            get().appProviders[appConfig.govCoreChainId].instance,
-          );
+          const erc20 = erc20Contract({
+            client: get().appClients[appConfig.govCoreChainId].instance,
+            contractAddress: underlyingAsset,
+          });
           const symbol = getTokenName(underlyingAsset) as Token;
-          const balance = await erc20.balanceOf(activeAddress);
+          const balance = await erc20.read.balanceOf([activeAddress]);
 
           const delegatesAddresses = await get().delegationService.getDelegates(
             underlyingAsset,
@@ -79,18 +81,18 @@ export const createDelegationSlice: StoreSlice<
             amount: normalizeBN(balance.toString(), 18).toNumber(),
             votingToAddress:
               votingToAddress === activeAddress ||
-              votingToAddress === constants.AddressZero
-                ? ''
+              votingToAddress === zeroAddress
+                ? '0x0'
                 : !!votingToAddress
                 ? votingToAddress
-                : '',
+                : '0x0',
             propositionToAddress:
               propositionToAddress === activeAddress ||
-              propositionToAddress === constants.AddressZero
-                ? ''
+              propositionToAddress === zeroAddress
+                ? '0x0'
                 : !!propositionToAddress
                 ? propositionToAddress
-                : '',
+                : '0x0',
           };
         }),
       );
@@ -105,7 +107,7 @@ export const createDelegationSlice: StoreSlice<
   delegate: async (stateDelegateData, formDelegateData, timestamp) => {
     await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
     const delegationService = get().delegationService;
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
       // initiate batch of signatures
@@ -151,7 +153,7 @@ export const createDelegationSlice: StoreSlice<
         ) {
           const sig = await delegationService.delegateMetaSig(
             underlyingAsset,
-            votingToAddress === '' ? activeAddress : votingToAddress,
+            votingToAddress === '0x0' ? activeAddress : votingToAddress,
             GovernancePowerTypeApp.All,
             activeAddress,
           );
@@ -162,7 +164,7 @@ export const createDelegationSlice: StoreSlice<
           if (!isVotingToAddressSame) {
             const sig = await delegationService.delegateMetaSig(
               underlyingAsset,
-              votingToAddress === '' ? activeAddress : votingToAddress,
+              votingToAddress === '0x0' ? activeAddress : votingToAddress,
               GovernancePowerTypeApp.VOTING,
               activeAddress,
             );
@@ -172,7 +174,7 @@ export const createDelegationSlice: StoreSlice<
           if (!isPropositionToAddressSame) {
             const sig = await delegationService.delegateMetaSig(
               underlyingAsset,
-              propositionToAddress === ''
+              propositionToAddress === '0x0'
                 ? activeAddress
                 : propositionToAddress,
               GovernancePowerTypeApp.PROPOSITION,

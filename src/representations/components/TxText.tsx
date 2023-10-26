@@ -1,5 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
+import { Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { ChainNameWithIcon } from '../../ui/components/ChainNameWithIcon';
@@ -25,9 +26,9 @@ export function TxText({
 }: TxTextProps) {
   const store = useStore();
   const { activeWallet, ensData } = store;
-  const activeAddress = activeWallet?.accounts[0] || '';
+  const activeAddress = activeWallet?.address || '';
 
-  const formattedData: { representative: string; chainId: number }[] = [];
+  const formattedData: { representative: Hex; chainId: number }[] = [];
   for (const item of formData) {
     let representative = item.representative;
     // get previous representative data for current chain id
@@ -44,7 +45,7 @@ export function TxText({
       {formattedData.map((item, index) => {
         const isRepresent =
           item.representative !== undefined &&
-          item.representative !== '' &&
+          item.representative !== '0x0' &&
           item.representative !== activeAddress;
 
         const firstText = isRepresent
@@ -64,7 +65,7 @@ export function TxText({
                 isEnsName(item.representative)
                   ? item.representative
                   : ENSDataExists(store, item.representative, ENSProperty.NAME)
-                  ? ensData[item.representative.toLocaleLowerCase()].name
+                  ? ensData[item.representative.toLocaleLowerCase() as Hex].name
                   : textCenterEllipsis(item.representative, 5, 5)
               }`}{' '}
             for{' '}

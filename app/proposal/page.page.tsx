@@ -4,10 +4,9 @@ import {
   getProposalMetadata,
   getProposalState,
   getVotingMachineProposalState,
+  govCoreContract,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IGovernanceCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore__factory';
-import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import type { Metadata } from 'next';
 import React from 'react';
 
@@ -20,7 +19,7 @@ import {
   cachedVotesPath,
   githubStartUrl,
 } from '../../src/utils/cacheGithubLinks';
-import { initialProviders } from '../../src/utils/initialProviders';
+import { initialClients } from '../../src/utils/initialClients';
 
 export const revalidate = 0;
 
@@ -79,14 +78,10 @@ export default async function ProposalPage({
   const id = Number(proposalId);
 
   // contracts
-  const govCore = IGovernanceCore__factory.connect(
-    appConfig.govCoreConfig.contractAddress,
-    initialProviders[appConfig.govCoreChainId],
-  );
-  const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-    appConfig.govCoreConfig.dataHelperContractAddress,
-    initialProviders[appConfig.govCoreChainId],
-  );
+  const govCore = govCoreContract({
+    contractAddress: appConfig.govCoreConfig.contractAddress,
+    client: initialClients[appConfig.govCoreChainId],
+  });
 
   // cached data
   const resCachedProposalsIds = await fetch(
@@ -111,13 +106,15 @@ export default async function ProposalPage({
     : undefined;
 
   // data from contracts
-  const { configs, contractsConstants } = await getGovCoreConfigs(
-    govCoreDataHelper,
-    appConfig.govCoreConfig.contractAddress,
-  );
+  const { configs, contractsConstants } = await getGovCoreConfigs({
+    client: initialClients[appConfig.govCoreChainId],
+    govCoreContractAddress: appConfig.govCoreConfig.contractAddress,
+    govCoreDataHelperContractAddress:
+      appConfig.govCoreConfig.dataHelperContractAddress,
+  });
 
-  const proposalsCountInitial = await govCore.getProposalsCount();
-  const proposalCount = proposalsCountInitial.toNumber();
+  const proposalsCountInitial = await govCore.read.getProposalsCount();
+  const proposalCount = Number(proposalsCountInitial);
 
   // format data
   const proposalConfig = configs.filter(

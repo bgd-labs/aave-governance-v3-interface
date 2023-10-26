@@ -1,4 +1,4 @@
-import { WalletType } from '@bgd-labs/frontend-web3-utils/src';
+import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
@@ -56,7 +56,7 @@ export function WalletItem({
           {title}
         </Box>
 
-        {walletType === 'Metamask' ? (
+        {walletType === 'Injected' ? (
           <Box
             sx={(theme) => ({
               width: 28,

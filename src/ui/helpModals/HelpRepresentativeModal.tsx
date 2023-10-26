@@ -1,7 +1,7 @@
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
 import { Box, useTheme } from '@mui/system';
-import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
+import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import RepresentatiivesWalletImage from '/public/images/helpModals/RepresentatiivesWallet.svg';
 import RepresentatiivesWalletImageDark from '/public/images/helpModals/RepresentatiivesWalletDark.svg';
@@ -22,31 +22,31 @@ import { HelpModalTooltip } from './HelpModalTooltip';
 
 const testRepresentedAddresses: RepresentedAddress[] = [
   {
-    chainId: ChainIdByName.Avalanche,
+    chainId: avalanche.id,
     address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b',
   },
   {
-    chainId: ChainIdByName.EthereumMainnet,
+    chainId: mainnet.id,
     address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b',
   },
   {
-    chainId: ChainIdByName.Polygon,
+    chainId: polygon.id,
     address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b',
   },
   {
-    chainId: ChainIdByName.Polygon,
+    chainId: polygon.id,
     address: '0xC53e0A6EC3c116F350F11a01B39DFEAd078979B3',
   },
   {
-    chainId: ChainIdByName.Avalanche,
+    chainId: avalanche.id,
     address: '0x4bEC29424b47586817e302249184C7cBfec730CD',
   },
   {
-    chainId: ChainIdByName.Polygon,
+    chainId: polygon.id,
     address: '0x4bEC29424b47586817e302249184C7cBfec730CD',
   },
   {
-    chainId: ChainIdByName.Avalanche,
+    chainId: avalanche.id,
     address: '0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97',
   },
 ];
@@ -298,8 +298,8 @@ export function HelpRepresentativeModal() {
                     [theme.breakpoints.up('lg')]: { p: '50px 35px 30px' },
                   }}>
                   <AccountInfoModalContent
-                    activeAddress={ethers.constants.AddressZero}
-                    ensName={ethers.constants.AddressZero}
+                    activeAddress={zeroAddress}
+                    ensName={zeroAddress}
                     chainId={1}
                     isActive={true}
                     allTransactions={[]}

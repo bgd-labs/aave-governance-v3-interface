@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
+import { Hex, zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
 import { BackButton3D, BigButton, Input } from '../../../ui';
@@ -11,18 +12,16 @@ interface ImpersonatedFormProps {
 }
 
 export function ImpersonatedForm({ closeClick }: ImpersonatedFormProps) {
-  const impersonatedAddress = useStore((state) => state._impersonatedAddress);
-  const setImpersonatedAddress = useStore(
-    (state) => state.setImpersonatedAddress,
-  );
+  const impersonated = useStore((state) => state.impersonated);
+  const setImpersonated = useStore((state) => state.setImpersonated);
   const connectWallet = useStore((state) => state.connectWallet);
 
   const handleFormSubmit = async ({
     impersonatedAddress,
   }: {
-    impersonatedAddress: string;
+    impersonatedAddress: Hex;
   }) => {
-    setImpersonatedAddress(impersonatedAddress);
+    setImpersonated(impersonatedAddress);
     await connectWallet('Impersonated');
   };
 
@@ -43,10 +42,10 @@ export function ImpersonatedForm({ closeClick }: ImpersonatedFormProps) {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Form<{ impersonatedAddress: string }>
+        <Form<{ impersonatedAddress: Hex }>
           onSubmit={handleFormSubmit}
           initialValues={{
-            impersonatedAddress: impersonatedAddress,
+            impersonatedAddress: impersonated?.address || zeroAddress,
           }}>
           {({ handleSubmit, values }) => (
             <Box

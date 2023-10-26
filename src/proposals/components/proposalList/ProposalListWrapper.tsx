@@ -1,4 +1,4 @@
-import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect } from 'react';
 
@@ -87,7 +87,7 @@ export default function ProposalListWrapper({
       store.getPaginatedProposalsDataWithoutIpfs();
     }
   }, [
-    store.activeWallet?.accounts[0],
+    store.activeWallet?.address,
     store.isInitialLoading,
     store.loadingListCache,
     store.representative.address,

@@ -4,14 +4,14 @@ import { FieldArray } from 'react-final-form-arrays';
 
 import { BoxWith3D } from '../../ui';
 import {
-  AppProviderStorage,
+  AppClientsStorage,
   RpcSwitcherFormData,
-} from '../store/providerSlice';
+} from '../store/rpcSwitcherSlice';
 import { RpcSwitcherTable } from './RpcSwitcherTable';
 
 interface RpcSwitcherTableWrapperProps {
   loading: boolean;
-  rpcSwitcherData: Record<number, AppProviderStorage>;
+  rpcSwitcherData: Record<number, AppClientsStorage>;
   isEdit: boolean;
   isViewChanges: boolean;
   fields?: any;

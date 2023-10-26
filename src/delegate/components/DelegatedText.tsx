@@ -1,5 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
+import { Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
@@ -23,7 +24,7 @@ export function DelegatedText({
 }: DelegatedTextProps) {
   const store = useStore();
   const { activeWallet, ensData } = store;
-  const activeAddress = activeWallet?.accounts[0] || '';
+  const activeAddress = activeWallet?.address || '';
 
   const delegatedData: TxDelegateData[] = [];
   for (const formDelegateItem of formDelegateData) {
@@ -82,11 +83,12 @@ export function DelegatedText({
     <>
       {delegatedData.map((data, index) => {
         const isBothPowersDelegated =
-          data.bothAddresses !== '' && data.bothAddresses !== activeAddress;
+          data.bothAddresses !== '0x0' && data.bothAddresses !== activeAddress;
         const isVotingPowerDelegated =
-          data.votingToAddress !== '' && data.votingToAddress !== activeAddress;
+          data.votingToAddress !== '0x0' &&
+          data.votingToAddress !== activeAddress;
         const isPropositionPowerDelegated =
-          data.propositionToAddress !== '' &&
+          data.propositionToAddress !== '0x0' &&
           data.propositionToAddress !== activeAddress;
 
         const firstText =
@@ -121,13 +123,13 @@ export function DelegatedText({
           ? data.bothAddresses
           : data.bothAddresses &&
             ENSDataExists(store, data.bothAddresses, ENSProperty.NAME)
-          ? ensData[data.bothAddresses?.toLocaleLowerCase()].name
+          ? ensData[data.bothAddresses?.toLocaleLowerCase() as Hex].name
           : data.bothAddresses;
         const formattedVotingToAddress = isEnsName(data.votingToAddress || '')
           ? data.votingToAddress
           : data.votingToAddress &&
             ENSDataExists(store, data.votingToAddress, ENSProperty.NAME)
-          ? ensData[data.votingToAddress?.toLocaleLowerCase()].name
+          ? ensData[data.votingToAddress?.toLocaleLowerCase() as Hex].name
           : data.votingToAddress;
         const formattedPropositionToAddress = isEnsName(
           data.propositionToAddress || '',
@@ -135,7 +137,7 @@ export function DelegatedText({
           ? data.propositionToAddress
           : data.propositionToAddress &&
             ENSDataExists(store, data.propositionToAddress, ENSProperty.NAME)
-          ? ensData[data.propositionToAddress?.toLocaleLowerCase()].name
+          ? ensData[data.propositionToAddress?.toLocaleLowerCase() as Hex].name
           : data.propositionToAddress;
 
         const middleText =

@@ -13,23 +13,23 @@ function Child() {
     representationData,
     getRepresentationData,
     initEns,
-    initProviders,
+    initClients,
   } = useStore();
 
   useEffect(() => {
     initEns();
-    initProviders(chainInfoHelper, appUsedNetworks);
+    initClients(chainInfoHelper, appUsedNetworks);
   }, []);
 
   useEffect(() => {
     resetL1Balances();
     fullClearSupportObject();
     setTimeout(() => getRepresentationData(), 1);
-  }, [activeWallet?.accounts[0]]);
+  }, [activeWallet?.address]);
 
   useEffect(() => {
     getRepresentingAddress();
-  }, [activeWallet?.accounts[0], representationData]);
+  }, [activeWallet?.address, representationData]);
 
   return null;
 }

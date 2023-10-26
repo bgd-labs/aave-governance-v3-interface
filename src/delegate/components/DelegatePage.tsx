@@ -7,6 +7,7 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
+import { Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
@@ -80,7 +81,7 @@ export function DelegatePage() {
     getDelegateData();
     setIsEdit(false);
     setIsDelegateChangedView(false);
-  }, [activeWallet?.accounts[0]]);
+  }, [activeWallet?.address]);
 
   useEffect(() => {
     if (!!delegateData.length) {
@@ -90,21 +91,22 @@ export function DelegatePage() {
     }
   }, [delegateData.length]);
 
+  // TODO: need fix `ensName` should be string
   useEffect(() => {
     setFormDelegateData(
       delegateData.map((data) => {
         return {
           underlyingAsset: data.underlyingAsset,
           votingToAddress:
-            ensData[data.votingToAddress.toLocaleLowerCase()]?.name ||
-            data.votingToAddress,
+            (ensData[data.votingToAddress.toLocaleLowerCase() as Hex]
+              ?.name as Hex) || data.votingToAddress,
           propositionToAddress:
-            ensData[data.propositionToAddress.toLocaleLowerCase()]?.name ||
-            data.propositionToAddress,
+            (ensData[data.propositionToAddress.toLocaleLowerCase() as Hex]
+              ?.name as Hex) || data.propositionToAddress,
         };
       }),
     );
-  }, [activeWallet?.accounts[0], delegateData]);
+  }, [activeWallet?.address, delegateData]);
 
   const handleFormSubmit = ({
     formDelegateData,
@@ -115,10 +117,10 @@ export function DelegatePage() {
       return {
         underlyingAsset: data.underlyingAsset,
         votingToAddress:
-          data.votingToAddress === undefined ? '' : data.votingToAddress,
+          data.votingToAddress === undefined ? '0x0' : data.votingToAddress,
         propositionToAddress:
           data.propositionToAddress === undefined
-            ? ''
+            ? '0x0'
             : data.propositionToAddress,
       };
     });
@@ -134,7 +136,6 @@ export function DelegatePage() {
     setDelegateModalOpen(true);
     if (!!stateDelegateData.length && !!submittedFormData.length) {
       await executeTxWithLocalStatuses({
-        errorMessage: 'Tx error',
         callbackFunction: async () =>
           await delegate(stateDelegateData, formDelegateData, timestampTx),
       });

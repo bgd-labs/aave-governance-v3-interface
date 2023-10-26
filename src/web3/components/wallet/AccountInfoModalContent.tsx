@@ -196,9 +196,7 @@ export function AccountInfoModalContent({
 
           <Link
             href={`${
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              chainInfoHelper.getChainParameters(chainId).blockExplorerUrls[0]
+              chainInfoHelper.getChainParameters(chainId).blockExplorers
             }address/${activeAddress}`}
             css={{
               color: '$textSecondary',

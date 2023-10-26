@@ -1,7 +1,7 @@
 import {
   selectAllTransactions,
   selectPendingTransactionByWallet,
-} from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import makeBlockie from 'ethereum-blockies-base64';
@@ -22,7 +22,6 @@ import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
 import { getLocalStorageLastConnectedWallet } from '../../../utils/localStorage';
-import { selectActiveWallet } from '../../store/web3Selectors';
 import { RepresentingButton } from './RepresentingButton';
 
 interface ConnectWalletButtonProps {
@@ -40,18 +39,17 @@ export function ConnectWalletButton({
   isAvatarExists,
   representative,
 }: ConnectWalletButtonProps) {
+  const store = useStore();
+  const { walletActivating, activeWallet } = store;
+
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
   const [loading, setLoading] = useState(true);
 
-  const walletActivating = useStore((state) => state.walletActivating);
-  const getActiveAddress = useStore((state) => state.getActiveAddress);
-  const allTransactions = useStore((state) => selectAllTransactions(state));
-
-  const activeWallet = useStore(selectActiveWallet);
+  const allTransactions = selectAllTransactions(store);
 
   const isActive = activeWallet?.isActive;
-  const activeAddress = getActiveAddress() || '';
+  const activeAddress = activeWallet?.address || '';
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName
@@ -196,7 +194,7 @@ export function ConnectWalletButton({
                 }}
                 textCss={{ typography: 'buttonSmall', color: '$textLight' }}
                 iconSize={12}
-                chainId={activeWallet?.chainId || appConfig.govCoreChainId}
+                chainId={activeWallet?.chain?.id || appConfig.govCoreChainId}
               />
 
               <Box

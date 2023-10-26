@@ -1,18 +1,21 @@
+// TODO: need fix all as Hex
+
 import {
   BasicProposalState,
   checkHash,
   getBlockNumberByTimestamp,
   getProposalStepsAndAmounts,
+  HashZero,
   PayloadState,
   Proposal,
   ProposalState,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
-import { ethers } from 'ethers';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { Hex, zeroAddress } from 'viem';
 
-import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
@@ -114,7 +117,7 @@ export interface IProposalsHistorySlice {
 
 export const createProposalsHistorySlice: StoreSlice<
   IProposalsHistorySlice,
-  IWeb3Slice & IProviderSlice
+  IWeb3Slice & IRpcSwitcherSlice
 > = (set, get) => ({
   // initial
   proposalHistory: {},
@@ -140,9 +143,9 @@ export const createProposalsHistorySlice: StoreSlice<
             id: txId,
             hash:
               typeof historyItem?.txInfo.hash !== 'undefined' &&
-              historyItem?.txInfo.hash !== ethers.constants.HashZero
+              historyItem?.txInfo.hash !== HashZero
                 ? historyItem?.txInfo.hash
-                : ethers.constants.HashZero,
+                : HashZero,
             chainId: txChainId,
             hashLoading: false,
           },
@@ -409,8 +412,7 @@ export const createProposalsHistorySlice: StoreSlice<
           txInfo: {
             ...draft.proposalHistory[historyId].txInfo,
             hashLoading:
-              draft.proposalHistory[historyId].txInfo.hash ===
-              ethers.constants.HashZero,
+              draft.proposalHistory[historyId].txInfo.hash === HashZero,
           },
         };
       }),
@@ -419,7 +421,7 @@ export const createProposalsHistorySlice: StoreSlice<
   setHistoryItemHash: (historyId, filteredEvents) => {
     const historyItem = get().proposalHistory[historyId];
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         filteredEvents.forEach((event) =>
           set((state) =>
@@ -429,8 +431,7 @@ export const createProposalsHistorySlice: StoreSlice<
                 txInfo: {
                   ...draft.proposalHistory[historyId].txInfo,
                   hash:
-                    draft.proposalHistory[historyId].txInfo.hash !==
-                    ethers.constants.HashZero
+                    draft.proposalHistory[historyId].txInfo.hash !== HashZero
                       ? draft.proposalHistory[historyId].txInfo.hash
                       : event.transactionHash,
                 },
@@ -457,17 +458,17 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp(
-            txInfo.chainId,
-            historyItem.timestamp,
-            get().appProviders[txInfo.chainId].instance,
-          );
+          await getBlockNumberByTimestamp({
+            chainId: txInfo.chainId,
+            targetTimestamp: historyItem.timestamp,
+            client: get().appClients[txInfo.chainId].instance,
+          });
         const events = await get().govDataService.getPayloadsCreatedEvents(
           txInfo.chainId,
-          payloadControllerAddress,
+          payloadControllerAddress as Hex,
           minBlockNumber,
           maxBlockNumber,
         );
@@ -495,14 +496,14 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp(
-            txInfo.chainId,
-            historyItem.timestamp,
-            get().appProviders[txInfo.chainId].instance,
-          );
+          await getBlockNumberByTimestamp({
+            chainId: txInfo.chainId,
+            targetTimestamp: historyItem.timestamp,
+            client: get().appClients[txInfo.chainId].instance,
+          });
         const events = await get().govDataService.getProposalCreatedEvents(
           minBlockNumber,
           maxBlockNumber,
@@ -530,14 +531,14 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp(
-            txInfo.chainId,
-            historyItem.timestamp,
-            get().appProviders[txInfo.chainId].instance,
-          );
+          await getBlockNumberByTimestamp({
+            chainId: txInfo.chainId,
+            targetTimestamp: historyItem.timestamp,
+            client: get().appClients[txInfo.chainId].instance,
+          });
         const events = await get().govDataService.getProposalActivatedEvents(
           minBlockNumber,
           maxBlockNumber,
@@ -565,7 +566,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (proposal.proposal.data.votingMachineData.createdBlock > 0) {
         const events =
           await get().govDataService.getProposalActivatedOnVMEvents(
@@ -596,7 +597,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (
         proposal.proposal.data.votingMachineData
           .votingClosedAndSentBlockNumber > 0
@@ -631,14 +632,14 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp(
-            txInfo.chainId,
-            historyItem.timestamp,
-            get().appProviders[txInfo.chainId].instance,
-          );
+          await getBlockNumberByTimestamp({
+            chainId: txInfo.chainId,
+            targetTimestamp: historyItem.timestamp,
+            client: get().appClients[txInfo.chainId].instance,
+          });
         const events = await get().govDataService.getProposalQueuedEvents(
           minBlockNumber,
           maxBlockNumber,
@@ -672,17 +673,17 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp(
-            txInfo.chainId,
-            historyItem.timestamp,
-            get().appProviders[txInfo.chainId].instance,
-          );
+          await getBlockNumberByTimestamp({
+            chainId: txInfo.chainId,
+            targetTimestamp: historyItem.timestamp,
+            client: get().appClients[txInfo.chainId].instance,
+          });
         const events = await get().govDataService.getPayloadsQueuedEvents(
           txInfo.chainId,
-          payloadControllerAddress,
+          payloadControllerAddress as Hex,
           minBlockNumber,
           maxBlockNumber,
         );
@@ -716,17 +717,17 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === ethers.constants.HashZero) {
+    if (historyItem.txInfo.hash === zeroAddress) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp(
-            txInfo.chainId,
-            historyItem.timestamp,
-            get().appProviders[txInfo.chainId].instance,
-          );
+          await getBlockNumberByTimestamp({
+            chainId: txInfo.chainId,
+            targetTimestamp: historyItem.timestamp,
+            client: get().appClients[txInfo.chainId].instance,
+          });
         const events = await get().govDataService.getPayloadsExecutedEvents(
           txInfo.chainId,
-          payloadControllerAddress,
+          payloadControllerAddress as Hex,
           minBlockNumber,
           maxBlockNumber,
         );

@@ -1,4 +1,4 @@
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
@@ -28,9 +28,9 @@ export function VoteButton({
   isForHelpModal,
 }: VoteButtonProps) {
   const store = useStore();
-  const { representative, getActiveAddress, supportObject } = store;
+  const { activeWallet, representative, supportObject } = store;
 
-  const activeAddress = getActiveAddress();
+  const activeAddress = activeWallet?.address;
 
   const tx = useStore((state) =>
     selectLastTxByTypeAndPayload<TransactionUnion>(

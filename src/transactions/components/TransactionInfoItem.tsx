@@ -1,4 +1,4 @@
-import { selectTxExplorerLink } from '@bgd-labs/frontend-web3-utils/src';
+import { selectTxExplorerLink } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';

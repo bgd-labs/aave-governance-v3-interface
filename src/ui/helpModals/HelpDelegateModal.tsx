@@ -94,10 +94,10 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
       return {
         underlyingAsset: data.underlyingAsset,
         votingToAddress:
-          data.votingToAddress === undefined ? '' : data.votingToAddress,
+          data.votingToAddress === undefined ? '0x0' : data.votingToAddress,
         propositionToAddress:
           data.propositionToAddress === undefined
-            ? ''
+            ? '0x0'
             : data.propositionToAddress,
       };
     });

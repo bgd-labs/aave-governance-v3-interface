@@ -1,4 +1,4 @@
-import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils/src';
+import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils';
 import { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store';
@@ -16,7 +16,7 @@ const browserWalletLabelAndIcon = getBrowserWalletLabelAndIcon();
 
 export const wallets: Wallet[] = [
   {
-    walletType: 'Metamask',
+    walletType: 'Injected',
     icon: browserWalletLabelAndIcon.icon,
     title: browserWalletLabelAndIcon.label,
     isVisible: true,

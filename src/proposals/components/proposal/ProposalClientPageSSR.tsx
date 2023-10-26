@@ -7,7 +7,7 @@ import {
   ProposalWithLoadings,
   VotersData,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect } from 'react';
 
 import { useStore } from '../../../store';

@@ -1,10 +1,10 @@
 import {
   LocalStorageKeys as Web3LocalStorageKeys,
   WalletType,
-} from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/frontend-web3-utils';
 
 import { RepresentativeAddress } from '../representations/store/representationsSlice';
-import { AppProviderStorage } from '../rpcSwitcher/store/providerSlice';
+import { AppClientsStorage } from '../rpcSwitcher/store/rpcSwitcherSlice';
 import { IsHelpModalVisible } from '../ui/helpModals/HelpModalProvider';
 import { AppModeType, IsGaslessVote } from '../ui/store/uiSlice';
 import { EnsDataItem } from '../web3/store/ensSlice';
@@ -40,7 +40,7 @@ export const getLocalStorageRpcUrls = () => {
 };
 
 export const setLocalStorageRpcUrls = (
-  rpcUrls: Record<number, AppProviderStorage>,
+  rpcUrls: Record<number, AppClientsStorage>,
 ) => {
   localStorage?.setItem(LocalStorageKeys.RpcUrls, JSON.stringify(rpcUrls));
 };

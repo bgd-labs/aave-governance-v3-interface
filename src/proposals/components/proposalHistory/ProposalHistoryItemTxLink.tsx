@@ -1,5 +1,5 @@
+import { HashZero } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { ethers } from 'ethers';
 import React from 'react';
 
 import CopyIcon from '/public/images/icons/copy.svg';
@@ -28,7 +28,7 @@ export function ProposalHistoryItemTxLink({
         mb: 8,
         [theme.breakpoints.up('sm')]: { mt: 4, mb: 0 },
       }}>
-      {item.txInfo.hash === ethers.constants.HashZero ? (
+      {item.txInfo.hash === HashZero ? (
         <Box
           component="button"
           type="button"
@@ -77,9 +77,8 @@ export function ProposalHistoryItemTxLink({
         <>
           <Link
             href={`${
-              // @ts-ignore
               chainInfoHelper.getChainParameters(item.txInfo.chainId)
-                .blockExplorerUrls[0]
+                .blockExplorers
             }tx/${item.txInfo.hash}`}
             css={{
               color: '$textSecondary',

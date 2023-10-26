@@ -5,7 +5,7 @@ import {
   ProposalWithId,
   ProposalWithLoadings,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import Fuse from 'fuse.js';
 
 import { RootState } from '../../store';
@@ -83,7 +83,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
     let balances: Balance[] = [];
     if (!store.representativeLoading) {
       const userAddress =
-        store.representative.address || store.activeWallet?.accounts[0];
+        store.representative.address || store.activeWallet?.address;
 
       if (
         !store.blockHashBalanceLoadings[

@@ -1,23 +1,25 @@
+import { Hex } from 'viem';
+
 import { Token } from '../utils/getTokenName';
 
 export type DelegateItem = {
-  underlyingAsset: string;
+  underlyingAsset: Hex;
   symbol: Token;
   amount: number;
-  votingToAddress: string;
-  propositionToAddress: string;
+  votingToAddress: Hex;
+  propositionToAddress: Hex;
 };
 
 export type DelegateData = {
-  underlyingAsset: string;
-  votingToAddress: string;
-  propositionToAddress: string;
+  underlyingAsset: Hex;
+  votingToAddress: Hex;
+  propositionToAddress: Hex;
 };
 
 export type TxDelegateData = {
   symbol: Token;
-  underlyingAsset: string;
-  bothAddresses?: string;
-  votingToAddress?: string;
-  propositionToAddress?: string;
+  underlyingAsset: Hex;
+  bothAddresses?: Hex;
+  votingToAddress?: Hex;
+  propositionToAddress?: Hex;
 };

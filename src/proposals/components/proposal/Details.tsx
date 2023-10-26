@@ -1,4 +1,4 @@
-import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';

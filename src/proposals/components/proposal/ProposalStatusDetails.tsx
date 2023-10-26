@@ -3,8 +3,8 @@ import {
   checkHash,
   ProposalState,
   VotingMachineProposalState,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
@@ -118,7 +118,7 @@ export function ProposalStatusDetails({
   }: Pick<TransactionUnion, 'type' | 'payload'>) => {
     const tx = selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
-      activeWallet?.accounts[0] || '',
+      activeWallet?.address || '',
       type,
       payload,
     );

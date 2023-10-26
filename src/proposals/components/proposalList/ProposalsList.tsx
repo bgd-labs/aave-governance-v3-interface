@@ -2,7 +2,7 @@ import {
   CachedProposalDataItemWithId,
   ProposalEstimatedState,
   ProposalWithId,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState } from 'react';

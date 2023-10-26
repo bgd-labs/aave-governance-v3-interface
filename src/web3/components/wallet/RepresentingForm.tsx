@@ -1,7 +1,8 @@
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
 import { Listbox } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
+import { Hex } from 'viem';
+import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
@@ -28,12 +29,8 @@ interface RepresentingFormProps {
 }
 
 const testInitialAddress = {
-  chainsIds: [
-    ChainIdByName.Avalanche,
-    ChainIdByName.EthereumMainnet,
-    ChainIdByName.Polygon,
-  ],
-  address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b',
+  chainsIds: [avalanche.id, mainnet.id, polygon.id],
+  address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b' as Hex,
 };
 
 export function RepresentingForm({
@@ -54,7 +51,7 @@ export function RepresentingForm({
   const formattedOptions = formatRepresentedAddresses(representedAddresses);
   formattedOptions.unshift({
     chainsIds: appConfig.votingMachineChainIds,
-    address: '',
+    address: '0x0',
   });
 
   return (
@@ -130,7 +127,7 @@ export function RepresentingForm({
                       alignItems: 'center',
                       whiteSpace: 'nowrap',
                     }}>
-                    {localAddress.address !== '' && (
+                    {localAddress.address !== '0x0' && (
                       <Box sx={{ mr: 4 }}>
                         <ChainsIcons
                           chains={localAddress.chainsIds}
@@ -139,14 +136,16 @@ export function RepresentingForm({
                       </Box>
                     )}
                     <Box>
-                      {localAddress.address === ''
+                      {localAddress.address === '0x0'
                         ? texts.other.yourself
                         : ENSDataExists(
                             store,
                             localAddress.address,
                             ENSProperty.NAME,
                           )
-                        ? ensData[localAddress.address.toLocaleLowerCase()].name
+                        ? ensData[
+                            localAddress.address.toLocaleLowerCase() as Hex
+                          ].name
                         : localAddress.address}
                     </Box>
                   </Box>
@@ -213,7 +212,7 @@ export function RepresentingForm({
                           alignItems: 'center',
                           whiteSpace: 'nowrap',
                         }}>
-                        {option.address !== '' && (
+                        {option.address !== '0x0' && (
                           <Box sx={{ mr: 4 }}>
                             <ChainsIcons
                               chains={option.chainsIds}
@@ -222,14 +221,15 @@ export function RepresentingForm({
                           </Box>
                         )}
                         <Box>
-                          {option.address === ''
+                          {option.address === '0x0'
                             ? texts.other.yourself
                             : ENSDataExists(
                                 store,
                                 option.address,
                                 ENSProperty.NAME,
                               )
-                            ? ensData[option.address.toLocaleLowerCase()].name
+                            ? ensData[option.address.toLocaleLowerCase() as Hex]
+                                .name
                             : option.address}
                         </Box>
                       </Box>
@@ -244,10 +244,8 @@ export function RepresentingForm({
         {!!localAddress.address && (
           <Link
             href={`${
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
               chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                .blockExplorerUrls[0]
+                .blockExplorers
             }address/${localAddress.address}`}
             css={{
               color: '$textSecondary',

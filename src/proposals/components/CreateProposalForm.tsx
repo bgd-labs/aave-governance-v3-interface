@@ -1,4 +1,4 @@
-import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
 import { useEffect, useState } from 'react';

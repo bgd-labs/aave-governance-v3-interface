@@ -1,7 +1,7 @@
 import {
   selectTxExplorerLink,
   WalletType,
-} from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
@@ -28,13 +28,13 @@ export interface ActionModalContentProps {
   txSuccess?: boolean;
   isTxStart: boolean;
   setIsTxStart: (value: boolean) => void;
-  error: string;
+  error: Error | string;
   setError: (value: string) => void;
   isError?: boolean;
   successElement?: ReactNode;
   closeButtonText?: string;
   withoutTryAgainWhenError?: boolean;
-  fullTxErrorMessage?: string;
+  fullTxErrorMessage?: Error | string;
 }
 
 export function ActionModalContent({

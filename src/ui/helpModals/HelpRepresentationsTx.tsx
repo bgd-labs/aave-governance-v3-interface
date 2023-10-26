@@ -1,5 +1,5 @@
-import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 import {
   ActionModalContentWrapper,
@@ -38,7 +38,7 @@ export function HelpRepresentationsTx({
     <>
       <ActionModalContent
         isTxStart={isTxStart}
-        txHash={ethers.constants.AddressZero}
+        txHash={zeroAddress}
         txPending={txPending}
         txSuccess={txSuccess}
         setIsTxStart={setIsTxStart}

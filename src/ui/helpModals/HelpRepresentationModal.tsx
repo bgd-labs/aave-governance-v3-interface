@@ -63,7 +63,7 @@ export function HelpRepresentationModal({
       chainId: +data[0],
       representative:
         typeof data[1].representative === 'undefined'
-          ? ''
+          ? '0x0'
           : data[1].representative,
     };
   });

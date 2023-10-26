@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { HashZero } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect, useState } from 'react';
 
 import { DelegatedText } from '../../delegate/components/DelegatedText';
@@ -38,7 +38,7 @@ export function HelpDelegateTx({
     <>
       <ActionModalContent
         isTxStart={isTxStart}
-        txHash={ethers.constants.AddressZero}
+        txHash={HashZero}
         txPending={txPending}
         txSuccess={txSuccess}
         setIsTxStart={setIsTxStart}

@@ -1,3 +1,5 @@
+// TODO: need fix all as Hex
+
 import {
   BasicProposalState,
   formatProposal,
@@ -7,11 +9,12 @@ import {
   ProposalState,
   ProposalStateWithName,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Hex } from 'viem';
 
 import { useStore } from '../../../store';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
@@ -145,7 +148,7 @@ export function ProposalPage({
     if (!isFinished) {
       getProposalCreatorBalance(
         proposal.data.creator,
-        proposal.data.votingMachineData.votingAssets,
+        proposal.data.votingMachineData.votingAssets as Hex[],
       );
       if (
         !!creatorBalance[creator] &&
@@ -476,7 +479,7 @@ export function ProposalPage({
                   proposalQueuingTime={proposal.data.queuingTime}
                   cooldownPeriod={proposal.timings.cooldownPeriod}
                   underlyingAssets={
-                    proposal.data.votingMachineData.votingAssets
+                    proposal.data.votingMachineData.votingAssets as Hex[]
                   }
                   blockHash={proposal.data.snapshotBlockHash}
                   votingBlockHash={proposal.data.votingMachineData.l1BlockHash}

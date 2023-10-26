@@ -1,7 +1,7 @@
 import {
   getProposalStepsAndAmounts,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -173,11 +173,9 @@ export function ProposalHistoryItem({
                       css={{ display: 'inline-flex', alignItems: 'center' }}
                       inNewWindow
                       href={`${
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
                         chainInfoHelper.getChainParameters(
                           item.txInfo.chainId || appConfig.govCoreChainId,
-                        ).blockExplorerUrls[0]
+                        ).blockExplorers
                       }address/${address}`}>
                       <Box
                         component="li"

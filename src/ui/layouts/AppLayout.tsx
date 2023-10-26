@@ -10,8 +10,8 @@ import React, { useEffect } from 'react';
 import { RepresentationInfoModal } from '../../representations/components/RepresentationInfoModal';
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
+import WagmiProvider from '../../web3/providers/WagmiProvider';
 import Web3HelperProvider from '../../web3/providers/Web3HelperProvider';
-import Web3Provider from '../../web3/providers/Web3Provider';
 import { TermsAndConditionsModal } from '../components/TermsAndConditionsModal';
 import { TermsPreAppModal } from '../components/TermsPreAppModal';
 import { HelpModalProvider } from '../helpModals/HelpModalProvider';
@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Web3Provider />
+      <WagmiProvider />
       <Web3HelperProvider />
 
       <MainLayout>{children}</MainLayout>

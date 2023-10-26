@@ -1,11 +1,14 @@
 'use client';
 
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers/src';
-import { AaveTokenV3__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/AaveTokenV3__factory';
-import { ATokenWithDelegation__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/ATokenWithDelegation__factory';
-import { IMetaDelegateHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IMetaDelegateHelper__factory';
-import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src';
-import { ethers, providers } from 'ethers';
+import {
+  aaveTokenV3Contract,
+  aTokenWithDelegationContract,
+  metaDelegateHelperContract,
+  normalizeBN,
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
+import { WalletClient } from '@wagmi/core';
+import { Hex, hexToSignature } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
@@ -22,71 +25,63 @@ export enum GovernancePowerTypeApp {
 }
 
 export type BatchMetaDelegateParams = {
-  underlyingAsset: string;
-  delegator: string;
-  delegatee: string;
-  deadline: string;
+  underlyingAsset: Hex;
+  delegator: Hex;
+  delegatee: Hex;
+  deadline: bigint;
   v: number;
-  r: string;
-  s: string;
+  r: Hex;
+  s: Hex;
   delegationType: GovernancePowerTypeApp;
 };
 
 export class DelegationService {
-  private signer: providers.JsonRpcSigner | undefined;
-  private providers: Record<
-    number,
-    StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
-  >;
+  private walletClient: WalletClient | undefined = undefined;
+  private clients: ClientsRecord;
 
-  constructor(
-    providers: Record<
-      number,
-      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
-    >,
-  ) {
-    this.providers = providers;
+  constructor(clients: ClientsRecord) {
+    this.clients = clients;
   }
 
-  connectSigner(signer: providers.JsonRpcSigner) {
-    this.signer = signer;
+  connectSigner(walletClient: WalletClient) {
+    this.walletClient = walletClient;
   }
 
-  async getDelegates(underlyingAsset: string, delegator: string) {
-    const assetContract = AaveTokenV3__factory.connect(
-      underlyingAsset,
-      this.providers[appConfig.govCoreChainId],
-    );
+  async getDelegates(underlyingAsset: Hex, delegator: Hex) {
+    const assetContract = aaveTokenV3Contract({
+      contractAddress: underlyingAsset,
+      client: this.clients[appConfig.govCoreChainId],
+    });
 
     return await Promise.all([
-      await assetContract.getDelegateeByType(
+      await assetContract.read.getDelegateeByType([
         delegator,
         GovernancePowerType.VOTING,
-      ),
-      await assetContract.getDelegateeByType(
+      ]),
+      await assetContract.read.getDelegateeByType([
         delegator,
         GovernancePowerType.PROPOSITION,
-      ),
+      ]),
     ]);
   }
 
-  async getDelegatedPropositionPower(underlyingAssets: string[], user: string) {
+  async getDelegatedPropositionPower(underlyingAssets: Hex[], user: Hex) {
     const contracts = underlyingAssets.map((asset) => {
       return {
-        contract: AaveTokenV3__factory.connect(
-          asset,
-          this.providers[appConfig.govCoreChainId],
-        ),
+        contract: aaveTokenV3Contract({
+          contractAddress: asset,
+          client: this.clients[appConfig.govCoreChainId],
+        }),
         underlyingAsset: asset,
       };
     });
 
     return Promise.all(
       contracts.map(async (contract) => {
-        const power = await contract.contract.getPowerCurrent(
+        const power = await contract.contract.read.getPowerCurrent([
           user,
           GovernancePowerType.PROPOSITION,
-        );
+        ]);
 
         return {
           underlyingAsset: contract.underlyingAsset,
@@ -97,31 +92,32 @@ export class DelegationService {
   }
 
   async getDelegatedVotingPowerByBlockHash(
-    blockHash: string,
-    userAddress: string,
-    underlyingAssets: string[],
+    blockHash: Hex,
+    userAddress: Hex,
+    underlyingAssets: Hex[],
   ) {
     const blockNumber = (
-      await this.providers[appConfig.govCoreChainId].getBlock(blockHash)
+      await this.clients[appConfig.govCoreChainId].getBlock({ blockHash })
     ).number;
     const contracts = underlyingAssets.map((asset) => {
       return {
-        contract: AaveTokenV3__factory.connect(
-          asset,
-          this.providers[appConfig.govCoreChainId],
-        ),
+        contract: aaveTokenV3Contract({
+          contractAddress: asset,
+          client: this.clients[appConfig.govCoreChainId],
+        }),
         underlyingAsset: asset,
       };
     });
 
     return Promise.all(
       contracts.map(async (contract) => {
-        const userBalance = await contract.contract.balanceOf(userAddress);
-        const totalPower = await contract.contract.getPowerCurrent(
+        const userBalance = await contract.contract.read.balanceOf([
           userAddress,
-          GovernancePowerType.VOTING,
+        ]);
+        const totalPower = await contract.contract.read.getPowerCurrent(
+          [userAddress, GovernancePowerType.VOTING],
           {
-            blockTag: blockNumber,
+            blockNumber: blockNumber,
           },
         );
 
@@ -132,21 +128,21 @@ export class DelegationService {
           basicValue: totalPower.toString(),
           value: normalizeBN(totalPower.toString(), 18).toString(),
           userBalance: userBalance.toString(),
-          isWithDelegatedPower: userBalance.lt(totalPower),
+          isWithDelegatedPower: userBalance < totalPower,
         };
       }),
     );
   }
 
   async delegateMetaSig(
-    underlyingAsset: string,
-    delegateToAddress: string,
+    underlyingAsset: Hex,
+    delegateToAddress: Hex,
     delegationType: GovernancePowerTypeApp,
-    activeAddress: string,
+    activeAddress: Hex,
     increaseNonce?: boolean,
   ): Promise<BatchMetaDelegateParams | undefined> {
-    if (this.signer) {
-      const deadline = Math.floor(Date.now() / 1000 + 3600).toString();
+    if (this.walletClient) {
+      const deadline = BigInt(Math.floor(Date.now() / 1000 + 3600));
       const isAAAVE =
         underlyingAsset.toLowerCase() ===
         appConfig.additional.aAaveAddress.toLowerCase();
@@ -154,14 +150,14 @@ export class DelegationService {
         underlyingAsset.toLowerCase() ===
         appConfig.additional.aaveAddress.toLowerCase();
 
-      const normalAssetContract = AaveTokenV3__factory.connect(
-        underlyingAsset,
-        this.providers[appConfig.govCoreChainId],
-      );
-      const aAssetContract = ATokenWithDelegation__factory.connect(
-        underlyingAsset,
-        this.providers[appConfig.govCoreChainId],
-      );
+      const normalAssetContract = aaveTokenV3Contract({
+        contractAddress: underlyingAsset,
+        client: this.clients[appConfig.govCoreChainId],
+      });
+      const aAssetContract = aTokenWithDelegationContract({
+        contractAddress: underlyingAsset,
+        client: this.clients[appConfig.govCoreChainId],
+      });
 
       // TODO: maybe need fix name
       // const name = isAAAVE
@@ -172,11 +168,11 @@ export class DelegationService {
         ? 'Aave Ethereum AAVE'
         : isAAVE
         ? 'Aave token V3'
-        : await normalAssetContract.name();
+        : await normalAssetContract.read.name();
 
       const nonce = isAAAVE
-        ? await aAssetContract.nonces(activeAddress)
-        : await normalAssetContract._nonces(activeAddress);
+        ? await aAssetContract.read.nonces([activeAddress])
+        : await normalAssetContract.read._nonces([activeAddress]);
 
       const isAllDelegate = delegationType === GovernancePowerTypeApp.All;
 
@@ -207,19 +203,19 @@ export class DelegationService {
       const typesData = {
         delegator: activeAddress,
         delegatee: delegateToAddress,
-        nonce: increaseNonce ? nonce.add(1) : nonce,
+        nonce: BigInt(increaseNonce ? Number(nonce) + 1 : nonce),
         deadline,
       };
 
-      const sig = ethers.utils.splitSignature(
-        await this.signer._signTypedData(
-          {
+      const sig = hexToSignature(
+        await this.walletClient.signTypedData({
+          domain: {
             name: name,
             version: '2',
             chainId: appConfig.govCoreChainId,
             verifyingContract: underlyingAsset,
           },
-          isAllDelegate
+          types: isAllDelegate
             ? { Delegate: [...sigParametersType, ...sigBaseType] }
             : {
                 DelegateByType: [
@@ -228,12 +224,13 @@ export class DelegationService {
                   ...sigBaseType,
                 ],
               },
-          isAllDelegate
+          primaryType: isAllDelegate ? 'Delegate' : 'DelegateByType',
+          message: isAllDelegate
             ? {
                 ...typesData,
               }
             : { ...typesData, delegationType },
-        ),
+        }),
       );
 
       return {
@@ -242,7 +239,7 @@ export class DelegationService {
         delegatee: delegateToAddress,
         delegationType,
         deadline,
-        v: sig.v,
+        v: Number(sig.v),
         r: sig.r,
         s: sig.s,
       };
@@ -250,25 +247,19 @@ export class DelegationService {
   }
 
   async batchMetaDelegate(sigs: BatchMetaDelegateParams[]) {
-    const delegateHelperContract = IMetaDelegateHelper__factory.connect(
-      appConfig.additional.delegationHelper,
-      this.providers[appConfig.govCoreChainId],
-    );
+    const delegateHelperContract = metaDelegateHelperContract({
+      contractAddress: appConfig.additional.delegationHelper,
+      client: this.clients[appConfig.govCoreChainId],
+      walletClient: this.walletClient,
+    });
 
     // TODO: maybe don't need to increase gas limit for mainnets
-    const gasLimit =
-      await delegateHelperContract.estimateGas.batchMetaDelegate(sigs);
+    const gasLimit = await delegateHelperContract.estimateGas.batchMetaDelegate(
+      [sigs],
+    );
 
-    if (this.signer) {
-      return delegateHelperContract
-        .connect(this.signer)
-        .batchMetaDelegate(sigs, {
-          gasLimit: gasLimit.add(100000),
-        });
-    } else {
-      return delegateHelperContract.batchMetaDelegate(sigs, {
-        gasLimit: gasLimit.add(100000),
-      });
-    }
+    return delegateHelperContract.write.batchMetaDelegate([sigs], {
+      gasPrice: BigInt(Number(gasLimit) + 100000),
+    });
   }
 }

@@ -2,8 +2,8 @@ import {
   InitialPayload,
   Payload,
   PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -138,7 +138,7 @@ function PayloadItem({
 
   const tx = selectLastTxByTypeAndPayload<TransactionUnion>(
     store,
-    store.activeWallet?.accounts[0] || '',
+    store.activeWallet?.address || '',
     'executePayload',
     {
       proposalId,
@@ -309,11 +309,9 @@ function PayloadItem({
                     css={{ display: 'inline-flex', alignItems: 'center' }}
                     inNewWindow
                     href={`${
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
                       chainInfoHelper.getChainParameters(
                         payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorerUrls[0]
+                      ).blockExplorers
                     }address/${address}`}>
                     <Box
                       component="li"

@@ -3,5 +3,5 @@ import { chainInfoHelper } from '../../utils/configs';
 
 export function getChainName(chainId: number) {
   return chainInfoHelper.getChainParameters(chainId || appConfig.govCoreChainId)
-    .chainName;
+    .name;
 }

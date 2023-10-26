@@ -1,4 +1,4 @@
-import { VotersData } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 

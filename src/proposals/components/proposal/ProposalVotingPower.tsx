@@ -1,4 +1,4 @@
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
 
@@ -79,12 +79,12 @@ export function ProposalVotingPower({
   const tx = useStore((state) =>
     selectLastTxByTypeAndPayload<TransactionUnion>(
       state,
-      activeWallet?.accounts[0] || '',
+      activeWallet?.address || '',
       'vote',
       {
         proposalId,
         support: !supportObject[proposalId],
-        voter: representative.address || activeWallet?.accounts[0],
+        voter: representative.address || activeWallet?.address,
       },
     ),
   );
@@ -309,7 +309,7 @@ export function ProposalVotingPower({
                                       tx.payload.proposalId === proposalId &&
                                       tx.payload.voter ===
                                         (representative.address ||
-                                          activeWallet.accounts[0]) &&
+                                          activeWallet.address) &&
                                       tx.chainId === votingChainId &&
                                       (tx.pending || tx.status === 1)
                                     }

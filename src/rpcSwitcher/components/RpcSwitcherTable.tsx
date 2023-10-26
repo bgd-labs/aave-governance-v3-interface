@@ -4,14 +4,14 @@ import { Divider } from '../../ui';
 import { TableHeaderTitle } from '../../ui/components/TableHeaderTitle';
 import { texts } from '../../ui/utils/texts';
 import {
-  AppProviderStorage,
+  AppClientsStorage,
   RpcSwitcherFormData,
-} from '../store/providerSlice';
+} from '../store/rpcSwitcherSlice';
 import { TableItem } from './TableItem';
 
 interface RpcSwitcherTableProps {
   loading: boolean;
-  rpcSwitcherData: Record<number, AppProviderStorage>;
+  rpcSwitcherData: Record<number, AppClientsStorage>;
   isEdit: boolean;
   isViewChanges: boolean;
   fields?: any;

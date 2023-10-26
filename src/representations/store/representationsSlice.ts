@@ -1,7 +1,7 @@
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
-import { ethers } from 'ethers';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
+import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
@@ -16,27 +16,27 @@ import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { getFormattedRepresentedAddresses } from '../utils/getRepresentedAddresses';
 
 export type RepresentationDataItem = {
-  representative: string;
-  represented: string[];
+  representative: Hex;
+  represented: Hex[];
 };
 
 export type RepresentationFormData = {
   chainId: number;
-  representative: string;
+  representative: Hex;
 };
 
 export type RepresentativeAddress = {
   chainsIds: number[];
-  address: string;
+  address: Hex;
 };
 
-export type RepresentedAddress = { chainId: number; address: string };
+export type RepresentedAddress = { chainId: number; address: Hex };
 
 export interface IRepresentationsSlice {
   representativeLoading: boolean;
   representative: RepresentativeAddress;
   getRepresentingAddress: () => void;
-  setRepresentativeAddress: (address: string, chainsIds: number[]) => void;
+  setRepresentativeAddress: (address: Hex, chainsIds: number[]) => void;
 
   representationData: Record<number, RepresentationDataItem>;
   representationDataLoading: boolean;
@@ -61,12 +61,12 @@ export const createRepresentationsSlice: StoreSlice<
   representativeLoading: true,
   representative: {
     chainsIds: [],
-    address: '',
+    address: '0x0',
   },
   getRepresentingAddress: async () => {
     set({ representativeLoading: true });
 
-    const activeAddress = get().activeWallet?.accounts[0];
+    const activeAddress = get().activeWallet?.address;
     const addresses = getLocalStorageRepresentingAddresses();
     const data = get().representationData;
 
@@ -86,15 +86,15 @@ export const createRepresentationsSlice: StoreSlice<
 
       set({
         representative: !!isAddressesValid
-          ? walletRepresentative || { chainsIds: [], address: '' }
-          : { chainsIds: [], address: '' },
+          ? walletRepresentative || { chainsIds: [], address: '0x0' }
+          : { chainsIds: [], address: '0x0' },
         representativeLoading: false,
       });
     }
   },
   setRepresentativeAddress: (address, chainsIds) => {
-    const activeAddress = get().activeWallet?.accounts[0];
-    const formattedAddress = !address ? '' : address;
+    const activeAddress = get().activeWallet?.address;
+    const formattedAddress = !address ? '0x0' : address;
     set((state) =>
       produce(state, (draft) => {
         draft.representative = {
@@ -124,7 +124,7 @@ export const createRepresentationsSlice: StoreSlice<
   representationData: {},
   representationDataLoading: false,
   getRepresentationData: async () => {
-    const activeAddress = get().activeWallet?.accounts[0];
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
       set({ representationDataLoading: true });
@@ -134,18 +134,17 @@ export const createRepresentationsSlice: StoreSlice<
 
       appConfig.votingMachineChainIds.forEach((chainId) => {
         const represented = data.represented
-          .filter((item) => item.chainId.toNumber() === chainId)
+          .filter((item) => Number(item.chainId) === chainId)
           .map((item) => item.votersRepresented)
           .flat();
 
         const representative = data.representative
-          .filter((item) => item.chainId.toNumber() === chainId)
+          .filter((item) => Number(item.chainId) === chainId)
           .map((item) => item.representative)[0];
 
         const formattedRepresentative =
-          representative === ethers.constants.AddressZero ||
-          representative === activeAddress
-            ? ''
+          representative === zeroAddress || representative === activeAddress
+            ? '0x0'
             : representative;
 
         set((state) =>
@@ -167,10 +166,10 @@ export const createRepresentationsSlice: StoreSlice<
   updateRepresentatives: async (initialData, formData, timestamp) => {
     await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
     const govDataService = get().govDataService;
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
-      const formattedData: { representative: string; chainId: number }[] = [];
+      const formattedData: { representative: Hex; chainId: bigint }[] = [];
       for await (const item of formData) {
         let representative = item.representative;
 
@@ -188,11 +187,11 @@ export const createRepresentationsSlice: StoreSlice<
           formattedData.push({
             representative:
               representative === undefined ||
-              representative === '' ||
+              representative === '0x0' ||
               representative === activeAddress
-                ? ethers.constants.AddressZero
-                : representative,
-            chainId: item.chainId,
+                ? (zeroAddress as Hex)
+                : (representative as Hex),
+            chainId: BigInt(item.chainId),
           });
         }
       }

@@ -1,3 +1,5 @@
+// TODO: need fix all as Hex
+
 import {
   BaseTx as BT,
   createTransactionsSlice as createBaseTransactionsSlice,
@@ -5,7 +7,8 @@ import {
   IWalletSlice,
   StoreSlice,
   WalletType,
-} from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/frontend-web3-utils';
+import { Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
@@ -17,8 +20,8 @@ import {
   IRepresentationsSlice,
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
-import { selectAppProviders } from '../../rpcSwitcher/store/providerSelectors';
-import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
+import { selectAppClients } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
@@ -158,7 +161,7 @@ export const createTransactionsSlice: StoreSlice<
     IProposalsHistorySlice &
     IRepresentationsSlice &
     IEnsSlice &
-    IProviderSlice
+    IRpcSwitcherSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
@@ -170,7 +173,7 @@ export const createTransactionsSlice: StoreSlice<
         case 'createPayload':
           await get().getDetailedPayloadsData(
             data.payload.chainId,
-            data.payload.payloadsController,
+            data.payload.payloadsController as Hex,
             [data.payload.payloadId],
           );
           set({
@@ -229,8 +232,7 @@ export const createTransactionsSlice: StoreSlice<
           break;
       }
     },
-    defaultProviders: get()?.initProvidersLoaded
-      ? selectAppProviders(get())
-      : {},
+    // TODO: need fix
+    defaultClients: get()?.initClientsLoaded ? selectAppClients(get()) : {},
   })(set, get),
 });

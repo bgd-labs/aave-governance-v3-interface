@@ -5,12 +5,12 @@ import {
   ProposalState,
   ProposalWithLoadings,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 // @ts-ignore
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
@@ -145,7 +145,7 @@ export function HelpVoteTx({
 
   return (
     <ActionModalContent
-      txHash={ethers.constants.AddressZero}
+      txHash={zeroAddress}
       setIsOpen={(value) => {
         setTxPending(value);
         setIsTxStart(value);

@@ -7,6 +7,7 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
+import { Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
@@ -19,9 +20,13 @@ import {
   getAddressByENSNameIfExists,
 } from '../../web3/store/ensSelectors';
 import { isEnsName } from '../../web3/utils/ensHelpers';
-import { RepresentationFormData } from '../store/representationsSlice';
+import { RepresentationFormData as BaseRepresentationFormData } from '../store/representationsSlice';
 import { RepresentationsModal } from './RepresentationsModal';
 import { RepresentationsTableWrapper } from './RepresentationsTableWrapper';
+
+type RepresentationFormData = BaseRepresentationFormData & {
+  representative: Hex | string;
+};
 
 export function RepresentationsPage() {
   const theme = useTheme();
@@ -53,19 +58,20 @@ export function RepresentationsPage() {
   >([]);
   const [timestampTx] = useState(dayjs().unix());
 
+  // TODO: need fix `ensName` should be string
   const initialData = Object.entries(representationData).map((data) => {
     return {
       chainId: +data[0],
       representative:
-        ensData[data[1].representative.toLocaleLowerCase()]?.name ||
-        data[1].representative,
+        (ensData[data[1].representative.toLocaleLowerCase() as Hex]
+          ?.name as Hex) || data[1].representative,
     };
   });
 
   useEffect(() => {
     setIsEdit(false);
     setIsRepresentationsChangedView(false);
-  }, [activeWallet?.accounts[0]]);
+  }, [activeWallet?.address]);
 
   useEffect(() => {
     if (!!Object.keys(representationData).length) {
@@ -77,7 +83,7 @@ export function RepresentationsPage() {
 
   useEffect(() => {
     setFormData(initialData);
-  }, [activeWallet?.accounts[0], representationData]);
+  }, [activeWallet?.address, representationData]);
 
   const {
     error,
@@ -118,7 +124,6 @@ export function RepresentationsPage() {
     setRepresentationsModalOpen(true);
     if (!!submittedFormData.length && !!stateInitialData.length) {
       await executeTxWithLocalStatuses({
-        errorMessage: 'Tx error',
         callbackFunction: async () =>
           await updateRepresentatives(
             stateInitialData,

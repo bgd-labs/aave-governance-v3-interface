@@ -1,4 +1,4 @@
-import { VotersData } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
@@ -117,9 +117,7 @@ export function VotersListItem({ vote }: { vote: VotersData }) {
           hover: { opacity: '0.5' },
         }}
         href={`${
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          chainInfoHelper.getChainParameters(vote.chainId).blockExplorerUrls[0]
+          chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
         }address/${vote.address}`}>
         <Box component="p" sx={{ typography: 'descriptor' }}>
           {formatVoterAddress(vote)}

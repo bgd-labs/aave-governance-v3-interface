@@ -1,5 +1,5 @@
-import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers';
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 
 import { DelegateItem } from '../../delegate/types';
@@ -287,6 +287,8 @@ export const createUISlice: StoreSlice<
             ...proposalData.proposal,
             data: {
               ...proposalData.proposal.data,
+              // TODO: need think how to fix
+              // @ts-ignore
               votingMachineData: {
                 ...proposalData.proposal.data.votingMachineData,
                 forVotes:

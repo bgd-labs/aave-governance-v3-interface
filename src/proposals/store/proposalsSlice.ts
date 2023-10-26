@@ -1,3 +1,5 @@
+// TODO: fix all as Hex
+
 import {
   Balance,
   BasicProposal,
@@ -16,13 +18,14 @@ import {
   VotersData,
   VotingBalance,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
-import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
@@ -87,7 +90,7 @@ export interface IProposalsSlice {
   setDetailedPayloadsData: (key: string, data: Payload) => void;
   getDetailedPayloadsData: (
     chainId: number,
-    payloadsController: string,
+    payloadsController: Hex,
     ids: number[],
   ) => Promise<void>;
 
@@ -211,7 +214,7 @@ export const createProposalsSlice: StoreSlice<
     IProposalsHistorySlice &
     IRepresentationsSlice &
     IEnsSlice &
-    IProviderSlice
+    IRpcSwitcherSlice
 > = (set, get) => ({
   isInitialLoading: true,
 
@@ -492,6 +495,8 @@ export const createProposalsSlice: StoreSlice<
       set({ detailedProposalsDataLoading: true });
       set((state) =>
         produce(state, (draft) => {
+          // TODO: think how to fix
+          // @ts-ignore
           draft.detailedProposalsData[id] = data;
         }),
       );
@@ -500,7 +505,7 @@ export const createProposalsSlice: StoreSlice<
   },
 
   getDetailedProposalsData: async (ids, from, to, pageSize) => {
-    const userAddress = get().getActiveAddress();
+    const userAddress = get().activeWallet?.address;
     const representativeAddress = get().representative.address;
 
     set((state) =>
@@ -625,6 +630,8 @@ export const createProposalsSlice: StoreSlice<
       set((state) =>
         produce(state, (draft) => {
           proposalsData.forEach((proposal) => {
+            // TODO: think how to fix
+            // @ts-ignore
             draft.detailedProposalsData[proposal.id] = {
               ...proposal,
               prerender: !draft.detailedProposalsData[proposal.id]?.prerender
@@ -727,7 +734,7 @@ export const createProposalsSlice: StoreSlice<
     set({ blockHashBalance: {} });
   },
   getL1Balances: async (ids) => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
     const blockHashes = get().blockHashBalance;
 
     const newBlockHashes: {
@@ -776,7 +783,8 @@ export const createProposalsSlice: StoreSlice<
           ) {
             newBlockHashes.push({
               hash: proposalData.votingMachineData.l1BlockHash,
-              underlyingAssets: proposalData.votingMachineData.votingAssets,
+              underlyingAssets: proposalData.votingMachineData
+                .votingAssets as Hex[],
               votingChainId: proposalData.votingChainId,
             });
           }
@@ -795,9 +803,9 @@ export const createProposalsSlice: StoreSlice<
       const balances = await Promise.all(
         newBlockHashes.map((item) => {
           return get().delegationService.getDelegatedVotingPowerByBlockHash(
-            item.hash,
+            item.hash as Hex,
             userAddress,
-            item.underlyingAssets,
+            item.underlyingAssets as Hex[],
           );
         }),
       );
@@ -832,8 +840,8 @@ export const createProposalsSlice: StoreSlice<
   getProposalCreatorBalance: async (creator, underlyingAssets) => {
     const creatorDelegatedPower =
       await get().delegationService.getDelegatedPropositionPower(
-        underlyingAssets,
-        creator,
+        underlyingAssets as Hex[],
+        creator as Hex,
       );
 
     const creatorPropositionPower = creatorDelegatedPower.map((power) =>
@@ -901,7 +909,8 @@ export const createProposalsSlice: StoreSlice<
           if (ENSDataExists(get(), vote.address, ENSProperty.NAME)) {
             newVotersData.push({
               ...vote,
-              ensName: get().ensData[vote.address.toLocaleLowerCase()].name,
+              ensName:
+                get().ensData[vote.address.toLocaleLowerCase() as Hex].name,
             });
           } else {
             newVotersData.push(vote);
@@ -927,7 +936,7 @@ export const createProposalsSlice: StoreSlice<
             } else {
               await get().fetchEnsNameByAddress(vote.address);
               const ensName =
-                get().ensData[vote.address.toLocaleLowerCase()].name;
+                get().ensData[vote.address.toLocaleLowerCase() as Hex].name;
               if (ensName) {
                 return {
                   ...vote,
@@ -1062,22 +1071,26 @@ export const createProposalsSlice: StoreSlice<
     baseBalanceSlotRaw,
     withSlot,
   ) => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
       const proposalData = get().detailedProposalsData[proposalId];
 
       if (checkHash(proposalData.snapshotBlockHash).notZero) {
-        const block = await get().appProviders[
+        const block = await get().appClients[
           appConfig.govCoreChainId
-        ].instance.getBlock(proposalData.snapshotBlockHash);
+        ].instance.getBlock({
+          blockHash: proposalData.snapshotBlockHash as Hex,
+        });
 
         await get().executeTx({
+          // TODO: need fix
+          // @ts-ignore
           body: () => {
             get().setModalOpen(true);
             return get().govDataService.sendProofs(
               activeAddress,
-              block.number,
+              Number(block.number),
               asset,
               votingChainId,
               baseBalanceSlotRaw,
@@ -1127,7 +1140,7 @@ export const createProposalsSlice: StoreSlice<
     balances,
     voterAddress,
   }) => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
     const proposal = get().detailedProposalsData[proposalId];
     const govDataService = get().govDataService;
 
@@ -1137,24 +1150,24 @@ export const createProposalsSlice: StoreSlice<
 
         if (voterAddress) {
           const proofs = await getVotingProofs(
-            proposal.snapshotBlockHash,
+            proposal.snapshotBlockHash as Hex,
             formattedBalances,
             govDataService,
-            voterAddress,
+            voterAddress as Hex,
           );
 
           if (proofs && proofs.length > 0) {
             const blockNumber = await govDataService.getCoreBlockNumber(
-              proposal.snapshotBlockHash,
+              proposal.snapshotBlockHash as Hex,
             );
 
             const proofOfRepresentative =
               await generateProofsRepresentativeByChain(
-                get().appProviders[appConfig.govCoreChainId].instance,
+                get().appClients[appConfig.govCoreChainId].instance,
                 appConfig.govCoreConfig.contractAddress,
                 slots[appConfig.govCoreConfig.contractAddress.toLowerCase()]
                   .balance,
-                voterAddress,
+                voterAddress as Hex,
                 votingChainId,
                 blockNumber,
               );
@@ -1171,7 +1184,7 @@ export const createProposalsSlice: StoreSlice<
                         getVotingAssetsWithSlot(formattedBalances),
                       proofs,
                       signerAddress: activeAddress,
-                      voterAddress,
+                      voterAddress: voterAddress as Hex,
                       proofOfRepresentation: proofOfRepresentative,
                     })
                   : govDataService.vote({
@@ -1179,7 +1192,7 @@ export const createProposalsSlice: StoreSlice<
                       proposalId,
                       support,
                       proofs,
-                      voterAddress,
+                      voterAddress: voterAddress as Hex,
                       proofOfRepresentation: proofOfRepresentative,
                     });
               },
@@ -1313,7 +1326,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.createPayload(
           chainId,
           payloadActions,
-          payloadsController,
+          payloadsController as Hex,
         );
       },
       params: {
@@ -1367,9 +1380,9 @@ export const createProposalsSlice: StoreSlice<
         body: () => {
           get().setModalOpen(true);
           return govDataService.createProposal(
-            votingPortalAddress,
+            votingPortalAddress as Hex,
             formattedPayloads,
-            ipfsHash,
+            ipfsHash as Hex,
             cancellationFee,
           );
         },

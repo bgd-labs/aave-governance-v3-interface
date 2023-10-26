@@ -53,7 +53,6 @@ export function ActionModal({
 
   const handleClick = async () =>
     await executeTxWithLocalStatuses({
-      errorMessage: 'Tx error',
       callbackFunction,
     });
 

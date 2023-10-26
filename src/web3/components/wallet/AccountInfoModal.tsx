@@ -1,4 +1,4 @@
-import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils/src';
+import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
 import React from 'react';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
@@ -27,16 +27,13 @@ export function AccountInfoModal({
   isAvatarExists,
   representedAddresses,
 }: AccountInfoModalProps) {
-  const {
-    activeWallet,
-    getActiveAddress,
-    disconnectActiveWallet,
-    setModalOpen,
-  } = useStore();
+  const { activeWallet, disconnectActiveWallet, setModalOpen } = useStore();
 
-  const activeAddress = getActiveAddress() || '';
   const allTransactions = useStore((state) =>
-    selectAllTransactionsByWallet<TransactionUnion>(state, activeAddress),
+    selectAllTransactionsByWallet<TransactionUnion>(
+      state,
+      activeWallet?.address || '',
+    ),
   );
 
   const handleDisconnectClick = async () => {
@@ -55,8 +52,8 @@ export function AccountInfoModal({
         ensName={ensName}
         ensAvatar={ensAvatar}
         isAvatarExists={isAvatarExists}
-        activeAddress={activeAddress}
-        chainId={activeWallet?.chainId || appConfig.govCoreChainId}
+        activeAddress={activeWallet?.address || ''}
+        chainId={activeWallet?.chain?.id || appConfig.govCoreChainId}
         isActive={activeWallet?.isActive || false}
         allTransactions={allTransactions.sort(
           (a, b) => b.localTimestamp - a.localTimestamp,
