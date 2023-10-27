@@ -8,6 +8,7 @@ import React, { useMemo } from 'react';
 
 import { AppGlobalStyles } from '../src/ui';
 import AppLayout from '../src/ui/layouts/AppLayout';
+import WagmiProvider from '../src/web3/providers/WagmiProvider';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
@@ -32,9 +33,13 @@ function GovernanceApp({
   }, [router]);
 
   return (
-    <AppGlobalStyles emotionCache={emotionCache}>
-      <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>
-    </AppGlobalStyles>
+    <>
+      <WagmiProvider />
+
+      <AppGlobalStyles emotionCache={emotionCache}>
+        <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>
+      </AppGlobalStyles>
+    </>
   );
 }
 

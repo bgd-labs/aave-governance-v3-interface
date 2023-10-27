@@ -4,6 +4,7 @@ import React from 'react';
 
 import AppLayout from '../src/ui/layouts/AppLayout';
 import ThemeRegistry from '../src/ui/utils/ThemeRegistry';
+import WagmiProvider from '../src/web3/providers/WagmiProvider';
 
 export const interNextFont = Inter({
   weight: ['300', '400', '600', '700', '800'],
@@ -30,6 +31,8 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body>
+        <WagmiProvider />
+
         <ThemeRegistry options={{ key: 'mui' }}>
           <NextTopLoader />
           <AppLayout>{children}</AppLayout>

@@ -1136,22 +1136,22 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.8.0.tgz#6d4169c5b8e70bc9b847f5173b4ea2ca59f7a21b"
   integrity sha512-oBcoPtwxnMZ310iYZHLqViuKAy4Q8hvwq6enW33LdqDL5Y+iU7c8TptKl6KdsojxwlluNZ1sahW5PfKNUT0jIQ==
 
-"@bgd-labs/aave-governance-ui-helpers@^0.2.8-41cbdfa69cd6846dc665d404af096600e785228c.0":
-  version "0.2.8-41cbdfa69cd6846dc665d404af096600e785228c.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.2.8-41cbdfa69cd6846dc665d404af096600e785228c.0.tgz#a5a7ff566c843ba5c304b325a77cbc2913982495"
-  integrity sha512-aU4aE0UEnCB1+jXsZWRa3P72lZ9bLO34CeULM85I55APDtqQEVE/+2f0+AxD0YjP6TVSDQopKJuQ0uSjV5o/8A==
+"@bgd-labs/aave-governance-ui-helpers@^0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0":
+  version "0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0.tgz#db965fa06963812b0dda31062ed209499516f302"
+  integrity sha512-TtIW3JlglNACSkmqpLquvq0xeX2u0JG5ZcvzEyyhNqgrYuzvBMQc6zXDh9yLZxrBqxMrPH3dSA9hZnvufus5Mw==
   dependencies:
     "@bgd-labs/aave-address-book" "2.8.0"
-    "@wagmi/core" "^1.4.5"
     bs58 "^5.0.0"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
     viem "^1.16.6"
+    wagmi "^1.4.5"
 
-"@bgd-labs/frontend-web3-utils@^0.3.13-c1108bbbd4351b356bd73b26d4de27952ff3e973.0":
-  version "0.3.13-c1108bbbd4351b356bd73b26d4de27952ff3e973.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.3.13-c1108bbbd4351b356bd73b26d4de27952ff3e973.0.tgz#ba195bba24cdd5aac73dfd1ec1ccc76fae72dd80"
-  integrity sha512-LwJTdOR9PC/c/vmMfOEMecKdXzNH+WFNlGMHAMSJx1ogFNetUMlpkbC8TDmLp6OQwAdEH1xBBk1/MZd1XKvK+A==
+"@bgd-labs/frontend-web3-utils@^0.2.6-0ed5cbfc94b315d4a21093044fb62637a67e684e.0":
+  version "0.2.6-52942c81301e4a8ccf2ba7eb7bfbf48bd9d7e16e.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.2.6-52942c81301e4a8ccf2ba7eb7bfbf48bd9d7e16e.0.tgz#ec91ac024550664eb755539390a055465b4b3fca"
+  integrity sha512-BJIQ0qp+Rln9kztRdSuAtXkrsLvJBgdk5Q24DeeESreAvFVtKGcOu23g+SyN/QQXO0p3vVFD0wOsmgEIEmU83w==
   dependencies:
     dayjs "^1.11.10"
     lodash "^4.17.21"
