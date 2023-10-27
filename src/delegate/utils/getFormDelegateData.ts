@@ -4,8 +4,8 @@ import { DelegateData } from '../types';
 
 interface GetFormDelegateDataParams {
   underlyingAsset?: Hex;
-  votingToAddress?: Hex;
-  propositionToAddress?: Hex;
+  votingToAddress?: Hex | '';
+  propositionToAddress?: Hex | '';
   formDelegateData?: DelegateData[];
 }
 

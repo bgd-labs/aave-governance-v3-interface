@@ -41,7 +41,6 @@ import {
   encodeFunctionData,
   Hex,
   pad,
-  parseGwei,
   stringToBytes,
   toHex,
   zeroAddress,

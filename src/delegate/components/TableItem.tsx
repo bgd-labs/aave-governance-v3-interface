@@ -15,8 +15,8 @@ export interface TableItemProps {
   underlyingAsset?: Hex;
   symbol?: Token;
   amount?: number;
-  votingToAddress?: Hex;
-  propositionToAddress?: Hex;
+  votingToAddress?: Hex | '';
+  propositionToAddress?: Hex | '';
   loading?: boolean;
   isEdit?: boolean;
   isViewChanges?: boolean;

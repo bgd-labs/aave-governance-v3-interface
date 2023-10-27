@@ -20,7 +20,7 @@ import {
   VotingConfig,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import { produce } from 'immer';
+import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
@@ -495,9 +495,7 @@ export const createProposalsSlice: StoreSlice<
       set({ detailedProposalsDataLoading: true });
       set((state) =>
         produce(state, (draft) => {
-          // TODO: think how to fix
-          // @ts-ignore
-          draft.detailedProposalsData[id] = data;
+          draft.detailedProposalsData[id] = data as Draft<ProposalData>;
         }),
       );
       set({ detailedProposalsDataLoading: false });
@@ -542,14 +540,14 @@ export const createProposalsSlice: StoreSlice<
           fr <= 0 ? (get().totalProposalCount > 9 ? 1 : 0) : fr,
           to <= 0 ? 0 : to,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
         );
       } else if ((from || from === 0 || from === -1) && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
           from < 0 ? 0 : from,
           0,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
           pageSize,
         );
       } else if (from && from > 0 && to && to > 0 && isProposalNotInCache) {
@@ -557,14 +555,14 @@ export const createProposalsSlice: StoreSlice<
           from,
           to,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
         );
       } else if (!isProposalNotInCache) {
         const proposals = ids.map((id) => get().detailedProposalsData[id]);
         proposalsData = await get().govDataService.getOnlyVotingMachineData(
           proposals,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
         );
       }
 
@@ -630,8 +628,6 @@ export const createProposalsSlice: StoreSlice<
       set((state) =>
         produce(state, (draft) => {
           proposalsData.forEach((proposal) => {
-            // TODO: think how to fix
-            // @ts-ignore
             draft.detailedProposalsData[proposal.id] = {
               ...proposal,
               prerender: !draft.detailedProposalsData[proposal.id]?.prerender
@@ -649,7 +645,7 @@ export const createProposalsSlice: StoreSlice<
                 proposal.ipfsHash,
                 draft.detailedProposalsData[proposal.id]?.title,
               ),
-            };
+            } as Draft<ProposalData>;
           });
         }),
       );
