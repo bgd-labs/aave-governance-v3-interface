@@ -3,7 +3,10 @@ import {
   Payload,
   PayloadState,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -222,7 +225,7 @@ function PayloadItem({
             <>
               {store.activeWallet?.isActive ? (
                 <SmallButton
-                  disabled={tx?.status === 1}
+                  disabled={tx?.status === TransactionStatus.Success}
                   loading={tx?.pending}
                   onClick={() => {
                     setSelectedPayloadForExecute({
@@ -308,11 +311,9 @@ function PayloadItem({
                   <Link
                     css={{ display: 'inline-flex', alignItems: 'center' }}
                     inNewWindow
-                    href={`${
-                      chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers
-                    }address/${address}`}>
+                    href={`${chainInfoHelper.getChainParameters(
+                      payload.chainId || appConfig.govCoreChainId,
+                    ).blockExplorers?.default.url}/address/${address}`}>
                     <Box
                       component="li"
                       sx={{

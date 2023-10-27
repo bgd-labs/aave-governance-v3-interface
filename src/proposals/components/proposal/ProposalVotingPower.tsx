@@ -1,4 +1,7 @@
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
 
@@ -311,7 +314,8 @@ export function ProposalVotingPower({
                                         (representative.address ||
                                           activeWallet.address) &&
                                       tx.chainId === votingChainId &&
-                                      (tx.pending || tx.status === 1)
+                                      (tx.pending ||
+                                        tx.status === TransactionStatus.Success)
                                     }
                                     onClick={onClick}>
                                     <Box

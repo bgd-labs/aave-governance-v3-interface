@@ -4,7 +4,10 @@ import {
   ProposalState,
   VotingMachineProposalState,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
@@ -143,7 +146,7 @@ export function ProposalStatusDetails({
       tx.type !== 'representations' &&
       tx.type === type &&
       tx.payload.proposalId === proposalId &&
-      tx.status === 1;
+      tx.status === TransactionStatus.Success;
 
     return { isPending, isSuccess };
   };

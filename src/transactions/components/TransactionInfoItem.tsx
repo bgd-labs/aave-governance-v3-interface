@@ -1,4 +1,7 @@
-import { selectTxExplorerLink } from '@bgd-labs/frontend-web3-utils';
+import {
+  selectTxExplorerLink,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -267,12 +270,16 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                 },
                 path: {
                   stroke:
-                    tx.status === 1
+                    tx.status === TransactionStatus.Success
                       ? theme.palette.$mainFor
                       : theme.palette.$mainAgainst,
                 },
               }}>
-              {tx.status === 1 ? <CheckIcon /> : <CrossIcon />}
+              {tx.status === TransactionStatus.Success ? (
+                <CheckIcon />
+              ) : (
+                <CrossIcon />
+              )}
             </IconBox>
           )}
         </Box>

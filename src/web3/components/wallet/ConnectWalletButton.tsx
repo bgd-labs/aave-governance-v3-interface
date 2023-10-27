@@ -1,6 +1,7 @@
 import {
   selectAllTransactions,
   selectPendingTransactionByWallet,
+  TransactionStatus,
 } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
@@ -63,10 +64,10 @@ export function ConnectWalletButton({
 
   useEffect(() => {
     if (lastTransaction?.status && activeWallet) {
-      if (lastTransaction.status === 1) {
+      if (lastTransaction.status === TransactionStatus.Success) {
         setLastTransactionSuccess(true);
         setTimeout(() => setLastTransactionSuccess(false), 1000);
-      } else if (lastTransaction.status === 0) {
+      } else if (lastTransaction.status === TransactionStatus.Reverted) {
         setLastTransactionError(true);
         setTimeout(() => setLastTransactionError(false), 1000);
       }

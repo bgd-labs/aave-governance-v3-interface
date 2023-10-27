@@ -1,3 +1,4 @@
+import { TransactionStatus } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import makeBlockie from 'ethereum-blockies-base64';
 import React from 'react';
@@ -17,12 +18,13 @@ import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { chainInfoHelper } from '../../../utils/configs';
 import { RepresentingForm } from './RepresentingForm';
 
+// TODO: need fix type
 interface AccountInfoModalContentProps {
   activeAddress: string;
   chainId: number;
   isActive: boolean;
   allTransactions: (TransactionUnion & {
-    status?: number | undefined;
+    status?: TransactionStatus;
     pending: boolean;
   })[];
   onAllTransactionButtonClick: () => void;
@@ -195,9 +197,8 @@ export function AccountInfoModalContent({
           )}
 
           <Link
-            href={`${
-              chainInfoHelper.getChainParameters(chainId).blockExplorers
-            }address/${activeAddress}`}
+            href={`${chainInfoHelper.getChainParameters(chainId).blockExplorers
+              ?.default.url}/address/${activeAddress}`}
             css={{
               color: '$textSecondary',
               lineHeight: 1,

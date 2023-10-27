@@ -138,10 +138,11 @@ export function RepresentingButton() {
                   path: { stroke: theme.palette.$textSecondary },
                 },
               }}
-              href={`${
-                chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                  .blockExplorers
-              }address/${representative.address}`}>
+              href={`${chainInfoHelper.getChainParameters(
+                appConfig.govCoreChainId,
+              ).blockExplorers?.default.url}/address/${
+                representative.address
+              }`}>
               <Box>
                 {ENSDataExists(store, representative.address, ENSProperty.NAME)
                   ? ensData[representative.address.toLocaleLowerCase() as Hex]

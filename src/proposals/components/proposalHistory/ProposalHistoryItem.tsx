@@ -172,11 +172,9 @@ export function ProposalHistoryItem({
                     <Link
                       css={{ display: 'inline-flex', alignItems: 'center' }}
                       inNewWindow
-                      href={`${
-                        chainInfoHelper.getChainParameters(
-                          item.txInfo.chainId || appConfig.govCoreChainId,
-                        ).blockExplorers
-                      }address/${address}`}>
+                      href={`${chainInfoHelper.getChainParameters(
+                        item.txInfo.chainId || appConfig.govCoreChainId,
+                      ).blockExplorers?.default.url}/address/${address}`}>
                       <Box
                         component="li"
                         sx={{

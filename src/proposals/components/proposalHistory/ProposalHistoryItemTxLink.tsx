@@ -76,10 +76,8 @@ export function ProposalHistoryItemTxLink({
       ) : (
         <>
           <Link
-            href={`${
-              chainInfoHelper.getChainParameters(item.txInfo.chainId)
-                .blockExplorers
-            }tx/${item.txInfo.hash}`}
+            href={`${chainInfoHelper.getChainParameters(item.txInfo.chainId)
+              .blockExplorers?.default.url}/tx/${item.txInfo.hash}`}
             css={{
               color: '$textSecondary',
               hover: { color: theme.palette.$text },

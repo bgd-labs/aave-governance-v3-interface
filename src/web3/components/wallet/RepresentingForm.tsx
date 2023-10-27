@@ -243,10 +243,9 @@ export function RepresentingForm({
 
         {!!localAddress.address && (
           <Link
-            href={`${
-              chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                .blockExplorers
-            }address/${localAddress.address}`}
+            href={`${chainInfoHelper.getChainParameters(
+              appConfig.govCoreChainId,
+            ).blockExplorers?.default.url}/address/${localAddress.address}`}
             css={{
               color: '$textSecondary',
               lineHeight: 1,
