@@ -200,8 +200,27 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === 'vote' && tx.payload && (
             <>
               {texts.transactions.voteTx}{' '}
-              <b>{tx.payload.support ? 'for' : 'against'}</b> for the proposal{' '}
-              <b>#{tx.payload.proposalId}</b> on <NetworkIconWitchChainN />
+              <b>{tx.payload.support ? 'for' : 'against'}</b>{' '}
+              {tx.payload.voter !== state.activeWallet?.address && (
+                <>
+                  {texts.transactions.voteTxAsRepresentative}{' '}
+                  <Link
+                    css={{
+                      color: '$textSecondary',
+                      fontWeight: 500,
+                      hover: { opacity: 0.7 },
+                    }}
+                    href={`${chainInfoHelper.getChainParameters(tx.chainId)
+                      .blockExplorers?.default.url}/address/${
+                      tx.payload.voter
+                    }`}
+                    inNewWindow>
+                    {textCenterEllipsis(tx.payload.voter, 6, 4)}
+                  </Link>
+                </>
+              )}{' '}
+              for the proposal <b>#{tx.payload.proposalId}</b> on{' '}
+              <NetworkIconWitchChainN />
             </>
           )}
           {tx.type === 'closeAndSendVote' && tx.payload && (

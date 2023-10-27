@@ -13,7 +13,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { Hex, zeroAddress } from 'viem';
+import { Hex } from 'viem';
 
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { texts } from '../../ui/utils/texts';
@@ -717,7 +717,7 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === zeroAddress) {
+    if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
         const { minBlockNumber, maxBlockNumber } =
           await getBlockNumberByTimestamp({

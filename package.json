@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@bgd-labs/aave-address-book": "^2.8.0",
-    "@bgd-labs/aave-governance-ui-helpers": "^0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0",
-    "@bgd-labs/frontend-web3-utils": "^0.4.14-622b3655ce08559f3c63e9cb6202edfea2587753.0",
+    "@bgd-labs/aave-governance-ui-helpers": "^0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0",
+    "@bgd-labs/frontend-web3-utils": "^0.4.3-0d4c96f91d8a5df6ef903428206dbf2a8e05a5c2.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",

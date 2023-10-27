@@ -250,6 +250,7 @@ export const texts = {
     activateVotingOnVotingMachineTx:
       'You activate voting on voting machine for the proposal',
     voteTx: 'You voted',
+    voteTxAsRepresentative: 'as a representative of',
     closeVoteTx: 'You closed voting for the proposal',
     sendVoteResultsTx: 'and sent voting results to',
     executeProposalTx: 'You executed the proposal',

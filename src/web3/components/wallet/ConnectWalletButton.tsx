@@ -1,5 +1,5 @@
 import {
-  selectAllTransactions,
+  selectAllTransactionsByWallet,
   selectPendingTransactionByWallet,
   TransactionStatus,
 } from '@bgd-labs/frontend-web3-utils';
@@ -41,16 +41,17 @@ export function ConnectWalletButton({
   representative,
 }: ConnectWalletButtonProps) {
   const store = useStore();
-  const { walletActivating, activeWallet } = store;
+  const { walletActivating, activeWallet, isInitialLoading } = store;
 
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
   const [loading, setLoading] = useState(true);
 
-  const allTransactions = selectAllTransactions(store);
-
   const isActive = activeWallet?.isActive;
   const activeAddress = activeWallet?.address || '';
+
+  const allTransactions = selectAllTransactionsByWallet(store, activeAddress);
+
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName
@@ -63,7 +64,7 @@ export function ConnectWalletButton({
   const [lastTransactionError, setLastTransactionError] = useState(false);
 
   useEffect(() => {
-    if (lastTransaction?.status && activeWallet) {
+    if (lastTransaction?.status && activeWallet && !isInitialLoading) {
       if (lastTransaction.status === TransactionStatus.Success) {
         setLastTransactionSuccess(true);
         setTimeout(() => setLastTransactionSuccess(false), 1000);

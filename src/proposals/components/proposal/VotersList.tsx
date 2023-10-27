@@ -117,7 +117,7 @@ export function VotersListItem({ vote }: { vote: VotersData }) {
           hover: { opacity: '0.5' },
         }}
         href={`${chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
-          ?.default.url}address/${vote.address}`}>
+          ?.default.url}/address/${vote.address}`}>
         <Box component="p" sx={{ typography: 'descriptor' }}>
           {formatVoterAddress(vote)}
         </Box>

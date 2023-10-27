@@ -1136,10 +1136,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.8.0.tgz#6d4169c5b8e70bc9b847f5173b4ea2ca59f7a21b"
   integrity sha512-oBcoPtwxnMZ310iYZHLqViuKAy4Q8hvwq6enW33LdqDL5Y+iU7c8TptKl6KdsojxwlluNZ1sahW5PfKNUT0jIQ==
 
-"@bgd-labs/aave-governance-ui-helpers@^0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0":
-  version "0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.2.72-d102b5058ad4fb505641d71068353c3409f44f2a.0.tgz#db965fa06963812b0dda31062ed209499516f302"
-  integrity sha512-TtIW3JlglNACSkmqpLquvq0xeX2u0JG5ZcvzEyyhNqgrYuzvBMQc6zXDh9yLZxrBqxMrPH3dSA9hZnvufus5Mw==
+"@bgd-labs/aave-governance-ui-helpers@^0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0":
+  version "0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0.tgz#4d2da437beb150ea1f709ab774f56d7a54e5bb88"
+  integrity sha512-1Pl/LswIwXvlMDUCa836ttbfVxOO0orBm8foimQU5wcOC5kZ9/XJPAUUWuTCkslhv1XWoZVo3m2E9YhPlY8/1A==
   dependencies:
     "@bgd-labs/aave-address-book" "2.8.0"
     bs58 "^5.0.0"
@@ -1148,10 +1148,10 @@
     viem "^1.16.6"
     wagmi "^1.4.5"
 
-"@bgd-labs/frontend-web3-utils@^0.4.14-622b3655ce08559f3c63e9cb6202edfea2587753.0":
-  version "0.4.14-622b3655ce08559f3c63e9cb6202edfea2587753.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.14-622b3655ce08559f3c63e9cb6202edfea2587753.0.tgz#aa2076412d9541f27ff3cfb722d1a48c1af1712e"
-  integrity sha512-RayCYPDp/WFqfqMwe2NsAHyYT23wYIOCEfWpjRQcNNPPUuzuU6nwAHA13wVtsxPGU9qBmeZ4WUUhxncVEZ1Kkw==
+"@bgd-labs/frontend-web3-utils@^0.4.3-0d4c96f91d8a5df6ef903428206dbf2a8e05a5c2.0":
+  version "0.4.3-5bca4d608c3b12a7cd7d290353b10a7114107952.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.3-5bca4d608c3b12a7cd7d290353b10a7114107952.0.tgz#9796309a8db4c213c576c14b784e462f516dc23d"
+  integrity sha512-aQ2xiZKjQ/YHyy9UZH+SYUJTmXpI7iM8D9njMhKSfLGIQxLtuLs1nQ3NQmGWLYUil6jgLxoDr4awrLF9z8ztww==
   dependencies:
     dayjs "^1.11.10"
     lodash "^4.17.21"

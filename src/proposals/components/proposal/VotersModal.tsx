@@ -112,7 +112,7 @@ export function VotersModal({
           hover: { opacity: '0.5' },
         }}
         href={`${chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
-          ?.default.url}address/${vote.address}`}>
+          ?.default.url}/address/${vote.address}`}>
         <Box component="p" sx={{ typography: 'body' }}>
           {formatVoterAddress(vote)}
         </Box>
