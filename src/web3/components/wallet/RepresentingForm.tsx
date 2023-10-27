@@ -51,7 +51,7 @@ export function RepresentingForm({
   const formattedOptions = formatRepresentedAddresses(representedAddresses);
   formattedOptions.unshift({
     chainsIds: appConfig.votingMachineChainIds,
-    address: '0x0',
+    address: '',
   });
 
   return (
@@ -86,7 +86,7 @@ export function RepresentingForm({
             onChange={(value: RepresentativeAddress) => {
               setLocalAddress(value);
               if (!isForTest) {
-                setRepresentativeAddress(value.address, value.chainsIds);
+                setRepresentativeAddress(value.address as Hex, value.chainsIds);
               }
             }}>
             {({ open }) => (
@@ -127,7 +127,7 @@ export function RepresentingForm({
                       alignItems: 'center',
                       whiteSpace: 'nowrap',
                     }}>
-                    {localAddress.address !== '0x0' && (
+                    {localAddress.address !== '' && (
                       <Box sx={{ mr: 4 }}>
                         <ChainsIcons
                           chains={localAddress.chainsIds}
@@ -136,7 +136,7 @@ export function RepresentingForm({
                       </Box>
                     )}
                     <Box>
-                      {localAddress.address === '0x0'
+                      {localAddress.address === ''
                         ? texts.other.yourself
                         : ENSDataExists(
                             store,
@@ -212,7 +212,7 @@ export function RepresentingForm({
                           alignItems: 'center',
                           whiteSpace: 'nowrap',
                         }}>
-                        {option.address !== '0x0' && (
+                        {option.address !== '' && (
                           <Box sx={{ mr: 4 }}>
                             <ChainsIcons
                               chains={option.chainsIds}
@@ -221,7 +221,7 @@ export function RepresentingForm({
                           </Box>
                         )}
                         <Box>
-                          {option.address === '0x0'
+                          {option.address === ''
                             ? texts.other.yourself
                             : ENSDataExists(
                                 store,

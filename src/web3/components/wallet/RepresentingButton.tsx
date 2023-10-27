@@ -144,7 +144,11 @@ export function RepresentingButton() {
                 representative.address
               }`}>
               <Box>
-                {ENSDataExists(store, representative.address, ENSProperty.NAME)
+                {ENSDataExists(
+                  store,
+                  representative.address as Hex,
+                  ENSProperty.NAME,
+                )
                   ? ensData[representative.address.toLocaleLowerCase() as Hex]
                       .name
                   : representative.address}
@@ -192,7 +196,7 @@ export function RepresentingButton() {
             src={
               !isAvatarExists
                 ? makeBlockie(
-                    representative.address !== '0x0'
+                    representative.address !== ''
                       ? representative.address
                       : 'default',
                   )

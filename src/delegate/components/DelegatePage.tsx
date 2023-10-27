@@ -117,10 +117,10 @@ export function DelegatePage() {
       return {
         underlyingAsset: data.underlyingAsset,
         votingToAddress:
-          data.votingToAddress === undefined ? '0x0' : data.votingToAddress,
+          data.votingToAddress === undefined ? '' : data.votingToAddress,
         propositionToAddress:
           data.propositionToAddress === undefined
-            ? '0x0'
+            ? ''
             : data.propositionToAddress,
       };
     });

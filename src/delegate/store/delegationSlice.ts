@@ -4,7 +4,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { zeroAddress } from 'viem';
+import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -79,20 +79,18 @@ export const createDelegationSlice: StoreSlice<
             underlyingAsset,
             symbol,
             amount: normalizeBN(balance.toString(), 18).toNumber(),
-            votingToAddress:
-              votingToAddress === activeAddress ||
-              votingToAddress === zeroAddress
-                ? '0x0'
-                : !!votingToAddress
-                ? votingToAddress
-                : '0x0',
-            propositionToAddress:
-              propositionToAddress === activeAddress ||
-              propositionToAddress === zeroAddress
-                ? '0x0'
-                : !!propositionToAddress
-                ? propositionToAddress
-                : '0x0',
+            votingToAddress: (votingToAddress === activeAddress ||
+            votingToAddress === zeroAddress
+              ? ''
+              : !!votingToAddress
+              ? votingToAddress
+              : '') as Hex | '',
+            propositionToAddress: (propositionToAddress === activeAddress ||
+            propositionToAddress === zeroAddress
+              ? ''
+              : !!propositionToAddress
+              ? propositionToAddress
+              : '') as Hex | '',
           };
         }),
       );
@@ -153,7 +151,7 @@ export const createDelegationSlice: StoreSlice<
         ) {
           const sig = await delegationService.delegateMetaSig(
             underlyingAsset,
-            votingToAddress === '0x0' ? activeAddress : votingToAddress,
+            votingToAddress === '' ? activeAddress : votingToAddress,
             GovernancePowerTypeApp.All,
             activeAddress,
           );
@@ -164,7 +162,7 @@ export const createDelegationSlice: StoreSlice<
           if (!isVotingToAddressSame) {
             const sig = await delegationService.delegateMetaSig(
               underlyingAsset,
-              votingToAddress === '0x0' ? activeAddress : votingToAddress,
+              votingToAddress === '' ? activeAddress : votingToAddress,
               GovernancePowerTypeApp.VOTING,
               activeAddress,
             );
@@ -174,7 +172,7 @@ export const createDelegationSlice: StoreSlice<
           if (!isPropositionToAddressSame) {
             const sig = await delegationService.delegateMetaSig(
               underlyingAsset,
-              propositionToAddress === '0x0'
+              propositionToAddress === ''
                 ? activeAddress
                 : propositionToAddress,
               GovernancePowerTypeApp.PROPOSITION,

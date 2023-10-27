@@ -4,7 +4,7 @@ export const checkIsVotingAvailable = (
   store: RootState,
   votingChainId: number,
 ) => {
-  return store.representative.address !== '0x0'
+  return store.representative.address !== ''
     ? !!store.representative.chainsIds.length &&
         !!store.representative.chainsIds.find(
           (chainId) => chainId === votingChainId,

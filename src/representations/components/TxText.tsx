@@ -28,7 +28,7 @@ export function TxText({
   const { activeWallet, ensData } = store;
   const activeAddress = activeWallet?.address || '';
 
-  const formattedData: { representative: Hex; chainId: number }[] = [];
+  const formattedData: { representative: Hex | ''; chainId: number }[] = [];
   for (const item of formData) {
     let representative = item.representative;
     // get previous representative data for current chain id
@@ -45,7 +45,7 @@ export function TxText({
       {formattedData.map((item, index) => {
         const isRepresent =
           item.representative !== undefined &&
-          item.representative !== '0x0' &&
+          item.representative !== '' &&
           item.representative !== activeAddress;
 
         const firstText = isRepresent
@@ -64,7 +64,11 @@ export function TxText({
               `by ${
                 isEnsName(item.representative)
                   ? item.representative
-                  : ENSDataExists(store, item.representative, ENSProperty.NAME)
+                  : ENSDataExists(
+                      store,
+                      item.representative as Hex,
+                      ENSProperty.NAME,
+                    )
                   ? ensData[item.representative.toLocaleLowerCase() as Hex].name
                   : textCenterEllipsis(item.representative, 5, 5)
               }`}{' '}

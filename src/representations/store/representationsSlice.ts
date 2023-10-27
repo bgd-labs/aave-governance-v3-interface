@@ -16,21 +16,21 @@ import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { getFormattedRepresentedAddresses } from '../utils/getRepresentedAddresses';
 
 export type RepresentationDataItem = {
-  representative: Hex;
+  representative: Hex | '';
   represented: Hex[];
 };
 
 export type RepresentationFormData = {
   chainId: number;
-  representative: Hex;
+  representative: Hex | '';
 };
 
 export type RepresentativeAddress = {
   chainsIds: number[];
-  address: Hex;
+  address: Hex | '';
 };
 
-export type RepresentedAddress = { chainId: number; address: Hex };
+export type RepresentedAddress = { chainId: number; address: Hex | '' };
 
 export interface IRepresentationsSlice {
   representativeLoading: boolean;
@@ -61,7 +61,7 @@ export const createRepresentationsSlice: StoreSlice<
   representativeLoading: true,
   representative: {
     chainsIds: [],
-    address: '0x0',
+    address: '',
   },
   getRepresentingAddress: async () => {
     set({ representativeLoading: true });
@@ -86,15 +86,15 @@ export const createRepresentationsSlice: StoreSlice<
 
       set({
         representative: !!isAddressesValid
-          ? walletRepresentative || { chainsIds: [], address: '0x0' }
-          : { chainsIds: [], address: '0x0' },
+          ? walletRepresentative || { chainsIds: [], address: '' }
+          : { chainsIds: [], address: '' },
         representativeLoading: false,
       });
     }
   },
   setRepresentativeAddress: (address, chainsIds) => {
     const activeAddress = get().activeWallet?.address;
-    const formattedAddress = !address ? '0x0' : address;
+    const formattedAddress = !address ? '' : address;
     set((state) =>
       produce(state, (draft) => {
         draft.representative = {
@@ -112,12 +112,16 @@ export const createRepresentationsSlice: StoreSlice<
           address: formattedAddress,
         },
       };
-      setLocalStorageRepresentingAddresses(newAddresses);
+      setLocalStorageRepresentingAddresses(
+        newAddresses as Record<string, RepresentativeAddress>,
+      );
     } else if (activeAddress) {
       const newAddresses = {
         [activeAddress]: { chainsIds, address: formattedAddress },
       };
-      setLocalStorageRepresentingAddresses(newAddresses);
+      setLocalStorageRepresentingAddresses(
+        newAddresses as Record<string, RepresentativeAddress>,
+      );
     }
   },
 
@@ -144,7 +148,7 @@ export const createRepresentationsSlice: StoreSlice<
 
         const formattedRepresentative =
           representative === zeroAddress || representative === activeAddress
-            ? '0x0'
+            ? ''
             : representative;
 
         set((state) =>
@@ -187,10 +191,10 @@ export const createRepresentationsSlice: StoreSlice<
           formattedData.push({
             representative:
               representative === undefined ||
-              representative === '0x0' ||
+              representative === '' ||
               representative === activeAddress
-                ? (zeroAddress as Hex)
-                : (representative as Hex),
+                ? zeroAddress
+                : representative,
             chainId: BigInt(item.chainId),
           });
         }

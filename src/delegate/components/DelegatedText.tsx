@@ -83,12 +83,11 @@ export function DelegatedText({
     <>
       {delegatedData.map((data, index) => {
         const isBothPowersDelegated =
-          data.bothAddresses !== '0x0' && data.bothAddresses !== activeAddress;
+          data.bothAddresses !== '' && data.bothAddresses !== activeAddress;
         const isVotingPowerDelegated =
-          data.votingToAddress !== '0x0' &&
-          data.votingToAddress !== activeAddress;
+          data.votingToAddress !== '' && data.votingToAddress !== activeAddress;
         const isPropositionPowerDelegated =
-          data.propositionToAddress !== '0x0' &&
+          data.propositionToAddress !== '' &&
           data.propositionToAddress !== activeAddress;
 
         const firstText =

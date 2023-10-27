@@ -857,7 +857,7 @@ export class GovDataService {
     return this.govCore.write.createProposal(
       [formattedPayloads, votingPortalAddress, ipfsHash],
       {
-        value: parseGwei(cancellationFee),
+        value: BigInt(cancellationFee),
       },
     );
   }
