@@ -5,9 +5,10 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { PublicClient } from '@wagmi/core';
-import { produce } from 'immer';
+import { Draft, produce } from 'immer';
 import { Chain, createPublicClient, http } from 'viem';
 
+import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';
 import { chainInfoHelper } from '../../utils/configs';
 import {
@@ -37,6 +38,7 @@ export interface IRpcSwitcherSlice {
   initClientsLoaded: boolean;
   initClients: (clients: ChainInfo, appUsedNetworks: number[]) => void;
   updateClients: (formData: RpcSwitcherFormData) => void;
+  syncTransactionsClients: () => void;
   syncLocalStorage: () => void;
   syncDataServices: () => void;
   syncAppClientsForm: () => void;
@@ -47,7 +49,7 @@ export interface IRpcSwitcherSlice {
 
 export const createRpcSwitcherSlice: StoreSlice<
   IRpcSwitcherSlice,
-  IWeb3Slice
+  IWeb3Slice & TransactionsSlice
 > = (set, get) => ({
   appClients: {},
   appClientsForm: {},
@@ -77,8 +79,6 @@ export const createRpcSwitcherSlice: StoreSlice<
 
               draft.appClients[chainIdNumber] = {
                 rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                // TODO: need think how to fix
-                // @ts-ignore
                 instance: createPublicClient({
                   batch: {
                     multicall: true,
@@ -87,7 +87,7 @@ export const createRpcSwitcherSlice: StoreSlice<
                   transport: http(
                     parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
                   ),
-                }) as PublicClient,
+                }) as Draft<PublicClient>,
               };
             });
         }),
@@ -104,9 +104,8 @@ export const createRpcSwitcherSlice: StoreSlice<
                 rpcUrl:
                   clients.getChainParameters(chainIdNumber).rpcUrls.default
                     .http[0],
-                // TODO: need think how to fix
-                // @ts-ignore
-                instance: clients.clientInstances[chainIdNumber].instance,
+                instance: clients.clientInstances[chainIdNumber]
+                  .instance as Draft<PublicClient>,
               };
             });
         }),
@@ -114,6 +113,7 @@ export const createRpcSwitcherSlice: StoreSlice<
       get().syncLocalStorage();
     }
 
+    get().syncTransactionsClients();
     get().syncDataServices();
     get().syncAppClientsForm();
     Object.keys(get().appClientsForm).forEach((chainId) => {
@@ -135,22 +135,29 @@ export const createRpcSwitcherSlice: StoreSlice<
       set((state) =>
         produce(state, (draft) => {
           draft.appClients[chainId].rpcUrl = rpcUrl;
-          // TODO: need think how to fix
-          // @ts-ignore
           draft.appClients[chainId].instance = createPublicClient({
             batch: {
               multicall: true,
             },
             chain: chainInfoHelper.getChainParameters(chainId),
             transport: http(rpcUrl),
-          }) as PublicClient;
+          }) as Draft<PublicClient>;
         }),
       );
     });
 
+    get().syncTransactionsClients();
     get().syncLocalStorage();
     get().syncDataServices();
     get().syncAppClientsForm();
+  },
+  syncTransactionsClients: () => {
+    const clients = selectAppClients(get());
+    Object.entries(clients).forEach((value) => {
+      const clientChainId = Number(value[0]);
+      const client = value[1];
+      get().setClient(clientChainId, client);
+    });
   },
   syncLocalStorage: () => {
     const parsedProvidersForLocalStorage = Object.entries(

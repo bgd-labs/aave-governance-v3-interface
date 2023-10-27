@@ -1,11 +1,10 @@
-// TODO: need fix all as Hex
-
 import {
   BaseTx as BT,
   createTransactionsSlice as createBaseTransactionsSlice,
   ITransactionsSlice,
   IWalletSlice,
   StoreSlice,
+  TransactionStatus,
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
 import { Hex } from 'viem';
@@ -20,14 +19,13 @@ import {
   IRepresentationsSlice,
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
-import { selectAppClients } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 type BaseTx = BT & {
-  status?: number;
+  status?: TransactionStatus;
   pending: boolean;
   walletType: WalletType;
 };
@@ -232,7 +230,7 @@ export const createTransactionsSlice: StoreSlice<
           break;
       }
     },
-    // TODO: need fix
-    defaultClients: get()?.initClientsLoaded ? selectAppClients(get()) : {},
+    // for initial don't set default clients because of rpc switcher flow
+    defaultClients: {},
   })(set, get),
 });
