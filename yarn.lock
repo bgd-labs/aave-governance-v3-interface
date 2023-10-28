@@ -1136,10 +1136,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.8.0.tgz#6d4169c5b8e70bc9b847f5173b4ea2ca59f7a21b"
   integrity sha512-oBcoPtwxnMZ310iYZHLqViuKAy4Q8hvwq6enW33LdqDL5Y+iU7c8TptKl6KdsojxwlluNZ1sahW5PfKNUT0jIQ==
 
-"@bgd-labs/aave-governance-ui-helpers@^0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0":
-  version "0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.2.81-f374aa93b1710e2c61a8544c5e8153535f79554c.0.tgz#4d2da437beb150ea1f709ab774f56d7a54e5bb88"
-  integrity sha512-1Pl/LswIwXvlMDUCa836ttbfVxOO0orBm8foimQU5wcOC5kZ9/XJPAUUWuTCkslhv1XWoZVo3m2E9YhPlY8/1A==
+"@bgd-labs/aave-governance-ui-helpers@^0.2.82-649bc765c516d94237a14546d79f2939664acd2c.0":
+  version "0.2.82-649bc765c516d94237a14546d79f2939664acd2c.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.2.82-649bc765c516d94237a14546d79f2939664acd2c.0.tgz#164f426dbd0ea2ab01d322d5a3f78615cd2f5b1b"
+  integrity sha512-VRFXGQ3yFELlfguFWfCGhcSoLI7DBuINCQTyrFGiPBvrZE9rs66Sxqc79CzhsRn3RoilOg+5W/X+mX/6jDZRsQ==
   dependencies:
     "@bgd-labs/aave-address-book" "2.8.0"
     bs58 "^5.0.0"
@@ -1148,10 +1148,10 @@
     viem "^1.16.6"
     wagmi "^1.4.5"
 
-"@bgd-labs/frontend-web3-utils@^0.4.3-0d4c96f91d8a5df6ef903428206dbf2a8e05a5c2.0":
-  version "0.4.3-5bca4d608c3b12a7cd7d290353b10a7114107952.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.3-5bca4d608c3b12a7cd7d290353b10a7114107952.0.tgz#9796309a8db4c213c576c14b784e462f516dc23d"
-  integrity sha512-aQ2xiZKjQ/YHyy9UZH+SYUJTmXpI7iM8D9njMhKSfLGIQxLtuLs1nQ3NQmGWLYUil6jgLxoDr4awrLF9z8ztww==
+"@bgd-labs/frontend-web3-utils@^0.4.22-48208612d9dcd6ff24c2db3a3b699c419af1ed4c.0":
+  version "0.4.22-48208612d9dcd6ff24c2db3a3b699c419af1ed4c.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.22-48208612d9dcd6ff24c2db3a3b699c419af1ed4c.0.tgz#33df14d91740e8f80b0c19a2ab248ac7836561d5"
+  integrity sha512-tshLW9pmsCHjHv+p1UP8GC3CDs2/6FY5Sku2DMOwBJVnFbCf0Rn6Gg0zDGorHBoaJb+OHgzIDtC/9GiFBMzoWQ==
   dependencies:
     dayjs "^1.11.10"
     lodash "^4.17.21"
@@ -1705,7 +1705,7 @@
     "@safe-global/safe-gateway-typescript-sdk" "^3.5.3"
     viem "^1.0.0"
 
-"@safe-global/safe-apps-sdk@^8.0.0":
+"@safe-global/safe-apps-sdk@^8.0.0", "@safe-global/safe-apps-sdk@^8.1.0":
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/@safe-global/safe-apps-sdk/-/safe-apps-sdk-8.1.0.tgz#d1d0c69cd2bf4eef8a79c5d677d16971926aa64a"
   integrity sha512-XJbEPuaVc7b9n23MqlF6c+ToYIS3f7P2Sel8f3cSBQ9WORE4xrSuvhMpK9fDSFqJ7by/brc+rmJR/5HViRr0/w==
