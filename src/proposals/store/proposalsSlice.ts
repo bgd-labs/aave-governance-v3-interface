@@ -35,11 +35,8 @@ import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import {
-  generateProofsRepresentativeByChain,
-  slots,
-} from '../../web3/utils/helperToGetProofs';
-import {
   formatBalances,
+  getProofOfRepresentative,
   getVotingAssetsWithSlot,
   getVotingProofs,
 } from '../utils/formatBalances';
@@ -1153,20 +1150,12 @@ export const createProposalsSlice: StoreSlice<
           );
 
           if (proofs && proofs.length > 0) {
-            const blockNumber = await govDataService.getCoreBlockNumber(
-              proposal.snapshotBlockHash as Hex,
+            const proofOfRepresentative = await getProofOfRepresentative(
+              proposal.votingMachineData.l1BlockHash,
+              govDataService,
+              voterAddress as Hex,
+              votingChainId,
             );
-
-            const proofOfRepresentative =
-              await generateProofsRepresentativeByChain(
-                get().appClients[appConfig.govCoreChainId].instance,
-                appConfig.govCoreConfig.contractAddress,
-                slots[appConfig.govCoreConfig.contractAddress.toLowerCase()]
-                  .balance,
-                voterAddress as Hex,
-                votingChainId,
-                blockNumber,
-              );
 
             await get().executeTx({
               body: () => {

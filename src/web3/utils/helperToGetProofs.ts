@@ -8,7 +8,6 @@ import {
   keccak256,
   pad,
   parseAbiParameters,
-  size,
   toHex,
   toRlp,
 } from 'viem';
@@ -125,7 +124,7 @@ export function getSolidityTwoLevelStorageSlotHash(
       { name: 'voter', type: 'address' },
       { name: 'rawSlot', type: 'uint256' },
     ],
-    [voter, BigInt(size(rawSlot))],
+    [voter, BigInt(rawSlot)],
   );
 
   // ABI Encode the second level of the mapping
@@ -149,35 +148,3 @@ export function getVoteBalanceSlot(
     ? slots[underlyingAsset.toLowerCase()].delegation || 64
     : slots[underlyingAsset.toLowerCase()].balance || 0;
 }
-
-const generateProofs = async (
-  client: PublicClient,
-  token: Hex,
-  slot: string,
-  blockNumber: number,
-) => {
-  const rawAccountProofData = await getProof(
-    client,
-    token,
-    [slot],
-    blockNumber,
-  );
-
-  // storageProofRLP
-  return formatToProofRLP(rawAccountProofData.storageProof[0].proof);
-};
-
-export const generateProofsRepresentativeByChain = async (
-  client: PublicClient,
-  token: Hex,
-  rawSlot: number,
-  voter: Hex,
-  chainId: number,
-  blockNumber: number,
-) => {
-  const hexSlot = toHex(rawSlot);
-  const slot = getSolidityTwoLevelStorageSlotHash(hexSlot, voter, chainId);
-
-  // storageProofRLP
-  return generateProofs(client, token, slot, blockNumber);
-};
