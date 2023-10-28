@@ -1,3 +1,5 @@
+// TODO: added fallback rpc urls to all chains
+
 import { Chain } from 'viem';
 import {
   arbitrum,
@@ -16,44 +18,53 @@ import {
 } from 'viem/chains';
 
 // chains information (RPC (urls), nativeCurrency, name, blockExplorerUrls)
-function setChain(chain: Chain, url: string) {
+export const initialRpcUrls: Record<number, string[]> = {
+  [mainnet.id]: ['https://cloudflare-eth.com'],
+  [polygon.id]: ['https://polygon.llamarpc.com'],
+  [avalanche.id]: ['https://avalanche.drpc.org'],
+  [bsc.id]: ['https://binance.llamarpc.com'],
+  [base.id]: ['https://base-mainnet.public.blastapi.io'],
+  [arbitrum.id]: ['https://arbitrum.llamarpc.com'],
+  [metis.id]: ['https://metis-mainnet.public.blastapi.io'],
+  [optimism.id]: ['https://optimism.llamarpc.com'],
+  // testnets
+  [goerli.id]: [
+    'https://ethereum-goerli.publicnode.com',
+    'https://goerli.blockpi.network/v1/rpc/public',
+    'https://eth-goerli.public.blastapi.io',
+  ],
+  [sepolia.id]: ['https://ethereum-sepolia.blockpi.network/v1/rpc/public'],
+  [polygonMumbai.id]: ['https://rpc.ankr.com/polygon_mumbai'],
+  [avalancheFuji.id]: ['https://api.avax-test.network/ext/bc/C/rpc'],
+  [bscTestnet.id]: ['https://data-seed-prebsc-1-s1.bnbchain.org:8545'],
+};
+
+function setChain(chain: Chain) {
   return {
     ...chain,
     rpcUrls: {
       ...chain.rpcUrls,
       default: {
         ...chain.rpcUrls.default,
-        http: [url],
+        http: [initialRpcUrls[chain.id][0]],
       },
     },
   };
 }
 
 export const CHAINS: Record<number, Chain> = {
-  [mainnet.id]: setChain(mainnet, 'https://cloudflare-eth.com'),
-  [polygon.id]: setChain(polygon, 'https://polygon.llamarpc.com'),
-  [avalanche.id]: setChain(avalanche, 'https://avalanche.drpc.org'),
-  [bsc.id]: setChain(bsc, 'https://binance.llamarpc.com'),
-  [base.id]: setChain(base, 'https://base-mainnet.public.blastapi.io'),
-  [arbitrum.id]: setChain(arbitrum, 'https://arbitrum.llamarpc.com'),
-  [metis.id]: setChain(metis, 'https://metis-mainnet.public.blastapi.io'),
-  [optimism.id]: setChain(optimism, 'https://optimism.llamarpc.com'),
+  [mainnet.id]: setChain(mainnet),
+  [polygon.id]: setChain(polygon),
+  [avalanche.id]: setChain(avalanche),
+  [bsc.id]: setChain(bsc),
+  [base.id]: setChain(base),
+  [arbitrum.id]: setChain(arbitrum),
+  [metis.id]: setChain(metis),
+  [optimism.id]: setChain(optimism),
   // testnets
-  [goerli.id]: setChain(goerli, 'https://ethereum-goerli.publicnode.com'),
-  [sepolia.id]: setChain(
-    sepolia,
-    'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
-  ),
-  [polygonMumbai.id]: setChain(
-    polygonMumbai,
-    'https://rpc.ankr.com/polygon_mumbai',
-  ),
-  [avalancheFuji.id]: setChain(
-    avalancheFuji,
-    'https://api.avax-test.network/ext/bc/C/rpc',
-  ),
-  [bscTestnet.id]: setChain(
-    bscTestnet,
-    'https://data-seed-prebsc-1-s1.bnbchain.org:8545',
-  ),
+  [goerli.id]: setChain(goerli),
+  [sepolia.id]: setChain(sepolia),
+  [polygonMumbai.id]: setChain(polygonMumbai),
+  [avalancheFuji.id]: setChain(avalancheFuji),
+  [bscTestnet.id]: setChain(bscTestnet),
 };

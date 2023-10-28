@@ -1,8 +1,8 @@
 import { PublicClient } from '@wagmi/core';
-import { createPublicClient, http } from 'viem';
+import { createPublicClient, fallback, http } from 'viem';
 
 import { appUsedNetworks } from './appConfig';
-import { CHAINS } from './chains';
+import { CHAINS, initialRpcUrls } from './chains';
 
 export const initialClients: Record<number, PublicClient> = {};
 appUsedNetworks.forEach((chain) => {
@@ -11,6 +11,6 @@ appUsedNetworks.forEach((chain) => {
       multicall: true,
     },
     chain: CHAINS[chain],
-    transport: http(),
+    transport: fallback(initialRpcUrls[chain].map((url) => http(url))),
   }) as PublicClient;
 });
