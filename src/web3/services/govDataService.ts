@@ -433,7 +433,10 @@ export class GovDataService {
   }: {
     data: { representative: Hex; chainId: bigint }[];
   }) {
-    return this.govCore.write.updateRepresentativesForChain([data]);
+    return this.govCore.write.updateRepresentativesForChain([data], {
+      // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+      value: BigInt(0) as any,
+    });
   }
   // end representations
 
@@ -677,18 +680,26 @@ export class GovDataService {
   }) {
     let connectedVotingMachine = this.votingMachines[votingChainId];
     return !!voterAddress && !!proofOfRepresentation
-      ? connectedVotingMachine.write.submitVoteAsRepresentative([
-          BigInt(proposalId),
-          support,
-          voterAddress,
-          proofOfRepresentation,
-          proofs,
-        ])
-      : connectedVotingMachine.write.submitVote([
-          BigInt(proposalId),
-          support,
-          proofs,
-        ]);
+      ? connectedVotingMachine.write.submitVoteAsRepresentative(
+          [
+            BigInt(proposalId),
+            support,
+            voterAddress,
+            proofOfRepresentation,
+            proofs,
+          ],
+          {
+            // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+            value: BigInt(0) as any,
+          },
+        )
+      : connectedVotingMachine.write.submitVote(
+          [BigInt(proposalId), support, proofs],
+          {
+            // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+            value: BigInt(0) as any,
+          },
+        );
   }
 
   async voteBySignature({
