@@ -552,7 +552,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '24%',
+              left: '44%',
             }}>
             <CanceledItemWrapper
               sx={{
@@ -573,7 +573,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '49%',
+              left: '69%',
             }}>
             <CanceledItemWrapper
               sx={{
@@ -591,7 +591,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '74%',
+              left: '80%',
             }}>
             <CanceledItemWrapper
               sx={{
