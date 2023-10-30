@@ -1,5 +1,3 @@
-// TODO: fix all as Hex
-
 import {
   Balance,
   BasicProposal,
@@ -1077,7 +1075,6 @@ export const createProposalsSlice: StoreSlice<
         });
 
         await get().executeTx({
-          // TODO: need fix
           // @ts-ignore
           body: () => {
             get().setModalOpen(true);

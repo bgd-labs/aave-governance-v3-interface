@@ -1,5 +1,3 @@
-// TODO: need fix all as Hex
-
 import {
   BasicProposalState,
   checkHash,

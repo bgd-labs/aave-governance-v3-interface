@@ -1,5 +1,5 @@
 import { WalletClient } from '@wagmi/core';
-import { Hex, hexToSignature, signatureToHex, verifyTypedData } from 'viem';
+import { Hex, hexToSignature } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 
@@ -82,9 +82,6 @@ export async function getVoteSignatureParams({
       s: sig.s,
     };
   } else {
-    const signerAddress = walletClient.account.address;
-    console.log('sig voter address', voterAddress);
-    console.log('sig signer address', signerAddress);
     const sig = hexToSignature(
       await walletClient.signTypedData({
         domain,
@@ -126,51 +123,6 @@ export async function getVoteSignatureParams({
         },
       }),
     );
-
-    // TODO: remove after testing
-    const signatureAddress = await verifyTypedData({
-      address: signerAddress,
-      domain,
-      types: {
-        VotingAssetWithSlot: [
-          { name: 'underlyingAsset', type: 'address' },
-          { name: 'slot', type: 'uint128' },
-        ],
-        SubmitVote: [
-          {
-            name: 'proposalId',
-            type: 'uint256',
-          },
-          {
-            name: 'voter',
-            type: 'address',
-          },
-          {
-            name: 'support',
-            type: 'bool',
-          },
-          {
-            name: 'votingAssetsWithSlot',
-            type: 'VotingAssetWithSlot[]',
-          },
-        ],
-      },
-      primaryType: 'SubmitVote',
-      message: {
-        proposalId: BigInt(proposalId),
-        voter: voterAddress,
-        support,
-        votingAssetsWithSlot: votingAssetsWithSlot.map((asset) => {
-          return {
-            slot: BigInt(asset.slot),
-            underlyingAsset: asset.underlyingAsset,
-          };
-        }),
-      },
-      signature: signatureToHex(sig),
-    });
-
-    console.log('sig signature address', signatureAddress);
 
     return {
       v: sig.v,
