@@ -4,6 +4,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import isEqual from 'lodash/isEqual';
 import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
@@ -14,6 +15,7 @@ import { appConfig } from '../../utils/appConfig';
 import { getTokenName, Token } from '../../utils/getTokenName';
 import {
   BatchMetaDelegateParams,
+  DelegateDataParams,
   GovernancePowerTypeApp,
 } from '../../web3/services/delegationService';
 import { IEnsSlice } from '../../web3/store/ensSlice';
@@ -24,6 +26,9 @@ export interface IDelegationSlice {
   delegateData: DelegateItem[];
   delegateDataLoading: boolean;
   getDelegateData: () => Promise<void>;
+  prepareDataForDelegation: (
+    formDelegateData: DelegateData[],
+  ) => Promise<DelegateDataParams[]>;
   delegate: (
     stateDelegateData: DelegateItem[],
     formDelegateData: DelegateData[],
@@ -102,16 +107,12 @@ export const createDelegationSlice: StoreSlice<
     }
   },
 
-  delegate: async (stateDelegateData, formDelegateData, timestamp) => {
-    await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
-    const delegationService = get().delegationService;
+  prepareDataForDelegation: async (formDelegateData) => {
     const activeAddress = get().activeWallet?.address;
 
-    if (activeAddress) {
-      // initiate batch of signatures
-      const sigs: BatchMetaDelegateParams[] = [];
+    const data: DelegateDataParams[] = [];
 
-      // iterate over form data to create batch of signatures
+    if (activeAddress) {
       for await (const formDelegateItem of formDelegateData) {
         const { underlyingAsset } = formDelegateItem;
         let votingToAddress = formDelegateItem.votingToAddress;
@@ -149,43 +150,63 @@ export const createDelegationSlice: StoreSlice<
           (!isInitialAddressSame ||
             votingToAddress !== delegateData.votingToAddress)
         ) {
-          const sig = await delegationService.delegateMetaSig(
+          data.push({
             underlyingAsset,
-            votingToAddress === '' ? activeAddress : votingToAddress,
-            GovernancePowerTypeApp.All,
-            activeAddress,
-          );
-          sig && sigs.push(sig);
+            delegator: activeAddress,
+            delegatee: votingToAddress === '' ? activeAddress : votingToAddress,
+            delegationType: GovernancePowerTypeApp.All,
+          });
         } else {
           // if delegationTo are different addresses
           // check if need to re-delegate voting
           if (!isVotingToAddressSame) {
-            const sig = await delegationService.delegateMetaSig(
+            data.push({
               underlyingAsset,
-              votingToAddress === '' ? activeAddress : votingToAddress,
-              GovernancePowerTypeApp.VOTING,
-              activeAddress,
-            );
-            sig && sigs.push(sig);
+              delegator: activeAddress,
+              delegatee:
+                votingToAddress === '' ? activeAddress : votingToAddress,
+              delegationType: GovernancePowerTypeApp.VOTING,
+            });
           }
           // check if need to re-delegate proposition
           if (!isPropositionToAddressSame) {
-            const sig = await delegationService.delegateMetaSig(
+            data.push({
               underlyingAsset,
-              propositionToAddress === ''
-                ? activeAddress
-                : propositionToAddress,
-              GovernancePowerTypeApp.PROPOSITION,
-              activeAddress,
-              !isVotingToAddressSame && !isPropositionToAddressSame,
-            );
-            sig && sigs.push(sig);
+              delegator: activeAddress,
+              delegatee:
+                propositionToAddress === ''
+                  ? activeAddress
+                  : propositionToAddress,
+              delegationType: GovernancePowerTypeApp.PROPOSITION,
+            });
           }
         }
       }
+    }
+
+    return data;
+  },
+
+  delegate: async (stateDelegateData, formDelegateData, timestamp) => {
+    await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
+    const delegationService = get().delegationService;
+    const activeAddress = get().activeWallet?.address;
+    const isWalletAddressContract = get().activeWallet?.isContractAddress;
+    const data = await get().prepareDataForDelegation(formDelegateData);
+
+    if (activeAddress && !isWalletAddressContract) {
+      const sigs: BatchMetaDelegateParams[] = await Promise.all(
+        data.map(async (dataItem) => {
+          return (await delegationService.delegateMetaSig(
+            dataItem.underlyingAsset,
+            dataItem.delegatee,
+            dataItem.delegationType,
+            dataItem.delegator,
+          )) as BatchMetaDelegateParams;
+        }),
+      );
 
       if (!!sigs.length) {
-        // after we finished gathering signatures, we send it
         await get().executeTx({
           body: () => {
             get().setModalOpen(true);
@@ -202,6 +223,39 @@ export const createDelegationSlice: StoreSlice<
           },
         });
       }
+    } else if (activeAddress && isWalletAddressContract) {
+      if (data.length > 1) {
+        await Promise.all([
+          data.map(async (dataItem) => {
+            if (!isEqual(dataItem, data[data.length - 1])) {
+              return delegationService.delegate(
+                dataItem.underlyingAsset,
+                dataItem.delegatee,
+                dataItem.delegationType,
+              );
+            }
+          }),
+        ]);
+      }
+      await get().executeTx({
+        body: () => {
+          get().setModalOpen(true);
+          return delegationService.delegate(
+            data[data.length - 1].underlyingAsset,
+            data[data.length - 1].delegatee,
+            data[data.length - 1].delegationType,
+          );
+        },
+        params: {
+          type: 'delegate',
+          desiredChainID: appConfig.govCoreChainId,
+          payload: {
+            delegateData: stateDelegateData,
+            formDelegateData,
+            timestamp,
+          },
+        },
+      });
     }
   },
 

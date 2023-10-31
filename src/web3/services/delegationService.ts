@@ -24,6 +24,13 @@ export enum GovernancePowerTypeApp {
   All,
 }
 
+export type DelegateDataParams = {
+  underlyingAsset: Hex;
+  delegator: Hex;
+  delegatee: Hex;
+  delegationType: GovernancePowerTypeApp;
+};
+
 export type BatchMetaDelegateParams = {
   underlyingAsset: Hex;
   delegator: Hex;
@@ -261,5 +268,30 @@ export class DelegationService {
     return delegateHelperContract.write.batchMetaDelegate([sigs], {
       gasPrice: BigInt(Number(gasLimit) + 100000),
     });
+  }
+
+  // need only for gnosis safe wallet
+  async delegate(
+    underlyingAsset: Hex,
+    delegateToAddress: Hex,
+    type: GovernancePowerTypeApp,
+  ) {
+    const tokenContract = aaveTokenV3Contract({
+      contractAddress: underlyingAsset,
+      client: this.clients[appConfig.govCoreChainId],
+      walletClient: this.walletClient,
+    });
+
+    if (type === GovernancePowerTypeApp.All) {
+      return tokenContract.write.delegate([delegateToAddress], {
+        // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+        value: BigInt(0) as any,
+      });
+    } else {
+      return tokenContract.write.delegateByType([delegateToAddress, type], {
+        // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+        value: BigInt(0) as any,
+      });
+    }
   }
 }

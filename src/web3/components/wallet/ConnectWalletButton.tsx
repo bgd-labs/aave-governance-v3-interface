@@ -41,7 +41,7 @@ export function ConnectWalletButton({
   representative,
 }: ConnectWalletButtonProps) {
   const store = useStore();
-  const { walletActivating, activeWallet, isInitialLoading } = store;
+  const { walletActivating, activeWallet, walletConnectedTimeLock } = store;
 
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
@@ -51,7 +51,6 @@ export function ConnectWalletButton({
   const activeAddress = activeWallet?.address || '';
 
   const allTransactions = selectAllTransactionsByWallet(store, activeAddress);
-
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName
@@ -64,7 +63,7 @@ export function ConnectWalletButton({
   const [lastTransactionError, setLastTransactionError] = useState(false);
 
   useEffect(() => {
-    if (lastTransaction?.status && activeWallet && !isInitialLoading) {
+    if (lastTransaction?.status && activeWallet && !walletConnectedTimeLock) {
       if (lastTransaction.status === TransactionStatus.Success) {
         setLastTransactionSuccess(true);
         setTimeout(() => setLastTransactionSuccess(false), 1000);
