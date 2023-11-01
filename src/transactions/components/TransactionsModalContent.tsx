@@ -1,18 +1,13 @@
-import { TransactionStatus } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
 import { BackButton3D, Divider } from '../../ui';
 import { texts } from '../../ui/utils/texts';
-import { TransactionUnion } from '../store/transactionsSlice';
+import { AllTransactions } from '../store/transactionsSlice';
 import { TransactionInfoItem } from './TransactionInfoItem';
 
-// TODO: need fix type
 interface TransactionsModalContentProps {
-  allTransactions: (TransactionUnion & {
-    status?: TransactionStatus;
-    pending: boolean;
-  })[];
+  allTransactions: AllTransactions;
   onBackButtonClick: () => void;
   representedAddresses?: RepresentedAddress[];
 }

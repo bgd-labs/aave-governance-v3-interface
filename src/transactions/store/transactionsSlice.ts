@@ -148,6 +148,11 @@ export type TransactionUnion =
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion>;
 
+export type AllTransactions = (TransactionUnion & {
+  status?: TransactionStatus;
+  pending: boolean;
+})[];
+
 export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,
   IProposalsListCacheSlice &

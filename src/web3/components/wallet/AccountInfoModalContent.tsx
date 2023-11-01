@@ -1,4 +1,3 @@
-import { TransactionStatus } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import makeBlockie from 'ethereum-blockies-base64';
 import React from 'react';
@@ -7,7 +6,7 @@ import CopyIcon from '/public/images/icons/copy.svg';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
 import { TransactionInfoItem } from '../../../transactions/components/TransactionInfoItem';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
+import { AllTransactions } from '../../../transactions/store/transactionsSlice';
 import { CopyToClipboard, Divider, Image, Link } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { ROUTES } from '../../../ui/utils/routes';
@@ -18,15 +17,11 @@ import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { chainInfoHelper } from '../../../utils/configs';
 import { RepresentingForm } from './RepresentingForm';
 
-// TODO: need fix type
 interface AccountInfoModalContentProps {
   activeAddress: string;
   chainId: number;
   isActive: boolean;
-  allTransactions: (TransactionUnion & {
-    status?: TransactionStatus;
-    pending: boolean;
-  })[];
+  allTransactions: AllTransactions;
   onAllTransactionButtonClick: () => void;
   onDisconnectButtonClick: () => void;
   onDelegateButtonClick: () => void;
