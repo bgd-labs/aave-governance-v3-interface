@@ -29,6 +29,7 @@ import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { ipfsGateway } from '../../utils/configs';
+import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
@@ -282,7 +283,14 @@ export const createProposalsSlice: StoreSlice<
 
   getPaginatedProposalsData: async () => {
     if (get().isInitialLoading) {
-      await get().getTotalProposalCount();
+      try {
+        await get().getTotalProposalCount();
+      } catch {
+        const rpcUrl =
+          get().clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+        get().setRpcError(true, rpcUrl, appConfig.govCoreChainId);
+        return;
+      }
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData(activeIds);
@@ -351,9 +359,15 @@ export const createProposalsSlice: StoreSlice<
 
   setGovCoreConfigs: async () => {
     if (!get().configs.length) {
-      const { configs, contractsConstants } =
-        await get().govDataService.getGovCoreConfigs();
-      set({ configs, contractsConstants });
+      try {
+        const { configs, contractsConstants } =
+          await get().govDataService.getGovCoreConfigs();
+        set({ configs, contractsConstants });
+      } catch {
+        const rpcUrl =
+          get().clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+        get().setRpcError(true, rpcUrl, appConfig.govCoreChainId);
+      }
     }
   },
   setSSRGovCoreConfigs: (configs, contractsConstants) => {
@@ -386,21 +400,26 @@ export const createProposalsSlice: StoreSlice<
       ) && payloadsController;
 
     if (payloadController) {
-      const payloadsData = await get().govDataService.getPayloads(
-        chainId,
-        payloadsController,
-        ids,
-      );
+      try {
+        const payloadsData = await get().govDataService.getPayloads(
+          chainId,
+          payloadsController,
+          ids,
+        );
 
-      set((state) =>
-        produce(state, (draft) => {
-          payloadsData.forEach((payload) => {
-            draft.detailedPayloadsData[
-              `${payload.payloadsController}_${payload.id}`
-            ] = payload;
-          });
-        }),
-      );
+        set((state) =>
+          produce(state, (draft) => {
+            payloadsData.forEach((payload) => {
+              draft.detailedPayloadsData[
+                `${payload.payloadsController}_${payload.id}`
+              ] = payload;
+            });
+          }),
+        );
+      } catch {
+        const rpcUrl = get().clients[chainId].chain.rpcUrls.default.http[0];
+        get().setRpcError(true, rpcUrl, chainId);
+      }
     }
   },
 
@@ -536,6 +555,8 @@ export const createProposalsSlice: StoreSlice<
           to <= 0 ? 0 : to,
           userAddress,
           representativeAddress as Hex,
+          PAGE_SIZE,
+          get().setRpcError,
         );
       } else if ((from || from === 0 || from === -1) && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
@@ -544,6 +565,7 @@ export const createProposalsSlice: StoreSlice<
           userAddress,
           representativeAddress as Hex,
           pageSize,
+          get().setRpcError,
         );
       } else if (from && from > 0 && to && to > 0 && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
@@ -551,6 +573,8 @@ export const createProposalsSlice: StoreSlice<
           to,
           userAddress,
           representativeAddress as Hex,
+          PAGE_SIZE,
+          get().setRpcError,
         );
       } else if (!isProposalNotInCache) {
         const proposals = ids.map((id) => get().detailedProposalsData[id]);
@@ -558,6 +582,7 @@ export const createProposalsSlice: StoreSlice<
           proposals,
           userAddress,
           representativeAddress as Hex,
+          get().setRpcError,
         );
       }
 

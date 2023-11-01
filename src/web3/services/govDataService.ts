@@ -28,6 +28,7 @@ import {
   payloadsControllerDataHelperContract,
   ProposalData,
   updateVotingMachineData,
+  VMProposalStructOutput,
   VotersData,
   votingMachineContract,
   votingMachineDataHelperContract,
@@ -258,6 +259,7 @@ export class GovDataService {
     initialProposals: InitialProposal[],
     userAddress?: Hex,
     representative?: Hex,
+    setRpcError?: (isError: boolean, rpcUrl: string, chainId: number) => void,
   ) {
     const votingMachineChainIds = initialProposals
       .map((data) => data.votingChainId)
@@ -276,24 +278,31 @@ export class GovDataService {
             };
           });
 
-        if (representative && userAddress) {
-          if (userAddress) {
-            return (
-              (await votingMachineDataHelper.read.getProposalsData([
-                this.votingMachines[chainId].address,
-                formattedInitialProposals,
-                representative || userAddress || zeroAddress,
-              ])) || []
-            );
+        try {
+          if (representative && userAddress) {
+            if (userAddress) {
+              return (
+                (await votingMachineDataHelper.read.getProposalsData([
+                  this.votingMachines[chainId].address,
+                  formattedInitialProposals,
+                  representative || userAddress || zeroAddress,
+                ])) || []
+              );
+            }
+          }
+          return (
+            (await votingMachineDataHelper.read.getProposalsData([
+              this.votingMachines[chainId].address,
+              formattedInitialProposals,
+              userAddress || zeroAddress,
+            ])) || []
+          );
+        } catch {
+          if (!!setRpcError) {
+            const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
+            setRpcError(true, rpcUrl, chainId);
           }
         }
-        return (
-          (await votingMachineDataHelper.read.getProposalsData([
-            this.votingMachines[chainId].address,
-            formattedInitialProposals,
-            userAddress || zeroAddress,
-          ])) || []
-        );
       }),
     );
 
@@ -306,6 +315,7 @@ export class GovDataService {
     userAddress?: Hex,
     representative?: Hex,
     pageSize?: number,
+    setRpcError?: (isError: boolean, rpcUrl: string, chainId: number) => void,
   ): Promise<BasicProposal[]> {
     const govCoreDataHelperData =
       await this.govCoreDataHelper.read.getProposalsData([
@@ -327,6 +337,7 @@ export class GovDataService {
       initialProposals,
       userAddress,
       representative,
+      setRpcError,
     );
 
     const proposalsIds = govCoreDataHelperData.map((proposal) =>
@@ -335,7 +346,7 @@ export class GovDataService {
 
     return getDetailedProposalsData(
       govCoreDataHelperData,
-      votingMachineDataHelperData,
+      votingMachineDataHelperData as VMProposalStructOutput[],
       proposalsIds,
     );
   }
@@ -344,6 +355,7 @@ export class GovDataService {
     proposals: ProposalData[],
     userAddress?: Hex,
     representative?: Hex,
+    setRpcError?: (isError: boolean, rpcUrl: string, chainId: number) => void,
   ) {
     const initialProposals = proposals.map((proposal) => {
       return {
@@ -357,6 +369,7 @@ export class GovDataService {
       initialProposals,
       userAddress,
       representative,
+      setRpcError,
     );
 
     const proposalsIds = initialProposals.map((proposal) =>
@@ -365,7 +378,7 @@ export class GovDataService {
 
     return updateVotingMachineData(
       proposals,
-      votingMachineDataHelperData,
+      votingMachineDataHelperData as VMProposalStructOutput[],
       proposalsIds,
     );
   }

@@ -11,3 +11,7 @@ export const selectAppClients = (store: IRpcSwitcherSlice) => {
     {} as Record<string, PublicClient>,
   );
 };
+
+export const selectRpcHasError = (store: IRpcSwitcherSlice) => {
+  return Object.values(store.rpcHasError).some((error) => error.error);
+};

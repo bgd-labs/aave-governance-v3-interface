@@ -4,7 +4,9 @@ import React from 'react';
 
 import SettingsIcon from '/public/images/icons/settings.svg';
 import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
+import WarningIcon from '/public/images/icons/warningIcon.svg';
 
+import { selectRpcHasError } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { BoxWith3D, Divider, Link, ThemeSwitcher } from '../';
@@ -14,7 +16,10 @@ import { texts } from '../utils/texts';
 
 export function SettingsButton() {
   const theme = useTheme();
-  const { setIsTermModalOpen } = useStore();
+  const store = useStore();
+  const { setIsTermModalOpen } = store;
+
+  const isRpcHasError = selectRpcHasError(store);
 
   return (
     <>
@@ -41,7 +46,7 @@ export function SettingsButton() {
                     '&:first-of-type': {
                       opacity: 0,
                     },
-                    '&:last-of-type': {
+                    '&:nth-of-type(2)': {
                       opacity: 1,
                     },
                   },
@@ -51,7 +56,6 @@ export function SettingsButton() {
                 sx={{
                   width: 16,
                   height: 16,
-
                   opacity: open ? 0 : 1,
                   position: 'absolute',
                   top: '50%',
@@ -100,6 +104,33 @@ export function SettingsButton() {
                 }}>
                 <SettingsIcon />
               </IconBox>
+
+              {isRpcHasError && (
+                <IconBox
+                  sx={{
+                    position: 'absolute',
+                    right: 7,
+                    bottom: -3,
+                    width: 10,
+                    height: 8,
+                    '> svg': {
+                      width: 10,
+                      height: 8,
+                      [theme.breakpoints.up('lg')]: {
+                        width: 12,
+                        height: 10,
+                      },
+                    },
+                    [theme.breakpoints.up('lg')]: {
+                      width: 12,
+                      height: 10,
+                      right: 6,
+                      bottom: -3,
+                    },
+                  }}>
+                  <WarningIcon />
+                </IconBox>
+              )}
             </Menu.Button>
 
             <Menu.Items

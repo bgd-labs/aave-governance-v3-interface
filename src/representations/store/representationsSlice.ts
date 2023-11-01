@@ -4,6 +4,7 @@ import isEqual from 'lodash/isEqual';
 import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
@@ -56,7 +57,12 @@ export interface IRepresentationsSlice {
 
 export const createRepresentationsSlice: StoreSlice<
   IRepresentationsSlice,
-  IWeb3Slice & TransactionsSlice & IProposalsSlice & IUISlice & IEnsSlice
+  IWeb3Slice &
+    TransactionsSlice &
+    IProposalsSlice &
+    IUISlice &
+    IEnsSlice &
+    IRpcSwitcherSlice
 > = (set, get) => ({
   representativeLoading: true,
   representative: {
@@ -133,35 +139,42 @@ export const createRepresentationsSlice: StoreSlice<
     if (activeAddress) {
       set({ representationDataLoading: true });
 
-      const data =
-        await get().govDataService.getRepresentationData(activeAddress);
+      try {
+        const data =
+          await get().govDataService.getRepresentationData(activeAddress);
 
-      appConfig.votingMachineChainIds.forEach((chainId) => {
-        const represented = data.represented
-          .filter((item) => Number(item.chainId) === chainId)
-          .map((item) => item.votersRepresented)
-          .flat();
+        appConfig.votingMachineChainIds.forEach((chainId) => {
+          const represented = data.represented
+            .filter((item) => Number(item.chainId) === chainId)
+            .map((item) => item.votersRepresented)
+            .flat();
 
-        const representative = data.representative
-          .filter((item) => Number(item.chainId) === chainId)
-          .map((item) => item.representative)[0];
+          const representative = data.representative
+            .filter((item) => Number(item.chainId) === chainId)
+            .map((item) => item.representative)[0];
 
-        const formattedRepresentative =
-          representative === zeroAddress || representative === activeAddress
-            ? ''
-            : representative;
+          const formattedRepresentative =
+            representative === zeroAddress || representative === activeAddress
+              ? ''
+              : representative;
 
-        set((state) =>
-          produce(state, (draft) => {
-            draft.representationData[chainId] = {
-              representative: formattedRepresentative,
-              represented: represented,
-            };
-          }),
-        );
+          set((state) =>
+            produce(state, (draft) => {
+              draft.representationData[chainId] = {
+                representative: formattedRepresentative,
+                represented: represented,
+              };
+            }),
+          );
 
+          setTimeout(() => set({ representationDataLoading: false }), 1);
+        });
+      } catch {
+        const rpcUrl =
+          get().clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+        get().setRpcError(true, rpcUrl, appConfig.govCoreChainId);
         setTimeout(() => set({ representationDataLoading: false }), 1);
-      });
+      }
     } else {
       set({ representativeLoading: false });
     }

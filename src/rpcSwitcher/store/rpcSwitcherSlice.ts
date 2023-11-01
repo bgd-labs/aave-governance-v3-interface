@@ -44,7 +44,8 @@ export interface IRpcSwitcherSlice {
   syncAppClientsForm: () => void;
 
   checkRpcUrl: (rpcUrl: string, chainId: number) => Promise<void>;
-  rpcHasError: { [rpcUrl: string]: { error: boolean; chainId: number } };
+  rpcHasError: Record<string, { error: boolean; chainId: number }>;
+  setRpcError: (isError: boolean, rpcUrl: string, chainId: number) => void;
 }
 
 export const createRpcSwitcherSlice: StoreSlice<
@@ -189,6 +190,18 @@ export const createRpcSwitcherSlice: StoreSlice<
 
     set({ appClientsForm: parsedProvidersForLocalStorage });
   },
+
+  setRpcError: (isError, rpcUrl, chainId) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.rpcHasError[rpcUrl] = {
+          error: isError,
+          chainId: chainId,
+        };
+      }),
+    );
+  },
+
   checkRpcUrl: async (rpcUrl, chainId) => {
     if (
       get().rpcHasError.hasOwnProperty(rpcUrl) &&
@@ -213,17 +226,6 @@ export const createRpcSwitcherSlice: StoreSlice<
       client,
     });
 
-    const setError = () => {
-      set((state) =>
-        produce(state, (draft) => {
-          draft.rpcHasError[rpcUrl] = {
-            error: true,
-            chainId: chainId,
-          };
-        }),
-      );
-    };
-
     try {
       // initial request to our contract
       await payloadsControllerContract.read.getPayloadsCount();
@@ -239,19 +241,12 @@ export const createRpcSwitcherSlice: StoreSlice<
           chainId,
         });
 
-        set((state) =>
-          produce(state, (draft) => {
-            draft.rpcHasError[rpcUrl] = {
-              error: false,
-              chainId: chainId,
-            };
-          }),
-        );
+        get().setRpcError(false, rpcUrl, chainId);
       } catch {
-        setError();
+        get().setRpcError(true, rpcUrl, chainId);
       }
     } catch {
-      setError();
+      get().setRpcError(true, rpcUrl, chainId);
     }
   },
   rpcHasError: {},

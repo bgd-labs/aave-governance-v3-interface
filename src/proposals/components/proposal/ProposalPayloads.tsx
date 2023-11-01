@@ -293,7 +293,7 @@ function PayloadItem({
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
               {texts.proposals.payloadsDetails.actions(
-                payload.actionAddresses.length,
+                payload.actionAddresses?.length || 0,
               )}
             </Box>
             <Box
@@ -304,7 +304,7 @@ function PayloadItem({
                 listStyleType: 'disc',
                 pl: 12,
               }}>
-              {payload.actionAddresses.map((address, index) => (
+              {payload.actionAddresses?.map((address, index) => (
                 <Box
                   sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
                   key={index}>
