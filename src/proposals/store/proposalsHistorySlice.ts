@@ -458,31 +458,44 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
-        const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp({
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: txInfo.chainId,
+              targetTimestamp: historyItem.timestamp,
+              client: get().appClients[txInfo.chainId].instance,
+            });
+          const events = await get().govDataService.getPayloadsCreatedEvents(
+            txInfo.chainId,
+            payloadControllerAddress as Hex,
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          const filteredEvents = events
+            .filter(
+              (payload) =>
+                payload.payloadId === txInfo.id &&
+                payload.chainId === txInfo.chainId &&
+                payload.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
             chainId: txInfo.chainId,
-            targetTimestamp: historyItem.timestamp,
-            client: get().appClients[txInfo.chainId].instance,
           });
-        const events = await get().govDataService.getPayloadsCreatedEvents(
-          txInfo.chainId,
-          payloadControllerAddress as Hex,
-          minBlockNumber,
-          maxBlockNumber,
-        );
-
-        const filteredEvents = events
-          .filter(
-            (payload) =>
-              payload.payloadId === txInfo.id &&
-              payload.chainId === txInfo.chainId &&
-              payload.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        }
       }
     }
   },
@@ -496,28 +509,41 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
-        const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp({
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: txInfo.chainId,
+              targetTimestamp: historyItem.timestamp,
+              client: get().appClients[txInfo.chainId].instance,
+            });
+          const events = await get().govDataService.getProposalCreatedEvents(
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          const filteredEvents = events
+            .filter(
+              (proposal) =>
+                proposal.proposalId === txInfo.id &&
+                proposal.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
             chainId: txInfo.chainId,
-            targetTimestamp: historyItem.timestamp,
-            client: get().appClients[txInfo.chainId].instance,
           });
-        const events = await get().govDataService.getProposalCreatedEvents(
-          minBlockNumber,
-          maxBlockNumber,
-        );
-
-        const filteredEvents = events
-          .filter(
-            (proposal) =>
-              proposal.proposalId === txInfo.id &&
-              proposal.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        }
       }
     }
   },
@@ -531,28 +557,41 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
-        const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp({
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: txInfo.chainId,
+              targetTimestamp: historyItem.timestamp,
+              client: get().appClients[txInfo.chainId].instance,
+            });
+          const events = await get().govDataService.getProposalActivatedEvents(
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          const filteredEvents = events
+            .filter(
+              (proposal) =>
+                proposal.proposalId === txInfo.id &&
+                proposal.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
             chainId: txInfo.chainId,
-            targetTimestamp: historyItem.timestamp,
-            client: get().appClients[txInfo.chainId].instance,
           });
-        const events = await get().govDataService.getProposalActivatedEvents(
-          minBlockNumber,
-          maxBlockNumber,
-        );
-
-        const filteredEvents = events
-          .filter(
-            (proposal) =>
-              proposal.proposalId === txInfo.id &&
-              proposal.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        }
       }
     }
   },
@@ -566,24 +605,37 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (proposal.proposal.data.votingMachineData.createdBlock > 0) {
-        const events =
-          await get().govDataService.getProposalActivatedOnVMEvents(
-            historyItem.txInfo.chainId,
-            proposal.proposal.data.votingMachineData.createdBlock - 100,
-            proposal.proposal.data.votingMachineData.createdBlock + 100,
-          );
+        try {
+          const events =
+            await get().govDataService.getProposalActivatedOnVMEvents(
+              historyItem.txInfo.chainId,
+              proposal.proposal.data.votingMachineData.createdBlock - 100,
+              proposal.proposal.data.votingMachineData.createdBlock + 100,
+            );
 
-        const filteredEvents = events
-          .filter(
-            (proposal) =>
-              proposal.proposalId === txInfo.id &&
-              proposal.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+          const filteredEvents = events
+            .filter(
+              (proposal) =>
+                proposal.proposalId === txInfo.id &&
+                proposal.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
+          });
+        }
       }
     }
   },
@@ -600,25 +652,38 @@ export const createProposalsHistorySlice: StoreSlice<
         proposal.proposal.data.votingMachineData
           .votingClosedAndSentBlockNumber > 0
       ) {
-        const events = await get().govDataService.getProposalVotingClosed(
-          historyItem.txInfo.chainId,
-          proposal.proposal.data.votingMachineData
-            .votingClosedAndSentBlockNumber - 100,
-          proposal.proposal.data.votingMachineData
-            .votingClosedAndSentBlockNumber + 100,
-        );
+        try {
+          const events = await get().govDataService.getProposalVotingClosed(
+            historyItem.txInfo.chainId,
+            proposal.proposal.data.votingMachineData
+              .votingClosedAndSentBlockNumber - 100,
+            proposal.proposal.data.votingMachineData
+              .votingClosedAndSentBlockNumber + 100,
+          );
 
-        const filteredEvents = events
-          .filter(
-            (proposal) =>
-              proposal.proposalId === txInfo.id &&
-              proposal.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+          const filteredEvents = events
+            .filter(
+              (proposal) =>
+                proposal.proposalId === txInfo.id &&
+                proposal.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
+          });
+        }
       }
     }
   },
@@ -632,28 +697,41 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
-        const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp({
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: txInfo.chainId,
+              targetTimestamp: historyItem.timestamp,
+              client: get().appClients[txInfo.chainId].instance,
+            });
+          const events = await get().govDataService.getProposalQueuedEvents(
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          const filteredEvents = events
+            .filter(
+              (proposal) =>
+                proposal.proposalId === txInfo.id &&
+                proposal.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
             chainId: txInfo.chainId,
-            targetTimestamp: historyItem.timestamp,
-            client: get().appClients[txInfo.chainId].instance,
           });
-        const events = await get().govDataService.getProposalQueuedEvents(
-          minBlockNumber,
-          maxBlockNumber,
-        );
-
-        const filteredEvents = events
-          .filter(
-            (proposal) =>
-              proposal.proposalId === txInfo.id &&
-              proposal.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        }
       }
     }
   },
@@ -673,31 +751,44 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
-        const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp({
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: txInfo.chainId,
+              targetTimestamp: historyItem.timestamp,
+              client: get().appClients[txInfo.chainId].instance,
+            });
+          const events = await get().govDataService.getPayloadsQueuedEvents(
+            txInfo.chainId,
+            payloadControllerAddress as Hex,
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          const filteredEvents = events
+            .filter(
+              (payload) =>
+                payload.payloadId === txInfo.id &&
+                payload.chainId === txInfo.chainId &&
+                payload.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
             chainId: txInfo.chainId,
-            targetTimestamp: historyItem.timestamp,
-            client: get().appClients[txInfo.chainId].instance,
           });
-        const events = await get().govDataService.getPayloadsQueuedEvents(
-          txInfo.chainId,
-          payloadControllerAddress as Hex,
-          minBlockNumber,
-          maxBlockNumber,
-        );
-
-        const filteredEvents = events
-          .filter(
-            (payload) =>
-              payload.payloadId === txInfo.id &&
-              payload.chainId === txInfo.chainId &&
-              payload.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        }
       }
     }
   },
@@ -717,31 +808,44 @@ export const createProposalsHistorySlice: StoreSlice<
 
     if (historyItem.txInfo.hash === HashZero) {
       if (historyItem.timestamp) {
-        const { minBlockNumber, maxBlockNumber } =
-          await getBlockNumberByTimestamp({
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: txInfo.chainId,
+              targetTimestamp: historyItem.timestamp,
+              client: get().appClients[txInfo.chainId].instance,
+            });
+          const events = await get().govDataService.getPayloadsExecutedEvents(
+            txInfo.chainId,
+            payloadControllerAddress as Hex,
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          const filteredEvents = events
+            .filter(
+              (payload) =>
+                payload.payloadId === txInfo.id &&
+                payload.chainId === txInfo.chainId &&
+                payload.transactionHash !== txInfo.hash,
+            )
+            .map((event) => {
+              return { transactionHash: event.transactionHash };
+            });
+
+          get().setHistoryItemHash(historyId, filteredEvents);
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
             chainId: txInfo.chainId,
-            targetTimestamp: historyItem.timestamp,
-            client: get().appClients[txInfo.chainId].instance,
           });
-        const events = await get().govDataService.getPayloadsExecutedEvents(
-          txInfo.chainId,
-          payloadControllerAddress as Hex,
-          minBlockNumber,
-          maxBlockNumber,
-        );
-
-        const filteredEvents = events
-          .filter(
-            (payload) =>
-              payload.payloadId === txInfo.id &&
-              payload.chainId === txInfo.chainId &&
-              payload.transactionHash !== txInfo.hash,
-          )
-          .map((event) => {
-            return { transactionHash: event.transactionHash };
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+            chainId: txInfo.chainId,
           });
-
-        await get().setHistoryItemHash(historyId, filteredEvents);
+        }
       }
     }
   },
