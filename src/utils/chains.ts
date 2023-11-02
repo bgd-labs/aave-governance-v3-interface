@@ -72,14 +72,14 @@ export const initialRpcUrls: Record<number, string[]> = {
   [bscTestnet.id]: ['https://data-seed-prebsc-1-s1.bnbchain.org:8545'],
 };
 
-function setChain(chain: Chain) {
+export function setChain(chain: Chain, url?: string) {
   return {
     ...chain,
     rpcUrls: {
       ...chain.rpcUrls,
       default: {
         ...chain.rpcUrls.default,
-        http: [initialRpcUrls[chain.id][0]],
+        http: [url || initialRpcUrls[chain.id][0]],
       },
     },
   };

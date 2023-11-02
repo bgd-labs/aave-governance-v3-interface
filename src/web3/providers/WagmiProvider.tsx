@@ -4,14 +4,14 @@ import { WagmiProvider as BaseWagmiProvider } from '@bgd-labs/frontend-web3-util
 
 import { useStore } from '../../store';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';
-import { internalChains } from '../../utils/configs';
+import { CHAINS } from '../../utils/chains';
 
 export default function WagmiProvider() {
   return (
     <BaseWagmiProvider
       connectorsInitProps={{
         appName: 'AAVEGovernanceV3',
-        chains: internalChains,
+        chains: CHAINS,
         defaultChainId: appConfig.govCoreChainId,
         wcParams: {
           projectId: WC_PROJECT_ID,

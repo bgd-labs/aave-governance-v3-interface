@@ -10,6 +10,7 @@ import { Chain, createPublicClient, http } from 'viem';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';
+import { setChain } from '../../utils/chains';
 import { chainInfoHelper } from '../../utils/configs';
 import {
   getLocalStorageRpcUrls,
@@ -32,6 +33,12 @@ export type ChainInfo = {
   getChainParameters: (chainId: number) => Chain;
 };
 
+export type SetRpcErrorParams = {
+  isError: boolean;
+  rpcUrl: string;
+  chainId: number;
+};
+
 export interface IRpcSwitcherSlice {
   appClients: Record<number, AppClient>;
   appClientsForm: Record<number, AppClientsStorage>;
@@ -43,9 +50,15 @@ export interface IRpcSwitcherSlice {
   syncDataServices: () => void;
   syncAppClientsForm: () => void;
 
+  rpcAppErrors: Record<
+    number,
+    { error: boolean; rpcUrl: string; chainId: number }
+  >;
+  setRpcError: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void;
+
+  setRpcFormError: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void;
+  rpcFormErrors: Record<string, { error: boolean; chainId: number }>;
   checkRpcUrl: (rpcUrl: string, chainId: number) => Promise<void>;
-  rpcHasError: Record<string, { error: boolean; chainId: number }>;
-  setRpcError: (isError: boolean, rpcUrl: string, chainId: number) => void;
 }
 
 export const createRpcSwitcherSlice: StoreSlice<
@@ -77,19 +90,25 @@ export const createRpcSwitcherSlice: StoreSlice<
             .filter((chainId) => appUsedNetworks.includes(Number(chainId)))
             .forEach((chainId) => {
               const chainIdNumber = Number(chainId);
+              const chain = clients.getChainParameters(chainIdNumber);
 
-              draft.appClients[chainIdNumber] = {
-                rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                instance: createPublicClient({
-                  batch: {
-                    multicall: true,
-                  },
-                  chain: clients.getChainParameters(chainIdNumber),
-                  transport: http(
-                    parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                  ),
-                }) as Draft<PublicClient>,
-              };
+              if (chain) {
+                draft.appClients[chainIdNumber] = {
+                  rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                  instance: createPublicClient({
+                    batch: {
+                      multicall: true,
+                    },
+                    chain: setChain(
+                      chain,
+                      parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                    ) as Draft<Chain>,
+                    transport: http(
+                      parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                    ),
+                  }) as Draft<PublicClient>,
+                };
+              }
             });
         }),
       );
@@ -117,16 +136,11 @@ export const createRpcSwitcherSlice: StoreSlice<
     get().syncTransactionsClients();
     get().syncDataServices();
     get().syncAppClientsForm();
+
     Object.keys(get().appClientsForm).forEach((chainId) => {
-      set((state) =>
-        produce(state, (draft) => {
-          const rpcUrl = draft.appClientsForm[+chainId].rpcUrl;
-          draft.rpcHasError[rpcUrl] = {
-            error: false,
-            chainId: +chainId,
-          };
-        }),
-      );
+      const rpcUrl = get().appClientsForm[+chainId].rpcUrl;
+      get().setRpcError({ isError: false, rpcUrl, chainId: +chainId });
+      get().setRpcFormError({ isError: false, rpcUrl, chainId: +chainId });
     });
 
     set({ initClientsLoaded: true });
@@ -151,6 +165,19 @@ export const createRpcSwitcherSlice: StoreSlice<
     get().syncLocalStorage();
     get().syncDataServices();
     get().syncAppClientsForm();
+
+    Object.values(formData).forEach((data) => {
+      get().setRpcError({
+        isError: false,
+        rpcUrl: data.rpcUrl,
+        chainId: data.chainId,
+      });
+      get().setRpcFormError({
+        isError: false,
+        rpcUrl: data.rpcUrl,
+        chainId: data.chainId,
+      });
+    });
   },
   syncTransactionsClients: () => {
     const clients = selectAppClients(get());
@@ -191,21 +218,36 @@ export const createRpcSwitcherSlice: StoreSlice<
     set({ appClientsForm: parsedProvidersForLocalStorage });
   },
 
-  setRpcError: (isError, rpcUrl, chainId) => {
+  rpcAppErrors: {},
+  setRpcError: ({ isError, rpcUrl, chainId }) => {
+    if (!!rpcUrl && !!chainId) {
+      set((state) =>
+        produce(state, (draft) => {
+          draft.rpcAppErrors[chainId] = {
+            error: isError,
+            rpcUrl,
+            chainId,
+          };
+        }),
+      );
+    }
+  },
+
+  rpcFormErrors: {},
+  setRpcFormError: ({ isError, rpcUrl, chainId }) => {
     set((state) =>
       produce(state, (draft) => {
-        draft.rpcHasError[rpcUrl] = {
+        draft.rpcFormErrors[rpcUrl] = {
           error: isError,
           chainId: chainId,
         };
       }),
     );
   },
-
   checkRpcUrl: async (rpcUrl, chainId) => {
     if (
-      get().rpcHasError.hasOwnProperty(rpcUrl) &&
-      get().rpcHasError[rpcUrl].chainId === chainId
+      get().rpcFormErrors.hasOwnProperty(rpcUrl) &&
+      get().rpcFormErrors[rpcUrl].chainId === chainId
     ) {
       return;
     }
@@ -241,13 +283,12 @@ export const createRpcSwitcherSlice: StoreSlice<
           chainId,
         });
 
-        get().setRpcError(false, rpcUrl, chainId);
+        get().setRpcFormError({ isError: false, rpcUrl, chainId });
       } catch {
-        get().setRpcError(true, rpcUrl, chainId);
+        get().setRpcFormError({ isError: true, rpcUrl, chainId });
       }
     } catch {
-      get().setRpcError(true, rpcUrl, chainId);
+      get().setRpcFormError({ isError: true, rpcUrl, chainId });
     }
   },
-  rpcHasError: {},
 });

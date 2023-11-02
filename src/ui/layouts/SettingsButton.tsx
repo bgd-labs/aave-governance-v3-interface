@@ -6,7 +6,7 @@ import SettingsIcon from '/public/images/icons/settings.svg';
 import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
-import { selectRpcHasError } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
+import { selectIsRpcAppHasErrors } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { BoxWith3D, Divider, Link, ThemeSwitcher } from '../';
@@ -19,7 +19,7 @@ export function SettingsButton() {
   const store = useStore();
   const { setIsTermModalOpen } = store;
 
-  const isRpcHasError = selectRpcHasError(store);
+  const isRpcHasError = selectIsRpcAppHasErrors(store);
 
   return (
     <>

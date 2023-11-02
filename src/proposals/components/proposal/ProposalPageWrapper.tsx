@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store';
+import { appConfig } from '../../../utils/appConfig';
 import {
   getProposalDataById,
   selectIpfsDataByProposalId,
@@ -163,7 +164,10 @@ export function ProposalPageWrapper({
     !proposalData?.proposal ||
     proposalData.loading ||
     (!ipfsData && !ipfsDataError) ||
-    store.totalProposalCountLoading
+    (store.totalProposalCountLoading &&
+      !Object.values(store.rpcAppErrors).find(
+        (error) => error.error && error.chainId === appConfig.govCoreChainId,
+      )?.error)
   )
     return <ProposalLoading />;
 

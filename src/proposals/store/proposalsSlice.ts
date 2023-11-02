@@ -219,7 +219,10 @@ export const createProposalsSlice: StoreSlice<
   getTotalProposalCount: async (internal) => {
     set({ totalProposalCountLoading: true });
     const totalProposalCount =
-      await get().govDataService.getTotalProposalsCount();
+      await get().govDataService.getTotalProposalsCount(
+        get().totalProposalCount,
+        get().setRpcError,
+      );
     set({ totalProposalCount, totalProposalCountLoading: false });
     if (internal) {
       set({ isInitialLoading: false });
@@ -283,12 +286,21 @@ export const createProposalsSlice: StoreSlice<
 
   getPaginatedProposalsData: async () => {
     if (get().isInitialLoading) {
+      const rpcUrl = get().appClients[appConfig.govCoreChainId].rpcUrl;
+
       try {
         await get().getTotalProposalCount();
+        get().setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
       } catch {
-        const rpcUrl =
-          get().clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
-        get().setRpcError(true, rpcUrl, appConfig.govCoreChainId);
+        get().setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
         return;
       }
       const paginatedIds = selectPaginatedIds(get());
@@ -359,15 +371,9 @@ export const createProposalsSlice: StoreSlice<
 
   setGovCoreConfigs: async () => {
     if (!get().configs.length) {
-      try {
-        const { configs, contractsConstants } =
-          await get().govDataService.getGovCoreConfigs();
-        set({ configs, contractsConstants });
-      } catch {
-        const rpcUrl =
-          get().clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
-        get().setRpcError(true, rpcUrl, appConfig.govCoreChainId);
-      }
+      const { configs, contractsConstants } =
+        await get().govDataService.getGovCoreConfigs(get().setRpcError);
+      set({ configs, contractsConstants });
     }
   },
   setSSRGovCoreConfigs: (configs, contractsConstants) => {
@@ -400,6 +406,8 @@ export const createProposalsSlice: StoreSlice<
       ) && payloadsController;
 
     if (payloadController) {
+      const rpcUrl = get().appClients[chainId].rpcUrl;
+
       try {
         const payloadsData = await get().govDataService.getPayloads(
           chainId,
@@ -416,9 +424,9 @@ export const createProposalsSlice: StoreSlice<
             });
           }),
         );
+        get().setRpcError({ isError: false, rpcUrl, chainId });
       } catch {
-        const rpcUrl = get().clients[chainId].chain.rpcUrls.default.http[0];
-        get().setRpcError(true, rpcUrl, chainId);
+        get().setRpcError({ isError: true, rpcUrl, chainId });
       }
     }
   },
@@ -721,7 +729,10 @@ export const createProposalsSlice: StoreSlice<
 
     const interval = setInterval(async () => {
       const totalProposalCountFromContract =
-        await get().govDataService.getTotalProposalsCount();
+        await get().govDataService.getTotalProposalsCount(
+          get().totalProposalCount,
+          get().setRpcError,
+        );
       const currentProposalCount = get().totalProposalCount;
 
       if (totalProposalCountFromContract > currentProposalCount) {

@@ -47,6 +47,7 @@ import {
   zeroAddress,
 } from 'viem';
 
+import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { appConfig, isTestnet } from '../../utils/appConfig';
 import {
   formatToProofRLP,
@@ -197,17 +198,72 @@ export class GovDataService {
     ).payloadsControllerDataHelpers;
   }
 
-  async getGovCoreConfigs() {
-    return await getGovCoreConfigs({
+  async getGovCoreConfigs(
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
+  ) {
+    const rpcUrl =
+      this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+
+    const govCoreConfigs = await getGovCoreConfigs({
       client: this.clients[appConfig.govCoreChainId],
       govCoreContractAddress: this.govCore.address,
       govCoreDataHelperContractAddress: this.govCoreDataHelper.address,
     });
+
+    if (
+      !!setRpcError &&
+      govCoreConfigs.contractsConstants.expirationTime > 1000
+    ) {
+      setRpcError({
+        isError: false,
+        rpcUrl,
+        chainId: appConfig.govCoreChainId,
+      });
+    } else if (
+      !!setRpcError &&
+      govCoreConfigs.contractsConstants.expirationTime <= 1000
+    ) {
+      setRpcError({
+        isError: true,
+        rpcUrl,
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+
+    return govCoreConfigs;
   }
 
-  async getTotalProposalsCount(): Promise<number> {
-    const proposalsCount = await this.govCore.read.getProposalsCount();
-    return Number(proposalsCount);
+  async getTotalProposalsCount(
+    prevProposalCount?: number,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
+  ): Promise<number> {
+    const rpcUrl =
+      this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+
+    try {
+      const proposalsCount = await this.govCore.read.getProposalsCount();
+      if (!!setRpcError) {
+        setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+      }
+      return Number(proposalsCount);
+    } catch {
+      if (!!setRpcError) {
+        setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+      }
+      if (prevProposalCount) {
+        return prevProposalCount;
+      } else {
+        return 0;
+      }
+    }
   }
 
   async getTotalPayloadsCount(
@@ -259,7 +315,7 @@ export class GovDataService {
     initialProposals: InitialProposal[],
     userAddress?: Hex,
     representative?: Hex,
-    setRpcError?: (isError: boolean, rpcUrl: string, chainId: number) => void,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const votingMachineChainIds = initialProposals
       .map((data) => data.votingChainId)
@@ -278,7 +334,12 @@ export class GovDataService {
             };
           });
 
+        const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
+
         try {
+          if (!!setRpcError) {
+            setRpcError({ isError: false, rpcUrl, chainId });
+          }
           if (representative && userAddress) {
             if (userAddress) {
               return (
@@ -299,9 +360,9 @@ export class GovDataService {
           );
         } catch {
           if (!!setRpcError) {
-            const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
-            setRpcError(true, rpcUrl, chainId);
+            setRpcError({ isError: true, rpcUrl, chainId });
           }
+          return;
         }
       }),
     );
@@ -315,7 +376,7 @@ export class GovDataService {
     userAddress?: Hex,
     representative?: Hex,
     pageSize?: number,
-    setRpcError?: (isError: boolean, rpcUrl: string, chainId: number) => void,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<BasicProposal[]> {
     const govCoreDataHelperData =
       await this.govCoreDataHelper.read.getProposalsData([
@@ -355,7 +416,7 @@ export class GovDataService {
     proposals: ProposalData[],
     userAddress?: Hex,
     representative?: Hex,
-    setRpcError?: (isError: boolean, rpcUrl: string, chainId: number) => void,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const initialProposals = proposals.map((proposal) => {
       return {

@@ -25,7 +25,7 @@ export function RpcSwitcherPage() {
     updateClients,
     isRpcSwitcherChangedView,
     setIsRpcSwitcherChangedView,
-    rpcHasError,
+    rpcFormErrors,
   } = store;
 
   const [isEdit, setIsEdit] = useState(false);
@@ -120,10 +120,10 @@ export function RpcSwitcherPage() {
                 disabled={
                   isEqual(initialData, formData) ||
                   formData.some((item) => {
-                    if (rpcHasError.hasOwnProperty(item.rpcUrl)) {
+                    if (rpcFormErrors.hasOwnProperty(item.rpcUrl)) {
                       return (
-                        rpcHasError[item.rpcUrl].error ||
-                        rpcHasError[item.rpcUrl].chainId !== item.chainId
+                        rpcFormErrors[item.rpcUrl].error ||
+                        rpcFormErrors[item.rpcUrl].chainId !== item.chainId
                       );
                     }
                     return true;

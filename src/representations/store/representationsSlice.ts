@@ -139,6 +139,8 @@ export const createRepresentationsSlice: StoreSlice<
     if (activeAddress) {
       set({ representationDataLoading: true });
 
+      const rpcUrl = get().appClients[appConfig.govCoreChainId].rpcUrl;
+
       try {
         const data =
           await get().govDataService.getRepresentationData(activeAddress);
@@ -168,11 +170,18 @@ export const createRepresentationsSlice: StoreSlice<
           );
 
           setTimeout(() => set({ representationDataLoading: false }), 1);
+          get().setRpcError({
+            isError: false,
+            rpcUrl,
+            chainId: appConfig.govCoreChainId,
+          });
         });
       } catch {
-        const rpcUrl =
-          get().clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
-        get().setRpcError(true, rpcUrl, appConfig.govCoreChainId);
+        get().setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
         setTimeout(() => set({ representationDataLoading: false }), 1);
       }
     } else {

@@ -12,6 +12,6 @@ export const selectAppClients = (store: IRpcSwitcherSlice) => {
   );
 };
 
-export const selectRpcHasError = (store: IRpcSwitcherSlice) => {
-  return Object.values(store.rpcHasError).some((error) => error.error);
+export const selectIsRpcAppHasErrors = (store: IRpcSwitcherSlice) => {
+  return Object.values(store.rpcAppErrors).some((error) => error.error);
 };
