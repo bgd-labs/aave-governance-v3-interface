@@ -246,6 +246,7 @@ export const createProposalsSlice: StoreSlice<
                 await get().govDataService.getTotalPayloadsCount(
                   payloadsController,
                   chainId,
+                  get().setRpcError,
                 );
 
               set({

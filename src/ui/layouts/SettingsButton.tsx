@@ -12,14 +12,19 @@ import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { BoxWith3D, Divider, Link, ThemeSwitcher } from '../';
 import { IconBox } from '../primitives/IconBox';
 import { ROUTES } from '../utils/routes';
+import { textCenterEllipsis } from '../utils/text-center-ellipsis';
 import { texts } from '../utils/texts';
 
 export function SettingsButton() {
   const theme = useTheme();
   const store = useStore();
-  const { setIsTermModalOpen } = store;
+  const { setIsTermModalOpen, rpcAppErrors } = store;
 
   const isRpcHasError = selectIsRpcAppHasErrors(store);
+
+  const filteredAppErrors = Object.values(rpcAppErrors).filter(
+    (error) => error.error,
+  );
 
   return (
     <>
@@ -42,6 +47,9 @@ export function SettingsButton() {
                   ml: 10,
                 },
                 hover: {
+                  '.SettingsButton__rpc--error': {
+                    opacity: 1,
+                  },
                   '> div': {
                     '&:first-of-type': {
                       opacity: 0,
@@ -106,30 +114,57 @@ export function SettingsButton() {
               </IconBox>
 
               {isRpcHasError && (
-                <IconBox
-                  sx={{
-                    position: 'absolute',
-                    right: 7,
-                    bottom: -3,
-                    width: 10,
-                    height: 8,
-                    '> svg': {
+                <>
+                  <IconBox
+                    sx={{
+                      position: 'absolute',
+                      right: 7,
+                      bottom: -3,
                       width: 10,
                       height: 8,
+                      '> svg': {
+                        width: 10,
+                        height: 8,
+                        [theme.breakpoints.up('lg')]: {
+                          width: 12,
+                          height: 10,
+                        },
+                      },
                       [theme.breakpoints.up('lg')]: {
                         width: 12,
                         height: 10,
+                        right: 6,
+                        bottom: -3,
                       },
-                    },
-                    [theme.breakpoints.up('lg')]: {
-                      width: 12,
-                      height: 10,
-                      right: 6,
-                      bottom: -3,
-                    },
-                  }}>
-                  <WarningIcon />
-                </IconBox>
+                    }}>
+                    <WarningIcon />
+                  </IconBox>
+
+                  <Box
+                    className="SettingsButton__rpc--error"
+                    sx={{
+                      padding: 4,
+                      typography: 'descriptor',
+                      backgroundColor: '$light',
+                      position: 'absolute',
+                      top: -16,
+                      right: 'calc(100% - 6px)',
+                      minWidth: 250,
+                      zIndex: 6,
+                      opacity: 0,
+                      transition: 'all 0.2s ease',
+                      pointerEvents: 'none',
+                      [theme.breakpoints.up('lg')]: {
+                        padding: 8,
+                        top: -18,
+                      },
+                    }}>
+                    {texts.other.rpcError(
+                      filteredAppErrors.length,
+                      textCenterEllipsis(filteredAppErrors[0].rpcUrl, 12, 12),
+                    )}
+                  </Box>
+                </>
               )}
             </Menu.Button>
 
@@ -150,14 +185,42 @@ export function SettingsButton() {
                 <Link
                   href={ROUTES.rpcSwitcher}
                   css={{
-                    color: '$textDisabled',
+                    color: isRpcHasError ? '$error' : '$textDisabled',
                     lineHeight: 1,
-                    hover: { color: theme.palette.$textWhite },
+                    hover: {
+                      color: isRpcHasError
+                        ? theme.palette.$error
+                        : theme.palette.$textWhite,
+                    },
                     mb: 15,
                   }}
                   onClick={close}>
-                  <Box sx={{ typography: 'buttonSmall' }}>
-                    {texts.header.changeRPC}
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box sx={{ typography: 'buttonSmall' }}>
+                      {texts.header.changeRPC}
+                    </Box>
+                    {isRpcHasError && (
+                      <IconBox
+                        sx={{
+                          width: 10,
+                          height: 8,
+                          ml: 4,
+                          '> svg': {
+                            width: 10,
+                            height: 8,
+                            [theme.breakpoints.up('lg')]: {
+                              width: 12,
+                              height: 10,
+                            },
+                          },
+                          [theme.breakpoints.up('lg')]: {
+                            width: 12,
+                            height: 10,
+                          },
+                        }}>
+                        <WarningIcon />
+                      </IconBox>
+                    )}
                   </Box>
                 </Link>
                 <Box

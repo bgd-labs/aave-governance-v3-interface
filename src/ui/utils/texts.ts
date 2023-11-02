@@ -337,6 +337,12 @@ export const texts = {
     copyError: 'Copy error text',
     userNotFound: 'User not found',
     rpcIsNotSupported: "This RPC doesn't support our contracts logic",
+    rpcError: (rpcErrorsLength: number, rpcUrl?: string) =>
+      `At the moment we cannot get data from ${
+        rpcErrorsLength > 1
+          ? "multiple RPC's"
+          : `this RPC (${!!rpcUrl && rpcUrl})`
+      }. Try to use the application later or go to the RPC change screen.`,
   },
   terms: {
     description:

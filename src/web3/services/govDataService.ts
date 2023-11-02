@@ -269,13 +269,36 @@ export class GovDataService {
   async getTotalPayloadsCount(
     payloadsController: Hex,
     chainId: number,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<number> {
-    const payloadsControllerContract = initPayloadControllerContract({
-      client: this.clients[chainId],
-      contractAddress: payloadsController,
-    });
+    const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
 
-    return await payloadsControllerContract.read.getPayloadsCount();
+    try {
+      const payloadsControllerContract = initPayloadControllerContract({
+        client: this.clients[chainId],
+        contractAddress: payloadsController,
+      });
+
+      const payloadsCount =
+        await payloadsControllerContract.read.getPayloadsCount();
+      if (!!setRpcError) {
+        setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: chainId,
+        });
+      }
+      return Number(payloadsCount);
+    } catch {
+      if (!!setRpcError) {
+        setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: chainId,
+        });
+      }
+      return 0;
+    }
   }
 
   async getPayloads(

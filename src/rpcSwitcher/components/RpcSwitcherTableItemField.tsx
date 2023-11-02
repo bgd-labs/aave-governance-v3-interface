@@ -72,7 +72,7 @@ export function RpcSwitcherTableItemField({
 }: RpcSwitcherTableItemAddressProps) {
   const isRpcUrlToVisible = rpcUrl !== rpcUrlTo;
 
-  const { checkRpcUrl, rpcFormErrors } = useStore();
+  const { checkRpcUrl, rpcFormErrors, rpcAppErrors } = useStore();
 
   useEffect(() => {
     if (rpcUrlTo && rpcUrlTo !== rpcUrl && chainId) {
@@ -82,7 +82,16 @@ export function RpcSwitcherTableItemField({
 
   return (
     <>
-      {!isEdit && !isViewChanges && <Text rpcUrl={rpcUrl} />}
+      {!isEdit && !isViewChanges && (
+        <Text
+          rpcUrl={rpcUrl}
+          isError={
+            Object.values(rpcAppErrors).filter(
+              (error) => error.chainId === chainId,
+            )[0].error
+          }
+        />
+      )}
       {isEdit && !isViewChanges && (
         <Field name={inputName} validate={composeValidators(rpcUrlValidator)}>
           {(props) => {

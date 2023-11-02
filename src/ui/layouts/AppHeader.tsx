@@ -2,8 +2,10 @@ import { Box, useTheme } from '@mui/system';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
+import WarningIcon from '/public/images/icons/warningIcon.svg';
 import Logo from '/public/images/logo.svg';
 
+import { selectIsRpcAppHasErrors } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { WalletWidget } from '../../web3/components/wallet/WalletWidget';
@@ -40,6 +42,7 @@ const headerNavItems = [
 export function AppHeader() {
   const theme = useTheme();
   const path = usePathname();
+  const store = useStore();
 
   const sm = useMediaQuery(media.sm);
   const wrapperRef = useRef(null);
@@ -57,7 +60,9 @@ export function AppHeader() {
     setIsTermModalOpen,
     setIsRepresentationInfoModalOpen,
     closeHelpModals,
-  } = useStore();
+  } = store;
+
+  const isRpcHasError = selectIsRpcAppHasErrors(store);
 
   const { scrollDirection } = useScrollDirection();
 
@@ -327,6 +332,12 @@ export function AppHeader() {
                 <SettingsButton />
 
                 <Box
+                  sx={{
+                    position: 'relative',
+                    [theme.breakpoints.up('sm')]: {
+                      display: 'none',
+                    },
+                  }}
                   component="button"
                   type="button"
                   onClick={() => {
@@ -335,74 +346,91 @@ export function AppHeader() {
                     } else {
                       handleOpenMobileMenu();
                     }
-                  }}
-                  sx={{
-                    p: 10,
-                    display: 'inline-block',
-                    transitionProperty: 'opacity, filter',
-                    transitionDuration: '0.15s',
-                    transitionTimingFunction: 'linear',
-                    overflow: 'visible',
-                    position: 'relative',
-                    zIndex: 21,
-                    [theme.breakpoints.up('sm')]: {
-                      display: 'none',
-                    },
-                    hover: {
-                      opacity: 0.7,
-                    },
-                    '.hamburger-box': {
-                      width: 17,
-                      height: 16,
-                      display: 'inline-block',
-                      position: 'relative',
-                    },
-                    '.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after':
-                      {
-                        width: 17,
-                        height: 2,
-                        backgroundColor: '$textWhite',
-                        position: 'absolute',
-                        transitionProperty: 'transform',
-                        transitionDuration: '0.15s',
-                        transitionTimingFunction: 'ease',
-                      },
-                    '.hamburger-inner': {
-                      display: 'block',
-                      mt: -2,
-                      top: 2,
-                      transition: 'background-color 0s 0.13s linear',
-                      transitionDelay: mobileMenuOpen ? '0.22s' : '0.13s',
-                      backgroundColor: mobileMenuOpen
-                        ? 'transparent !important'
-                        : '$textWhite',
-                      '&:before, &:after': {
-                        content: `''`,
-                        display: 'block',
-                      },
-                      '&:before': {
-                        top: mobileMenuOpen ? 0 : 8,
-                        transition: mobileMenuOpen
-                          ? 'top 0.1s 0.15s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1)'
-                          : 'top 0.1s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
-                        transform: mobileMenuOpen
-                          ? 'translate3d(0, 8px, 0) rotate(45deg)'
-                          : 'unset',
-                      },
-                      '&:after': {
-                        top: mobileMenuOpen ? 0 : 16,
-                        transition: mobileMenuOpen
-                          ? 'top 0.2s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1)'
-                          : 'top 0.2s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
-                        transform: mobileMenuOpen
-                          ? 'translate3d(0, 8px, 0) rotate(-45deg)'
-                          : 'unset',
-                      },
-                    },
                   }}>
-                  <span className="hamburger-box">
-                    <span className="hamburger-inner" />
-                  </span>
+                  <Box
+                    sx={{
+                      p: 10,
+                      display: 'inline-block',
+                      transitionProperty: 'opacity, filter',
+                      transitionDuration: '0.15s',
+                      transitionTimingFunction: 'linear',
+                      overflow: 'visible',
+                      position: 'relative',
+                      zIndex: 21,
+                      hover: {
+                        opacity: 0.7,
+                      },
+                      '.hamburger-box': {
+                        width: 17,
+                        height: 16,
+                        display: 'inline-block',
+                        position: 'relative',
+                      },
+                      '.hamburger-inner, .hamburger-inner:before, .hamburger-inner:after':
+                        {
+                          width: 17,
+                          height: 2,
+                          backgroundColor: '$textWhite',
+                          position: 'absolute',
+                          transitionProperty: 'transform',
+                          transitionDuration: '0.15s',
+                          transitionTimingFunction: 'ease',
+                        },
+                      '.hamburger-inner': {
+                        display: 'block',
+                        mt: -2,
+                        top: 2,
+                        transition: 'background-color 0s 0.13s linear',
+                        transitionDelay: mobileMenuOpen ? '0.22s' : '0.13s',
+                        backgroundColor: mobileMenuOpen
+                          ? 'transparent !important'
+                          : '$textWhite',
+                        '&:before, &:after': {
+                          content: `''`,
+                          display: 'block',
+                        },
+                        '&:before': {
+                          top: mobileMenuOpen ? 0 : 8,
+                          transition: mobileMenuOpen
+                            ? 'top 0.1s 0.15s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1)'
+                            : 'top 0.1s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+                          transform: mobileMenuOpen
+                            ? 'translate3d(0, 8px, 0) rotate(45deg)'
+                            : 'unset',
+                        },
+                        '&:after': {
+                          top: mobileMenuOpen ? 0 : 16,
+                          transition: mobileMenuOpen
+                            ? 'top 0.2s cubic-bezier(0.33333, 0, 0.66667, 0.33333), transform 0.13s 0.22s cubic-bezier(0.215, 0.61, 0.355, 1)'
+                            : 'top 0.2s 0.2s cubic-bezier(0.33333, 0.66667, 0.66667, 1), transform 0.13s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+                          transform: mobileMenuOpen
+                            ? 'translate3d(0, 8px, 0) rotate(-45deg)'
+                            : 'unset',
+                        },
+                      },
+                    }}>
+                    <span className="hamburger-box">
+                      <span className="hamburger-inner" />
+                    </span>
+                  </Box>
+
+                  {isRpcHasError && !mobileMenuOpen && (
+                    <IconBox
+                      sx={{
+                        position: 'absolute',
+                        zIndex: 105,
+                        bottom: 6,
+                        right: 6,
+                        width: 12,
+                        height: 10,
+                        '> svg': {
+                          width: 12,
+                          height: 10,
+                        },
+                      }}>
+                      <WarningIcon />
+                    </IconBox>
+                  )}
                 </Box>
               </Box>
             </NoSSR>
@@ -492,10 +520,29 @@ export function AppHeader() {
                   mb: 15,
                   display: 'block',
                 }}>
-                <Box
-                  component="p"
-                  sx={{ typography: 'body', color: '$textLight' }}>
-                  {texts.header.changeRPC}
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box
+                    component="p"
+                    sx={{
+                      typography: 'body',
+                      color: isRpcHasError ? '$error' : '$textLight',
+                    }}>
+                    {texts.header.changeRPC}
+                  </Box>
+                  {isRpcHasError && (
+                    <IconBox
+                      sx={{
+                        width: 12,
+                        height: 10,
+                        ml: 4,
+                        '> svg': {
+                          width: 12,
+                          height: 10,
+                        },
+                      }}>
+                      <WarningIcon />
+                    </IconBox>
+                  )}
                 </Box>
               </Link>
               {!isForIPFS && isTermsAndConditionsVisible && (
