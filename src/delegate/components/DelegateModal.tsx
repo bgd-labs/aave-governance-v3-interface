@@ -28,6 +28,9 @@ export function DelegateModal({
   formDelegateData,
   fullTxErrorMessage,
   setFullTxErrorMessage,
+  isTxReplaced,
+  replacedTxHash,
+  txChainId,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
@@ -43,6 +46,9 @@ export function DelegateModal({
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
+  | 'isTxReplaced'
+  | 'replacedTxHash'
+  | 'txChainId'
 > & { delegateData: DelegateItem[]; formDelegateData: DelegateData[] }) {
   return (
     <BasicActionModal
@@ -60,6 +66,9 @@ export function DelegateModal({
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      isTxReplaced={isTxReplaced}
+      replacedTxHash={replacedTxHash}
+      txChainId={txChainId}
       successElement={
         <DelegatedText
           delegateData={delegateData}

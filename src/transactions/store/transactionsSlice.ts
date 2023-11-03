@@ -148,10 +148,13 @@ export type TransactionUnion =
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion>;
 
-export type AllTransactions = (TransactionUnion & {
+export type TxWithStatus = TransactionUnion & {
   status?: TransactionStatus;
   pending: boolean;
-})[];
+  replacedTxHash?: string;
+};
+
+export type AllTransactions = TxWithStatus[];
 
 export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,

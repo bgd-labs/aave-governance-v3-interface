@@ -99,6 +99,8 @@ export function RepresentationsPage() {
     setFullTxErrorMessage,
     fullTxErrorMessage,
     executeTxWithLocalStatuses,
+    isTxReplaced,
+    replacedTxHash,
   } = useLastTxLocalStatus({
     type: 'representations',
     payload: {
@@ -308,6 +310,8 @@ export function RepresentationsPage() {
           isError={isError}
           setFullTxErrorMessage={setFullTxErrorMessage}
           fullTxErrorMessage={fullTxErrorMessage}
+          isTxReplaced={isTxReplaced}
+          replacedTxHash={replacedTxHash}
         />
       )}
     </>

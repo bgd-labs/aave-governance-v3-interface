@@ -244,10 +244,16 @@ export function HelpRepresentativeModal() {
                   mobileBottomPadding={25}
                   css={{
                     position: 'absolute',
-                    left: 100,
-                    top: 95,
-                    [theme.breakpoints.up('sm')]: { left: 115, top: 95 },
-                    [theme.breakpoints.up('lg')]: { left: 130, top: 100 },
+                    left: -15,
+                    top: 115,
+                    [`@media only screen and (min-width: 470px)`]: {
+                      left: 100,
+                      top: 95,
+                    },
+                    [theme.breakpoints.up('lg')]: {
+                      left: '115px !important',
+                      top: '102px !important',
+                    },
                     '.HelpModalTooltip__content': {
                       width: 170,
                       '> div': {
@@ -276,9 +282,14 @@ export function HelpRepresentativeModal() {
                   css={{
                     position: 'absolute',
                     left: -15,
-                    top: 200,
-                    [theme.breakpoints.up('lg')]: { top: 197 },
-                    [theme.breakpoints.up('lg')]: { left: -10, top: 205 },
+                    top: 230,
+                    [`@media only screen and (min-width: 470px)`]: {
+                      top: 185,
+                    },
+                    [theme.breakpoints.up('lg')]: {
+                      left: '-10px !important',
+                      top: '197px !important',
+                    },
                     '.HelpModalTooltip__content': {
                       width: 390,
                       [theme.breakpoints.up('sm')]: { width: 400 },

@@ -58,8 +58,7 @@ export function RepresentingForm({
     <Box
       sx={{
         display: 'flex',
-        mt: 30,
-        mb: 30,
+        my: 24,
         alignItems: 'center',
         flexDirection: 'column',
         position: 'relative',
@@ -67,19 +66,33 @@ export function RepresentingForm({
       <Box
         component="h3"
         sx={{
+          width: '100%',
           typography: 'h3',
           textAlign: 'center',
           fontWeight: 600,
           display: 'inline-flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
         }}>
         {texts.walletConnect.representing}
       </Box>
 
-      <Divider sx={{ mt: 13, mb: 20, width: '100%' }} />
+      <Divider
+        sx={{
+          my: 14,
+          borderBottomColor: theme.palette.$secondaryBorder,
+          width: '100%',
+        }}
+      />
 
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          maxWidth: 450,
+          alignSelf: 'flex-start',
+        }}>
         <Box sx={{ width: '100%' }}>
           <Listbox
             value={localAddress}

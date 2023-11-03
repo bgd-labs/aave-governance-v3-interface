@@ -68,6 +68,9 @@ export function DelegatePage() {
     fullTxErrorMessage,
     setFullTxErrorMessage,
     executeTxWithLocalStatuses,
+    isTxReplaced,
+    replacedTxHash,
+    txChainId,
   } = useLastTxLocalStatus({
     type: 'delegate',
     payload: {
@@ -331,6 +334,9 @@ export function DelegatePage() {
           isError={isError}
           fullTxErrorMessage={fullTxErrorMessage}
           setFullTxErrorMessage={setFullTxErrorMessage}
+          isTxReplaced={isTxReplaced}
+          replacedTxHash={replacedTxHash}
+          txChainId={txChainId}
         />
       )}
     </>

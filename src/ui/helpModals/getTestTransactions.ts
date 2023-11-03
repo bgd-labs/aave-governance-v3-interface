@@ -1,5 +1,5 @@
 import { HashZero } from '@bgd-labs/aave-governance-ui-helpers';
-import { WalletType } from '@bgd-labs/frontend-web3-utils';
+import { TransactionStatus, WalletType } from '@bgd-labs/frontend-web3-utils';
 import { zeroAddress } from 'viem';
 
 import { TransactionUnion } from '../../transactions/store/transactionsSlice';
@@ -12,16 +12,16 @@ export type TransactionItem = TransactionUnion & {
 
 export const generateStatus = () => {
   if (Math.round(Math.random()) > 0) {
-    return 1;
+    return TransactionStatus.Success;
   } else {
-    return 2;
+    return TransactionStatus.Reverted;
   }
 };
 
 export const makeTestTransaction = (
   timestamp: number,
   pending: boolean,
-  status?: number,
+  status?: TransactionStatus,
 ) => {
   return {
     type: 'test',

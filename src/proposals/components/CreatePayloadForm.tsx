@@ -65,6 +65,9 @@ export function CreatePayloadForm() {
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
+    isTxReplaced,
+    replacedTxHash,
+    txChainId,
   } = useLastTxLocalStatus({
     type: 'createPayload',
     payload: {
@@ -475,6 +478,9 @@ export function CreatePayloadForm() {
         payloadId={initialPayloadsCount[payloadsController]}
         fullTxErrorMessage={fullTxErrorMessage}
         setFullTxErrorMessage={setFullTxErrorMessage}
+        isTxReplaced={isTxReplaced}
+        replacedTxHash={replacedTxHash}
+        txChainId={txChainId}
       />
     </>
   );

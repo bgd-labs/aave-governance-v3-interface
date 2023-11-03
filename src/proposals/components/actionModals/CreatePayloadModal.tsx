@@ -26,6 +26,9 @@ export function CreatePayloadModal({
   payloadId,
   fullTxErrorMessage,
   setFullTxErrorMessage,
+  replacedTxHash,
+  isTxReplaced,
+  txChainId,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
@@ -41,6 +44,9 @@ export function CreatePayloadModal({
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
+  | 'isTxReplaced'
+  | 'replacedTxHash'
+  | 'txChainId'
 > & { payloadId: number }) {
   return (
     <BasicActionModal
@@ -58,6 +64,9 @@ export function CreatePayloadModal({
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      replacedTxHash={replacedTxHash}
+      isTxReplaced={isTxReplaced}
+      txChainId={txChainId}
       successElement={
         <Box component="p" sx={{ typography: 'body' }}>
           {texts.proposalActions.createPayloadSuccess(payloadId)}

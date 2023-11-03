@@ -28,6 +28,9 @@ export function RepresentationsModal({
   initialData,
   fullTxErrorMessage,
   setFullTxErrorMessage,
+  isTxReplaced,
+  replacedTxHash,
+  txChainId,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
@@ -43,6 +46,9 @@ export function RepresentationsModal({
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
+  | 'isTxReplaced'
+  | 'replacedTxHash'
+  | 'txChainId'
 > & {
   initialData: RepresentationFormData[];
   formData: RepresentationFormData[];
@@ -63,6 +69,9 @@ export function RepresentationsModal({
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      isTxReplaced={isTxReplaced}
+      replacedTxHash={replacedTxHash}
+      txChainId={txChainId}
       successElement={<TxText initialData={initialData} formData={formData} />}
       topBlock={
         <ActionModalTitle

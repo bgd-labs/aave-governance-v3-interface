@@ -26,6 +26,9 @@ export function CreateProposalModal({
   proposalId,
   fullTxErrorMessage,
   setFullTxErrorMessage,
+  replacedTxHash,
+  isTxReplaced,
+  txChainId,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
@@ -41,6 +44,9 @@ export function CreateProposalModal({
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
+  | 'isTxReplaced'
+  | 'replacedTxHash'
+  | 'txChainId'
 > & { proposalId: number }) {
   return (
     <BasicActionModal
@@ -58,6 +64,9 @@ export function CreateProposalModal({
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      replacedTxHash={replacedTxHash}
+      isTxReplaced={isTxReplaced}
+      txChainId={txChainId}
       successElement={
         <Box component="p" sx={{ typography: 'body' }}>
           {texts.proposalActions.createProposalSuccess(proposalId)}

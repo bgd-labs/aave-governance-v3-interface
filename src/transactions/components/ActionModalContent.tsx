@@ -7,6 +7,7 @@ import React, { ReactNode } from 'react';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 import RocketError from '/public/images/rocketError.svg';
+import RocketReplaced from '/public/images/rocketReplaced.svg';
 import RocketSuccess from '/public/images/rocketSuccess.svg';
 
 import { useStore } from '../../store';
@@ -35,6 +36,9 @@ export interface ActionModalContentProps {
   closeButtonText?: string;
   withoutTryAgainWhenError?: boolean;
   fullTxErrorMessage?: Error | string;
+  isTxReplaced?: boolean;
+  replacedTxHash?: string;
+  txChainId?: number;
 }
 
 export function ActionModalContent({
@@ -48,13 +52,15 @@ export function ActionModalContent({
   txSuccess,
   isTxStart,
   setIsTxStart,
-  error,
   setError,
   isError,
   successElement,
   closeButtonText,
   withoutTryAgainWhenError,
   fullTxErrorMessage,
+  isTxReplaced,
+  replacedTxHash,
+  txChainId,
 }: ActionModalContentProps) {
   const theme = useTheme();
   const state = useStore();
@@ -116,6 +122,19 @@ export function ActionModalContent({
                   <RocketSuccess />
                 </IconBox>
               )}
+              {isTxReplaced && (
+                <IconBox
+                  sx={{
+                    width: rocketSize,
+                    height: rocketSize,
+                    '> svg': {
+                      width: rocketSize,
+                      height: rocketSize,
+                    },
+                  }}>
+                  <RocketReplaced />
+                </IconBox>
+              )}
 
               <Box
                 component="h3"
@@ -128,6 +147,7 @@ export function ActionModalContent({
                 {txPending && texts.transactions.pending}
                 {txSuccess && texts.transactions.success}
                 {isError && texts.transactions.error}
+                {isTxReplaced && texts.transactions.replaced}
               </Box>
               <Box sx={{ typography: 'h3' }}>
                 {txPending && texts.transactions.pendingDescription}
@@ -135,6 +155,7 @@ export function ActionModalContent({
                   ? successElement
                   : txSuccess && texts.transactions.executed}
                 {isError && texts.transactions.notExecuted}
+                {isTxReplaced && texts.transactions.txReplaced}
               </Box>
               {isError && (
                 <Box
@@ -145,66 +166,120 @@ export function ActionModalContent({
                     flexDirection: 'column',
                     my: 12,
                   }}>
-                  {/*<Box*/}
-                  {/*  sx={{*/}
-                  {/*    typography: 'body',*/}
-                  {/*    color: '$textSecondary',*/}
-                  {/*    wordBreak: 'break-all',*/}
-                  {/*  }}>*/}
-                  {/*  {error}*/}
-                  {/*</Box>*/}
                   {fullTxErrorMessage && (
                     <CopyErrorButton errorMessage={fullTxErrorMessage} />
                   )}
                 </Box>
               )}
-              {txHash && txWalletType && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    mt: 44,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Link
-                    href={selectTxExplorerLink(
-                      state,
-                      chainInfoHelper.getChainParameters,
-                      txHash,
-                    )}
-                    css={{
-                      display: 'inline-flex',
+              <Box>
+                {txHash && txWalletType && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      mt: 40,
                       alignItems: 'center',
-                      color: '$textSecondary',
-                      path: {
-                        transition: 'all 0.2s ease',
-                        stroke: theme.palette.$textSecondary,
-                      },
-                      hover: {
-                        color: theme.palette.$text,
-                        path: { stroke: theme.palette.$text },
-                      },
-                    }}
-                    inNewWindow>
-                    <Box component="span" sx={{ typography: 'descriptor' }}>
-                      {texts.other.viewOnExplorer}
-                    </Box>
-                    <IconBox
-                      sx={{
-                        width: 12,
-                        height: 12,
-                        '> svg': {
+                      justifyContent: 'center',
+                    }}>
+                    <Link
+                      href={selectTxExplorerLink(
+                        state,
+                        chainInfoHelper.getChainParameters,
+                        txHash,
+                      )}
+                      css={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        color: replacedTxHash
+                          ? '$textDisabled'
+                          : '$textSecondary',
+                        path: {
+                          transition: 'all 0.2s ease',
+                          stroke: replacedTxHash
+                            ? theme.palette.$textDisabled
+                            : theme.palette.$textSecondary,
+                        },
+                        hover: {
+                          color: replacedTxHash
+                            ? theme.palette.$textDisabled
+                            : theme.palette.$text,
+                          path: {
+                            stroke: replacedTxHash
+                              ? theme.palette.$textDisabled
+                              : theme.palette.$text,
+                          },
+                        },
+                      }}
+                      inNewWindow>
+                      <Box component="span" sx={{ typography: 'descriptor' }}>
+                        {replacedTxHash
+                          ? texts.other.transactionHash
+                          : texts.other.viewOnExplorer}
+                      </Box>
+                      <IconBox
+                        sx={{
                           width: 12,
                           height: 12,
-                        },
-                        ml: 4,
-                        position: 'relative',
-                      }}>
-                      <LinkIcon />
-                    </IconBox>
-                  </Link>
-                </Box>
-              )}
+                          '> svg': {
+                            width: 12,
+                            height: 12,
+                          },
+                          ml: 4,
+                          position: 'relative',
+                        }}>
+                        <LinkIcon />
+                      </IconBox>
+                    </Link>
+                  </Box>
+                )}
+                {isTxReplaced && replacedTxHash && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      mt: 8,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    {txChainId && (
+                      <Link
+                        href={`${chainInfoHelper.getChainParameters(txChainId)
+                          .blockExplorers?.default.url}/tx/${replacedTxHash}`}
+                        css={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          color: '$textSecondary',
+                          path: {
+                            transition: 'all 0.2s ease',
+                            stroke: theme.palette.$textSecondary,
+                          },
+                          hover: {
+                            color: theme.palette.$text,
+                            path: {
+                              stroke: theme.palette.$text,
+                            },
+                          },
+                        }}
+                        inNewWindow>
+                        <Box component="span" sx={{ typography: 'descriptor' }}>
+                          {texts.other.replacedTransactionHash}
+                        </Box>
+                        <IconBox
+                          sx={{
+                            width: 12,
+                            height: 12,
+                            '> svg': {
+                              width: 12,
+                              height: 12,
+                            },
+                            ml: 4,
+                            position: 'relative',
+                          }}>
+                          <LinkIcon />
+                        </IconBox>
+                      </Link>
+                    )}
+                  </Box>
+                )}
+              </Box>
             </Box>
 
             <Box
@@ -213,7 +288,7 @@ export function ActionModalContent({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              {txSuccess && (
+              {(txSuccess || isTxReplaced) && (
                 <BigButton alwaysWithBorders onClick={() => setIsOpen(false)}>
                   {closeButtonText || texts.other.close}
                 </BigButton>

@@ -182,6 +182,9 @@ export function CreateProposalForm() {
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
+    isTxReplaced,
+    replacedTxHash,
+    txChainId,
   } = useLastTxLocalStatus({
     type: 'createProposal',
     payload: { proposalId: totalProposalCount },
@@ -503,6 +506,9 @@ export function CreateProposalForm() {
         proposalId={totalProposalCount}
         fullTxErrorMessage={fullTxErrorMessage}
         setFullTxErrorMessage={setFullTxErrorMessage}
+        isTxReplaced={isTxReplaced}
+        replacedTxHash={replacedTxHash}
+        txChainId={txChainId}
       />
     </>
   );

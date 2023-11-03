@@ -47,7 +47,8 @@ export function AccountInfoModal({
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withCloseButton
-      withoutAnimationWhenOpen>
+      withoutAnimationWhenOpen
+      maxWidth={680}>
       <AccountInfoModalContent
         ensName={ensName}
         ensAvatar={ensAvatar}

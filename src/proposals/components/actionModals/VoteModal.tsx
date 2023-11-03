@@ -109,6 +109,9 @@ export function VoteModal({
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
+    isTxReplaced,
+    replacedTxHash,
+    txChainId,
   } = useLastTxLocalStatus({
     type: 'vote',
     payload: {
@@ -243,6 +246,9 @@ export function VoteModal({
       contentMinHeight={isTxStart ? 287 : 211}
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      isTxReplaced={isTxReplaced}
+      replacedTxHash={replacedTxHash}
+      txChainId={txChainId}
       topBlock={
         !isVotingModesInfoOpen && (
           <Box

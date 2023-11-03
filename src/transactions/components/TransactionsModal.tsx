@@ -29,6 +29,7 @@ export function TransactionsModal({
     <BasicModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
+      maxWidth={680}
       withCloseButton
       withoutAnimationWhenOpen>
       <TransactionsModalContent

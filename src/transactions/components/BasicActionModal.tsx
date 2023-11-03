@@ -29,7 +29,10 @@ export function BasicActionModal({
   txWalletType,
   withoutTryAgainWhenError,
   fullTxErrorMessage,
+  isTxReplaced,
+  replacedTxHash,
   setFullTxErrorMessage,
+  txChainId,
 }: BasicActionModalProps) {
   useEffect(() => {
     setIsTxStart(false);
@@ -54,7 +57,10 @@ export function BasicActionModal({
         txPending={txPending}
         txWalletType={txWalletType}
         withoutTryAgainWhenError={withoutTryAgainWhenError}
-        fullTxErrorMessage={fullTxErrorMessage}>
+        fullTxErrorMessage={fullTxErrorMessage}
+        isTxReplaced={isTxReplaced}
+        replacedTxHash={replacedTxHash}
+        txChainId={txChainId}>
         {children}
       </ActionModalContent>
     </BasicModal>
