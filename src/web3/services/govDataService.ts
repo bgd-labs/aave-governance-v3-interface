@@ -26,6 +26,7 @@ import {
   PayloadForCreation,
   payloadsControllerContract as initPayloadControllerContract,
   payloadsControllerDataHelperContract,
+  PayloadState,
   ProposalData,
   updateVotingMachineData,
   VMProposalStructOutput,
@@ -952,6 +953,42 @@ export class GovDataService {
     ipfsHash: Hex,
     cancellationFee: string,
   ) {
+    const payloadsChainIds = payloads
+      .map((payload) => payload.chain)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    const payloadsControllers = payloads
+      .map((payload) => payload.payloadsController)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    const payloadsData = await Promise.all(
+      payloadsChainIds.map(async (chainId) => {
+        return await Promise.all(
+          payloadsControllers.map(async (controller) => {
+            const payloadsIds = payloads
+              .filter(
+                (payload) =>
+                  payload.chain === chainId &&
+                  payload.payloadsController === controller,
+              )
+              .flat()
+              .map((payload) => payload.id);
+
+            return await this.getPayloads(chainId, controller, payloadsIds);
+          }),
+        );
+      }),
+    );
+
+    if (
+      payloadsData
+        .flat()
+        .flat()
+        .some((payload) => payload.state === PayloadState.Expired)
+    ) {
+      throw new Error('One ore multiple payloads has expired status');
+    }
+
     const formattedPayloads = payloads.map((payload) => {
       return {
         chain: BigInt(payload.chain),
