@@ -235,27 +235,27 @@ export const createDelegationSlice: StoreSlice<
               );
             }
           }),
+          await get().executeTx({
+            body: () => {
+              get().setModalOpen(true);
+              return delegationService.delegate(
+                data[data.length - 1].underlyingAsset,
+                data[data.length - 1].delegatee,
+                data[data.length - 1].delegationType,
+              );
+            },
+            params: {
+              type: 'delegate',
+              desiredChainID: appConfig.govCoreChainId,
+              payload: {
+                delegateData: stateDelegateData,
+                formDelegateData,
+                timestamp,
+              },
+            },
+          }),
         ]);
       }
-      await get().executeTx({
-        body: () => {
-          get().setModalOpen(true);
-          return delegationService.delegate(
-            data[data.length - 1].underlyingAsset,
-            data[data.length - 1].delegatee,
-            data[data.length - 1].delegationType,
-          );
-        },
-        params: {
-          type: 'delegate',
-          desiredChainID: appConfig.govCoreChainId,
-          payload: {
-            delegateData: stateDelegateData,
-            formDelegateData,
-            timestamp,
-          },
-        },
-      });
     }
   },
 
