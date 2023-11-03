@@ -15,12 +15,14 @@ export default function WagmiProvider() {
         defaultChainId: appConfig.govCoreChainId,
         wcParams: {
           projectId: WC_PROJECT_ID,
-          // TODO: need change metadata for wallet connect
           metadata: {
-            name: 'wagmi',
-            description: 'my wagmi app',
-            url: 'https://wagmi.sh',
-            icons: ['https://wagmi.sh/icon.png'],
+            name: 'Aave governance',
+            description:
+              'User interface to interact with the Aave governance v3 smart contracts',
+            url: 'https://vote.onaave.com',
+            icons: [
+              'https://imagedelivery.net/_aTEfDRm7z3tKgu9JhfeKA/c54c2635-3522-4d32-0e97-2329a733ee00/lg',
+            ],
           },
         },
       }}
