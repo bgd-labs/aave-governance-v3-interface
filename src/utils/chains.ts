@@ -15,7 +15,7 @@ import {
   sepolia,
 } from 'viem/chains';
 
-// chains information (RPC (urls), nativeCurrency, name, blockExplorerUrls)
+// chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
     'https://cloudflare-eth.com',
