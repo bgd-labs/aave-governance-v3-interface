@@ -115,8 +115,9 @@
     "*.svg": "npx svgo --final-newline"
   },
   "nextBundleAnalysis": {
-    "budget": null,
+    "budget": 1228800,
     "budgetPercentIncreaseRed": 20,
+    "minimumChangeThreshold": 0,
     "showDetails": true
   }
 }
