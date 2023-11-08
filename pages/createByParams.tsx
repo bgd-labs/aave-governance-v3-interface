@@ -1,0 +1,41 @@
+import { useSearchParams } from 'next/navigation';
+import queryString from 'query-string';
+import React from 'react';
+
+import { CreateByParamsPage } from '../src/createByParams/components/CreateByParamsPage';
+import { InitialParams, PayloadParams } from '../src/createByParams/types';
+
+export default function CreateByParams() {
+  const searchParams = useSearchParams();
+
+  if (!searchParams) return null;
+
+  // params
+  const ipfsHash = !!searchParams.get('ipfsHash')
+    ? String(searchParams.get('ipfsHash'))
+    : undefined;
+  const votingPortal = !!searchParams.get('votingPortal')
+    ? String(searchParams.get('votingPortal'))
+    : undefined;
+
+  const payloads: Record<number, PayloadParams> = {};
+  Object.entries(queryString.parse(searchParams.toString()))
+    .filter((value) => value[0].startsWith('payload['))
+    .forEach((value) => {
+      const indexKey = Number(value[0].split('[')[1].split(']')[0]);
+      const paramKey = value[0].split('.')[1];
+
+      payloads[indexKey] = {
+        ...payloads[indexKey],
+        [paramKey]: value[1],
+      };
+    });
+
+  const initialParams: InitialParams = {
+    ipfsHash,
+    votingPortal,
+    payloads: Object.values(payloads),
+  };
+
+  return <CreateByParamsPage initialParams={initialParams} />;
+}
