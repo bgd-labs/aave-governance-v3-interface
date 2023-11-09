@@ -92,10 +92,14 @@ function PayloadItem({
   const store = useStore();
   const now = dayjs().unix();
 
-  const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
 
   useEffect(() => {
-    setIsActionsOpen(false);
+    if (forCreate) {
+      setIsActionsOpen(true);
+    } else {
+      setIsActionsOpen(false);
+    }
   }, [isFullView]);
 
   const isPayloadOnInitialState =
@@ -182,7 +186,12 @@ function PayloadItem({
             display: 'inline-flex',
             alignItems: 'center',
           }}>
-          <NetworkIcon chainId={payload.chainId} size={10} css={{ mr: 4 }} />
+          <NetworkIcon
+            chainId={payload.chainId}
+            size={10}
+            css={{ mr: 4 }}
+            withTooltip={forCreate}
+          />
           <Box sx={{ typography: 'body' }}>
             {texts.proposals.payloadsDetails.payload} {payloadNumber}
           </Box>
@@ -422,7 +431,7 @@ export function ProposalPayloads({
 }: ProposalPayloadsProps) {
   const theme = useTheme();
 
-  const [isFullView, setFullView] = useState(false);
+  const [isFullView, setFullView] = useState(!!forCreate);
 
   const formattedPayloadsForList: Payload[] =
     !!payloads.length && payloads.length > 1
@@ -493,26 +502,28 @@ export function ProposalPayloads({
         )}
       </Box>
 
-      <Box
-        sx={{
-          mt: 10,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pr: 20,
-        }}>
+      {!forCreate && (
         <Box
-          onClick={() => setFullView(!isFullView)}
           sx={{
-            cursor: 'pointer',
-            typography: 'descriptorAccent',
-            color: '$textSecondary',
-            transition: 'all 0.2s ease',
-            hover: { color: theme.palette.$text },
+            mt: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pr: 20,
           }}>
-          {texts.proposals.payloadsDetails.more(isFullView)}
+          <Box
+            onClick={() => setFullView(!isFullView)}
+            sx={{
+              cursor: 'pointer',
+              typography: 'descriptorAccent',
+              color: '$textSecondary',
+              transition: 'all 0.2s ease',
+              hover: { color: theme.palette.$text },
+            }}>
+            {texts.proposals.payloadsDetails.more(isFullView)}
+          </Box>
         </Box>
-      </Box>
+      )}
     </BoxWith3D>
   );
 }

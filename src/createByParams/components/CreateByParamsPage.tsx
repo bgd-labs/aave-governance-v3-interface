@@ -193,7 +193,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
             sx={{ position: 'relative', zIndex: 2, wordBreak: 'break-word' }}>
             <Box sx={{ typography: 'body', mb: 18 }}>
               <Box component="h2" sx={{ typography: 'h2', mb: 12 }}>
-                Preview initial data
+                Initial data
               </Box>
               <Box sx={{ mb: 8 }}>
                 Voting portal: {initialParams.votingPortal}
