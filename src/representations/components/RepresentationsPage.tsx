@@ -241,7 +241,9 @@ export function RepresentationsPage() {
                             return {
                               chainId: data.chainId,
                               representative:
-                                data.representative === undefined
+                                data.representative === undefined ||
+                                data.representative.toLocaleLowerCase() ===
+                                  activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.representative)
                                   ? getAddressByENSNameIfExists(

@@ -120,9 +120,15 @@ export function DelegatePage() {
       return {
         underlyingAsset: data.underlyingAsset,
         votingToAddress:
-          data.votingToAddress === undefined ? '' : data.votingToAddress,
+          data.votingToAddress === undefined ||
+          data.votingToAddress.toLocaleLowerCase() ===
+            activeWallet?.address.toLocaleLowerCase()
+            ? ''
+            : data.votingToAddress,
         propositionToAddress:
-          data.propositionToAddress === undefined
+          data.propositionToAddress === undefined ||
+          data.propositionToAddress.toLocaleLowerCase() ===
+            activeWallet?.address.toLocaleLowerCase()
             ? ''
             : data.propositionToAddress,
       };
@@ -254,7 +260,9 @@ export function DelegatePage() {
                             return {
                               underlyingAsset: data.underlyingAsset,
                               votingToAddress:
-                                data.votingToAddress === undefined
+                                data.votingToAddress === undefined ||
+                                data.votingToAddress.toLocaleLowerCase() ===
+                                  activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.votingToAddress)
                                   ? getAddressByENSNameIfExists(
@@ -264,7 +272,9 @@ export function DelegatePage() {
                                     data.votingToAddress.toLocaleLowerCase()
                                   : data.votingToAddress.toLocaleLowerCase(),
                               propositionToAddress:
-                                data.propositionToAddress === undefined
+                                data.propositionToAddress === undefined ||
+                                data.propositionToAddress.toLocaleLowerCase() ===
+                                  activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.propositionToAddress)
                                   ? getAddressByENSNameIfExists(

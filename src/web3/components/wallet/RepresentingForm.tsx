@@ -90,8 +90,9 @@ export function RepresentingForm({
           display: 'flex',
           alignItems: 'center',
           width: '100%',
-          maxWidth: 450,
           alignSelf: 'flex-start',
+          maxWidth: 450,
+          position: 'relative',
         }}>
         <Box sx={{ width: '100%' }}>
           <Listbox
