@@ -267,6 +267,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                 state,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
+                state.activeWallet?.isContractAddress,
               )}
               css={{
                 display: 'inline-flex',

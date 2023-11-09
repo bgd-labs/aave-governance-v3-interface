@@ -77,7 +77,15 @@ export function TxText({
               <ChainNameWithIcon
                 chainId={item.chainId}
                 iconSize={8}
-                css={{ position: 'relative', bottom: inTxHistory ? 0 : 2 }}
+                css={{
+                  position: 'relative',
+                  bottom: inTxHistory ? 0 : 2,
+                  display: inTxHistory ? 'inline-block' : 'inline-flex',
+                  '.NetworkIcon': { mr: inTxHistory ? 'inline' : undefined },
+                  '.ChainNameWithIcon__text': {
+                    display: inTxHistory ? 'inline' : undefined,
+                  },
+                }}
               />
             </b>{' '}
             {endText}
