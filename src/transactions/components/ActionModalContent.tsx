@@ -185,6 +185,7 @@ export function ActionModalContent({
                         state,
                         chainInfoHelper.getChainParameters,
                         txHash,
+                        state.activeWallet?.isContractAddress,
                       )}
                       css={{
                         display: 'inline-flex',
