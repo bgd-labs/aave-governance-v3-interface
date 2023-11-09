@@ -37,7 +37,8 @@ interface ProposalPayloadsProps {
   proposalQueuingTime: number;
   isProposalExecuted: boolean;
   payloads: Payload[];
-  setSelectedPayloadForExecute: (payload: InitialPayload | undefined) => void;
+  setSelectedPayloadForExecute?: (payload: InitialPayload | undefined) => void;
+  forCreate?: boolean;
 }
 
 function PayloadItemStatusInfo({
@@ -72,12 +73,14 @@ function PayloadItem({
   isFullView,
   inList,
   setSelectedPayloadForExecute,
+  forCreate,
 }: Pick<
   ProposalPayloadsProps,
   | 'setSelectedPayloadForExecute'
   | 'isProposalExecuted'
   | 'proposalId'
   | 'proposalQueuingTime'
+  | 'forCreate'
 > & {
   payload: Payload;
   payloadCount: number;
@@ -129,8 +132,11 @@ function PayloadItem({
   //   payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
   // }
 
-  let payloadNumber =
-    totalPayloadsCount > 1 ? `${payloadCount}/${totalPayloadsCount}` : '';
+  let payloadNumber = forCreate
+    ? `id #${payload.id}`
+    : totalPayloadsCount > 1
+    ? `${payloadCount}/${totalPayloadsCount}`
+    : '';
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;
   const isArrowVisibleForFirstPayload = totalPayloadsCount > 1 && isFullView;
@@ -228,11 +234,13 @@ function PayloadItem({
                   disabled={tx?.status === TransactionStatus.Success}
                   loading={tx?.pending}
                   onClick={() => {
-                    setSelectedPayloadForExecute({
-                      chainId: payload.chainId,
-                      payloadsController: payload.payloadsController,
-                      id: payload.id,
-                    });
+                    if (!!setSelectedPayloadForExecute) {
+                      setSelectedPayloadForExecute({
+                        chainId: payload.chainId,
+                        payloadsController: payload.payloadsController,
+                        id: payload.id,
+                      });
+                    }
                     store.setExecutePayloadModalOpen(true);
                   }}>
                   {texts.proposals.payloadsDetails.execute}
@@ -291,6 +299,17 @@ function PayloadItem({
             mt: 4,
           }}>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            {forCreate && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+                <Box sx={{ typography: 'descriptorAccent' }}>
+                  {texts.proposals.payloadsDetails.accessLevel}:{' '}
+                  <Box sx={{ display: 'inline', typography: 'headline' }}>
+                    {payload.maximumAccessLevelRequired}
+                  </Box>
+                </Box>
+              </Box>
+            )}
+
             <Box sx={{ typography: 'descriptorAccent' }}>
               {texts.proposals.payloadsDetails.actions(
                 payload.actionAddresses?.length || 0,
@@ -370,6 +389,7 @@ function PayloadItem({
               ))}
             </Box>
           </Box>
+
           {/*TODO: will need in future*/}
           {/*{!isFinalStatus && (*/}
           {/*  <Box*/}
@@ -398,6 +418,7 @@ export function ProposalPayloads({
   payloads,
   setSelectedPayloadForExecute,
   proposalQueuingTime,
+  forCreate,
 }: ProposalPayloadsProps) {
   const theme = useTheme();
 
@@ -448,6 +469,7 @@ export function ProposalPayloads({
           isFullView={isFullView}
           setSelectedPayloadForExecute={setSelectedPayloadForExecute}
           proposalQueuingTime={proposalQueuingTime}
+          forCreate={forCreate}
         />
 
         {!!formattedPayloadsForList.length && isFullView && (
@@ -464,6 +486,7 @@ export function ProposalPayloads({
                 inList
                 setSelectedPayloadForExecute={setSelectedPayloadForExecute}
                 proposalQueuingTime={proposalQueuingTime}
+                forCreate={forCreate}
               />
             ))}
           </>

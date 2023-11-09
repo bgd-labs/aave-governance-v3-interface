@@ -9,6 +9,7 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Hex } from 'viem';
 
+import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';
@@ -167,7 +168,8 @@ export const createTransactionsSlice: StoreSlice<
     IProposalsHistorySlice &
     IRepresentationsSlice &
     IEnsSlice &
-    IRpcSwitcherSlice
+    IRpcSwitcherSlice &
+    ICreateByParamsSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {

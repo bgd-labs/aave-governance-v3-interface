@@ -1,6 +1,7 @@
 import { useSearchParams } from 'next/navigation';
 import queryString from 'query-string';
 import React from 'react';
+import { Hex } from 'viem';
 
 import { CreateByParamsPage } from '../src/createByParams/components/CreateByParamsPage';
 import { InitialParams, PayloadParams } from '../src/createByParams/types';
@@ -12,10 +13,10 @@ export default function CreateByParams() {
 
   // params
   const ipfsHash = !!searchParams.get('ipfsHash')
-    ? String(searchParams.get('ipfsHash'))
+    ? (String(searchParams.get('ipfsHash')) as Hex)
     : undefined;
   const votingPortal = !!searchParams.get('votingPortal')
-    ? String(searchParams.get('votingPortal'))
+    ? (String(searchParams.get('votingPortal')) as Hex)
     : undefined;
 
   const payloads: Record<number, PayloadParams> = {};

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Hex } from 'viem';
 
 import { CreateByParamsPage } from '../../src/createByParams/components/CreateByParamsPage';
 import { InitialParams, PayloadParams } from '../../src/createByParams/types';
@@ -10,10 +11,10 @@ export default async function CreateByParams({
 }) {
   // params
   const ipfsHash = !!searchParams['ipfsHash']
-    ? String(searchParams['ipfsHash'])
+    ? (String(searchParams['ipfsHash']) as Hex)
     : undefined;
   const votingPortal = !!searchParams['votingPortal']
-    ? String(searchParams['votingPortal'])
+    ? (String(searchParams['votingPortal']) as Hex)
     : undefined;
 
   const payloads: Record<number, PayloadParams> = {};
