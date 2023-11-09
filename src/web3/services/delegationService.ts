@@ -29,6 +29,7 @@ export type DelegateDataParams = {
   delegator: Hex;
   delegatee: Hex;
   delegationType: GovernancePowerTypeApp;
+  increaseNonce?: boolean;
 };
 
 export type BatchMetaDelegateParams = {

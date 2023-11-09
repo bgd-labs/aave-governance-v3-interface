@@ -178,6 +178,8 @@ export const createDelegationSlice: StoreSlice<
                   ? activeAddress
                   : propositionToAddress,
               delegationType: GovernancePowerTypeApp.PROPOSITION,
+              increaseNonce:
+                !isVotingToAddressSame && !isPropositionToAddressSame,
             });
           }
         }
@@ -195,16 +197,18 @@ export const createDelegationSlice: StoreSlice<
     const data = await get().prepareDataForDelegation(formDelegateData);
 
     if (activeAddress && !isWalletAddressContract) {
-      const sigs: BatchMetaDelegateParams[] = await Promise.all(
-        data.map(async (dataItem) => {
-          return (await delegationService.delegateMetaSig(
-            dataItem.underlyingAsset,
-            dataItem.delegatee,
-            dataItem.delegationType,
-            dataItem.delegator,
-          )) as BatchMetaDelegateParams;
-        }),
-      );
+      const sigs: BatchMetaDelegateParams[] = [];
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i];
+        const sig = (await delegationService.delegateMetaSig(
+          item.underlyingAsset,
+          item.delegatee,
+          item.delegationType,
+          item.delegator,
+          item.increaseNonce,
+        )) as BatchMetaDelegateParams;
+        sigs.push(sig);
+      }
 
       if (!!sigs.length) {
         await get().executeTx({
