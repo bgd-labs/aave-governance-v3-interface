@@ -341,7 +341,9 @@ function PayloadItem({
                     inNewWindow
                     href={`${chainInfoHelper.getChainParameters(
                       payload.chainId || appConfig.govCoreChainId,
-                    ).blockExplorers?.default.url}/address/${address}`}>
+                    ).blockExplorers?.default.url}/address/${address}${
+                      forCreate ? '#code' : ''
+                    }`}>
                     <Box
                       component="li"
                       sx={{

@@ -1,8 +1,20 @@
+import { Metadata } from 'next';
 import React from 'react';
 import { Hex } from 'viem';
 
 import { CreateByParamsPage } from '../../src/createByParams/components/CreateByParamsPage';
 import { InitialParams, PayloadParams } from '../../src/createByParams/types';
+import { metaTexts } from '../../src/ui/utils/metaTexts';
+
+export const metadata: Metadata = {
+  title: metaTexts.ipfsTitle,
+  description: metaTexts.ipfsDescription,
+  openGraph: {
+    images: ['/metaLogo.jpg'],
+    title: metaTexts.ipfsTitle,
+    description: metaTexts.ipfsDescription,
+  },
+};
 
 export default async function CreateByParams({
   searchParams,
