@@ -3,7 +3,7 @@ import {
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import Sdk from '@safe-global/safe-apps-sdk/src/sdk';
+import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
 import { Hex, zeroAddress } from 'viem';
