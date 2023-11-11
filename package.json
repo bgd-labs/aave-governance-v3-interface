@@ -40,6 +40,7 @@
     "@gelatonetwork/relay-sdk": "^5.5.2",
     "@headlessui/react": "^1.7.17",
     "@mui/system": "^5.14.17",
+    "@safe-global/safe-apps-sdk": "^8.1.0",
     "@safe-global/safe-deployments": "^1.28.0",
     "alova": "^2.13.1",
     "bignumber.js": "^9.1.2",

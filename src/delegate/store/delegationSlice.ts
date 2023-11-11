@@ -3,6 +3,7 @@ import {
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import Sdk from '@safe-global/safe-apps-sdk/src/sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
 import { Hex, zeroAddress } from 'viem';
@@ -228,38 +229,94 @@ export const createDelegationSlice: StoreSlice<
         });
       }
     } else if (activeAddress && isWalletAddressContract) {
-      if (data.length > 1) {
-        for (let i = 0; i < data.length; i++) {
-          const item = data[i];
-          if (!isEqual(item, data[data.length - 1])) {
-            await delegationService.delegate(
-              item.underlyingAsset,
-              item.delegatee,
-              item.delegationType,
-            );
+      if (get().activeWallet?.walletType === 'GnosisSafe') {
+        const options = {
+          allowedDomains: [
+            /gnosis-safe.io$/,
+            /app.safe.global$/,
+            /metissafe.tech$/,
+          ],
+          debug: false,
+        };
+
+        const safeSdk = new Sdk(options);
+        const safeInfo = await safeSdk.safe.getInfo();
+        console.log('safeInfo', safeInfo);
+
+        if (safeInfo.safeAddress) {
+          const txsData = await Promise.all(
+            data.map(async (item) => {
+              const txData = await delegationService.getDelegateTxParams(
+                item.underlyingAsset,
+                item.delegatee,
+                item.delegationType,
+              );
+
+              return {
+                to: item.underlyingAsset,
+                value: '0',
+                data: txData,
+              };
+            }),
+          );
+
+          console.log('txsData', txsData);
+
+          const safeTxHash = (await safeSdk.txs.send({ txs: txsData }))
+            .safeTxHash as Hex;
+
+          console.log('safeTxHash', safeTxHash);
+
+          await get().executeTx({
+            body: () => {
+              get().setModalOpen(true);
+              return new Promise(() => safeTxHash);
+            },
+            params: {
+              type: 'delegate',
+              desiredChainID: appConfig.govCoreChainId,
+              payload: {
+                delegateData: stateDelegateData,
+                formDelegateData,
+                timestamp,
+              },
+            },
+          });
+        }
+      } else {
+        if (data.length > 1) {
+          for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            if (!isEqual(item, data[data.length - 1])) {
+              await delegationService.delegate(
+                item.underlyingAsset,
+                item.delegatee,
+                item.delegationType,
+              );
+            }
           }
         }
-      }
 
-      await get().executeTx({
-        body: () => {
-          get().setModalOpen(true);
-          return delegationService.delegate(
-            data[data.length - 1].underlyingAsset,
-            data[data.length - 1].delegatee,
-            data[data.length - 1].delegationType,
-          );
-        },
-        params: {
-          type: 'delegate',
-          desiredChainID: appConfig.govCoreChainId,
-          payload: {
-            delegateData: stateDelegateData,
-            formDelegateData,
-            timestamp,
+        await get().executeTx({
+          body: () => {
+            get().setModalOpen(true);
+            return delegationService.delegate(
+              data[data.length - 1].underlyingAsset,
+              data[data.length - 1].delegatee,
+              data[data.length - 1].delegationType,
+            );
           },
-        },
-      });
+          params: {
+            type: 'delegate',
+            desiredChainID: appConfig.govCoreChainId,
+            payload: {
+              delegateData: stateDelegateData,
+              formDelegateData,
+              timestamp,
+            },
+          },
+        });
+      }
     }
   },
 
