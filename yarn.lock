@@ -1148,10 +1148,10 @@
     viem "^1.18.9"
     wagmi "^1.4.5"
 
-"@bgd-labs/frontend-web3-utils@^0.4.54-850bee49d3cd3eb30a5c2e3ab847eba903239a01.0":
-  version "0.4.54-850bee49d3cd3eb30a5c2e3ab847eba903239a01.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.54-850bee49d3cd3eb30a5c2e3ab847eba903239a01.0.tgz#3a4645b5bde6f038b178f663046473feff365452"
-  integrity sha512-ov7TgBh8gzS2qJnOdlNHu8lRmvX4pxO6eGmavhYiI07PlGTDFPr3VLfUlxbAc94dfJjZ1yHiS7BPj1XGcGsuLQ==
+"@bgd-labs/frontend-web3-utils@^0.4.55-da8df467e02cd2767ffa9bf3f27577b5d9ff2db5.0":
+  version "0.4.55-da8df467e02cd2767ffa9bf3f27577b5d9ff2db5.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.55-da8df467e02cd2767ffa9bf3f27577b5d9ff2db5.0.tgz#e67e311a97d2684f8a242646695120c929c6007a"
+  integrity sha512-k/frP01cwtDAR702fLMULKPP+932Cf08Tx6HUyxD5Pkm848VmCw4KuUZDyzkccnEj16/OC/NLVwh7tQcFgJ1+w==
   dependencies:
     dayjs "^1.11.10"
     lodash "^4.17.21"
@@ -1690,7 +1690,7 @@
     "@safe-global/safe-gateway-typescript-sdk" "^3.5.3"
     viem "^1.0.0"
 
-"@safe-global/safe-apps-sdk@^8.0.0", "@safe-global/safe-apps-sdk@^8.1.0":
+"@safe-global/safe-apps-sdk@^8.0.0":
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/@safe-global/safe-apps-sdk/-/safe-apps-sdk-8.1.0.tgz#d1d0c69cd2bf4eef8a79c5d677d16971926aa64a"
   integrity sha512-XJbEPuaVc7b9n23MqlF6c+ToYIS3f7P2Sel8f3cSBQ9WORE4xrSuvhMpK9fDSFqJ7by/brc+rmJR/5HViRr0/w==

@@ -32,7 +32,7 @@
   "dependencies": {
     "@bgd-labs/aave-address-book": "^2.10.0",
     "@bgd-labs/aave-governance-ui-helpers": "^0.2.96-21b565f97bf492c361f398e614c10bf0bdce0f46.0",
-    "@bgd-labs/frontend-web3-utils": "^0.4.54-850bee49d3cd3eb30a5c2e3ab847eba903239a01.0",
+    "@bgd-labs/frontend-web3-utils": "^0.4.55-da8df467e02cd2767ffa9bf3f27577b5d9ff2db5.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -40,7 +40,6 @@
     "@gelatonetwork/relay-sdk": "^5.5.2",
     "@headlessui/react": "^1.7.17",
     "@mui/system": "^5.14.17",
-    "@safe-global/safe-apps-sdk": "^8.1.0",
     "@safe-global/safe-deployments": "^1.28.0",
     "alova": "^2.13.1",
     "bignumber.js": "^9.1.2",

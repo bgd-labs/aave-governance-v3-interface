@@ -2,7 +2,7 @@ import {
   erc20Contract,
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { safeSdkOptions, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
@@ -230,59 +230,36 @@ export const createDelegationSlice: StoreSlice<
       }
     } else if (activeAddress && isWalletAddressContract) {
       if (get().activeWallet?.walletType === 'GnosisSafe') {
-        const options = {
-          allowedDomains: [
-            /gnosis-safe.io$/,
-            /app.safe.global$/,
-            /metissafe.tech$/,
-          ],
-          debug: false,
-        };
+        const safeSdk = new Sdk(safeSdkOptions);
 
-        const safeSdk = new Sdk(options);
-        const safeInfo = await safeSdk.safe.getInfo();
-        console.log('safeInfo', safeInfo);
-
-        if (safeInfo.safeAddress) {
-          const txsData = await Promise.all(
-            data.map(async (item) => {
-              const txData = await delegationService.getDelegateTxParams(
-                item.underlyingAsset,
-                item.delegatee,
-                item.delegationType,
-              );
-
-              return {
-                to: item.underlyingAsset,
-                value: '0',
-                data: txData,
-              };
-            }),
+        const txsData = data.map((item) => {
+          const txData = delegationService.getDelegateTxParams(
+            item.underlyingAsset,
+            item.delegatee,
+            item.delegationType,
           );
+          return {
+            to: item.underlyingAsset,
+            value: '0',
+            data: txData,
+          };
+        });
 
-          console.log('txsData', txsData);
-
-          const safeTxHash = (await safeSdk.txs.send({ txs: txsData }))
-            .safeTxHash as Hex;
-
-          console.log('safeTxHash', safeTxHash);
-
-          await get().executeTx({
-            body: () => {
-              get().setModalOpen(true);
-              return new Promise(() => safeTxHash);
+        await get().executeTx({
+          body: () => {
+            get().setModalOpen(true);
+            return safeSdk.txs.send({ txs: txsData });
+          },
+          params: {
+            type: 'delegate',
+            desiredChainID: appConfig.govCoreChainId,
+            payload: {
+              delegateData: stateDelegateData,
+              formDelegateData,
+              timestamp,
             },
-            params: {
-              type: 'delegate',
-              desiredChainID: appConfig.govCoreChainId,
-              payload: {
-                delegateData: stateDelegateData,
-                formDelegateData,
-                timestamp,
-              },
-            },
-          });
-        }
+          },
+        });
       } else {
         if (data.length > 1) {
           for (let i = 0; i < data.length; i++) {

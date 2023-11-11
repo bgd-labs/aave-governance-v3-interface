@@ -296,7 +296,7 @@ export class DelegationService {
     }
   }
 
-  async getDelegateTxParams(
+  getDelegateTxParams(
     underlyingAsset: Hex,
     delegateToAddress: Hex,
     type: GovernancePowerTypeApp,
