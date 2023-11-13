@@ -12,6 +12,7 @@ import { PayloadParams } from '../types';
 
 export interface ICreateByParamsSlice {
   createPayloadsData: Record<number, Payload[]>;
+  createPayloadsErrors: Record<string, boolean>;
   getCreatePayloadsData: (
     proposalId: number,
     initialPayloadsData: PayloadParams[],
@@ -28,6 +29,7 @@ export const createByParamsSlice: StoreSlice<
     IRpcSwitcherSlice
 > = (set, get) => ({
   createPayloadsData: {},
+  createPayloadsErrors: {},
   getCreatePayloadsData: async (proposalId, initialPayloadsData) => {
     const payloadsChainIds = initialPayloadsData.map(
       (payload) => payload.chainId,
@@ -49,11 +51,20 @@ export const createByParamsSlice: StoreSlice<
               )
               .map((payload) => payload.payloadId);
 
-            return await get().govDataService.getPayloads(
-              Number(chainId),
-              controller,
-              payloadsIds,
-            );
+            try {
+              return await get().govDataService.getPayloads(
+                Number(chainId),
+                controller,
+                payloadsIds,
+              );
+            } catch {
+              set((state) =>
+                produce(state, (draft) => {
+                  draft.createPayloadsErrors[controller] = true;
+                }),
+              );
+              return [];
+            }
           }),
         );
       }),

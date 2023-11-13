@@ -8,9 +8,19 @@ import { Details } from '../../proposals/components/proposal/Details';
 import { DetailsShareLinks } from '../../proposals/components/proposal/DetailsShareLinks';
 import { ProposalPayloads } from '../../proposals/components/proposal/ProposalPayloads';
 import { useStore } from '../../store';
-import { BackButton3D, BoxWith3D, Container, Divider, NoSSR } from '../../ui';
+import {
+  BackButton3D,
+  BoxWith3D,
+  Container,
+  Divider,
+  Link,
+  NoSSR,
+} from '../../ui';
+import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { ToTopButton } from '../../ui/components/ToTopButton';
 import { getChainName } from '../../ui/utils/getChainName';
+import { appConfig } from '../../utils/appConfig';
+import { chainInfoHelper } from '../../utils/configs';
 import { InitialParams } from '../types';
 
 interface CreateByParamsPageProps {
@@ -28,6 +38,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     ipfsDataErrors,
     createPayloadsData,
     getCreatePayloadsData,
+    createPayloadsErrors,
   } = useStore();
 
   useEffect(() => {
@@ -43,8 +54,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
   const newIpfsDataError = ipfsDataErrors[initialParams.ipfsHash || ''];
   const payloads = createPayloadsData[totalProposalCount + 1];
 
-  // TODO: need loading
-  if (!initialParams || !newIpfsData || !payloads) return null;
+  if (!initialParams) return null;
 
   return (
     <Container>
@@ -63,14 +73,39 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
             [theme.breakpoints.up('sm')]: { display: 'none' },
           }}>
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
-              {newIpfsData.title}
-            </Box>
-            <DetailsShareLinks
-              ipfs={newIpfsData}
-              ipfsError={newIpfsDataError}
-              forCreate
-            />
+            {!newIpfsData ? (
+              <>
+                <Box
+                  sx={{
+                    mb: 8,
+                    [theme.breakpoints.up('sm')]: { mb: 12 },
+                    [theme.breakpoints.up('lg')]: { mb: 16 },
+                    '.ProposalListItem__title--loading': {
+                      height: 17,
+                      [theme.breakpoints.up('lg')]: {
+                        height: 21,
+                      },
+                    },
+                  }}>
+                  <CustomSkeleton
+                    className="ProposalListItem__title--loading"
+                    count={2}
+                    width="100%"
+                  />
+                </Box>
+              </>
+            ) : (
+              <>
+                <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
+                  {newIpfsData.title}
+                </Box>
+                <DetailsShareLinks
+                  ipfs={newIpfsData}
+                  ipfsError={newIpfsDataError}
+                  forCreate
+                />
+              </>
+            )}
           </Box>
         </Box>
 
@@ -101,7 +136,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
               },
             }}>
             <NoSSR>
-              {payloads.some((payload) => !payload?.state) && (
+              {(payloads || []).some((payload) => !payload?.state) && (
                 <BoxWith3D
                   wrapperCss={{ mb: 12 }}
                   borderSize={10}
@@ -130,13 +165,75 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
             </NoSSR>
 
             <NoSSR>
-              <ProposalPayloads
-                proposalId={totalProposalCount + 1}
-                isProposalExecuted={false}
-                payloads={payloads}
-                proposalQueuingTime={100}
-                forCreate
-              />
+              <Box sx={{ mb: 12 }}>
+                {!!payloads &&
+                payloads.length &&
+                !Object.keys(createPayloadsErrors).length ? (
+                  <ProposalPayloads
+                    proposalId={totalProposalCount + 1}
+                    isProposalExecuted={false}
+                    payloads={payloads}
+                    proposalQueuingTime={100}
+                    forCreate
+                  />
+                ) : !!Object.keys(createPayloadsErrors).length ? (
+                  <>
+                    {initialParams.payloads
+                      .filter(
+                        (value) =>
+                          !!createPayloadsErrors[value.payloadsController],
+                      )
+                      .map((value, index) => {
+                        return (
+                          <Box key={index}>
+                            <BoxWith3D
+                              borderSize={10}
+                              contentColor="$mainLight"
+                              bottomBorderColor="$light"
+                              css={{ p: '15px 20px 15px 20px' }}>
+                              <Box sx={{ wordBreak: 'break-word' }}>
+                                Cannot get payload id {value.payloadId}
+                                <br />
+                                <br />
+                                payloadController:{' '}
+                                <Link
+                                  css={{ display: 'inline-block' }}
+                                  href={`${chainInfoHelper.getChainParameters(
+                                    value.chainId || appConfig.govCoreChainId,
+                                  ).blockExplorers?.default.url}/address/${
+                                    value.payloadsController
+                                  }`}
+                                  inNewWindow>
+                                  {value.payloadsController}
+                                </Link>
+                              </Box>
+                            </BoxWith3D>
+                          </Box>
+                        );
+                      })}
+                  </>
+                ) : (
+                  <>
+                    {initialParams.payloads.map((value, index) => {
+                      return (
+                        <Box key={index}>
+                          <BoxWith3D
+                            borderSize={10}
+                            contentColor="$mainLight"
+                            bottomBorderColor="$light"
+                            css={{ p: '15px 20px 15px 20px' }}>
+                            <CustomSkeleton
+                              className="ProposalListItem__title--loading"
+                              count={3}
+                              width="100%"
+                            />
+                          </BoxWith3D>
+                        </Box>
+                      );
+                    })}
+                  </>
+                )}
+              </Box>
             </NoSSR>
           </Box>
 
@@ -168,16 +265,41 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                 display: 'none',
                 [theme.breakpoints.up('sm')]: { display: 'block' },
               }}>
-              <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
-                {newIpfsData.title}
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
-                <DetailsShareLinks
-                  ipfs={newIpfsData}
-                  ipfsError={newIpfsDataError}
-                  forCreate
-                />
-              </Box>
+              {!newIpfsData ? (
+                <>
+                  <Box
+                    sx={{
+                      mb: 8,
+                      [theme.breakpoints.up('sm')]: { mb: 12 },
+                      [theme.breakpoints.up('lg')]: { mb: 16 },
+                      '.ProposalListItem__title--loading': {
+                        height: 17,
+                        [theme.breakpoints.up('lg')]: {
+                          height: 21,
+                        },
+                      },
+                    }}>
+                    <CustomSkeleton
+                      className="ProposalListItem__title--loading"
+                      count={2}
+                      width="100%"
+                    />
+                  </Box>
+                </>
+              ) : (
+                <>
+                  <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
+                    {newIpfsData.title}
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
+                    <DetailsShareLinks
+                      ipfs={newIpfsData}
+                      ipfsError={newIpfsDataError}
+                      forCreate
+                    />
+                  </Box>
+                </>
+              )}
             </Box>
 
             <Details ipfs={newIpfsData} ipfsError={newIpfsDataError} />
