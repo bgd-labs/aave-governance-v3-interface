@@ -165,75 +165,75 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
             </NoSSR>
 
             <NoSSR>
-              <Box sx={{ mb: 12 }}>
-                {!!payloads &&
-                payloads.length &&
-                !Object.keys(createPayloadsErrors).length ? (
-                  <ProposalPayloads
-                    proposalId={totalProposalCount + 1}
-                    isProposalExecuted={false}
-                    payloads={payloads}
-                    proposalQueuingTime={100}
-                    forCreate
-                  />
-                ) : !!Object.keys(createPayloadsErrors).length ? (
-                  <>
-                    {initialParams.payloads
-                      .filter(
-                        (value) =>
-                          !!createPayloadsErrors[value.payloadsController],
-                      )
-                      .map((value, index) => {
-                        return (
-                          <Box key={index}>
-                            <BoxWith3D
-                              borderSize={10}
-                              contentColor="$mainLight"
-                              bottomBorderColor="$light"
-                              css={{ p: '15px 20px 15px 20px' }}>
-                              <Box sx={{ wordBreak: 'break-word' }}>
-                                Cannot get payload id {value.payloadId}
-                                <br />
-                                <br />
-                                payloadController:{' '}
-                                <Link
-                                  css={{ display: 'inline-block' }}
-                                  href={`${chainInfoHelper.getChainParameters(
-                                    value.chainId || appConfig.govCoreChainId,
-                                  ).blockExplorers?.default.url}/address/${
-                                    value.payloadsController
-                                  }`}
-                                  inNewWindow>
-                                  {value.payloadsController}
-                                </Link>
-                              </Box>
-                            </BoxWith3D>
-                          </Box>
-                        );
-                      })}
-                  </>
-                ) : (
-                  <>
-                    {initialParams.payloads.map((value, index) => {
+              {!!payloads &&
+              payloads.length &&
+              !Object.keys(createPayloadsErrors).length ? (
+                <ProposalPayloads
+                  proposalId={totalProposalCount + 1}
+                  isProposalExecuted={false}
+                  payloads={payloads}
+                  proposalQueuingTime={100}
+                  forCreate
+                />
+              ) : !!Object.keys(createPayloadsErrors).length ? (
+                <>
+                  {initialParams.payloads
+                    .filter(
+                      (value) =>
+                        !!createPayloadsErrors[value.payloadsController],
+                    )
+                    .map((value, index) => {
                       return (
                         <Box key={index}>
                           <BoxWith3D
                             borderSize={10}
                             contentColor="$mainLight"
                             bottomBorderColor="$light"
+                            wrapperCss={{ mb: 12 }}
                             css={{ p: '15px 20px 15px 20px' }}>
-                            <CustomSkeleton
-                              className="ProposalListItem__title--loading"
-                              count={3}
-                              width="100%"
-                            />
+                            <Box sx={{ wordBreak: 'break-word' }}>
+                              Cannot get payload id {value.payloadId}
+                              <br />
+                              <br />
+                              payloadController:{' '}
+                              <Link
+                                css={{ display: 'inline-block' }}
+                                href={`${chainInfoHelper.getChainParameters(
+                                  value.chainId || appConfig.govCoreChainId,
+                                ).blockExplorers?.default.url}/address/${
+                                  value.payloadsController
+                                }`}
+                                inNewWindow>
+                                {value.payloadsController}
+                              </Link>
+                            </Box>
                           </BoxWith3D>
                         </Box>
                       );
                     })}
-                  </>
-                )}
-              </Box>
+                </>
+              ) : (
+                <>
+                  {initialParams.payloads.map((value, index) => {
+                    return (
+                      <Box key={index}>
+                        <BoxWith3D
+                          borderSize={10}
+                          contentColor="$mainLight"
+                          bottomBorderColor="$light"
+                          wrapperCss={{ mb: 12 }}
+                          css={{ p: '15px 20px 15px 20px' }}>
+                          <CustomSkeleton
+                            className="ProposalListItem__title--loading"
+                            count={3}
+                            width="100%"
+                          />
+                        </BoxWith3D>
+                      </Box>
+                    );
+                  })}
+                </>
+              )}
             </NoSSR>
           </Box>
 
