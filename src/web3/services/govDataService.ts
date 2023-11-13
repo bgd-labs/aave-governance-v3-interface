@@ -912,7 +912,10 @@ export class GovDataService {
       contractAddress: payloadsController,
       walletClient: this.walletClient,
     });
-    return payloadsControllerContract.write.executePayload([payloadId]);
+    return payloadsControllerContract.write.executePayload([payloadId], {
+      // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+      value: BigInt(0) as any,
+    });
   }
 
   async createPayload(
