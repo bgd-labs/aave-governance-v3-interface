@@ -178,6 +178,8 @@ export const createDelegationSlice: StoreSlice<
                   ? activeAddress
                   : propositionToAddress,
               delegationType: GovernancePowerTypeApp.PROPOSITION,
+              increaseNonce:
+                !isVotingToAddressSame && !isPropositionToAddressSame,
             });
           }
         }
@@ -195,16 +197,18 @@ export const createDelegationSlice: StoreSlice<
     const data = await get().prepareDataForDelegation(formDelegateData);
 
     if (activeAddress && !isWalletAddressContract) {
-      const sigs: BatchMetaDelegateParams[] = await Promise.all(
-        data.map(async (dataItem) => {
-          return (await delegationService.delegateMetaSig(
-            dataItem.underlyingAsset,
-            dataItem.delegatee,
-            dataItem.delegationType,
-            dataItem.delegator,
-          )) as BatchMetaDelegateParams;
-        }),
-      );
+      const sigs: BatchMetaDelegateParams[] = [];
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i];
+        const sig = (await delegationService.delegateMetaSig(
+          item.underlyingAsset,
+          item.delegatee,
+          item.delegationType,
+          item.delegator,
+          item.increaseNonce,
+        )) as BatchMetaDelegateParams;
+        sigs.push(sig);
+      }
 
       if (!!sigs.length) {
         await get().executeTx({
@@ -224,37 +228,38 @@ export const createDelegationSlice: StoreSlice<
         });
       }
     } else if (activeAddress && isWalletAddressContract) {
-      await Promise.all([
-        await get().executeTx({
-          body: () => {
-            get().setModalOpen(true);
-            return delegationService.delegate(
-              data[data.length - 1].underlyingAsset,
-              data[data.length - 1].delegatee,
-              data[data.length - 1].delegationType,
+      if (data.length > 1) {
+        for (let i = 0; i < data.length; i++) {
+          const item = data[i];
+          if (!isEqual(item, data[data.length - 1])) {
+            await delegationService.delegate(
+              item.underlyingAsset,
+              item.delegatee,
+              item.delegationType,
             );
+          }
+        }
+      }
+
+      await get().executeTx({
+        body: () => {
+          get().setModalOpen(true);
+          return delegationService.delegate(
+            data[data.length - 1].underlyingAsset,
+            data[data.length - 1].delegatee,
+            data[data.length - 1].delegationType,
+          );
+        },
+        params: {
+          type: 'delegate',
+          desiredChainID: appConfig.govCoreChainId,
+          payload: {
+            delegateData: stateDelegateData,
+            formDelegateData,
+            timestamp,
           },
-          params: {
-            type: 'delegate',
-            desiredChainID: appConfig.govCoreChainId,
-            payload: {
-              delegateData: stateDelegateData,
-              formDelegateData,
-              timestamp,
-            },
-          },
-        }),
-        data.length > 1 &&
-          data.map(async (dataItem) => {
-            if (!isEqual(dataItem, data[data.length - 1])) {
-              return delegationService.delegate(
-                dataItem.underlyingAsset,
-                dataItem.delegatee,
-                dataItem.delegationType,
-              );
-            }
-          }),
-      ]);
+        },
+      });
     }
   },
 
