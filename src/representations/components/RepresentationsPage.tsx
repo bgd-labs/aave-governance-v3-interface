@@ -101,6 +101,7 @@ export function RepresentationsPage() {
     executeTxWithLocalStatuses,
     isTxReplaced,
     replacedTxHash,
+    txChainId,
   } = useLastTxLocalStatus({
     type: 'representations',
     payload: {
@@ -314,6 +315,7 @@ export function RepresentationsPage() {
           fullTxErrorMessage={fullTxErrorMessage}
           isTxReplaced={isTxReplaced}
           replacedTxHash={replacedTxHash}
+          txChainId={txChainId}
         />
       )}
     </>
