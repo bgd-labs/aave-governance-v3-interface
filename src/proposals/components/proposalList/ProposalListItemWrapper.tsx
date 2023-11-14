@@ -37,8 +37,8 @@ export function ProposalListItemWrapper({
         estimatedState === ProposalEstimatedState.Defeated && !isFinished
           ? '$secondaryAgainst'
           : estimatedState === ProposalEstimatedState.Succeed && !isFinished
-          ? '$secondaryFor'
-          : '$light'
+            ? '$secondaryFor'
+            : '$light'
       }
       wrapperCss={{ mb: 20 }}
       css={{

@@ -112,10 +112,10 @@ export function HelpTxWrapper({
                   !txPending && !txSuccess
                     ? txStartImageMobile
                     : txPending && !txSuccess
-                    ? theme.palette.mode === 'dark'
-                      ? 'images/helpModals/txLoadingMobileDark.svg'
-                      : 'images/helpModals/txLoadingMobile.svg'
-                    : txEndImageMobile
+                      ? theme.palette.mode === 'dark'
+                        ? 'images/helpModals/txLoadingMobileDark.svg'
+                        : 'images/helpModals/txLoadingMobile.svg'
+                      : txEndImageMobile
                 }`,
               )})`,
               backgroundSize: 'contain',
@@ -187,10 +187,10 @@ export function HelpTxWrapper({
                   !txPending && !txSuccess
                     ? txStartImageMobile
                     : txPending && !txSuccess
-                    ? theme.palette.mode === 'dark'
-                      ? 'images/helpModals/txLoadingMobileDark.svg'
-                      : 'images/helpModals/txLoadingMobile.svg'
-                    : txEndImageMobile
+                      ? theme.palette.mode === 'dark'
+                        ? 'images/helpModals/txLoadingMobileDark.svg'
+                        : 'images/helpModals/txLoadingMobile.svg'
+                      : txEndImageMobile
                 }`,
               )})`,
               backgroundSize: 'contain',

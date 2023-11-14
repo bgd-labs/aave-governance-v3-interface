@@ -101,6 +101,7 @@ export function RepresentationsPage() {
     executeTxWithLocalStatuses,
     isTxReplaced,
     replacedTxHash,
+    txChainId,
   } = useLastTxLocalStatus({
     type: 'representations',
     payload: {
@@ -246,11 +247,12 @@ export function RepresentationsPage() {
                                   activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.representative)
-                                  ? getAddressByENSNameIfExists(
-                                      store,
-                                      data.representative,
-                                    ) || data.representative.toLocaleLowerCase()
-                                  : data.representative.toLocaleLowerCase(),
+                                    ? getAddressByENSNameIfExists(
+                                        store,
+                                        data.representative,
+                                      ) ||
+                                      data.representative.toLocaleLowerCase()
+                                    : data.representative.toLocaleLowerCase(),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length
@@ -314,6 +316,7 @@ export function RepresentationsPage() {
           fullTxErrorMessage={fullTxErrorMessage}
           isTxReplaced={isTxReplaced}
           replacedTxHash={replacedTxHash}
+          txChainId={txChainId}
         />
       )}
     </>

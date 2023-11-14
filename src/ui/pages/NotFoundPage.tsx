@@ -27,6 +27,7 @@ export function NotFoundPage() {
         <Box sx={{ maxWidth: 444, m: '0 auto' }}>
           <NoSSR>
             {theme.palette.mode === 'dark' ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 width="100%"
                 height="auto"
@@ -34,6 +35,7 @@ export function NotFoundPage() {
                 alt={`404 - ${metaTexts.notFoundPageMetaTitle}`}
               />
             ) : (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 width="100%"
                 height="auto"

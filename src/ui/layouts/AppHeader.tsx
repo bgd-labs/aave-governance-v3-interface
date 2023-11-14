@@ -164,8 +164,8 @@ export function AppHeader() {
                   ? `${theme.palette.$mainStable} !important`
                   : theme.palette.$mainStable
                 : isRendered
-                ? `${theme.palette.$paper} !important`
-                : theme.palette.$paper,
+                  ? `${theme.palette.$paper} !important`
+                  : theme.palette.$paper,
               '> div': {
                 left: mobileMenuOpen ? 3 : 0,
                 bottom: mobileMenuOpen ? 3 : 0,

@@ -213,18 +213,18 @@ export function ConnectWalletButton({
                   backgroundColor: lastTransactionError
                     ? '$error'
                     : lastTransactionSuccess
-                    ? '$mainFor'
-                    : '$light',
+                      ? '$mainFor'
+                      : '$light',
                   transition: 'all 0.2s ease',
                   color: '$text',
                   hover: {
                     backgroundColor: lastTransactionError
                       ? theme.palette.$error
                       : lastTransactionSuccess
-                      ? theme.palette.$mainFor
-                      : theme.palette.mode === 'dark'
-                      ? theme.palette.$mainButton
-                      : theme.palette.$middleLight,
+                        ? theme.palette.$mainFor
+                        : theme.palette.mode === 'dark'
+                          ? theme.palette.$mainButton
+                          : theme.palette.$middleLight,
                     '.ConnectWalletButton__text': {
                       color:
                         !lastTransactionError && !lastTransactionSuccess
@@ -236,10 +236,10 @@ export function ConnectWalletButton({
                     backgroundColor: lastTransactionError
                       ? '$error'
                       : lastTransactionSuccess
-                      ? '$mainFor'
-                      : theme.palette.mode === 'dark'
-                      ? '$disabled'
-                      : '$secondary',
+                        ? '$mainFor'
+                        : theme.palette.mode === 'dark'
+                          ? '$disabled'
+                          : '$secondary',
                   },
                   '&:disabled': {
                     cursor: 'not-allowed',
@@ -295,16 +295,16 @@ export function ConnectWalletButton({
                     color: lastTransactionError
                       ? '$textWhite'
                       : lastTransactionSuccess
-                      ? '$textWhite'
-                      : '$text',
+                        ? '$textWhite'
+                        : '$text',
                   }}>
                   {lastTransactionError
                     ? 'Error'
                     : lastTransactionSuccess
-                    ? 'Success'
-                    : ensNameAbbreviated
-                    ? ensNameAbbreviated
-                    : textCenterEllipsis(activeAddress, 4, 4)}
+                      ? 'Success'
+                      : ensNameAbbreviated
+                        ? ensNameAbbreviated
+                        : textCenterEllipsis(activeAddress, 4, 4)}
                 </Box>
                 <Box
                   sx={{

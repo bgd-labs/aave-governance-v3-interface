@@ -26,14 +26,14 @@ export function ProposalStatus({
         color: isFinished
           ? '$text'
           : status === ProposalState.Defeated
-          ? '$mainAgainst'
-          : status === ProposalState.Succeed
-          ? '$mainFor'
-          : status === ProposalState.Expired
-          ? '$textDisabled'
-          : isSecondary
-          ? '$textSecondary'
-          : '$text',
+            ? '$mainAgainst'
+            : status === ProposalState.Succeed
+              ? '$mainFor'
+              : status === ProposalState.Expired
+                ? '$textDisabled'
+                : isSecondary
+                  ? '$textSecondary'
+                  : '$text',
       }}>
       {statusTitle}
     </Box>

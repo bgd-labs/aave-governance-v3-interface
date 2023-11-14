@@ -232,7 +232,7 @@ export function ActionModalContent({
                     </Link>
                   </Box>
                 )}
-                {isTxReplaced && replacedTxHash && (
+                {isTxReplaced && replacedTxHash && txHash && (
                   <Box
                     sx={{
                       display: 'flex',
@@ -242,8 +242,13 @@ export function ActionModalContent({
                     }}>
                     {txChainId && (
                       <Link
-                        href={`${chainInfoHelper.getChainParameters(txChainId)
-                          .blockExplorers?.default.url}/tx/${replacedTxHash}`}
+                        href={selectTxExplorerLink(
+                          state,
+                          chainInfoHelper.getChainParameters,
+                          txHash,
+                          state.activeWallet?.isContractAddress,
+                          replacedTxHash,
+                        )}
                         css={{
                           display: 'inline-flex',
                           alignItems: 'center',

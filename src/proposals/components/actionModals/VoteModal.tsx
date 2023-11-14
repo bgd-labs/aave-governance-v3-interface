@@ -122,7 +122,7 @@ export function VoteModal({
   });
 
   useEffect(() => {
-    if (txPending === false || isError === true) {
+    if (txPending === false || isError) {
       store.startDetailedProposalDataPolling(
         fromList ? undefined : [proposalId],
       );

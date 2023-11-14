@@ -24,8 +24,8 @@ export function ProposalListItemFinalStatus({
     status === ProposalState.Defeated
       ? '$mainAgainst'
       : status === ProposalState.Executed
-      ? '$mainFor'
-      : '$disabled';
+        ? '$mainFor'
+        : '$disabled';
 
   const icon = status === ProposalState.Executed ? SuccessIcon : ErrorIcon;
 

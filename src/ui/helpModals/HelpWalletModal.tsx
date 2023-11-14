@@ -85,13 +85,13 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
               setWalletActivating(false);
             }
           : !isFirstStepOnMobile
-          ? () => setIsFirstStepOnMobile(true)
-          : () => {
-              setIsHelpWalletModalOpen(false);
-              infoType === InfoType.Vote
-                ? setIsHelpVotingModalOpen(true)
-                : setIsHelpNavigationModalOpen(true);
-            }
+            ? () => setIsFirstStepOnMobile(true)
+            : () => {
+                setIsHelpWalletModalOpen(false);
+                infoType === InfoType.Vote
+                  ? setIsHelpVotingModalOpen(true)
+                  : setIsHelpNavigationModalOpen(true);
+              }
       }
       withCloseButton>
       <HelpModalContainer

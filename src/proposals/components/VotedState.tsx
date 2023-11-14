@@ -28,8 +28,8 @@ export function VotedState({
             isBig && support
               ? '$mainFor'
               : isBig && !support
-              ? '$mainAgainst'
-              : '$text',
+                ? '$mainAgainst'
+                : '$text',
         }}>
         {support ? texts.other.toggleFor : texts.other.toggleAgainst}
       </Box>

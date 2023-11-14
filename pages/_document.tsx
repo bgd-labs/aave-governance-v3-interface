@@ -40,6 +40,7 @@ export default class MyDocument extends Document {
 
           <script dangerouslySetInnerHTML={{ __html: scriptForIpfs }} />
 
+          {/* eslint-disable-next-line @next/next/no-title-in-document-head */}
           <title>{metaTexts.ipfsTitle}</title>
           <meta
             name="description"

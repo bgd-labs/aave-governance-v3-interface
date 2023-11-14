@@ -225,8 +225,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                       tx.status === TransactionStatus.Success
                         ? theme.palette.$mainFor
                         : tx.status === TransactionStatus.Replaced
-                        ? undefined
-                        : theme.palette.$mainAgainst,
+                          ? undefined
+                          : theme.palette.$mainAgainst,
                     fill:
                       tx.status === TransactionStatus.Replaced
                         ? theme.palette.$textSecondary
@@ -236,8 +236,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                         tx.status === TransactionStatus.Success
                           ? theme.palette.$mainFor
                           : tx.status === TransactionStatus.Replaced
-                          ? theme.palette.$textSecondary
-                          : theme.palette.$mainAgainst,
+                            ? theme.palette.$textSecondary
+                            : theme.palette.$mainAgainst,
                     },
                   },
                 }}>
@@ -376,7 +376,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           </Box>
         )}
 
-        {tx.replacedTxHash && (
+        {tx.replacedTxHash && tx.hash && (
           <Box
             sx={{
               display: 'inline-flex',
@@ -384,8 +384,13 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
               a: { lineHeight: 0 },
             }}>
             <Link
-              href={`${chainInfoHelper.getChainParameters(tx.chainId)
-                .blockExplorers?.default.url}/tx/${tx.replacedTxHash}`}
+              href={selectTxExplorerLink(
+                state,
+                chainInfoHelper.getChainParameters,
+                tx.hash,
+                state.activeWallet?.isContractAddress,
+                tx.replacedTxHash,
+              )}
               css={{
                 display: 'inline-flex',
                 color: '$textSecondary',

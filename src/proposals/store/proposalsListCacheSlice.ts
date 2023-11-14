@@ -13,7 +13,7 @@ export interface IProposalsListCacheSlice {
 
 export const createProposalsListCacheSlice: StoreSlice<
   IProposalsListCacheSlice
-> = (set, get) => ({
+> = (set) => ({
   loadingListCache: true,
   setLoadingListCache: (value) => set({ loadingListCache: value }),
 

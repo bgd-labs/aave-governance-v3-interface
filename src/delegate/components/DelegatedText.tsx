@@ -97,47 +97,48 @@ export function DelegatedText({
                 ? texts.delegatePage.willDelegate
                 : texts.delegatePage.delegated
               : isBeforeTx
-              ? texts.delegatePage.receiveBack
-              : texts.delegatePage.receivedBack
+                ? texts.delegatePage.receiveBack
+                : texts.delegatePage.receivedBack
             : typeof data.votingToAddress !== 'undefined'
-            ? isVotingPowerDelegated
-              ? isBeforeTx
-                ? texts.delegatePage.willDelegate
-                : texts.delegatePage.delegated
-              : isBeforeTx
-              ? texts.delegatePage.receiveBack
-              : texts.delegatePage.receivedBack
-            : typeof data.propositionToAddress !== 'undefined'
-            ? isPropositionPowerDelegated
-              ? isBeforeTx
-                ? texts.delegatePage.willDelegate
-                : texts.delegatePage.delegated
-              : isBeforeTx
-              ? texts.delegatePage.receiveBack
-              : texts.delegatePage.receivedBack
-            : '';
+              ? isVotingPowerDelegated
+                ? isBeforeTx
+                  ? texts.delegatePage.willDelegate
+                  : texts.delegatePage.delegated
+                : isBeforeTx
+                  ? texts.delegatePage.receiveBack
+                  : texts.delegatePage.receivedBack
+              : typeof data.propositionToAddress !== 'undefined'
+                ? isPropositionPowerDelegated
+                  ? isBeforeTx
+                    ? texts.delegatePage.willDelegate
+                    : texts.delegatePage.delegated
+                  : isBeforeTx
+                    ? texts.delegatePage.receiveBack
+                    : texts.delegatePage.receivedBack
+                : '';
 
         // TODO: maybe simplify this, but will be not readable
         const formattedBothAddresses = isEnsName(data.bothAddresses || '')
           ? data.bothAddresses
           : data.bothAddresses &&
-            ENSDataExists(store, data.bothAddresses, ENSProperty.NAME)
-          ? ensData[data.bothAddresses?.toLocaleLowerCase() as Hex].name
-          : data.bothAddresses;
+              ENSDataExists(store, data.bothAddresses, ENSProperty.NAME)
+            ? ensData[data.bothAddresses?.toLocaleLowerCase() as Hex].name
+            : data.bothAddresses;
         const formattedVotingToAddress = isEnsName(data.votingToAddress || '')
           ? data.votingToAddress
           : data.votingToAddress &&
-            ENSDataExists(store, data.votingToAddress, ENSProperty.NAME)
-          ? ensData[data.votingToAddress?.toLocaleLowerCase() as Hex].name
-          : data.votingToAddress;
+              ENSDataExists(store, data.votingToAddress, ENSProperty.NAME)
+            ? ensData[data.votingToAddress?.toLocaleLowerCase() as Hex].name
+            : data.votingToAddress;
         const formattedPropositionToAddress = isEnsName(
           data.propositionToAddress || '',
         )
           ? data.propositionToAddress
           : data.propositionToAddress &&
-            ENSDataExists(store, data.propositionToAddress, ENSProperty.NAME)
-          ? ensData[data.propositionToAddress?.toLocaleLowerCase() as Hex].name
-          : data.propositionToAddress;
+              ENSDataExists(store, data.propositionToAddress, ENSProperty.NAME)
+            ? ensData[data.propositionToAddress?.toLocaleLowerCase() as Hex]
+                .name
+            : data.propositionToAddress;
 
         const middleText =
           typeof data.bothAddresses !== 'undefined'
@@ -151,30 +152,30 @@ export function DelegatedText({
                   : ''
               }`
             : typeof data.votingToAddress !== 'undefined'
-            ? `${texts.delegatePage.votingPower} ${
-                isVotingPowerDelegated
-                  ? `to ${
-                      formattedVotingToAddress?.startsWith('0x')
-                        ? textCenterEllipsis(formattedVotingToAddress, 6, 4)
-                        : formattedVotingToAddress
-                    }`
-                  : ''
-              }`
-            : typeof data.propositionToAddress !== 'undefined'
-            ? `${texts.delegatePage.propositionPower} ${
-                isPropositionPowerDelegated
-                  ? `to ${
-                      formattedPropositionToAddress?.startsWith('0x')
-                        ? textCenterEllipsis(
-                            formattedPropositionToAddress,
-                            6,
-                            4,
-                          )
-                        : formattedPropositionToAddress
-                    }`
-                  : ''
-              }`
-            : '';
+              ? `${texts.delegatePage.votingPower} ${
+                  isVotingPowerDelegated
+                    ? `to ${
+                        formattedVotingToAddress?.startsWith('0x')
+                          ? textCenterEllipsis(formattedVotingToAddress, 6, 4)
+                          : formattedVotingToAddress
+                      }`
+                    : ''
+                }`
+              : typeof data.propositionToAddress !== 'undefined'
+                ? `${texts.delegatePage.propositionPower} ${
+                    isPropositionPowerDelegated
+                      ? `to ${
+                          formattedPropositionToAddress?.startsWith('0x')
+                            ? textCenterEllipsis(
+                                formattedPropositionToAddress,
+                                6,
+                                4,
+                              )
+                            : formattedPropositionToAddress
+                        }`
+                      : ''
+                  }`
+                : '';
 
         const endText = delegatedData.length - 1 !== index ? 'and ' : '';
 

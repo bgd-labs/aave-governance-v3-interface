@@ -153,14 +153,14 @@ export function RepresentingForm({
                       {localAddress.address === ''
                         ? texts.other.yourself
                         : ENSDataExists(
-                            store,
-                            localAddress.address,
-                            ENSProperty.NAME,
-                          )
-                        ? ensData[
-                            localAddress.address.toLocaleLowerCase() as Hex
-                          ].name
-                        : localAddress.address}
+                              store,
+                              localAddress.address,
+                              ENSProperty.NAME,
+                            )
+                          ? ensData[
+                              localAddress.address.toLocaleLowerCase() as Hex
+                            ].name
+                          : localAddress.address}
                     </Box>
                   </Box>
 
@@ -238,13 +238,14 @@ export function RepresentingForm({
                           {option.address === ''
                             ? texts.other.yourself
                             : ENSDataExists(
-                                store,
-                                option.address,
-                                ENSProperty.NAME,
-                              )
-                            ? ensData[option.address.toLocaleLowerCase() as Hex]
-                                .name
-                            : option.address}
+                                  store,
+                                  option.address,
+                                  ENSProperty.NAME,
+                                )
+                              ? ensData[
+                                  option.address.toLocaleLowerCase() as Hex
+                                ].name
+                              : option.address}
                         </Box>
                       </Box>
                     </Listbox.Option>

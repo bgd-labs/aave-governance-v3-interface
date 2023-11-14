@@ -207,23 +207,23 @@ const selectFilteredProposalIds = (store: RootState) => {
   return store.filteredState === null && store.titleSearchValue === undefined
     ? proposalsIds
     : store.filteredState !== null && store.titleSearchValue === undefined
-    ? detailedData
-        .filter((proposal) =>
-          store.filteredState !== 7
-            ? proposal?.proposal.state === store.filteredState
-            : proposal?.proposal.state === 0 ||
-              proposal?.proposal.state === 1 ||
-              proposal?.proposal.state === 2,
-        )
-        .map((proposal) => proposal?.proposal.data.id || 0)
-    : store.filteredState === null && store.titleSearchValue !== undefined
-    ? fuse
-        .search(store.titleSearchValue || '')
-        .map((item) => item.item?.proposal.data.id || 0)
-    : fuse
-        .search(store.titleSearchValue || '')
-        .filter((item) => item.item?.proposal.state === store.filteredState)
-        .map((item) => item.item?.proposal.data.id || 0);
+      ? detailedData
+          .filter((proposal) =>
+            store.filteredState !== 7
+              ? proposal?.proposal.state === store.filteredState
+              : proposal?.proposal.state === 0 ||
+                proposal?.proposal.state === 1 ||
+                proposal?.proposal.state === 2,
+          )
+          .map((proposal) => proposal?.proposal.data.id || 0)
+      : store.filteredState === null && store.titleSearchValue !== undefined
+        ? fuse
+            .search(store.titleSearchValue || '')
+            .map((item) => item.item?.proposal.data.id || 0)
+        : fuse
+            .search(store.titleSearchValue || '')
+            .filter((item) => item.item?.proposal.state === store.filteredState)
+            .map((item) => item.item?.proposal.data.id || 0);
 };
 
 export const selectPaginatedIds = (store: RootState) => {

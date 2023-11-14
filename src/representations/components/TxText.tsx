@@ -53,8 +53,8 @@ export function TxText({
             ? texts.representationsPage.yourWillRepresent
             : texts.representationsPage.yourRepresented
           : isBeforeTx
-          ? texts.representationsPage.yourCancelRepresented
-          : texts.representationsPage.yourCanceledRepresented;
+            ? texts.representationsPage.yourCancelRepresented
+            : texts.representationsPage.yourCanceledRepresented;
         const endText = formattedData.length - 1 !== index ? 'and ' : '';
 
         return (
@@ -65,12 +65,13 @@ export function TxText({
                 isEnsName(item.representative)
                   ? item.representative
                   : ENSDataExists(
-                      store,
-                      item.representative as Hex,
-                      ENSProperty.NAME,
-                    )
-                  ? ensData[item.representative.toLocaleLowerCase() as Hex].name
-                  : textCenterEllipsis(item.representative, 5, 5)
+                        store,
+                        item.representative as Hex,
+                        ENSProperty.NAME,
+                      )
+                    ? ensData[item.representative.toLocaleLowerCase() as Hex]
+                        .name
+                    : textCenterEllipsis(item.representative, 5, 5)
               }`}{' '}
             for{' '}
             <b>

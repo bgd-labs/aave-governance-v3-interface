@@ -173,8 +173,8 @@ export default async function ProposalPage({
   const ipfsDataSSR = cachedDetailsData?.ipfs
     ? undefined
     : ipfsHash
-    ? await getProposalMetadata(ipfsHash)
-    : undefined;
+      ? await getProposalMetadata(ipfsHash)
+      : undefined;
 
   return (
     <ProposalClientPageSSR

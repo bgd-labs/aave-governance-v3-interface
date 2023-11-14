@@ -53,8 +53,8 @@ export function TableText({
         color: isError
           ? '$error'
           : alwaysGray || isCrossed
-          ? '$textDisabled'
-          : '$text',
+            ? '$textDisabled'
+            : '$text',
         [theme.breakpoints.up('sm')]: {
           mb: isCrossed ? 0 : 0,
         },

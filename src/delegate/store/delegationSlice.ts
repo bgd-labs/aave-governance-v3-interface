@@ -2,7 +2,8 @@ import {
   erc20Contract,
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { safeSdkOptions, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
 import { Hex, zeroAddress } from 'viem';
@@ -88,14 +89,14 @@ export const createDelegationSlice: StoreSlice<
             votingToAddress === zeroAddress
               ? ''
               : !!votingToAddress
-              ? votingToAddress
-              : '') as Hex | '',
+                ? votingToAddress
+                : '') as Hex | '',
             propositionToAddress: (propositionToAddress === activeAddress ||
             propositionToAddress === zeroAddress
               ? ''
               : !!propositionToAddress
-              ? propositionToAddress
-              : '') as Hex | '',
+                ? propositionToAddress
+                : '') as Hex | '',
           };
         }),
       );
@@ -228,38 +229,71 @@ export const createDelegationSlice: StoreSlice<
         });
       }
     } else if (activeAddress && isWalletAddressContract) {
-      if (data.length > 1) {
-        for (let i = 0; i < data.length; i++) {
-          const item = data[i];
-          if (!isEqual(item, data[data.length - 1])) {
-            await delegationService.delegate(
-              item.underlyingAsset,
-              item.delegatee,
-              item.delegationType,
-            );
+      if (get().activeWallet?.walletType === 'GnosisSafe') {
+        const safeSdk = new Sdk(safeSdkOptions);
+
+        const txsData = data.map((item) => {
+          const txData = delegationService.getDelegateTxParams(
+            item.underlyingAsset,
+            item.delegatee,
+            item.delegationType,
+          );
+          return {
+            to: item.underlyingAsset,
+            value: '0',
+            data: txData,
+          };
+        });
+
+        await get().executeTx({
+          body: () => {
+            get().setModalOpen(true);
+            return safeSdk.txs.send({ txs: txsData });
+          },
+          params: {
+            type: 'delegate',
+            desiredChainID: appConfig.govCoreChainId,
+            payload: {
+              delegateData: stateDelegateData,
+              formDelegateData,
+              timestamp,
+            },
+          },
+        });
+      } else {
+        if (data.length > 1) {
+          for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            if (!isEqual(item, data[data.length - 1])) {
+              await delegationService.delegate(
+                item.underlyingAsset,
+                item.delegatee,
+                item.delegationType,
+              );
+            }
           }
         }
-      }
 
-      await get().executeTx({
-        body: () => {
-          get().setModalOpen(true);
-          return delegationService.delegate(
-            data[data.length - 1].underlyingAsset,
-            data[data.length - 1].delegatee,
-            data[data.length - 1].delegationType,
-          );
-        },
-        params: {
-          type: 'delegate',
-          desiredChainID: appConfig.govCoreChainId,
-          payload: {
-            delegateData: stateDelegateData,
-            formDelegateData,
-            timestamp,
+        await get().executeTx({
+          body: () => {
+            get().setModalOpen(true);
+            return delegationService.delegate(
+              data[data.length - 1].underlyingAsset,
+              data[data.length - 1].delegatee,
+              data[data.length - 1].delegationType,
+            );
           },
-        },
-      });
+          params: {
+            type: 'delegate',
+            desiredChainID: appConfig.govCoreChainId,
+            payload: {
+              delegateData: stateDelegateData,
+              formDelegateData,
+              timestamp,
+            },
+          },
+        });
+      }
     }
   },
 

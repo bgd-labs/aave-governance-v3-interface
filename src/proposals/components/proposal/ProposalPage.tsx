@@ -201,52 +201,54 @@ export function ProposalPage({
     proposal.data.votingMachineData.votingClosedAndSentTimestamp > 0
       ? proposal.data.votingMachineData.votingClosedAndSentTimestamp
       : (proposal.data.votingMachineData.endTime > 0 &&
-          proposal.data.votingMachineData.sentToGovernance) ||
-        (proposal.data.votingMachineData.endTime > 0 &&
-          now < proposal.data.votingMachineData.endTime) ||
-        (proposal.data.votingMachineData.endTime > 0 && isFinished)
-      ? proposal.data.votingMachineData.endTime
-      : proposal.data.votingMachineData.endTime > 0 &&
-        now > proposal.data.votingMachineData.endTime
-      ? now + 60
-      : now +
-        proposal.config.coolDownBeforeVotingStart +
-        proposal.timings.cooldownPeriod;
+            proposal.data.votingMachineData.sentToGovernance) ||
+          (proposal.data.votingMachineData.endTime > 0 &&
+            now < proposal.data.votingMachineData.endTime) ||
+          (proposal.data.votingMachineData.endTime > 0 && isFinished)
+        ? proposal.data.votingMachineData.endTime
+        : proposal.data.votingMachineData.endTime > 0 &&
+            now > proposal.data.votingMachineData.endTime
+          ? now + 60
+          : now +
+            proposal.config.coolDownBeforeVotingStart +
+            proposal.timings.cooldownPeriod;
 
   const payloadsExecutedTimestamp =
     lastPayloadExecutedAt > 0
       ? lastPayloadExecutedAt
       : lastPayloadQueuedAt > 0 &&
-        lastPayloadExecutedAt === 0 &&
-        lastPayloadQueuedAt + proposal.timings.executionPayloadTime < now
-      ? now + 60
-      : lastPayloadQueuedAt > 0 &&
-        lastPayloadExecutedAt === 0 &&
-        lastPayloadQueuedAt + proposal.timings.executionPayloadTime > now
-      ? lastPayloadQueuedAt + proposal.timings.executionPayloadTime
-      : proposal.data.queuingTime > 0 && lastPayloadQueuedAt === 0
-      ? proposal.data.queuingTime + proposal.timings.executionPayloadTime
-      : proposal.data.votingMachineData.votingClosedAndSentTimestamp > 0 &&
-        lastPayloadExecutedAt <= 0 &&
-        proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-          proposal.timings.executionPayloadTime <
-          now
-      ? now + 60
-      : proposal.data.votingMachineData.votingClosedAndSentTimestamp > 0 &&
-        lastPayloadExecutedAt <= 0 &&
-        proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-          proposal.timings.executionPayloadTime >
-          now
-      ? proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-        proposal.timings.executionPayloadTime
-      : proposal.data.votingMachineData.endTime > 0 &&
-        lastPayloadExecutedAt <= 0
-      ? proposal.data.votingMachineData.endTime +
-        proposal.timings.executionPayloadTime
-      : now +
-        proposal.config.coolDownBeforeVotingStart +
-        proposal.timings.cooldownPeriod +
-        proposal.timings.executionPayloadTime;
+          lastPayloadExecutedAt === 0 &&
+          lastPayloadQueuedAt + proposal.timings.executionPayloadTime < now
+        ? now + 60
+        : lastPayloadQueuedAt > 0 &&
+            lastPayloadExecutedAt === 0 &&
+            lastPayloadQueuedAt + proposal.timings.executionPayloadTime > now
+          ? lastPayloadQueuedAt + proposal.timings.executionPayloadTime
+          : proposal.data.queuingTime > 0 && lastPayloadQueuedAt === 0
+            ? proposal.data.queuingTime + proposal.timings.executionPayloadTime
+            : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
+                  0 &&
+                lastPayloadExecutedAt <= 0 &&
+                proposal.data.votingMachineData.votingClosedAndSentTimestamp +
+                  proposal.timings.executionPayloadTime <
+                  now
+              ? now + 60
+              : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
+                    0 &&
+                  lastPayloadExecutedAt <= 0 &&
+                  proposal.data.votingMachineData.votingClosedAndSentTimestamp +
+                    proposal.timings.executionPayloadTime >
+                    now
+                ? proposal.data.votingMachineData.votingClosedAndSentTimestamp +
+                  proposal.timings.executionPayloadTime
+                : proposal.data.votingMachineData.endTime > 0 &&
+                    lastPayloadExecutedAt <= 0
+                  ? proposal.data.votingMachineData.endTime +
+                    proposal.timings.executionPayloadTime
+                  : now +
+                    proposal.config.coolDownBeforeVotingStart +
+                    proposal.timings.cooldownPeriod +
+                    proposal.timings.executionPayloadTime;
 
   const Timeline = () => {
     if (!store.isRendered) {
@@ -271,11 +273,11 @@ export function ProposalPage({
             proposal.data.votingMachineData.startTime > 0
               ? proposal.data.votingMachineData.startTime
               : now >
-                proposal.data.creationTime +
+                  proposal.data.creationTime +
+                    proposal.config.coolDownBeforeVotingStart
+                ? now + 60
+                : proposal.data.creationTime +
                   proposal.config.coolDownBeforeVotingStart
-              ? now + 60
-              : proposal.data.creationTime +
-                proposal.config.coolDownBeforeVotingStart
           }
           votingClosedTimestamp={votingClosedTimestamp}
           payloadsExecutedTimestamp={payloadsExecutedTimestamp}

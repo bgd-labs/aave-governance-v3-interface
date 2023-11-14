@@ -149,8 +149,8 @@ function PayloadItem({
   let payloadNumber = forCreate
     ? `id #${payload.id}`
     : totalPayloadsCount > 1
-    ? `${payloadCount}/${totalPayloadsCount}`
-    : '';
+      ? `${payloadCount}/${totalPayloadsCount}`
+      : '';
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;
   const isArrowVisibleForFirstPayload = totalPayloadsCount > 1 && isFullView;
