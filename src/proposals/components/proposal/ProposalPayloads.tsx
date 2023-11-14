@@ -172,6 +172,14 @@ function PayloadItem({
 
   return (
     <>
+      {!!report && (
+        <SeatBeltReportModal
+          isOpen={isSeatbeltModalOpen}
+          setIsOpen={setIsSeatbeltModalOpen}
+          report={report}
+        />
+      )}
+
       <Box
         sx={{
           mb: isFullView || inList ? 18 : 0,
@@ -528,14 +536,6 @@ function PayloadItem({
           </Box>
         )}
       </Box>
-
-      {!!report && (
-        <SeatBeltReportModal
-          isOpen={isSeatbeltModalOpen}
-          setIsOpen={setIsSeatbeltModalOpen}
-          report={report}
-        />
-      )}
     </>
   );
 }
@@ -563,14 +563,18 @@ export function ProposalPayloads({
       contentColor="$mainLight"
       bottomBorderColor="$light"
       wrapperCss={{ mb: 12 }}
-      css={{ p: '24px 0 24px 30px' }}>
+      css={{
+        p: '20px 0 20px 20px',
+        [theme.breakpoints.up('lg')]: { p: '24px 0 24px 30px' },
+      }}>
       <Box
         sx={(theme) => ({
-          pr: 30,
+          pr: 20,
           maxHeight: payloads.length > 2 ? 200 : 'unset',
           overflowY: payloads.length > 2 ? 'auto' : undefined,
           [theme.breakpoints.up('lg')]: {
             maxHeight: payloads.length > 2 ? 300 : 'unset',
+            pr: 30,
           },
         })}>
         <PayloadItem
