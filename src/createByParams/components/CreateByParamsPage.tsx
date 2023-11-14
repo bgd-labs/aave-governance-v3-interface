@@ -360,37 +360,6 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
               position: 'relative',
               mt: 18,
             }}>
-            <Box
-              sx={{ position: 'relative', zIndex: 2, wordBreak: 'break-word' }}>
-              <Box sx={{ typography: 'body', mb: 18 }}>
-                <Box component="h2" sx={{ typography: 'h2', mb: 12 }}>
-                  Initial data
-                </Box>
-                <Box sx={{ mb: 8 }}>
-                  Voting portal: {initialParams.votingPortal}
-                </Box>
-                <Box sx={{ mb: 12 }}>Ipfs hash: {initialParams.ipfsHash}</Box>
-                {initialParams.payloads.map((value, index) => {
-                  return (
-                    <React.Fragment key={index}>
-                      <Divider />
-                      <Box sx={{ py: 12 }}>
-                        <Box sx={{ mb: 4 }}>Payload id: {value.payloadId}</Box>
-                        <Box sx={{ mb: 4 }}>
-                          Payloads controller: {value.payloadsController}
-                        </Box>
-                        <Box sx={{ mb: 4 }}>Chain Id: {value.chainId}</Box>
-
-                        <Box sx={{ mb: 4 }}>
-                          Access level: {value.accessLevel}
-                        </Box>
-                      </Box>
-                    </React.Fragment>
-                  );
-                })}
-              </Box>
-            </Box>
-
             {newIpfsData &&
               !!(payloads || []).length &&
               !Object.keys(createPayloadsErrors).length && (
