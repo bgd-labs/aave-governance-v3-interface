@@ -175,8 +175,8 @@ export class DelegationService {
       const name = isAAAVE
         ? 'Aave Ethereum AAVE'
         : isAAVE
-        ? 'Aave token V3'
-        : await normalAssetContract.read.name();
+          ? 'Aave token V3'
+          : await normalAssetContract.read.name();
 
       const nonce = isAAAVE
         ? await aAssetContract.read.nonces([activeAddress])

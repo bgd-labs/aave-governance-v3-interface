@@ -56,12 +56,12 @@ export function ProposalEstimatedStatus({
             estimatedStatus === ProposalEstimatedState.Defeated
               ? '$mainAgainst'
               : estimatedStatus === ProposalEstimatedState.Succeed
-              ? '$mainFor'
-              : estimatedStatus === ProposalEstimatedState.Expired
-              ? '$textDisabled'
-              : isSecondary
-              ? '$textSecondary'
-              : '$text',
+                ? '$mainFor'
+                : estimatedStatus === ProposalEstimatedState.Expired
+                  ? '$textDisabled'
+                  : isSecondary
+                    ? '$textSecondary'
+                    : '$text',
         }}>
         <Box component="span" sx={{ typography: 'body', color: '$text' }}>
           {statusText}

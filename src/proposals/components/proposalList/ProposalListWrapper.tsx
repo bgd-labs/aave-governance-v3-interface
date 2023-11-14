@@ -40,13 +40,13 @@ export default function ProposalListWrapper({
   const activePage = isForIPFS
     ? store.activePage
     : isActivePageWrong
-    ? 0
-    : Number(searchParams?.get('activePage'));
+      ? 0
+      : Number(searchParams?.get('activePage'));
   const filteredState = isForIPFS
     ? store.filteredState
     : isFilteredStateWrong
-    ? null
-    : searchParams?.get('filteredState');
+      ? null
+      : searchParams?.get('filteredState');
 
   const createQueryString = useCallback(
     ({

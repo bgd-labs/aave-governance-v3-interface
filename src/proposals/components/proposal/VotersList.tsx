@@ -77,21 +77,21 @@ export function VotersListItemsWrapper({
         pb: !voters?.length
           ? 24
           : voters?.length <= votersCountForViewAll
-          ? 32
-          : 24,
+            ? 32
+            : 24,
         [theme.breakpoints.up('sm')]: {
           pb: !voters?.length
             ? 24
             : voters?.length <= votersCountForViewAll
-            ? 30
-            : 24,
+              ? 30
+              : 24,
         },
         [theme.breakpoints.up('lg')]: {
           pb: !voters?.length
             ? 24
             : voters?.length <= votersCountForViewAll
-            ? 34
-            : 24,
+              ? 34
+              : 24,
         },
       })}>
       {children}

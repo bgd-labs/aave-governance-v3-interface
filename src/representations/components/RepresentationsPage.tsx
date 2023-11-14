@@ -247,11 +247,12 @@ export function RepresentationsPage() {
                                   activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.representative)
-                                  ? getAddressByENSNameIfExists(
-                                      store,
-                                      data.representative,
-                                    ) || data.representative.toLocaleLowerCase()
-                                  : data.representative.toLocaleLowerCase(),
+                                    ? getAddressByENSNameIfExists(
+                                        store,
+                                        data.representative,
+                                      ) ||
+                                      data.representative.toLocaleLowerCase()
+                                    : data.representative.toLocaleLowerCase(),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length

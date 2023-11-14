@@ -89,14 +89,14 @@ export const createDelegationSlice: StoreSlice<
             votingToAddress === zeroAddress
               ? ''
               : !!votingToAddress
-              ? votingToAddress
-              : '') as Hex | '',
+                ? votingToAddress
+                : '') as Hex | '',
             propositionToAddress: (propositionToAddress === activeAddress ||
             propositionToAddress === zeroAddress
               ? ''
               : !!propositionToAddress
-              ? propositionToAddress
-              : '') as Hex | '',
+                ? propositionToAddress
+                : '') as Hex | '',
           };
         }),
       );

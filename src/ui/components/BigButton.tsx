@@ -45,10 +45,10 @@ export function BigButton({
     activeColorType === 'for'
       ? '$mainFor'
       : activeColorType === 'against'
-      ? '$mainAgainst'
-      : color === 'white'
-      ? '$light'
-      : undefined;
+        ? '$mainAgainst'
+        : color === 'white'
+          ? '$light'
+          : undefined;
 
   return (
     <Box className="BigButton" sx={{ display: 'inline-flex', ...css }}>
@@ -63,8 +63,8 @@ export function BigButton({
           cursor: withoutActions
             ? 'default'
             : loading
-            ? 'not-allowed'
-            : 'pointer',
+              ? 'not-allowed'
+              : 'pointer',
           '&:disabled': { cursor: 'not-allowed' },
           [theme.breakpoints.up('sm')]: {
             minWidth: `calc(${tabletWidth} + ${borderSize}px)`,

@@ -164,13 +164,13 @@ export function ProposalStatusDetails({
       isModalOpen: isSTKAAVEToken
         ? isSendSTKAAVEProofModalOpen
         : isAAAVEToken
-        ? isSendAAAVEProofModalOpen
-        : isSendAAVEProofModalOpen,
+          ? isSendAAAVEProofModalOpen
+          : isSendAAVEProofModalOpen,
       setIsModalOpen: isSTKAAVEToken
         ? setIsSendSTKAAVEProofModalOpen
         : isAAAVEToken
-        ? setIsSendAAAVEProofModalOpen
-        : setIsSendAAVEProofModalOpen,
+          ? setIsSendAAAVEProofModalOpen
+          : setIsSendAAVEProofModalOpen,
     };
   });
   const isAssetsForProofsHasSTKAAVE = assetsForProofs.find(

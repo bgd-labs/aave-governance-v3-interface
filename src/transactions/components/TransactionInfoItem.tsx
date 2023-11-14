@@ -225,8 +225,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                       tx.status === TransactionStatus.Success
                         ? theme.palette.$mainFor
                         : tx.status === TransactionStatus.Replaced
-                        ? undefined
-                        : theme.palette.$mainAgainst,
+                          ? undefined
+                          : theme.palette.$mainAgainst,
                     fill:
                       tx.status === TransactionStatus.Replaced
                         ? theme.palette.$textSecondary
@@ -236,8 +236,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                         tx.status === TransactionStatus.Success
                           ? theme.palette.$mainFor
                           : tx.status === TransactionStatus.Replaced
-                          ? theme.palette.$textSecondary
-                          : theme.palette.$mainAgainst,
+                            ? theme.palette.$textSecondary
+                            : theme.palette.$mainAgainst,
                     },
                   },
                 }}>

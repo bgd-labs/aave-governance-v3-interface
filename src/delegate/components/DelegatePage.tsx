@@ -336,24 +336,24 @@ export function DelegatePage() {
                                   activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.votingToAddress)
-                                  ? getAddressByENSNameIfExists(
-                                      store,
-                                      data.votingToAddress,
-                                    ) ||
-                                    data.votingToAddress.toLocaleLowerCase()
-                                  : data.votingToAddress.toLocaleLowerCase(),
+                                    ? getAddressByENSNameIfExists(
+                                        store,
+                                        data.votingToAddress,
+                                      ) ||
+                                      data.votingToAddress.toLocaleLowerCase()
+                                    : data.votingToAddress.toLocaleLowerCase(),
                               propositionToAddress:
                                 data.propositionToAddress === undefined ||
                                 data.propositionToAddress.toLocaleLowerCase() ===
                                   activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.propositionToAddress)
-                                  ? getAddressByENSNameIfExists(
-                                      store,
-                                      data.propositionToAddress,
-                                    ) ||
-                                    data.propositionToAddress.toLocaleLowerCase()
-                                  : data.propositionToAddress.toLocaleLowerCase(),
+                                    ? getAddressByENSNameIfExists(
+                                        store,
+                                        data.propositionToAddress,
+                                      ) ||
+                                      data.propositionToAddress.toLocaleLowerCase()
+                                    : data.propositionToAddress.toLocaleLowerCase(),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length

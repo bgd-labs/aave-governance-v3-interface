@@ -67,8 +67,8 @@ export function SelectField({
                 ? getChainName(value)
                 : value
               : withMyself && value === ''
-              ? 'Myself'
-              : placeholder}
+                ? 'Myself'
+                : placeholder}
             <IconBox sx={{ path: { stroke: theme.palette.$main } }}>
               {open ? <ArrowToTop /> : <ArrowToBottom />}
             </IconBox>
@@ -118,8 +118,8 @@ export function SelectField({
                 {withChainName
                   ? getChainName(option)
                   : withMyself && option === ''
-                  ? 'Myself'
-                  : option}
+                    ? 'Myself'
+                    : option}
               </Listbox.Option>
             ))}
           </Listbox.Options>
