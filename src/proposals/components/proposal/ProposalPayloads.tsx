@@ -17,6 +17,7 @@ import ArrowToTop from '/public/images/icons/arrowToTop.svg';
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
+import { SeatBeltReportModal } from '../../../createByParams/components/SeatBeltReportModal';
 import { NewPayload } from '../../../createByParams/store/createByParamsSlice';
 import { useStore } from '../../../store';
 import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
@@ -79,6 +80,7 @@ function PayloadItem({
   creator,
   forCreate,
   createTransactionHash,
+  report,
 }: Pick<
   ProposalPayloadsProps,
   | 'setSelectedPayloadForExecute'
@@ -89,6 +91,7 @@ function PayloadItem({
 > & {
   creator?: Hex;
   createTransactionHash?: string;
+  report?: string;
   payload: Payload;
   payloadCount: number;
   totalPayloadsCount: number;
@@ -100,6 +103,7 @@ function PayloadItem({
   const now = dayjs().unix();
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
+  const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
 
   useEffect(() => {
     if (forCreate) {
@@ -167,346 +171,372 @@ function PayloadItem({
   );
 
   return (
-    <Box
-      sx={{
-        mb: isFullView || inList ? 18 : 0,
-        '&:last-of-type': {
-          mb: 0,
-        },
-      }}>
+    <>
       <Box
-        onClick={() => {
-          if (isArrowVisibleForFirstPayload || inList) {
-            setIsActionsOpen(!isActionsOpen);
-          }
-        }}
         sx={{
-          cursor:
-            isArrowVisibleForFirstPayload || inList ? 'pointer' : 'default',
-          transition: 'all 0.2s ease',
-          hover: {
-            backgroundColor:
-              isArrowVisibleForFirstPayload || inList
-                ? theme.palette.$light
-                : undefined,
+          mb: isFullView || inList ? 18 : 0,
+          '&:last-of-type': {
+            mb: 0,
           },
         }}>
         <Box
+          onClick={() => {
+            if (isArrowVisibleForFirstPayload || inList) {
+              setIsActionsOpen(!isActionsOpen);
+            }
+          }}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            cursor:
+              isArrowVisibleForFirstPayload || inList ? 'pointer' : 'default',
+            transition: 'all 0.2s ease',
+            hover: {
+              backgroundColor:
+                isArrowVisibleForFirstPayload || inList
+                  ? theme.palette.$light
+                  : undefined,
+            },
           }}>
           <Box
             sx={{
-              display: 'inline-flex',
+              display: 'flex',
               alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            <NetworkIcon
-              chainId={payload.chainId}
-              size={10}
-              css={{ mr: 4 }}
-              withTooltip={forCreate}
-            />
-            <Box sx={{ typography: 'body' }}>
-              {texts.proposals.payloadsDetails.payload} {payloadNumber}
-            </Box>
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {isPayloadReadyForExecution && !isExecuted && (
-              <>
-                {store.activeWallet?.isActive ? (
-                  <SmallButton
-                    disabled={tx?.status === TransactionStatus.Success}
-                    loading={tx?.pending}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!!setSelectedPayloadForExecute) {
-                        setSelectedPayloadForExecute({
-                          chainId: payload.chainId,
-                          payloadsController: payload.payloadsController,
-                          id: payload.id,
-                        });
-                      }
-                      store.setExecutePayloadModalOpen(true);
-                    }}>
-                    {texts.proposals.payloadsDetails.execute}
-                  </SmallButton>
-                ) : (
-                  <PayloadItemStatusInfo>
-                    {texts.proposals.payloadsDetails.execution}
-                  </PayloadItemStatusInfo>
-                )}
-              </>
-            )}
-            {(isArrowVisibleForFirstPayload || inList) && (
-              <IconBox
-                sx={{
-                  width: 10,
-                  height: 10,
-                  ml: 4,
-                  '> svg': { width: 10, height: 10 },
-                  path: { stroke: theme.palette.$main },
-                }}>
-                {isActionsOpen ? <ArrowToTop /> : <ArrowToBottom />}
-              </IconBox>
-            )}
-          </Box>
-        </Box>
-
-        <Box>
-          {forCreate && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
-              <Box sx={{ typography: 'descriptorAccent' }}>
-                {texts.proposals.payloadsDetails.accessLevel}:{' '}
-                <Box sx={{ display: 'inline', typography: 'headline' }}>
-                  {payload.maximumAccessLevelRequired}
-                </Box>
+            <Box
+              sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+              }}>
+              <NetworkIcon
+                chainId={payload.chainId}
+                size={10}
+                css={{ mr: 4 }}
+                withTooltip={forCreate}
+              />
+              <Box sx={{ typography: 'body' }}>
+                {texts.proposals.payloadsDetails.payload} {payloadNumber}
               </Box>
             </Box>
-          )}
 
-          {creator && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-              <Box sx={{ typography: 'descriptorAccent' }}>
-                {texts.proposals.payloadsDetails.creator}:{' '}
-                <Box sx={{ typography: 'descriptor' }}>
-                  <Link
-                    css={{ display: 'inline-flex', alignItems: 'center' }}
-                    inNewWindow
-                    href={`${chainInfoHelper.getChainParameters(
-                      payload.chainId || appConfig.govCoreChainId,
-                    ).blockExplorers?.default.url}/address/${creator}`}>
-                    {textCenterEllipsis(creator, 15, 10)}
-                    <IconBox
-                      sx={{
-                        width: 10,
-                        height: 10,
-                        ml: 2,
-                        '> svg': {
-                          width: 10,
-                          height: 10,
-                          path: {
-                            '&:first-of-type': {
-                              stroke: theme.palette.$text,
-                            },
-                            '&:last-of-type': {
-                              fill: theme.palette.$text,
-                            },
-                          },
-                        },
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {!!report && forCreate && (
+                <SmallButton
+                  disabled={tx?.status === TransactionStatus.Success}
+                  loading={tx?.pending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsSeatbeltModalOpen(true);
+                  }}>
+                  {texts.proposals.payloadsDetails.seatbelt}
+                </SmallButton>
+              )}
+
+              {isPayloadReadyForExecution && !isExecuted && (
+                <>
+                  {store.activeWallet?.isActive ? (
+                    <SmallButton
+                      disabled={tx?.status === TransactionStatus.Success}
+                      loading={tx?.pending}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!!setSelectedPayloadForExecute) {
+                          setSelectedPayloadForExecute({
+                            chainId: payload.chainId,
+                            payloadsController: payload.payloadsController,
+                            id: payload.id,
+                          });
+                        }
+                        store.setExecutePayloadModalOpen(true);
                       }}>
-                      <LinkIcon />
-                    </IconBox>
-                  </Link>
-                </Box>
-              </Box>
-            </Box>
-          )}
-
-          {isPayloadOnInitialState && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.created}>
-              <>
-                {createTransactionHash ? (
-                  <Link
-                    css={{ display: 'inline-flex', alignItems: 'center' }}
-                    inNewWindow
-                    href={`${chainInfoHelper.getChainParameters(
-                      payload.chainId || appConfig.govCoreChainId,
-                    ).blockExplorers?.default
-                      .url}/tx/${createTransactionHash}`}>
-                    {dayjs
-                      .unix(payload.createdAt)
-                      .format('MMM D, YYYY, h:mm A')}
-                    <IconBox
-                      sx={{
-                        width: 10,
-                        height: 10,
-                        ml: 2,
-                        '> svg': {
-                          width: 10,
-                          height: 10,
-                          path: {
-                            '&:first-of-type': {
-                              stroke: theme.palette.$text,
-                            },
-                            '&:last-of-type': {
-                              fill: theme.palette.$text,
-                            },
-                          },
-                        },
-                      }}>
-                      <LinkIcon />
-                    </IconBox>
-                  </Link>
-                ) : (
-                  dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')
-                )}
-              </>
-            </PayloadItemStatusInfo>
-          )}
-
-          {!isPayloadOnInitialState &&
-            isPayloadTimeLocked &&
-            !isFinalStatus &&
-            !isPayloadReadyForExecution && (
-              <PayloadItemStatusInfo>
-                {texts.proposals.payloadsDetails.timeLocked}
-              </PayloadItemStatusInfo>
-            )}
-
-          {!isPayloadOnInitialState &&
-            !isPayloadReadyForExecution &&
-            !isPayloadTimeLocked &&
-            !isFinalStatus && (
-              <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.executedIn}>
-                <Timer timestamp={payloadExecutionTime} />
-              </PayloadItemStatusInfo>
-            )}
-
-          {isExecuted && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.executedAt}>
-              <>
-                {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm A')}
-              </>
-            </PayloadItemStatusInfo>
-          )}
-
-          {payload.cancelledAt > 0 && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.cancelledAt}>
-              <>
-                {dayjs
-                  .unix(payload.cancelledAt)
-                  .format('MMM D, YYYY, , h:mm A')}
-              </>
-            </PayloadItemStatusInfo>
-          )}
-
-          {payload.state === PayloadState.Expired && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.expired}>
-              <>
-                {dayjs
-                  .unix(
-                    payload.queuedAt <= 0
-                      ? payload.expirationTime
-                      : payload.queuedAt + payload.delay + payload.gracePeriod,
-                  )
-                  .format('MMM D, YYYY, , h:mm A')}
-              </>
-            </PayloadItemStatusInfo>
-          )}
-        </Box>
-      </Box>
-
-      {(isActionVisible || isActionsOpen) && (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            flexDirection: 'column',
-            mt: 4,
-          }}>
-          {!isFinalStatus && (
-            <PayloadItemStatusInfo
-              title={texts.proposals.payloadsDetails.expiredIn}>
-              <Box sx={{ typography: 'descriptor' }}>
-                <Timer timestamp={payloadExpiredTime} />
-              </Box>
-            </PayloadItemStatusInfo>
-          )}
-
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ typography: 'descriptorAccent' }}>
-              {texts.proposals.payloadsDetails.actions(
-                payload.actionAddresses?.length || 0,
+                      {texts.proposals.payloadsDetails.execute}
+                    </SmallButton>
+                  ) : (
+                    <PayloadItemStatusInfo>
+                      {texts.proposals.payloadsDetails.execution}
+                    </PayloadItemStatusInfo>
+                  )}
+                </>
+              )}
+              {(isArrowVisibleForFirstPayload || inList) && (
+                <IconBox
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    ml: 4,
+                    '> svg': { width: 10, height: 10 },
+                    path: { stroke: theme.palette.$main },
+                  }}>
+                  {isActionsOpen ? <ArrowToTop /> : <ArrowToBottom />}
+                </IconBox>
               )}
             </Box>
-            <Box
-              component="ul"
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                listStyleType: 'disc',
-                pl: 12,
-              }}>
-              {payload.actionAddresses?.map((address, index) => (
-                <Box
-                  sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
-                  key={index}>
-                  <Link
-                    css={{ display: 'inline-flex', alignItems: 'center' }}
-                    inNewWindow
-                    href={`${chainInfoHelper.getChainParameters(
-                      payload.chainId || appConfig.govCoreChainId,
-                    ).blockExplorers?.default.url}/address/${address}${
-                      forCreate ? '#code' : ''
-                    }`}>
-                    <Box
-                      component="li"
-                      sx={{
-                        typography: 'descriptor',
-                        transition: 'all 0.2s ease',
-                        hover: { opacity: 0.7 },
-                      }}>
-                      {textCenterEllipsis(address, 6, 6)}
-                    </Box>
+          </Box>
 
-                    <IconBox
-                      sx={{
-                        width: 10,
-                        height: 10,
-                        ml: 2,
-                        '> svg': {
+          <Box>
+            {forCreate && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+                <Box sx={{ typography: 'descriptorAccent' }}>
+                  {texts.proposals.payloadsDetails.accessLevel}:{' '}
+                  <Box sx={{ display: 'inline', typography: 'headline' }}>
+                    {payload.maximumAccessLevelRequired}
+                  </Box>
+                </Box>
+              </Box>
+            )}
+
+            {creator && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
+                <Box sx={{ typography: 'descriptorAccent' }}>
+                  {texts.proposals.payloadsDetails.creator}:{' '}
+                  <Box sx={{ typography: 'descriptor' }}>
+                    <Link
+                      css={{ display: 'inline-flex', alignItems: 'center' }}
+                      inNewWindow
+                      href={`${chainInfoHelper.getChainParameters(
+                        payload.chainId || appConfig.govCoreChainId,
+                      ).blockExplorers?.default.url}/address/${creator}`}>
+                      {textCenterEllipsis(creator, 15, 10)}
+                      <IconBox
+                        sx={{
                           width: 10,
                           height: 10,
-                          path: {
-                            '&:first-of-type': {
-                              stroke: theme.palette.$text,
-                            },
-                            '&:last-of-type': {
-                              fill: theme.palette.$text,
+                          ml: 2,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                            path: {
+                              '&:first-of-type': {
+                                stroke: theme.palette.$text,
+                              },
+                              '&:last-of-type': {
+                                fill: theme.palette.$text,
+                              },
                             },
                           },
-                        },
-                      }}>
-                      <LinkIcon />
-                    </IconBox>
-                  </Link>
+                        }}>
+                        <LinkIcon />
+                      </IconBox>
+                    </Link>
+                  </Box>
+                </Box>
+              </Box>
+            )}
 
-                  <CopyToClipboard copyText={address}>
-                    <IconBox
-                      sx={{
-                        cursor: 'pointer',
-                        width: 10,
-                        height: 10,
-                        '> svg': {
+            {isPayloadOnInitialState && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.created}>
+                <>
+                  {createTransactionHash ? (
+                    <Link
+                      css={{ display: 'inline-flex', alignItems: 'center' }}
+                      inNewWindow
+                      href={`${chainInfoHelper.getChainParameters(
+                        payload.chainId || appConfig.govCoreChainId,
+                      ).blockExplorers?.default
+                        .url}/tx/${createTransactionHash}`}>
+                      {dayjs
+                        .unix(payload.createdAt)
+                        .format('MMM D, YYYY, h:mm A')}
+                      <IconBox
+                        sx={{
                           width: 10,
                           height: 10,
-                        },
-                        ml: 3,
-                        path: {
-                          transition: 'all 0.2s ease',
-                          stroke: theme.palette.$textSecondary,
-                        },
-                        hover: { path: { stroke: theme.palette.$main } },
-                      }}>
-                      <CopyIcon />
-                    </IconBox>
-                  </CopyToClipboard>
-                </Box>
-              ))}
-            </Box>
+                          ml: 2,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                            path: {
+                              '&:first-of-type': {
+                                stroke: theme.palette.$text,
+                              },
+                              '&:last-of-type': {
+                                fill: theme.palette.$text,
+                              },
+                            },
+                          },
+                        }}>
+                        <LinkIcon />
+                      </IconBox>
+                    </Link>
+                  ) : (
+                    dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')
+                  )}
+                </>
+              </PayloadItemStatusInfo>
+            )}
+
+            {!isPayloadOnInitialState &&
+              isPayloadTimeLocked &&
+              !isFinalStatus &&
+              !isPayloadReadyForExecution && (
+                <PayloadItemStatusInfo>
+                  {texts.proposals.payloadsDetails.timeLocked}
+                </PayloadItemStatusInfo>
+              )}
+
+            {!isPayloadOnInitialState &&
+              !isPayloadReadyForExecution &&
+              !isPayloadTimeLocked &&
+              !isFinalStatus && (
+                <PayloadItemStatusInfo
+                  title={texts.proposals.payloadsDetails.executedIn}>
+                  <Timer timestamp={payloadExecutionTime} />
+                </PayloadItemStatusInfo>
+              )}
+
+            {isExecuted && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.executedAt}>
+                <>
+                  {dayjs
+                    .unix(payload.executedAt)
+                    .format('MMM D, YYYY, , h:mm A')}
+                </>
+              </PayloadItemStatusInfo>
+            )}
+
+            {payload.cancelledAt > 0 && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.cancelledAt}>
+                <>
+                  {dayjs
+                    .unix(payload.cancelledAt)
+                    .format('MMM D, YYYY, , h:mm A')}
+                </>
+              </PayloadItemStatusInfo>
+            )}
+
+            {payload.state === PayloadState.Expired && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.expired}>
+                <>
+                  {dayjs
+                    .unix(
+                      payload.queuedAt <= 0
+                        ? payload.expirationTime
+                        : payload.queuedAt +
+                            payload.delay +
+                            payload.gracePeriod,
+                    )
+                    .format('MMM D, YYYY, , h:mm A')}
+                </>
+              </PayloadItemStatusInfo>
+            )}
           </Box>
         </Box>
+
+        {(isActionVisible || isActionsOpen) && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              flexDirection: 'column',
+              mt: 4,
+            }}>
+            {!isFinalStatus && (
+              <PayloadItemStatusInfo
+                title={texts.proposals.payloadsDetails.expiredIn}>
+                <Box sx={{ typography: 'descriptor' }}>
+                  <Timer timestamp={payloadExpiredTime} />
+                </Box>
+              </PayloadItemStatusInfo>
+            )}
+
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ typography: 'descriptorAccent' }}>
+                {texts.proposals.payloadsDetails.actions(
+                  payload.actionAddresses?.length || 0,
+                )}
+              </Box>
+              <Box
+                component="ul"
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  listStyleType: 'disc',
+                  pl: 12,
+                }}>
+                {payload.actionAddresses?.map((address, index) => (
+                  <Box
+                    sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
+                    key={index}>
+                    <Link
+                      css={{ display: 'inline-flex', alignItems: 'center' }}
+                      inNewWindow
+                      href={`${chainInfoHelper.getChainParameters(
+                        payload.chainId || appConfig.govCoreChainId,
+                      ).blockExplorers?.default.url}/address/${address}${
+                        forCreate ? '#code' : ''
+                      }`}>
+                      <Box
+                        component="li"
+                        sx={{
+                          typography: 'descriptor',
+                          transition: 'all 0.2s ease',
+                          hover: { opacity: 0.7 },
+                        }}>
+                        {textCenterEllipsis(address, 6, 6)}
+                      </Box>
+
+                      <IconBox
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          ml: 2,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                            path: {
+                              '&:first-of-type': {
+                                stroke: theme.palette.$text,
+                              },
+                              '&:last-of-type': {
+                                fill: theme.palette.$text,
+                              },
+                            },
+                          },
+                        }}>
+                        <LinkIcon />
+                      </IconBox>
+                    </Link>
+
+                    <CopyToClipboard copyText={address}>
+                      <IconBox
+                        sx={{
+                          cursor: 'pointer',
+                          width: 10,
+                          height: 10,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                          },
+                          ml: 3,
+                          path: {
+                            transition: 'all 0.2s ease',
+                            stroke: theme.palette.$textSecondary,
+                          },
+                          hover: { path: { stroke: theme.palette.$main } },
+                        }}>
+                        <CopyIcon />
+                      </IconBox>
+                    </CopyToClipboard>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          </Box>
+        )}
+      </Box>
+
+      {!!report && (
+        <SeatBeltReportModal
+          isOpen={isSeatbeltModalOpen}
+          setIsOpen={setIsSeatbeltModalOpen}
+          report={report}
+        />
       )}
-    </Box>
+    </>
   );
 }
 
@@ -555,6 +585,7 @@ export function ProposalPayloads({
           forCreate={forCreate}
           creator={payloads[0].creator || undefined}
           createTransactionHash={payloads[0].transactionHash || undefined}
+          report={payloads[0].seatbeltMD || undefined}
         />
 
         {!!formattedPayloadsForList.length && isFullView && (
@@ -574,6 +605,7 @@ export function ProposalPayloads({
                 forCreate={forCreate}
                 creator={payload.creator || undefined}
                 createTransactionHash={payload.transactionHash || undefined}
+                report={payload.seatbeltMD || undefined}
               />
             ))}
           </>

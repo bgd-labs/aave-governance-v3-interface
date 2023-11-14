@@ -15,6 +15,7 @@ import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { PayloadParams } from '../types';
 
 export type NewPayload = Payload & {
+  seatbeltMD?: string;
   creator?: Hex;
   transactionHash?: string;
 };
@@ -137,9 +138,41 @@ export const createByParamsSlice: StoreSlice<
       }),
     );
 
+    const updatedPayloadsWithReports = await Promise.all(
+      updatedPayloadsData.map(async (payload) => {
+        const preLink =
+          'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads';
+
+        try {
+          const response = await fetch(
+            `${preLink}/${payload.chainId}/${payload.payloadsController}/${payload.id}.md`,
+          );
+
+          if (response.ok) {
+            const reportMD: string = await response.text();
+
+            return {
+              seatbeltMD: reportMD,
+              ...payload,
+            } as NewPayload;
+          } else {
+            return {
+              seatbeltMD: undefined,
+              ...payload,
+            } as NewPayload;
+          }
+        } catch {
+          return {
+            seatbeltMD: undefined,
+            ...payload,
+          } as NewPayload;
+        }
+      }),
+    );
+
     set((state) =>
       produce(state, (draft) => {
-        draft.createPayloadsData[proposalId] = updatedPayloadsData;
+        draft.createPayloadsData[proposalId] = updatedPayloadsWithReports;
       }),
     );
   },
