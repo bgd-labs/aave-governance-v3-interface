@@ -202,6 +202,8 @@ export const texts = {
     tableHeaderProposition: 'Proposition',
     tableItemDelegated: 'Delegated',
     tableItemNotDelegated: 'Not Delegated',
+    walletConnectSafeWarning:
+      'Note that when connecting a Safe wallet via WalletConnect, the delegation transaction tracking is broken on our side.',
   },
   representationsPage: {
     notConnectedWallet: 'Wallet is not connected',
@@ -340,6 +342,7 @@ export const texts = {
     on: 'On',
     copyError: 'Copy error text',
     userNotFound: 'User not found',
+    readMore: 'Read more',
     rpcIsNotSupported: "This RPC doesn't support our contracts logic",
     rpcError: (rpcErrorsLength: number, rpcUrl?: string) =>
       `At the moment we cannot get data from ${

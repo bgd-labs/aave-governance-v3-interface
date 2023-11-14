@@ -8,7 +8,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { WalletClient } from '@wagmi/core';
-import { Hex, hexToSignature } from 'viem';
+import { encodeFunctionData, Hex, hexToSignature } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
@@ -292,6 +292,32 @@ export class DelegationService {
       return tokenContract.write.delegateByType([delegateToAddress, type], {
         // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
         value: BigInt(0) as any,
+      });
+    }
+  }
+
+  getDelegateTxParams(
+    underlyingAsset: Hex,
+    delegateToAddress: Hex,
+    type: GovernancePowerTypeApp,
+  ) {
+    const tokenContract = aaveTokenV3Contract({
+      contractAddress: underlyingAsset,
+      client: this.clients[appConfig.govCoreChainId],
+      walletClient: this.walletClient,
+    });
+
+    if (type === GovernancePowerTypeApp.All) {
+      return encodeFunctionData({
+        abi: tokenContract.abi,
+        functionName: 'delegate',
+        args: [delegateToAddress],
+      });
+    } else {
+      return encodeFunctionData({
+        abi: tokenContract.abi,
+        functionName: 'delegateByType',
+        args: [delegateToAddress, type],
       });
     }
   }

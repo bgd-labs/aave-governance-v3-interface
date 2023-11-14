@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import isEqual from 'lodash/isEqual';
@@ -9,11 +9,21 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 import { Hex } from 'viem';
 
+import WarningIcon from '/public/images/icons/warningIcon.svg';
+
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
-import { BackButton3D, BigButton, Container } from '../../ui';
+import {
+  BackButton3D,
+  BigButton,
+  BoxWith3D,
+  Container,
+  Link,
+  NoSSR,
+} from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
+import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import {
   checkIsGetAddressByENSNamePending,
@@ -25,6 +35,7 @@ import { DelegateModal } from './DelegateModal';
 import { DelegateTableWrapper } from './DelegateTableWrapper';
 
 export function DelegatePage() {
+  const theme = useTheme();
   const router = useRouter();
 
   const store = useStore();
@@ -154,8 +165,68 @@ export function DelegatePage() {
   return (
     <>
       <Container>
-        <Box sx={{ mb: 12 }}>
+        <Box
+          sx={{
+            mb: 12,
+            display: 'flex',
+            flexDirection: 'column',
+            [theme.breakpoints.up('sm')]: {
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            },
+          }}>
           <BackButton3D onClick={router.back} isVisibleOnMobile />
+          {activeWallet &&
+            activeWallet.isContractAddress &&
+            activeWallet.walletType === 'WalletConnect' && (
+              <NoSSR>
+                <Box
+                  sx={{
+                    mt: 16,
+                    [theme.breakpoints.up('sm')]: {
+                      mt: 0,
+                      ml: 16,
+                    },
+                  }}>
+                  <BoxWith3D
+                    borderSize={10}
+                    contentColor="$mainLight"
+                    css={{ p: 8, color: '$text' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                      <IconBox
+                        sx={{
+                          position: 'relative',
+                          top: 4,
+                          mr: 8,
+                          width: 16,
+                          height: 12,
+                          '> svg': {
+                            width: 16,
+                            height: 12,
+                          },
+                        }}>
+                        <WarningIcon />
+                      </IconBox>
+                      <Box>
+                        {texts.delegatePage.walletConnectSafeWarning}{' '}
+                        <Link
+                          css={{
+                            color: '$textSecondary',
+                            fontWeight: 600,
+                            hover: { color: theme.palette.$text },
+                          }}
+                          href="https://github.com/bgd-labs/aave-governance-v3-interface/issues/24"
+                          inNewWindow>
+                          {texts.other.readMore}
+                        </Link>
+                        .
+                      </Box>
+                    </Box>
+                  </BoxWith3D>
+                </Box>
+              </NoSSR>
+            )}
         </Box>
       </Container>
 
