@@ -70,6 +70,7 @@ export const texts = {
       expired: 'Expired at',
       expiredIn: 'Expired in',
       accessLevel: 'Access level',
+      creator: 'Creator',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status',
       more: (active: boolean) => (active ? 'Hide' : 'Show more'),

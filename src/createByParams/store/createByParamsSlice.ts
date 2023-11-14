@@ -1,6 +1,10 @@
-import { Payload } from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  getBlockNumberByTimestamp,
+  Payload,
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { Hex } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -10,8 +14,13 @@ import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { PayloadParams } from '../types';
 
+export type NewPayload = Payload & {
+  creator?: Hex;
+  transactionHash?: string;
+};
+
 export interface ICreateByParamsSlice {
-  createPayloadsData: Record<number, Payload[]>;
+  createPayloadsData: Record<number, NewPayload[]>;
   createPayloadsErrors: Record<string, boolean>;
   getCreatePayloadsData: (
     proposalId: number,
@@ -78,11 +87,59 @@ export const createByParamsSlice: StoreSlice<
           payload;
       });
 
+    const updatedPayloadsData: NewPayload[] = await Promise.all(
+      Object.values(formattedPayloadsData).map(async (payload) => {
+        try {
+          const { minBlockNumber, maxBlockNumber } =
+            await getBlockNumberByTimestamp({
+              chainId: payload.chainId,
+              targetTimestamp: payload.createdAt,
+              client: get().appClients[payload.chainId].instance,
+            });
+          const events = await get().govDataService.getPayloadsCreatedEvents(
+            payload.chainId,
+            payload.payloadsController as Hex,
+            minBlockNumber,
+            maxBlockNumber,
+          );
+
+          get().setRpcError({
+            isError: false,
+            rpcUrl: get().appClients[payload.chainId].rpcUrl,
+            chainId: payload.chainId,
+          });
+
+          const eventItem = events.filter(
+            (event) =>
+              event.chainId === payload.chainId &&
+              event.payloadId === payload.id &&
+              event.payloadsController === payload.payloadsController,
+          )[0];
+
+          return {
+            creator: eventItem.creator,
+            transactionHash: eventItem.transactionHash,
+            ...payload,
+          } as NewPayload;
+        } catch {
+          get().setRpcError({
+            isError: true,
+            rpcUrl: get().appClients[payload.chainId].rpcUrl,
+            chainId: payload.chainId,
+          });
+
+          return {
+            creator: undefined,
+            transactionHash: undefined,
+            ...payload,
+          } as NewPayload;
+        }
+      }),
+    );
+
     set((state) =>
       produce(state, (draft) => {
-        draft.createPayloadsData[proposalId] = Object.values(
-          formattedPayloadsData,
-        );
+        draft.createPayloadsData[proposalId] = updatedPayloadsData;
       }),
     );
   },
