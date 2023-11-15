@@ -7,7 +7,7 @@ import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import { PayloadItemStatusInfo } from '../../proposals/components/proposal/ProposalPayloads';
-import { BoxWith3D, CopyToClipboard, Link, Timer } from '../../ui';
+import { BoxWith3D, CopyToClipboard, Link, SmallButton, Timer } from '../../ui';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
@@ -62,7 +62,7 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
         height: '100%',
         '> div, .BoxWith3D__content': { height: '100%' },
       }}
-      css={{ p: 12, height: '100%', [theme.breakpoints.up('lg')]: { p: 24 } }}>
+      css={{ p: 12, height: '100%' }}>
       <Box>
         <Box
           sx={{
@@ -86,6 +86,18 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
               {texts.proposals.payloadsDetails.payload} <b>{payloadNumber}</b>
             </Box>
           </Box>
+
+          <Link
+            href={`https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads//${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
+            inNewWindow
+            css={{ display: 'flex', alignItems: 'center' }}>
+            <SmallButton
+              onClick={(e) => {
+                e.stopPropagation();
+              }}>
+              {texts.proposals.payloadsDetails.seatbelt}
+            </SmallButton>
+          </Link>
         </Box>
 
         <Box>

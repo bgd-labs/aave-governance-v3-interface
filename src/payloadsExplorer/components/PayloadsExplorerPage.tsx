@@ -74,7 +74,7 @@ export function PayloadsExplorerPage() {
                 [theme.breakpoints.up('sm')]: {
                   gridTemplateColumns: 'repeat(3, 1fr)',
                 },
-                [theme.breakpoints.up('md')]: {
+                [theme.breakpoints.up('lg')]: {
                   gridTemplateColumns: 'repeat(4, 1fr)',
                 },
               }}>
