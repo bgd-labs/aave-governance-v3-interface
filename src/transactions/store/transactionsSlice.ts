@@ -151,7 +151,7 @@ export type TransactionsSlice = ITransactionsSlice<TransactionUnion>;
 export type TxWithStatus = TransactionUnion & {
   status?: TransactionStatus;
   pending: boolean;
-  replacedTxHash?: string;
+  replacedTxHash?: Hex;
 };
 
 export type AllTransactions = TxWithStatus[];

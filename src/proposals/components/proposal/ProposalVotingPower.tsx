@@ -79,18 +79,18 @@ export function ProposalVotingPower({
     setIsRepresentationInfoModalOpen,
   } = store;
 
-  const tx = useStore((state) =>
+  const tx =
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      state,
-      activeWallet?.address || '',
+      store,
+      activeWallet.address,
       'vote',
       {
         proposalId,
         support: !supportObject[proposalId],
         voter: representative.address || activeWallet?.address,
       },
-    ),
-  );
+    );
 
   const disabled = !checkIsVotingAvailable(store, votingChainId);
 

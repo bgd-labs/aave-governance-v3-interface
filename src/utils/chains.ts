@@ -59,9 +59,9 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://eth-goerli.public.blastapi.io',
   ],
   [sepolia.id]: [
+    'https://endpoints.omniatech.io/v1/eth/sepolia/public',
     'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
     'https://ethereum-sepolia.publicnode.com',
-    'https://endpoints.omniatech.io/v1/eth/sepolia/public',
   ],
   [polygonMumbai.id]: ['https://rpc.ankr.com/polygon_mumbai'],
   [avalancheFuji.id]: [

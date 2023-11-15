@@ -4,6 +4,7 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
+import { Hex } from 'viem';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 import RocketError from '/public/images/rocketError.svg';
@@ -23,21 +24,21 @@ export interface ActionModalContentProps {
   setIsOpen: (value: boolean) => void;
   contentMinHeight?: number;
   children: ReactNode;
-  txHash?: string;
+  txHash?: Hex;
   txWalletType?: WalletType;
   txPending?: boolean;
   txSuccess?: boolean;
   isTxStart: boolean;
   setIsTxStart: (value: boolean) => void;
-  error: Error | string;
+  error: string;
   setError: (value: string) => void;
   isError?: boolean;
   successElement?: ReactNode;
   closeButtonText?: string;
   withoutTryAgainWhenError?: boolean;
-  fullTxErrorMessage?: Error | string;
+  fullTxErrorMessage?: string;
   isTxReplaced?: boolean;
-  replacedTxHash?: string;
+  replacedTxHash?: Hex;
   txChainId?: number;
 }
 

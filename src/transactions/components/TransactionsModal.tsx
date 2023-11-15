@@ -18,12 +18,15 @@ export function TransactionsModal({
   setIsOpen,
   representedAddresses,
 }: TransactionsModalProps) {
-  const { activeWallet, setAccountInfoModalOpen } = useStore();
-  const activeAddress = activeWallet?.address || '';
+  const store = useStore();
+  const { activeWallet, setAccountInfoModalOpen } = store;
 
-  const allTransactions = useStore((state) =>
-    selectAllTransactionsByWallet<TransactionUnion>(state, activeAddress),
-  );
+  const allTransactions = activeWallet
+    ? selectAllTransactionsByWallet<TransactionUnion>(
+        store,
+        activeWallet.address,
+      )
+    : [];
 
   return (
     <BasicModal
