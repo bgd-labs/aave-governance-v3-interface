@@ -12,6 +12,7 @@ import { Hex } from 'viem';
 import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
+import { IPayloadsExplorerSliceSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';
 import { IProposalsListCacheSlice } from '../../proposals/store/proposalsListCacheSlice';
 import { getProposalDataById } from '../../proposals/store/proposalsSelectors';
@@ -169,7 +170,8 @@ export const createTransactionsSlice: StoreSlice<
     IRepresentationsSlice &
     IEnsSlice &
     IRpcSwitcherSlice &
-    ICreateByParamsSlice
+    ICreateByParamsSlice &
+    IPayloadsExplorerSliceSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {

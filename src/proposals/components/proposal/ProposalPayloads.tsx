@@ -44,7 +44,7 @@ interface ProposalPayloadsProps {
   forCreate?: boolean;
 }
 
-function PayloadItemStatusInfo({
+export function PayloadItemStatusInfo({
   title,
   children,
 }: {

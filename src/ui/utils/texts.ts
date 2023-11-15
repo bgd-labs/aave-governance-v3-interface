@@ -353,6 +353,7 @@ export const texts = {
           ? "multiple RPC's"
           : `this RPC (${!!rpcUrl && rpcUrl})`
       }. Try to use the application later or go to the RPC change screen.`,
+    payloadsNetwork: 'Payloads network',
   },
   terms: {
     description:

@@ -16,7 +16,6 @@ import {
   BigButton,
   BoxWith3D,
   Container,
-  Divider,
   Link,
   NoSSR,
 } from '../../ui';

@@ -118,7 +118,6 @@ export const createByParamsSlice: StoreSlice<
           )[0];
 
           return {
-            creator: eventItem.creator,
             transactionHash: eventItem.transactionHash,
             ...payload,
           } as NewPayload;
@@ -130,7 +129,6 @@ export const createByParamsSlice: StoreSlice<
           });
 
           return {
-            creator: undefined,
             transactionHash: undefined,
             ...payload,
           } as NewPayload;

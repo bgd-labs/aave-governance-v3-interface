@@ -13,6 +13,10 @@ import {
   IDelegationSlice,
 } from '../delegate/store/delegationSlice';
 import {
+  createPayloadsExplorerSlice,
+  IPayloadsExplorerSliceSlice,
+} from '../payloadsExplorer/store/payloadsExplorerSlice';
+import {
   createProposalsHistorySlice,
   IProposalsHistorySlice,
 } from '../proposals/store/proposalsHistorySlice';
@@ -51,7 +55,8 @@ export type RootState = IProposalsSlice &
   IRepresentationsSlice &
   IEnsSlice &
   IRpcSwitcherSlice &
-  ICreateByParamsSlice;
+  ICreateByParamsSlice &
+  IPayloadsExplorerSliceSlice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -68,6 +73,7 @@ const createRootSlice = (
   ...createEnsSlice(set, get),
   ...createRpcSwitcherSlice(set, get),
   ...createByParamsSlice(set, get),
+  ...createPayloadsExplorerSlice(set, get),
 });
 
 export const useStore = create(devtools(createRootSlice, { serialize: true }));
