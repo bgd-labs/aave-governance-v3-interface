@@ -2,7 +2,6 @@
 
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
-import { mainnet } from 'viem/chains';
 
 import { useStore } from '../../store';
 import { Container } from '../../ui';
@@ -16,7 +15,7 @@ export function PayloadsExplorerPage() {
   const theme = useTheme();
   const { getPayloadsExploreData, payloadsExploreData } = useStore();
 
-  const [chainId, setChainId] = useState<number>(mainnet.id);
+  const [chainId, setChainId] = useState<number>(appConfig.govCoreChainId);
 
   useEffect(() => {
     getPayloadsExploreData(chainId);
@@ -67,12 +66,13 @@ export function PayloadsExplorerPage() {
                 mt: 24,
                 display: 'grid',
                 gridTemplateColumns: 'repeat(1, 1fr)',
-                gridGap: 12,
+                gridGap: 6,
                 [theme.breakpoints.up('xsm')]: {
                   gridTemplateColumns: 'repeat(2, 1fr)',
                 },
                 [theme.breakpoints.up('sm')]: {
                   gridTemplateColumns: 'repeat(3, 1fr)',
+                  gridGap: 12,
                 },
                 [theme.breakpoints.up('lg')]: {
                   gridTemplateColumns: 'repeat(4, 1fr)',

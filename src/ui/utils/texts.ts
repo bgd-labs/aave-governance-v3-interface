@@ -68,7 +68,7 @@ export const texts = {
       timeLocked: 'Time-locked',
       cancelledAt: 'Cancelled at',
       expired: 'Expired at',
-      expiredIn: 'Expired in',
+      expiredIn: 'Expire in',
       accessLevel: 'Access level',
       creator: 'Creator',
       seatbelt: 'Seatbelt',

@@ -24,11 +24,6 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
     payload.cancelledAt <= 0 &&
     payload.state !== PayloadState.Expired;
 
-  const isPayloadTimeLocked =
-    payload.queuedAt <= 0 &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
   const payloadExecutionTime =
     payload.queuedAt <= 0
       ? now + payload.delay
@@ -55,6 +50,18 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
     payload.cancelledAt > 0 ||
     payload.state === PayloadState.Expired;
 
+  const statusColor = isExecuted
+    ? '$mainFor'
+    : !isPayloadOnInitialState && !isFinalStatus && isPayloadReadyForExecution
+      ? '$mainFor'
+      : !isPayloadOnInitialState &&
+          !isFinalStatus &&
+          !isPayloadReadyForExecution
+        ? '$secondary'
+        : isPayloadOnInitialState
+          ? '$disabled'
+          : '$disabled';
+
   return (
     <BoxWith3D
       contentColor="$mainLight"
@@ -62,7 +69,13 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
         height: '100%',
         '> div, .BoxWith3D__content': { height: '100%' },
       }}
-      css={{ p: 12, height: '100%' }}>
+      css={{
+        p: 8,
+        height: '100%',
+        position: 'relative',
+        flexWrap: 'wrap',
+        [theme.breakpoints.up('sm')]: { p: 12 },
+      }}>
       <Box>
         <Box
           sx={{
@@ -111,7 +124,8 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
           </Box>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-            <Box sx={{ typography: 'descriptorAccent' }}>
+            <Box
+              sx={{ typography: 'descriptorAccent', wordBreak: 'break-word' }}>
               {texts.proposals.payloadsDetails.creator}:{' '}
               <Box sx={{ typography: 'descriptor' }}>
                 <Link
@@ -154,7 +168,6 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
           )}
 
           {!isPayloadOnInitialState &&
-            isPayloadTimeLocked &&
             !isFinalStatus &&
             !isPayloadReadyForExecution && (
               <PayloadItemStatusInfo>
@@ -164,7 +177,6 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
 
           {!isPayloadOnInitialState &&
             !isPayloadReadyForExecution &&
-            !isPayloadTimeLocked &&
             !isFinalStatus && (
               <PayloadItemStatusInfo
                 title={texts.proposals.payloadsDetails.executedIn}>
@@ -306,6 +318,34 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
             ))}
           </Box>
         </Box>
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          right: 1,
+          bottom: 1,
+          border: `2px solid ${theme.palette[statusColor]}`,
+          color: `${theme.palette[statusColor]}`,
+          typography: 'headline',
+          p: '6px 12px',
+        }}>
+        {isPayloadOnInitialState && 'Created'}
+        {!isPayloadOnInitialState &&
+          !isFinalStatus &&
+          !isPayloadReadyForExecution &&
+          'Queued'}
+        {!isPayloadOnInitialState &&
+          !isFinalStatus &&
+          isPayloadReadyForExecution && (
+            <Box sx={{}}>
+              Can be <br /> execute
+            </Box>
+          )}
+        {isExecuted && 'Executed'}
       </Box>
     </BoxWith3D>
   );

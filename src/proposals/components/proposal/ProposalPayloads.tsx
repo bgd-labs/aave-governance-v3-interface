@@ -292,44 +292,6 @@ function PayloadItem({
               </Box>
             )}
 
-            {creator && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-                <Box sx={{ typography: 'descriptorAccent' }}>
-                  {texts.proposals.payloadsDetails.creator}:{' '}
-                  <Box sx={{ typography: 'descriptor' }}>
-                    <Link
-                      css={{ display: 'inline-flex', alignItems: 'center' }}
-                      inNewWindow
-                      href={`${chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default.url}/address/${creator}`}>
-                      {textCenterEllipsis(creator, 15, 10)}
-                      <IconBox
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          ml: 2,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                            path: {
-                              '&:first-of-type': {
-                                stroke: theme.palette.$text,
-                              },
-                              '&:last-of-type': {
-                                fill: theme.palette.$text,
-                              },
-                            },
-                          },
-                        }}>
-                        <LinkIcon />
-                      </IconBox>
-                    </Link>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-
             {isPayloadOnInitialState && (
               <PayloadItemStatusInfo
                 title={texts.proposals.payloadsDetails.created}>
@@ -442,6 +404,48 @@ function PayloadItem({
               flexDirection: 'column',
               mt: 4,
             }}>
+            {creator && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
+                <Box
+                  sx={{
+                    typography: 'descriptorAccent',
+                    wordBreak: 'break-word',
+                  }}>
+                  {texts.proposals.payloadsDetails.creator}:{' '}
+                  <Box sx={{ typography: 'descriptor' }}>
+                    <Link
+                      css={{ display: 'inline-flex', alignItems: 'center' }}
+                      inNewWindow
+                      href={`${chainInfoHelper.getChainParameters(
+                        payload.chainId || appConfig.govCoreChainId,
+                      ).blockExplorers?.default.url}/address/${creator}`}>
+                      {textCenterEllipsis(creator, 15, 10)}
+                      <IconBox
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          ml: 2,
+                          '> svg': {
+                            width: 10,
+                            height: 10,
+                            path: {
+                              '&:first-of-type': {
+                                stroke: theme.palette.$text,
+                              },
+                              '&:last-of-type': {
+                                fill: theme.palette.$text,
+                              },
+                            },
+                          },
+                        }}>
+                        <LinkIcon />
+                      </IconBox>
+                    </Link>
+                  </Box>
+                </Box>
+              </Box>
+            )}
+
             {!isFinalStatus && (
               <PayloadItemStatusInfo
                 title={texts.proposals.payloadsDetails.expiredIn}>
