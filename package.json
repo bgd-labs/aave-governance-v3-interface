@@ -32,7 +32,7 @@
   "dependencies": {
     "@bgd-labs/aave-address-book": "^2.11.0",
     "@bgd-labs/aave-governance-ui-helpers": "^0.3.6-54251ce3789c6208861a3eb71d4451c57be8fc3f.0",
-    "@bgd-labs/frontend-web3-utils": "^0.4.73-5e04076f90e175acf659a1885c1f10050ffe0585.0",
+    "@bgd-labs/frontend-web3-utils": "^0.4.74-6ff8df975910fb518a21a142d4df6b34180b1a6a.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -70,8 +70,8 @@
     "react-paginate": "^8.2.0",
     "remark-gfm": "^4.0.0",
     "sharp": "^0.32.6",
-    "viem": "^1.19.1",
-    "wagmi": "^1.4.6",
+    "viem": "^1.19.3",
+    "wagmi": "^1.4.7",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
