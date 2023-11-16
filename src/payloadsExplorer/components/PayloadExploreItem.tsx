@@ -346,6 +346,8 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
             </Box>
           )}
         {isExecuted && 'Executed'}
+        {payload.state === PayloadState.Expired && 'Expired'}
+        {payload.state === PayloadState.Cancelled && 'Cancelled'}
       </Box>
     </BoxWith3D>
   );
