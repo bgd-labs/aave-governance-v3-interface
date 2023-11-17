@@ -229,7 +229,7 @@ export const createDelegationSlice: StoreSlice<
         });
       }
     } else if (activeAddress && isWalletAddressContract) {
-      if (get().activeWallet?.walletType === 'GnosisSafe') {
+      if (get().activeWallet?.walletType === 'Safe') {
         const safeSdk = new Sdk(safeSdkOptions);
 
         const txsData = data.map((item) => {

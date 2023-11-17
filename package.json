@@ -32,7 +32,7 @@
   "dependencies": {
     "@bgd-labs/aave-address-book": "^2.11.0",
     "@bgd-labs/aave-governance-ui-helpers": "^0.3.6-54251ce3789c6208861a3eb71d4451c57be8fc3f.0",
-    "@bgd-labs/frontend-web3-utils": "^0.4.79-4c5f6d665fa0bbc75fc3d24ecd3b74a107e76e56.0",
+    "@bgd-labs/frontend-web3-utils": "^0.4.83-7335f64372763ccad239416a213cdd8df84ae70c.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",

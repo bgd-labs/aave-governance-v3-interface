@@ -34,9 +34,9 @@ export const wallets: Wallet[] = [
     isVisible: true,
   },
   {
-    walletType: 'GnosisSafe',
+    walletType: 'Safe',
     icon: `url(${setRelativePath('/images/wallets/gnosisSafe.svg')})`,
-    title: 'Gnosis safe',
+    title: 'Safe wallet',
     isVisible: typeof window !== 'undefined' && window !== window.parent,
   },
   {
