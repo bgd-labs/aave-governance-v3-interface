@@ -90,7 +90,7 @@ export function ConnectWalletButton({
     : [];
   // filtered pending tx's, if now > tx.timestamp + 30 min, than remove tx from pending array to not show loading spinner in connect wallet button
   const filteredPendingTx = allPendingTransactions.filter(
-    (tx) => dayjs().unix() <= dayjs(tx.localTimestamp).unix() + 1800,
+    (tx) => dayjs().unix() <= dayjs.unix(tx.localTimestamp).unix() + 1800,
   );
 
   return (

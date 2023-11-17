@@ -1,10 +1,9 @@
 import {
   selectTxExplorerLink,
-  WalletType,
+  TxLocalStatusTxParams,
 } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
-import { Hex } from 'viem';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 import RocketError from '/public/images/rocketError.svg';
@@ -17,6 +16,7 @@ import { RocketLoader } from '../../ui/components/RocketLoader';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import { chainInfoHelper } from '../../utils/configs';
+import { TransactionUnion } from '../store/transactionsSlice';
 import { CopyErrorButton } from './CopyErrorButton';
 
 export interface ActionModalContentProps {
@@ -24,22 +24,15 @@ export interface ActionModalContentProps {
   setIsOpen: (value: boolean) => void;
   contentMinHeight?: number;
   children: ReactNode;
-  txHash?: Hex;
-  txWalletType?: WalletType;
-  txPending?: boolean;
-  txSuccess?: boolean;
   isTxStart: boolean;
   setIsTxStart: (value: boolean) => void;
   error: string;
   setError: (value: string) => void;
-  isError?: boolean;
   successElement?: ReactNode;
   closeButtonText?: string;
   withoutTryAgainWhenError?: boolean;
   fullTxErrorMessage?: string;
-  isTxReplaced?: boolean;
-  replacedTxHash?: Hex;
-  txChainId?: number;
+  tx?: TxLocalStatusTxParams<TransactionUnion>;
 }
 
 export function ActionModalContent({
@@ -47,21 +40,14 @@ export function ActionModalContent({
   setIsOpen,
   contentMinHeight = 240,
   children,
-  txHash,
-  txWalletType,
-  txPending,
-  txSuccess,
   isTxStart,
   setIsTxStart,
   setError,
-  isError,
   successElement,
   closeButtonText,
   withoutTryAgainWhenError,
   fullTxErrorMessage,
-  isTxReplaced,
-  replacedTxHash,
-  txChainId,
+  tx,
 }: ActionModalContentProps) {
   const theme = useTheme();
   const state = useStore();
@@ -92,12 +78,12 @@ export function ActionModalContent({
                 py: 20,
                 flexDirection: 'column',
               }}>
-              {txPending && (
+              {tx?.pending && (
                 <Box sx={{ lineHeight: 0, ml: -13 }}>
                   <RocketLoader size={rocketSize} />
                 </Box>
               )}
-              {isError && (
+              {tx?.isError && (
                 <IconBox
                   sx={{
                     width: rocketSize,
@@ -110,7 +96,7 @@ export function ActionModalContent({
                   <RocketError />
                 </IconBox>
               )}
-              {txSuccess && (
+              {tx?.isSuccess && (
                 <IconBox
                   sx={{
                     width: rocketSize,
@@ -123,7 +109,7 @@ export function ActionModalContent({
                   <RocketSuccess />
                 </IconBox>
               )}
-              {isTxReplaced && (
+              {tx?.isReplaced && (
                 <IconBox
                   sx={{
                     width: rocketSize,
@@ -143,22 +129,22 @@ export function ActionModalContent({
                   typography: 'h3',
                   mb: 8,
                   fontWeight: 600,
-                  color: isError ? '$error' : '$text',
+                  color: tx?.isError ? '$error' : '$text',
                 }}>
-                {txPending && texts.transactions.pending}
-                {txSuccess && texts.transactions.success}
-                {isError && texts.transactions.error}
-                {isTxReplaced && texts.transactions.replaced}
+                {tx?.pending && texts.transactions.pending}
+                {tx?.isSuccess && texts.transactions.success}
+                {tx?.isError && texts.transactions.error}
+                {tx?.isReplaced && texts.transactions.replaced}
               </Box>
               <Box sx={{ typography: 'h3' }}>
-                {txPending && texts.transactions.pendingDescription}
-                {txSuccess && !!successElement
+                {tx?.pending && texts.transactions.pendingDescription}
+                {tx?.isSuccess && !!successElement
                   ? successElement
-                  : txSuccess && texts.transactions.executed}
-                {isError && texts.transactions.notExecuted}
-                {isTxReplaced && texts.transactions.txReplaced}
+                  : tx?.isSuccess && texts.transactions.executed}
+                {tx?.isError && texts.transactions.notExecuted}
+                {tx?.isReplaced && texts.transactions.txReplaced}
               </Box>
-              {isError && (
+              {tx?.isError && (
                 <Box
                   sx={{
                     display: 'flex',
@@ -173,7 +159,7 @@ export function ActionModalContent({
                 </Box>
               )}
               <Box>
-                {txHash && txWalletType && (
+                {tx?.hash && tx?.walletType && (
                   <Box
                     sx={{
                       display: 'flex',
@@ -185,26 +171,26 @@ export function ActionModalContent({
                       href={selectTxExplorerLink(
                         state,
                         chainInfoHelper.getChainParameters,
-                        txHash,
+                        tx.hash,
                       )}
                       css={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        color: replacedTxHash
+                        color: tx.replacedTxHash
                           ? '$textDisabled'
                           : '$textSecondary',
                         path: {
                           transition: 'all 0.2s ease',
-                          stroke: replacedTxHash
+                          stroke: tx.replacedTxHash
                             ? theme.palette.$textDisabled
                             : theme.palette.$textSecondary,
                         },
                         hover: {
-                          color: replacedTxHash
+                          color: tx.replacedTxHash
                             ? theme.palette.$textDisabled
                             : theme.palette.$text,
                           path: {
-                            stroke: replacedTxHash
+                            stroke: tx.replacedTxHash
                               ? theme.palette.$textDisabled
                               : theme.palette.$text,
                           },
@@ -212,7 +198,7 @@ export function ActionModalContent({
                       }}
                       inNewWindow>
                       <Box component="span" sx={{ typography: 'descriptor' }}>
-                        {replacedTxHash
+                        {tx.replacedTxHash
                           ? texts.other.transactionHash
                           : texts.other.viewOnExplorer}
                       </Box>
@@ -232,7 +218,7 @@ export function ActionModalContent({
                     </Link>
                   </Box>
                 )}
-                {isTxReplaced && replacedTxHash && txHash && (
+                {tx?.isReplaced && tx?.replacedTxHash && tx?.hash && (
                   <Box
                     sx={{
                       display: 'flex',
@@ -240,13 +226,13 @@ export function ActionModalContent({
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    {txChainId && (
+                    {tx.chainId && (
                       <Link
                         href={selectTxExplorerLink(
                           state,
                           chainInfoHelper.getChainParameters,
-                          txHash,
-                          replacedTxHash,
+                          tx.hash,
+                          tx.replacedTxHash,
                         )}
                         css={{
                           display: 'inline-flex',
@@ -293,12 +279,12 @@ export function ActionModalContent({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              {(txSuccess || isTxReplaced) && (
+              {(tx?.isSuccess || tx?.isReplaced) && (
                 <BigButton alwaysWithBorders onClick={() => setIsOpen(false)}>
                   {closeButtonText || texts.other.close}
                 </BigButton>
               )}
-              {isError && (
+              {tx?.isError && (
                 <>
                   <BigButton
                     alwaysWithBorders

@@ -12,5 +12,5 @@ appUsedNetworks.forEach((chain) => {
     },
     chain: CHAINS[chain],
     transport: fallback(initialRpcUrls[chain].map((url) => http(url))),
-  }) as PublicClient;
+  });
 });

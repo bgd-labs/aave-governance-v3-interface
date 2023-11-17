@@ -15,58 +15,37 @@ export function CreatePayloadModal({
   isOpen,
   setIsOpen,
   isTxStart,
-  txHash,
-  txPending,
-  txSuccess,
-  txWalletType,
+  tx,
   setIsTxStart,
   setError,
   error,
-  isError,
   payloadId,
   fullTxErrorMessage,
   setFullTxErrorMessage,
-  replacedTxHash,
-  isTxReplaced,
-  txChainId,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
   | 'setIsOpen'
   | 'isTxStart'
-  | 'txHash'
-  | 'txPending'
-  | 'txSuccess'
-  | 'txWalletType'
   | 'setIsTxStart'
   | 'setError'
-  | 'isError'
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
-  | 'isTxReplaced'
-  | 'replacedTxHash'
-  | 'txChainId'
+  | 'tx'
 > & { payloadId: number }) {
   return (
     <BasicActionModal
       isTxStart={isTxStart}
-      txHash={txHash}
-      txPending={txPending}
-      txSuccess={txSuccess}
-      txWalletType={txWalletType}
       setIsTxStart={setIsTxStart}
       setError={setError}
       error={error}
-      isError={isError}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
-      replacedTxHash={replacedTxHash}
-      isTxReplaced={isTxReplaced}
-      txChainId={txChainId}
+      tx={tx}
       successElement={
         <Box component="p" sx={{ typography: 'body' }}>
           {texts.proposalActions.createPayloadSuccess(payloadId)}

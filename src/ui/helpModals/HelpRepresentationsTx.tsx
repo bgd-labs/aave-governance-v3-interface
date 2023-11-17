@@ -34,17 +34,14 @@ export function HelpRepresentationsTx({
     }
   }, [txPending]);
 
+  // TODO: need add tx
   return (
     <>
       <ActionModalContent
         isTxStart={isTxStart}
-        txHash={zeroAddress}
-        txPending={txPending}
-        txSuccess={txSuccess}
         setIsTxStart={setIsTxStart}
         setError={setError}
         error={error}
-        isError={false}
         setIsOpen={handleCancelClick}
         withoutTryAgainWhenError
         successElement={

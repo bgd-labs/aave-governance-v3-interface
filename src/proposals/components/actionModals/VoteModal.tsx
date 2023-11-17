@@ -100,18 +100,11 @@ export function VoteModal({
     setError,
     loading,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    txWalletType,
-    isError,
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
-    isTxReplaced,
-    replacedTxHash,
-    txChainId,
+    tx,
   } = useLastTxLocalStatus({
     type: 'vote',
     payload: {
@@ -122,12 +115,12 @@ export function VoteModal({
   });
 
   useEffect(() => {
-    if (txPending === false || isError) {
+    if (tx?.pending === false || tx?.isError) {
       store.startDetailedProposalDataPolling(
         fromList ? undefined : [proposalId],
       );
     }
-  }, [txPending, isError]);
+  }, [tx?.pending, tx?.isError]);
 
   if (!proposalData?.proposal) return null;
 
@@ -204,7 +197,6 @@ export function VoteModal({
   const handleVote = async (gelato?: boolean) => {
     store.stopDetailedProposalDataPolling();
     return await executeTxWithLocalStatuses({
-      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await vote({
           votingChainId: proposal.data.votingChainId,
@@ -234,21 +226,14 @@ export function VoteModal({
     <BasicActionModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      txHash={txHash}
-      txSuccess={txSuccess}
-      txPending={txPending}
       isTxStart={isTxStart}
-      isError={isError}
       setIsTxStart={setIsTxStart}
       error={error}
       setError={setError}
-      txWalletType={txWalletType}
       contentMinHeight={isTxStart ? 287 : 211}
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
-      isTxReplaced={isTxReplaced}
-      replacedTxHash={replacedTxHash}
-      txChainId={txChainId}
+      tx={tx}
       topBlock={
         !isVotingModesInfoOpen && (
           <Box
@@ -285,7 +270,7 @@ export function VoteModal({
                 minHeight: 20,
               }}>
               {isTxStart ? (
-                <VotedState support={!support} isBig inProcess={isError} />
+                <VotedState support={!support} isBig inProcess={tx.isError} />
               ) : (
                 <ProposalEstimatedStatus
                   proposalId={proposalId}

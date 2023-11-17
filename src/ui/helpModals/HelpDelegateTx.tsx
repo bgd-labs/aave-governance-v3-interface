@@ -34,17 +34,14 @@ export function HelpDelegateTx({
     }
   }, [txPending]);
 
+  // TODO: need add tx
   return (
     <>
       <ActionModalContent
         isTxStart={isTxStart}
-        txHash={HashZero}
-        txPending={txPending}
-        txSuccess={txSuccess}
         setIsTxStart={setIsTxStart}
         setError={setError}
         error={error}
-        isError={false}
         setIsOpen={handleCancelClick}
         withoutTryAgainWhenError
         successElement={

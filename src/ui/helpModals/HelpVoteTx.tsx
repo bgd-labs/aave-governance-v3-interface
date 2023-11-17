@@ -10,7 +10,6 @@ import { Box } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { zeroAddress } from 'viem';
 
 // @ts-ignore
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
@@ -143,22 +142,19 @@ export function HelpVoteTx({
     againstVotesWithVotingPowerBasic,
   );
 
+  // TODO: need add tx
   return (
     <ActionModalContent
-      txHash={zeroAddress}
       setIsOpen={(value) => {
         setTxPending(value);
         setIsTxStart(value);
         setTxSuccess(value);
         setIsVoteButtonClick(value);
       }}
-      isError={false}
       error={error}
       setError={setError}
       isTxStart={isTxStart}
       setIsTxStart={setIsTxStart}
-      txSuccess={txSuccess}
-      txPending={txPending}
       contentMinHeight={isTxStart ? 287 : 211}
       closeButtonText={texts.faq.tx.tryAgain}
       topBlock={

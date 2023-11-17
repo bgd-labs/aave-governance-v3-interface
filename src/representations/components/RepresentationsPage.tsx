@@ -90,18 +90,11 @@ export function RepresentationsPage() {
     setError,
     loading,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    isError,
-    txWalletType,
     setFullTxErrorMessage,
     fullTxErrorMessage,
     executeTxWithLocalStatuses,
-    isTxReplaced,
-    replacedTxHash,
-    txChainId,
+    tx,
   } = useLastTxLocalStatus({
     type: 'representations',
     payload: {
@@ -186,7 +179,7 @@ export function RepresentationsPage() {
                       await handleRepresent();
                     }
                   }}
-                  loading={loading || txPending}
+                  loading={loading || tx?.pending}
                   disabled={
                     isEqual(initialData, formData) ||
                     incorrectRepresentationFields.length > 0 ||
@@ -307,16 +300,9 @@ export function RepresentationsPage() {
           setError={setError}
           isTxStart={isTxStart}
           setIsTxStart={setIsTxStart}
-          txWalletType={txWalletType}
-          txSuccess={txSuccess}
-          txHash={txHash}
-          txPending={txPending}
-          isError={isError}
+          tx={tx}
           setFullTxErrorMessage={setFullTxErrorMessage}
           fullTxErrorMessage={fullTxErrorMessage}
-          isTxReplaced={isTxReplaced}
-          replacedTxHash={replacedTxHash}
-          txChainId={txChainId}
         />
       )}
     </>

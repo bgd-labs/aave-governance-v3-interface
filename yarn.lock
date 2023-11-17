@@ -1234,10 +1234,10 @@
     viem "^1.19.1"
     wagmi "^1.4.6"
 
-"@bgd-labs/frontend-web3-utils@^0.4.74-6ff8df975910fb518a21a142d4df6b34180b1a6a.0":
-  version "0.4.74-6ff8df975910fb518a21a142d4df6b34180b1a6a.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.74-6ff8df975910fb518a21a142d4df6b34180b1a6a.0.tgz#22b8c130766da98e209a12daa7c2b1b582e71a27"
-  integrity sha512-ZBem02nc40vt8LNRiaFuzqDfsNlzyCGLpo89Sx3WJ2Pfw2h+YdDJzHiCJuKrzpfiqXvGorB5Y+RxaXU8W+a+mw==
+"@bgd-labs/frontend-web3-utils@^0.4.79-4c5f6d665fa0bbc75fc3d24ecd3b74a107e76e56.0":
+  version "0.4.79-4c5f6d665fa0bbc75fc3d24ecd3b74a107e76e56.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.79-4c5f6d665fa0bbc75fc3d24ecd3b74a107e76e56.0.tgz#13a39fc1ccebf45bbca995530e74da355bcfdd17"
+  integrity sha512-1xyoyUXAzo6UQaL4m+J0GuvVG6kwA3okSy95FYVMiGl/gvbwkGgZd5XRwTSiwOc3rmHrDSDinlUGAmYxm80BvA==
   dependencies:
     dayjs "^1.11.10"
     lodash "^4.17.21"
