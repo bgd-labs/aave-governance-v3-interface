@@ -1,5 +1,9 @@
 import { HashZero } from '@bgd-labs/aave-governance-ui-helpers';
-import { TransactionStatus, WalletType } from '@bgd-labs/frontend-web3-utils';
+import {
+  TransactionStatus,
+  TxAdapter,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils';
 import { zeroAddress } from 'viem';
 
 import { TransactionUnion } from '../../transactions/store/transactionsSlice';
@@ -24,6 +28,8 @@ export const makeTestTransaction = (
   status?: TransactionStatus,
 ) => {
   return {
+    adapter: TxAdapter.Ethereum,
+    txKey: HashZero,
     type: 'test',
     chainId: 1,
     from: zeroAddress,
