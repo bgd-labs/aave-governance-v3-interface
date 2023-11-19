@@ -318,6 +318,7 @@ export class GovDataService {
 
     return initialPayloadsData.map((payload) => {
       return {
+        creator: payload.data.creator,
         id: Number(payload.id),
         chainId,
         maximumAccessLevelRequired: payload.data.maximumAccessLevelRequired,

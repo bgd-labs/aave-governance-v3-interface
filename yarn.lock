@@ -1222,22 +1222,22 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.11.0.tgz#63ad103265c72f3f99f180f9ea2fcc37f5954cbc"
   integrity sha512-xCIIibH0zmcT5DXFmd4CAPlSJJ7EG7kHqmVO2/S+5FmcvTbrhVXHRvW6kFWxZD2WiZPXvyl5WYCiTyYSXIIvhA==
 
-"@bgd-labs/aave-governance-ui-helpers@^0.3.6-54251ce3789c6208861a3eb71d4451c57be8fc3f.0":
-  version "0.3.6-54251ce3789c6208861a3eb71d4451c57be8fc3f.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.3.6-54251ce3789c6208861a3eb71d4451c57be8fc3f.0.tgz#61b315ac46a17445201938e33da469450602c2a1"
-  integrity sha512-s1pEhHASJt/AEu9n7tQ4FW0ZVQRSFEAN+FqXC27S4wbet8DQVvwe4X3m3QhHBxdHFt8qQ2DHSFYI6fVA5VM0iQ==
+"@bgd-labs/aave-governance-ui-helpers@^0.3.56-ba388b02c2b68e6f30a29a852941707e290b48ea.0":
+  version "0.3.56-ba388b02c2b68e6f30a29a852941707e290b48ea.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.3.56-ba388b02c2b68e6f30a29a852941707e290b48ea.0.tgz#98b170f7fe83654dbedbf8b549cfdde3859e6201"
+  integrity sha512-okZ5uV1AOzwapfCGy0JzNMeVCGaXy5l3JcWa0915eT7xmnklfQTFTeInzaoT8rsz1YRX1YVvXsxN3BirPH2opw==
   dependencies:
     "@bgd-labs/aave-address-book" "^2.11.0"
     bs58 "^5.0.0"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
-    viem "^1.19.1"
-    wagmi "^1.4.6"
+    viem "^1.19.3"
+    wagmi "^1.4.7"
 
-"@bgd-labs/frontend-web3-utils@^0.4.88-ed77566ba739290240b73aedd0377d70e6f6f786.0":
-  version "0.4.88-ed77566ba739290240b73aedd0377d70e6f6f786.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.88-ed77566ba739290240b73aedd0377d70e6f6f786.0.tgz#18ef3bede533c1d128a599e1420860eb74031529"
-  integrity sha512-f9hoiC99dTsipkBCwF/GSrm2YmPyGHI8AtBE1kDHVkgijRLTNceSbsUfEPZVojXMKpODQIXqseJLXJH+f4DERQ==
+"@bgd-labs/frontend-web3-utils@^0.4.89-51a3cc1e5a4b31da3c9ba27abb8a6e410e8d0e04.0":
+  version "0.4.89-51a3cc1e5a4b31da3c9ba27abb8a6e410e8d0e04.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.89-51a3cc1e5a4b31da3c9ba27abb8a6e410e8d0e04.0.tgz#6bb1778b14a65b8be3551f1c263f7dbbe7a5e973"
+  integrity sha512-UGDto9ckO8LvgPJBsqevpNg2GnreDvVZu23k+9dgr7JjBSnYFe8W/P75H4YTA+AbrN/e7p/K55jWUMD6WpbWTg==
   dependencies:
     dayjs "^1.11.10"
     lodash "^4.17.21"
@@ -2474,22 +2474,6 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@wagmi/connectors@3.1.4":
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-3.1.4.tgz#3e7c01956bb473e553a78fb2d57893dfbd3f9eae"
-  integrity sha512-DrYPXByoP9o+xko9R6whKz1cjaJ7HZ+9P27WkW7bhYUWU/sPeDZAvWiLmPwNAhQy8U7A/teAxyUtbExaOdc8zw==
-  dependencies:
-    "@coinbase/wallet-sdk" "^3.6.6"
-    "@ledgerhq/connect-kit-loader" "^1.1.0"
-    "@safe-global/safe-apps-provider" "^0.17.1"
-    "@safe-global/safe-apps-sdk" "^8.0.0"
-    "@walletconnect/ethereum-provider" "2.10.2"
-    "@walletconnect/legacy-provider" "^2.0.0"
-    "@walletconnect/modal" "2.6.2"
-    "@walletconnect/utils" "2.10.2"
-    abitype "0.8.7"
-    eventemitter3 "^4.0.7"
-
 "@wagmi/connectors@3.1.5":
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-3.1.5.tgz#88a6beaa0339004958b02caf694305c82a6432cc"
@@ -2505,16 +2489,6 @@
     "@walletconnect/utils" "2.10.2"
     abitype "0.8.7"
     eventemitter3 "^4.0.7"
-
-"@wagmi/core@1.4.6":
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-1.4.6.tgz#2f57e23aa2e52be0f492aa5628fe7d62619ad5f0"
-  integrity sha512-6SYcRZulzVNXCZ77EtJ7WfqirmMR+Svb5H/3Lqh0sDGwuW9kdH9G3hBDLf8LMJ1ImiWFsSDR5cl2qo7ZreYllA==
-  dependencies:
-    "@wagmi/connectors" "3.1.4"
-    abitype "0.8.7"
-    eventemitter3 "^4.0.7"
-    zustand "^4.3.1"
 
 "@wagmi/core@1.4.7":
   version "1.4.7"
@@ -8611,20 +8585,6 @@ viem@^1.0.0:
     isows "1.0.3"
     ws "8.13.0"
 
-viem@^1.19.1:
-  version "1.19.1"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-1.19.1.tgz#752c0b499f46e4b0fd462e428eef53d1d2471ed6"
-  integrity sha512-YkuBbtiy6yZHWFZuUxypdzBVUAsa1zHBtpVZDi0kILOW4bkykZ60b3zH8wIKVyfvlQ+SyB+2ZN9V5agLfsPm2w==
-  dependencies:
-    "@adraffy/ens-normalize" "1.9.4"
-    "@noble/curves" "1.2.0"
-    "@noble/hashes" "1.3.2"
-    "@scure/bip32" "1.3.2"
-    "@scure/bip39" "1.2.1"
-    abitype "0.9.8"
-    isows "1.0.3"
-    ws "8.13.0"
-
 viem@^1.19.3:
   version "1.19.3"
   resolved "https://registry.yarnpkg.com/viem/-/viem-1.19.3.tgz#896443d4f68005d68b9a1b5b61370ceb7bdf913b"
@@ -8638,18 +8598,6 @@ viem@^1.19.3:
     abitype "0.9.8"
     isows "1.0.3"
     ws "8.13.0"
-
-wagmi@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-1.4.6.tgz#5a3bee0b1a0862d339ba76f1c00ec4024d04b28b"
-  integrity sha512-A5Kryru0QT8E+dpkw83uDbfuGgyR1GdGzay2TALI7sf2kqVair8N0DuCj7ohrCStLRY1oAibXWGolRrmce4psg==
-  dependencies:
-    "@tanstack/query-sync-storage-persister" "^4.27.1"
-    "@tanstack/react-query" "^4.28.0"
-    "@tanstack/react-query-persist-client" "^4.28.0"
-    "@wagmi/core" "1.4.6"
-    abitype "0.8.7"
-    use-sync-external-store "^1.2.0"
 
 wagmi@^1.4.7:
   version "1.4.7"
