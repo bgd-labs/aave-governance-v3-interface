@@ -27,6 +27,7 @@ import { GelatoSwitcher } from '../components/GelatoSwitcher';
 import { ToggleButton } from '../components/ToggleButton';
 import { IconBox } from '../primitives/IconBox';
 import { texts } from '../utils/texts';
+import { getTestTx } from './getTestTx';
 
 interface HelpVoteTxProps {
   support: boolean;
@@ -142,7 +143,6 @@ export function HelpVoteTx({
     againstVotesWithVotingPowerBasic,
   );
 
-  // TODO: need add tx
   return (
     <ActionModalContent
       setIsOpen={(value) => {
@@ -157,6 +157,7 @@ export function HelpVoteTx({
       setIsTxStart={setIsTxStart}
       contentMinHeight={isTxStart ? 287 : 211}
       closeButtonText={texts.faq.tx.tryAgain}
+      tx={getTestTx({ txPending, txSuccess })}
       topBlock={
         !isVotingModesInfoOpen && (
           <Box

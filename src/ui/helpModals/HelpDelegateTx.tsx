@@ -1,4 +1,3 @@
-import { HashZero } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect, useState } from 'react';
 
 import { DelegatedText } from '../../delegate/components/DelegatedText';
@@ -9,6 +8,7 @@ import {
 } from '../../proposals/components/actionModals/ActionModalContentWrapper';
 import { ActionModalContent } from '../../transactions/components/ActionModalContent';
 import { texts } from '../utils/texts';
+import { getTestTx } from './getTestTx';
 
 interface HelpDelegateTxProps {
   txPending: boolean;
@@ -34,7 +34,6 @@ export function HelpDelegateTx({
     }
   }, [txPending]);
 
-  // TODO: need add tx
   return (
     <>
       <ActionModalContent
@@ -44,6 +43,7 @@ export function HelpDelegateTx({
         error={error}
         setIsOpen={handleCancelClick}
         withoutTryAgainWhenError
+        tx={getTestTx({ txPending, txSuccess })}
         successElement={
           <DelegatedText
             delegateData={delegateData}

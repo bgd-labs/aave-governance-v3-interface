@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { zeroAddress } from 'viem';
 
 import {
   ActionModalContentWrapper,
@@ -9,6 +8,7 @@ import { TxText } from '../../representations/components/TxText';
 import { RepresentationFormData } from '../../representations/store/representationsSlice';
 import { ActionModalContent } from '../../transactions/components/ActionModalContent';
 import { texts } from '../utils/texts';
+import { getTestTx } from './getTestTx';
 
 interface HelpRepresentationsTxProps {
   txPending: boolean;
@@ -34,7 +34,6 @@ export function HelpRepresentationsTx({
     }
   }, [txPending]);
 
-  // TODO: need add tx
   return (
     <>
       <ActionModalContent
@@ -44,6 +43,7 @@ export function HelpRepresentationsTx({
         error={error}
         setIsOpen={handleCancelClick}
         withoutTryAgainWhenError
+        tx={getTestTx({ txPending, txSuccess })}
         successElement={
           <TxText initialData={initialData} formData={formData} />
         }
