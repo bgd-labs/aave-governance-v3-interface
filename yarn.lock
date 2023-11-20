@@ -1222,19 +1222,19 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.11.0.tgz#63ad103265c72f3f99f180f9ea2fcc37f5954cbc"
   integrity sha512-xCIIibH0zmcT5DXFmd4CAPlSJJ7EG7kHqmVO2/S+5FmcvTbrhVXHRvW6kFWxZD2WiZPXvyl5WYCiTyYSXIIvhA==
 
-"@bgd-labs/aave-governance-ui-helpers@^0.3.56-ba388b02c2b68e6f30a29a852941707e290b48ea.0":
-  version "0.3.56-ba388b02c2b68e6f30a29a852941707e290b48ea.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.3.56-ba388b02c2b68e6f30a29a852941707e290b48ea.0.tgz#98b170f7fe83654dbedbf8b549cfdde3859e6201"
-  integrity sha512-okZ5uV1AOzwapfCGy0JzNMeVCGaXy5l3JcWa0915eT7xmnklfQTFTeInzaoT8rsz1YRX1YVvXsxN3BirPH2opw==
+"@bgd-labs/aave-governance-ui-helpers@^0.3.57-b0b3d664b365d268b28df769dd74514caa757ea1.0":
+  version "0.3.57-b0b3d664b365d268b28df769dd74514caa757ea1.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-0.3.57-b0b3d664b365d268b28df769dd74514caa757ea1.0.tgz#66c23cadf79b46610baa663055ed9ccfd9299e2e"
+  integrity sha512-nJVKh7TqwFNjfSRDfmVzlizR2wQW6IwZhPrCG7ho16+POjKUAY8+38jO7LggY99Kh5KMj28Z7pJfWPSziyVKWQ==
   dependencies:
     "@bgd-labs/aave-address-book" "^2.11.0"
     bs58 "^5.0.0"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
-    viem "^1.19.3"
+    viem "^1.19.4"
     wagmi "^1.4.7"
 
-"@bgd-labs/frontend-web3-utils@^0.4.89-51a3cc1e5a4b31da3c9ba27abb8a6e410e8d0e04.0":
+"@bgd-labs/frontend-web3-utils@^0.4.89-1376a91b452b8a2fc7b74f7501d7c064dbe569aa.0":
   version "0.4.89-51a3cc1e5a4b31da3c9ba27abb8a6e410e8d0e04.0"
   resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.4.89-51a3cc1e5a4b31da3c9ba27abb8a6e410e8d0e04.0.tgz#6bb1778b14a65b8be3551f1c263f7dbbe7a5e973"
   integrity sha512-UGDto9ckO8LvgPJBsqevpNg2GnreDvVZu23k+9dgr7JjBSnYFe8W/P75H4YTA+AbrN/e7p/K55jWUMD6WpbWTg==
@@ -8589,6 +8589,20 @@ viem@^1.19.3:
   version "1.19.3"
   resolved "https://registry.yarnpkg.com/viem/-/viem-1.19.3.tgz#896443d4f68005d68b9a1b5b61370ceb7bdf913b"
   integrity sha512-SymIbCO0nIq2ucna8R3XV4f/lEshKGLuhYU2f6O+OAbmE2ugBxBKx2axMKQrQML87nE0jb2qqqtRJka5SO/7MA==
+  dependencies:
+    "@adraffy/ens-normalize" "1.10.0"
+    "@noble/curves" "1.2.0"
+    "@noble/hashes" "1.3.2"
+    "@scure/bip32" "1.3.2"
+    "@scure/bip39" "1.2.1"
+    abitype "0.9.8"
+    isows "1.0.3"
+    ws "8.13.0"
+
+viem@^1.19.4:
+  version "1.19.4"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-1.19.4.tgz#0a345e36a6f5526dd6d7cf9b280b06de915ba46b"
+  integrity sha512-CvAVaOzxlu3Q/cpfrYvTRMBIPDMAkLu8aFmHLqU1Bg25DyUxp9xwoF1Ljp38q7/Rosm1OPFQ4y6K64v/VwoumQ==
   dependencies:
     "@adraffy/ens-normalize" "1.10.0"
     "@noble/curves" "1.2.0"
