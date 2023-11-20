@@ -2,6 +2,7 @@
 
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
+import { Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { Container } from '../../ui';
@@ -13,7 +14,13 @@ import { PayloadExploreItem } from './PayloadExploreItem';
 
 export function PayloadsExplorerPage() {
   const theme = useTheme();
-  const { getPayloadsExploreData, payloadsExploreData } = useStore();
+  const {
+    getPayloadsExploreData,
+    payloadsExploreData,
+    getPaginatedPayloadsExploreData,
+    totalPayloadsCountByAddress,
+    payloadsExplorePagination,
+  } = useStore();
 
   const [chainId, setChainId] = useState<number>(appConfig.govCoreChainId);
 
@@ -45,48 +52,85 @@ export function PayloadsExplorerPage() {
         </Box>
 
         <Box sx={{ typography: 'h1', my: 24 }}>Payloads</Box>
-        {Object.entries(payloadsData).map((value) => (
-          <Box key={value[0]}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                wordBreak: 'break-word',
-              }}>
-              <Box sx={{ typography: 'h2' }}>
-                Payloads controller: {value[0]}
-              </Box>
-              <Box sx={{ typography: 'h2' }}>Count: {value[1].length}</Box>
-            </Box>
+        {Object.entries(payloadsData).map((value) => {
+          const sortedPayloads = value[1]
+            .map((payload) => payload)
+            .sort((a, b) => a.id - b.id);
 
-            <Box
-              sx={{
-                mt: 24,
-                display: 'grid',
-                gridTemplateColumns: 'repeat(1, 1fr)',
-                gridGap: 6,
-                [theme.breakpoints.up('xsm')]: {
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                },
-                [theme.breakpoints.up('sm')]: {
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gridGap: 12,
-                },
-                [theme.breakpoints.up('lg')]: {
-                  gridTemplateColumns: 'repeat(4, 1fr)',
-                },
-              }}>
-              {value[1].map((payload, index) => (
-                <PayloadExploreItem
-                  key={`${payload.id}_${payload.chainId}`}
-                  payload={payload}
-                />
-              ))}
+          return (
+            <Box key={value[0]}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  wordBreak: 'break-word',
+                }}>
+                <Box sx={{ typography: 'h2' }}>
+                  Payloads controller: {value[0]}
+                </Box>
+                <Box sx={{ typography: 'h2' }}>
+                  Count: {totalPayloadsCountByAddress[value[0] as Hex]}
+                </Box>
+              </Box>
+
+              <Box
+                sx={{
+                  mt: 24,
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(1, 1fr)',
+                  gridGap: 6,
+                  [theme.breakpoints.up('xsm')]: {
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                  },
+                  [theme.breakpoints.up('sm')]: {
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gridGap: 12,
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                  },
+                }}>
+                {sortedPayloads
+                  .slice(
+                    payloadsExplorePagination[value[0] as Hex]
+                      ? -payloadsExplorePagination[value[0] as Hex]
+                          .currentStepSize
+                      : undefined,
+                  )
+                  .sort((a, b) => b.id - a.id)
+                  .map((payload) => (
+                    <PayloadExploreItem
+                      key={`${payload.id}_${payload.chainId}`}
+                      payload={payload}
+                    />
+                  ))}
+              </Box>
+
+              {payloadsExplorePagination[value[0] as Hex] &&
+                !payloadsExplorePagination[value[0] as Hex].isEnd && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mt: 24,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      hover: {
+                        color: theme.palette.$textSecondary,
+                      },
+                    }}
+                    onClick={() =>
+                      getPaginatedPayloadsExploreData(chainId, value[0] as Hex)
+                    }>
+                    <h1>Show more</h1>
+                  </Box>
+                )}
             </Box>
-          </Box>
-        ))}
+          );
+        })}
       </Container>
     </>
   );
