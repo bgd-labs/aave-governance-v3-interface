@@ -17,19 +17,15 @@ export function BasicActionModal({
   topBlock,
   contentMinHeight,
   children,
-  txHash,
-  txPending,
-  txSuccess,
   isTxStart,
   setIsTxStart,
-  isError,
   error,
   setError,
   successElement,
-  txWalletType,
   withoutTryAgainWhenError,
   fullTxErrorMessage,
   setFullTxErrorMessage,
+  tx,
 }: BasicActionModalProps) {
   useEffect(() => {
     setIsTxStart(false);
@@ -44,17 +40,13 @@ export function BasicActionModal({
         setIsOpen={setIsOpen}
         isTxStart={isTxStart}
         setIsTxStart={setIsTxStart}
-        isError={isError}
         error={error}
         setError={setError}
         contentMinHeight={contentMinHeight}
         successElement={successElement}
-        txSuccess={txSuccess}
-        txHash={txHash}
-        txPending={txPending}
-        txWalletType={txWalletType}
         withoutTryAgainWhenError={withoutTryAgainWhenError}
-        fullTxErrorMessage={fullTxErrorMessage}>
+        fullTxErrorMessage={fullTxErrorMessage}
+        tx={tx}>
         {children}
       </ActionModalContent>
     </BasicModal>

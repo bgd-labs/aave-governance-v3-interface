@@ -1,4 +1,4 @@
-import { ProposalWaitForState } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalWaitForState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
 import dayjs from 'dayjs';
 

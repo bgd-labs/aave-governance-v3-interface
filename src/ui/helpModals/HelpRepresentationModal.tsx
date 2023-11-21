@@ -154,8 +154,8 @@ export function HelpRepresentationModal({
               infoType === InfoType.WalletOptions
                 ? setIsHelpWalletModalOpen(true)
                 : infoType === InfoType.Representation
-                ? setIsHelpRepresentativeModalOpen(true)
-                : setIsHelpNavigationModalOpen(true);
+                  ? setIsHelpRepresentativeModalOpen(true)
+                  : setIsHelpNavigationModalOpen(true);
             }
       }>
       <HelpModalContainer
@@ -180,10 +180,10 @@ export function HelpRepresentationModal({
                 txSuccess
                   ? texts.faq.representations.selected
                   : isEdit && !isRepresentationsChangedView && !txSuccess
-                  ? texts.faq.representations.edit
-                  : !isEdit && isRepresentationsChangedView && !txSuccess
-                  ? texts.faq.representations.confirmation
-                  : texts.faq.representations.manage
+                    ? texts.faq.representations.edit
+                    : !isEdit && isRepresentationsChangedView && !txSuccess
+                      ? texts.faq.representations.confirmation
+                      : texts.faq.representations.manage
               }
               image={
                 <Box
@@ -197,10 +197,10 @@ export function HelpRepresentationModal({
                               txSuccess
                                 ? 'Done'
                                 : isRepresentationsChangedView
-                                ? 'Confirmation'
-                                : isEdit
-                                ? 'Edit'
-                                : 'Manage'
+                                  ? 'Confirmation'
+                                  : isEdit
+                                    ? 'Edit'
+                                    : 'Manage'
                             }Dark.svg`,
                           )})`
                         : `url(${setRelativePath(
@@ -208,10 +208,10 @@ export function HelpRepresentationModal({
                               txSuccess
                                 ? 'Done'
                                 : isRepresentationsChangedView
-                                ? 'Confirmation'
-                                : isEdit
-                                ? 'Edit'
-                                : 'Manage'
+                                  ? 'Confirmation'
+                                  : isEdit
+                                    ? 'Edit'
+                                    : 'Manage'
                             }.svg`,
                           )})`,
                     backgroundSize: 'contain',

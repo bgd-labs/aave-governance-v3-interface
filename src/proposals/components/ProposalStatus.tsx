@@ -1,4 +1,4 @@
-import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 
 import { proposalStatuses } from '../utils/statuses';
@@ -26,14 +26,14 @@ export function ProposalStatus({
         color: isFinished
           ? '$text'
           : status === ProposalState.Defeated
-          ? '$mainAgainst'
-          : status === ProposalState.Succeed
-          ? '$mainFor'
-          : status === ProposalState.Expired
-          ? '$textDisabled'
-          : isSecondary
-          ? '$textSecondary'
-          : '$text',
+            ? '$mainAgainst'
+            : status === ProposalState.Succeed
+              ? '$mainFor'
+              : status === ProposalState.Expired
+                ? '$textDisabled'
+                : isSecondary
+                  ? '$textSecondary'
+                  : '$text',
       }}>
       {statusTitle}
     </Box>

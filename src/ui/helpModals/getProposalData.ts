@@ -1,5 +1,6 @@
-import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers';
 import dayjs from 'dayjs';
+import { zeroAddress } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
@@ -60,6 +61,7 @@ export function getProposalData() {
         votingMachineState: 1,
         payloads: [
           {
+            creator: zeroAddress,
             id: 0,
             chainId: appConfig.govCoreChainId,
             maximumAccessLevelRequired: 1,

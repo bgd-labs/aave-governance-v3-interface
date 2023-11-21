@@ -1,4 +1,4 @@
-import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
 import { useEffect } from 'react';
 
@@ -56,12 +56,12 @@ export function ProposalEstimatedStatus({
             estimatedStatus === ProposalEstimatedState.Defeated
               ? '$mainAgainst'
               : estimatedStatus === ProposalEstimatedState.Succeed
-              ? '$mainFor'
-              : estimatedStatus === ProposalEstimatedState.Expired
-              ? '$textDisabled'
-              : isSecondary
-              ? '$textSecondary'
-              : '$text',
+                ? '$mainFor'
+                : estimatedStatus === ProposalEstimatedState.Expired
+                  ? '$textDisabled'
+                  : isSecondary
+                    ? '$textSecondary'
+                    : '$text',
         }}>
         <Box component="span" sx={{ typography: 'body', color: '$text' }}>
           {statusText}

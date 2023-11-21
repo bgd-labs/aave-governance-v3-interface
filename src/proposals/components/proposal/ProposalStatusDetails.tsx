@@ -3,8 +3,11 @@ import {
   checkHash,
   ProposalState,
   VotingMachineProposalState,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
@@ -116,12 +119,14 @@ export function ProposalStatusDetails({
     type,
     payload,
   }: Pick<TransactionUnion, 'type' | 'payload'>) => {
-    const tx = selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
-      activeWallet?.accounts[0] || '',
-      type,
-      payload,
-    );
+    const tx =
+      activeWallet &&
+      selectLastTxByTypeAndPayload<TransactionUnion>(
+        store,
+        activeWallet.address,
+        type,
+        payload,
+      );
 
     const isPending =
       tx &&
@@ -143,7 +148,7 @@ export function ProposalStatusDetails({
       tx.type !== 'representations' &&
       tx.type === type &&
       tx.payload.proposalId === proposalId &&
-      tx.status === 1;
+      tx.status === TransactionStatus.Success;
 
     return { isPending, isSuccess };
   };
@@ -161,13 +166,13 @@ export function ProposalStatusDetails({
       isModalOpen: isSTKAAVEToken
         ? isSendSTKAAVEProofModalOpen
         : isAAAVEToken
-        ? isSendAAAVEProofModalOpen
-        : isSendAAVEProofModalOpen,
+          ? isSendAAAVEProofModalOpen
+          : isSendAAVEProofModalOpen,
       setIsModalOpen: isSTKAAVEToken
         ? setIsSendSTKAAVEProofModalOpen
         : isAAAVEToken
-        ? setIsSendAAAVEProofModalOpen
-        : setIsSendAAVEProofModalOpen,
+          ? setIsSendAAAVEProofModalOpen
+          : setIsSendAAVEProofModalOpen,
     };
   });
   const isAssetsForProofsHasSTKAAVE = assetsForProofs.find(

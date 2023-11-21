@@ -1,4 +1,4 @@
-import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
@@ -37,8 +37,8 @@ export function ProposalListItemWrapper({
         estimatedState === ProposalEstimatedState.Defeated && !isFinished
           ? '$secondaryAgainst'
           : estimatedState === ProposalEstimatedState.Succeed && !isFinished
-          ? '$secondaryFor'
-          : '$light'
+            ? '$secondaryFor'
+            : '$light'
       }
       wrapperCss={{ mb: 20 }}
       css={{

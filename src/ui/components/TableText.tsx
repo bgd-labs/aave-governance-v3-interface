@@ -1,8 +1,7 @@
 import { Box } from '@mui/system';
-import { ethers } from 'ethers';
-import { isAddress } from 'ethers/lib/utils';
 import React, { ReactNode, useState } from 'react';
 import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
+import { isAddress, zeroAddress } from 'viem';
 
 import { useStore } from '../../store';
 import { texts } from '../utils/texts';
@@ -54,8 +53,8 @@ export function TableText({
         color: isError
           ? '$error'
           : alwaysGray || isCrossed
-          ? '$textDisabled'
-          : '$text',
+            ? '$textDisabled'
+            : '$text',
         [theme.breakpoints.up('sm')]: {
           mb: isCrossed ? 0 : 0,
         },
@@ -80,8 +79,7 @@ export function TableText({
       {value &&
       isAddress(value) &&
       topText &&
-      (value === ethers.constants.AddressZero ||
-        value === store.activeWallet?.accounts[0]) ? (
+      (value === zeroAddress || value === store.activeWallet?.address) ? (
         topText
       ) : (
         <>

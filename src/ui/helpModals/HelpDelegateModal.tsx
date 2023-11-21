@@ -228,22 +228,22 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
               setTxSuccess(false);
             }
           : !isFirstStepOnMobile
-          ? () => {
-              setFormDelegateData([]);
-              setIsEdit(false);
-              setIsDelegateChangedView(false);
-              setTxPending(false);
-              setTxSuccess(false);
-              setIsFirstStepOnMobile(true);
-            }
-          : () => {
-              setIsHelpDelegateModalOpen(false);
-              infoType === InfoType.WalletOptions
-                ? setIsHelpWalletModalOpen(true)
-                : infoType === InfoType.Representation
-                ? setIsHelpRepresentativeModalOpen(true)
-                : setIsHelpNavigationModalOpen(true);
-            }
+            ? () => {
+                setFormDelegateData([]);
+                setIsEdit(false);
+                setIsDelegateChangedView(false);
+                setTxPending(false);
+                setTxSuccess(false);
+                setIsFirstStepOnMobile(true);
+              }
+            : () => {
+                setIsHelpDelegateModalOpen(false);
+                infoType === InfoType.WalletOptions
+                  ? setIsHelpWalletModalOpen(true)
+                  : infoType === InfoType.Representation
+                    ? setIsHelpRepresentativeModalOpen(true)
+                    : setIsHelpNavigationModalOpen(true);
+              }
       }>
       <HelpModalContainer
         onMainButtonClick={
@@ -268,15 +268,15 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                 txSuccess
                   ? texts.faq.delegate.delegated
                   : isEdit && !isDelegateChangedView && !txSuccess
-                  ? texts.faq.delegate.editMode
-                  : !isEdit && isDelegateChangedView && !txSuccess
-                  ? texts.faq.delegate.confirmation
-                  : !isEdit &&
-                    !isDelegateChangedView &&
-                    !txSuccess &&
-                    !isFirstStepOnMobile
-                  ? texts.faq.delegate.delegationBar
-                  : texts.faq.delegate.delegation
+                    ? texts.faq.delegate.editMode
+                    : !isEdit && isDelegateChangedView && !txSuccess
+                      ? texts.faq.delegate.confirmation
+                      : !isEdit &&
+                          !isDelegateChangedView &&
+                          !txSuccess &&
+                          !isFirstStepOnMobile
+                        ? texts.faq.delegate.delegationBar
+                        : texts.faq.delegate.delegation
               }
               image={
                 <Box
@@ -290,8 +290,8 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                               isDelegateChangedView
                                 ? 'delegationChange'
                                 : isEdit
-                                ? 'delegationEdit'
-                                : 'delegationMain'
+                                  ? 'delegationEdit'
+                                  : 'delegationMain'
                             }Dark.svg`,
                           )})`
                         : `url(${setRelativePath(
@@ -299,8 +299,8 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                               isDelegateChangedView
                                 ? 'delegationChange'
                                 : isEdit
-                                ? 'delegationEdit'
-                                : 'delegationMain'
+                                  ? 'delegationEdit'
+                                  : 'delegationMain'
                             }.svg`,
                           )})`,
                     backgroundSize: 'contain',

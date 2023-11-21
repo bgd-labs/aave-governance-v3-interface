@@ -1,12 +1,17 @@
-import { selectTxExplorerLink } from '@bgd-labs/frontend-web3-utils/src';
+import {
+  selectTxExplorerLink,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
 
+import ArrowRightIcon from '/public/images/icons/arrowRight.svg';
 import CheckIcon from '/public/images/icons/check.svg';
 import CopyIcon from '/public/images/icons/copy.svg';
 import CrossIcon from '/public/images/icons/cross.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
+import ReplacedIcon from '/public/images/icons/replacedIcon.svg';
 
 import { DelegatedText } from '../../delegate/components/DelegatedText';
 import { TxText } from '../../representations/components/TxText';
@@ -19,10 +24,10 @@ import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { chainInfoHelper } from '../../utils/configs';
 import { getTokenName } from '../../utils/getTokenName';
-import { TransactionUnion } from '../store/transactionsSlice';
+import { TxWithStatus } from '../store/transactionsSlice';
 
 interface TransactionInfoItemProps {
-  tx: TransactionUnion;
+  tx: TxWithStatus;
 }
 
 export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
@@ -34,7 +39,11 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
       <ChainNameWithIcon
         chainId={tx.chainId}
         iconSize={8}
-        css={{ '.NetworkIcon': { mr: 2 } }}
+        css={{
+          display: 'inline-block',
+          '.NetworkIcon': { mr: 2 },
+          '.ChainNameWithIcon__text': { display: 'inline' },
+        }}
       />
     );
   };
@@ -44,13 +53,25 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
       <ChainNameWithIcon
         chainId={appConfig.govCoreChainId}
         iconSize={8}
-        css={{ '.NetworkIcon': { mr: 2 } }}
+        css={{
+          display: 'inline-block',
+          '.NetworkIcon': { mr: 2 },
+          '.ChainNameWithIcon__text': { display: 'inline' },
+        }}
       />
     );
   };
 
   return (
-    <Box sx={{ mb: 15, width: '100%', '&:last-of-type': { mb: 0 } }}>
+    <Box sx={{ mb: 14, width: '100%', '&:last-of-type': { mb: 0 } }}>
+      <Box sx={{ textAlign: 'left' }}>
+        {tx.localTimestamp && (
+          <Box component="span" sx={{ typography: 'headline' }}>
+            {dayjs.unix(tx.localTimestamp).format('MMM D, h:mm A')}
+          </Box>
+        )}
+      </Box>
+
       <Box
         sx={{
           display: 'flex',
@@ -59,106 +80,6 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         }}>
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            mr: 10,
-            minWidth: 95,
-          }}>
-          {tx.localTimestamp && (
-            <Box
-              component="span"
-              sx={{ typography: 'descriptorAccent', mb: 2 }}>
-              {tx.type === 'test'
-                ? dayjs.unix(tx.localTimestamp).format('MMM D, h:mm A')
-                : dayjs(tx.localTimestamp).format('MMM D, h:mm A')}
-            </Box>
-          )}
-          {tx.hash && (
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                a: { lineHeight: 0 },
-              }}>
-              <Link
-                href={selectTxExplorerLink(
-                  state,
-                  chainInfoHelper.getChainParameters,
-                  tx.hash,
-                )}
-                css={{
-                  display: 'inline-flex',
-                  color: '$textSecondary',
-                  alignItems: 'center',
-                  transition: 'all 0.2s ease',
-                  hover: {
-                    color: theme.palette.$text,
-                    svg: {
-                      path: {
-                        '&:first-of-type': {
-                          stroke: theme.palette.$text,
-                        },
-                        '&:last-of-type': {
-                          fill: theme.palette.$text,
-                        },
-                      },
-                    },
-                  },
-                }}
-                inNewWindow>
-                <Box component="p" sx={{ typography: 'descriptor' }}>
-                  {textCenterEllipsis(tx.hash, 5, 5)}
-                </Box>
-                <IconBox
-                  sx={{
-                    width: 10,
-                    height: 10,
-                    ml: 2,
-                    '> svg': {
-                      width: 10,
-                      height: 10,
-                      transition: 'all 0.2s ease',
-                      path: {
-                        '&:first-of-type': {
-                          stroke: theme.palette.$textSecondary,
-                        },
-                        '&:last-of-type': {
-                          fill: theme.palette.$textSecondary,
-                        },
-                      },
-                    },
-                  }}>
-                  <LinkIcon />
-                </IconBox>
-              </Link>
-
-              <CopyToClipboard copyText={tx.hash}>
-                <IconBox
-                  sx={{
-                    cursor: 'pointer',
-                    width: 10,
-                    height: 10,
-                    '> svg': {
-                      width: 10,
-                      height: 10,
-                    },
-                    ml: 3,
-                    path: {
-                      transition: 'all 0.2s ease',
-                      stroke: theme.palette.$textSecondary,
-                    },
-                    hover: { path: { stroke: theme.palette.$main } },
-                  }}>
-                  <CopyIcon />
-                </IconBox>
-              </CopyToClipboard>
-            </Box>
-          )}
-        </Box>
-
-        <Box
-          sx={{
-            typography: 'descriptor',
             flex: 1,
             display: 'inline-block',
           }}>
@@ -197,8 +118,27 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === 'vote' && tx.payload && (
             <>
               {texts.transactions.voteTx}{' '}
-              <b>{tx.payload.support ? 'for' : 'against'}</b> for the proposal{' '}
-              <b>#{tx.payload.proposalId}</b> on <NetworkIconWitchChainN />
+              <b>{tx.payload.support ? 'for' : 'against'}</b>{' '}
+              {tx.payload.voter !== state.activeWallet?.address && (
+                <>
+                  {texts.transactions.voteTxAsRepresentative}{' '}
+                  <Link
+                    css={{
+                      color: '$textSecondary',
+                      fontWeight: 500,
+                      hover: { opacity: 0.7 },
+                    }}
+                    href={`${chainInfoHelper.getChainParameters(tx.chainId)
+                      .blockExplorers?.default.url}/address/${
+                      tx.payload.voter
+                    }`}
+                    inNewWindow>
+                    {textCenterEllipsis(tx.payload.voter, 6, 4)}
+                  </Link>
+                </>
+              )}{' '}
+              for the proposal <b>#{tx.payload.proposalId}</b> on{' '}
+              <NetworkIconWitchChainN />
             </>
           )}
           {tx.type === 'closeAndSendVote' && tx.payload && (
@@ -248,34 +188,273 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           )}
         </Box>
 
-        <Box sx={{ ml: 10, lineHeight: 0, backgroundColor: '$paper' }}>
-          {tx.pending && (
-            <Spinner
-              size={16}
-              loaderLineColor="$paper"
-              loaderCss={{ backgroundColor: '$main' }}
-            />
-          )}
-          {tx.status && (
-            <IconBox
-              sx={{
-                width: 16,
-                height: 16,
-                '> svg': {
+        <Box
+          sx={{
+            width: 30,
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}>
+          <Box sx={{ lineHeight: 0, backgroundColor: '$paper' }}>
+            {tx.pending && (
+              <Spinner
+                size={16}
+                loaderLineColor="$paper"
+                loaderCss={{ backgroundColor: '$main' }}
+              />
+            )}
+            {tx.status && (
+              <IconBox
+                sx={{
                   width: 16,
                   height: 16,
+                  '> svg': {
+                    width: 16,
+                    height: 16,
+                  },
+                  ellipse: {
+                    fill:
+                      tx.status === TransactionStatus.Replaced
+                        ? theme.palette.$textSecondary
+                        : undefined,
+                  },
+                  path: {
+                    stroke:
+                      tx.status === TransactionStatus.Success
+                        ? theme.palette.$mainFor
+                        : tx.status === TransactionStatus.Replaced
+                          ? undefined
+                          : theme.palette.$mainAgainst,
+                    fill:
+                      tx.status === TransactionStatus.Replaced
+                        ? theme.palette.$textSecondary
+                        : undefined,
+                    '&:last-of-type': {
+                      stroke:
+                        tx.status === TransactionStatus.Success
+                          ? theme.palette.$mainFor
+                          : tx.status === TransactionStatus.Replaced
+                            ? theme.palette.$textSecondary
+                            : theme.palette.$mainAgainst,
+                    },
+                  },
+                }}>
+                {tx.status === TransactionStatus.Success ? (
+                  <CheckIcon />
+                ) : tx.status === TransactionStatus.Replaced ? (
+                  <ReplacedIcon />
+                ) : (
+                  <CrossIcon />
+                )}
+              </IconBox>
+            )}
+          </Box>
+        </Box>
+      </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: 4 }}>
+        {tx.hash && (
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              a: { lineHeight: 0 },
+            }}>
+            <Link
+              href={selectTxExplorerLink(
+                state,
+                chainInfoHelper.getChainParameters,
+                tx.hash,
+              )}
+              css={{
+                display: 'inline-flex',
+                color: tx.replacedTxHash ? '$textDisabled' : '$textSecondary',
+                alignItems: 'center',
+                transition: 'all 0.2s ease',
+                hover: {
+                  color: tx.replacedTxHash
+                    ? theme.palette.$textDisabled
+                    : theme.palette.$text,
+                  svg: {
+                    path: {
+                      '&:first-of-type': {
+                        stroke: tx.replacedTxHash
+                          ? theme.palette.$textDisabled
+                          : theme.palette.$text,
+                      },
+                      '&:last-of-type': {
+                        fill: tx.replacedTxHash
+                          ? theme.palette.$textDisabled
+                          : theme.palette.$text,
+                      },
+                    },
+                  },
+                },
+              }}
+              inNewWindow>
+              <Box component="p" sx={{ typography: 'descriptor' }}>
+                {textCenterEllipsis(tx.hash, 5, 5)}
+              </Box>
+              <IconBox
+                sx={{
+                  width: 10,
+                  height: 10,
+                  ml: 2,
+                  '> svg': {
+                    width: 10,
+                    height: 10,
+                    transition: 'all 0.2s ease',
+                    path: {
+                      '&:first-of-type': {
+                        stroke: tx.replacedTxHash
+                          ? theme.palette.$textDisabled
+                          : theme.palette.$textSecondary,
+                      },
+                      '&:last-of-type': {
+                        fill: tx.replacedTxHash
+                          ? theme.palette.$textDisabled
+                          : theme.palette.$textSecondary,
+                      },
+                    },
+                  },
+                }}>
+                <LinkIcon />
+              </IconBox>
+            </Link>
+
+            <CopyToClipboard copyText={tx.hash}>
+              <IconBox
+                sx={{
+                  cursor: 'pointer',
+                  width: 10,
+                  height: 10,
+                  '> svg': {
+                    width: 10,
+                    height: 10,
+                  },
+                  ml: 3,
+                  path: {
+                    transition: 'all 0.2s ease',
+                    stroke: tx.replacedTxHash
+                      ? theme.palette.$textDisabled
+                      : theme.palette.$textSecondary,
+                  },
+                  hover: {
+                    path: {
+                      stroke: tx.replacedTxHash
+                        ? theme.palette.$textDisabled
+                        : theme.palette.$main,
+                    },
+                  },
+                }}>
+                <CopyIcon />
+              </IconBox>
+            </CopyToClipboard>
+          </Box>
+        )}
+
+        {tx.replacedTxHash && (
+          <Box sx={{ mx: 6 }}>
+            <IconBox
+              sx={{
+                width: 12,
+                height: 12,
+                '> svg': {
+                  width: 12,
+                  height: 12,
                 },
                 path: {
-                  stroke:
-                    tx.status === 1
-                      ? theme.palette.$mainFor
-                      : theme.palette.$mainAgainst,
+                  transition: 'all 0.2s ease',
+                  stroke: theme.palette.$text,
                 },
               }}>
-              {tx.status === 1 ? <CheckIcon /> : <CrossIcon />}
+              <ArrowRightIcon />
             </IconBox>
-          )}
-        </Box>
+          </Box>
+        )}
+
+        {tx.replacedTxHash && tx.hash && (
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              a: { lineHeight: 0 },
+            }}>
+            <Link
+              href={selectTxExplorerLink(
+                state,
+                chainInfoHelper.getChainParameters,
+                tx.hash,
+                tx.replacedTxHash,
+              )}
+              css={{
+                display: 'inline-flex',
+                color: '$textSecondary',
+                alignItems: 'center',
+                transition: 'all 0.2s ease',
+                hover: {
+                  color: theme.palette.$text,
+                  svg: {
+                    path: {
+                      '&:first-of-type': {
+                        stroke: theme.palette.$text,
+                      },
+                      '&:last-of-type': {
+                        fill: theme.palette.$text,
+                      },
+                    },
+                  },
+                },
+              }}
+              inNewWindow>
+              <Box component="p" sx={{ typography: 'descriptor' }}>
+                {textCenterEllipsis(tx.replacedTxHash, 5, 5)}
+              </Box>
+              <IconBox
+                sx={{
+                  width: 10,
+                  height: 10,
+                  ml: 2,
+                  '> svg': {
+                    width: 10,
+                    height: 10,
+                    transition: 'all 0.2s ease',
+                    path: {
+                      '&:first-of-type': {
+                        stroke: theme.palette.$textSecondary,
+                      },
+                      '&:last-of-type': {
+                        fill: theme.palette.$textSecondary,
+                      },
+                    },
+                  },
+                }}>
+                <LinkIcon />
+              </IconBox>
+            </Link>
+
+            <CopyToClipboard copyText={tx.replacedTxHash}>
+              <IconBox
+                sx={{
+                  cursor: 'pointer',
+                  width: 10,
+                  height: 10,
+                  '> svg': {
+                    width: 10,
+                    height: 10,
+                  },
+                  ml: 3,
+                  path: {
+                    transition: 'all 0.2s ease',
+                    stroke: theme.palette.$textSecondary,
+                  },
+                  hover: { path: { stroke: theme.palette.$main } },
+                }}>
+                <CopyIcon />
+              </IconBox>
+            </CopyToClipboard>
+          </Box>
+        )}
       </Box>
     </Box>
   );

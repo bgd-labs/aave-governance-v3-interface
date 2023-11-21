@@ -1,5 +1,5 @@
-import { Balance } from '@bgd-labs/aave-governance-ui-helpers/src';
-import { ethers } from 'ethers';
+import { Balance } from '@bgd-labs/aave-governance-ui-helpers';
+import { Hex, toHex } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 import { GovDataService } from '../../web3/services/govDataService';
@@ -36,10 +36,10 @@ export function formatBalances(balances: Balance[]) {
 }
 
 export async function getVotingProofs(
-  blockHash: string,
+  blockHash: Hex,
   balances: Balance[],
   govDataService: GovDataService,
-  address: string,
+  address: Hex,
 ) {
   const blockNumber = await govDataService.getCoreBlockNumber(blockHash);
 
@@ -63,9 +63,9 @@ export async function getVotingProofs(
 }
 
 export async function getProofOfRepresentative(
-  blockHash: string,
+  blockHash: Hex,
   govDataService: GovDataService,
-  address: string,
+  address: Hex,
   chainId: number,
 ) {
   const blockNumber = await govDataService.getCoreBlockNumber(blockHash);
@@ -73,7 +73,7 @@ export async function getProofOfRepresentative(
     appConfig.govCoreConfig.contractAddress,
     false,
   );
-  const hexSlot = ethers.utils.hexlify(balanceSlotRaw);
+  const hexSlot = toHex(balanceSlotRaw);
   const slot = getSolidityTwoLevelStorageSlotHash(hexSlot, address, chainId);
 
   return await govDataService.getProofs({

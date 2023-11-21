@@ -2,6 +2,9 @@
 const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 
 const nextConfig = {
+  experimental: {
+    webpackBuildWorker: true,
+  },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
@@ -31,10 +34,6 @@ const nextConfig = {
 
     return config;
   },
-  transpilePackages: [
-    '@bgd-labs/frontend-web3-utils',
-    '@bgd-labs/aave-governance-ui-helpers',
-  ],
   reactStrictMode: true,
   trailingSlash: true,
 };
@@ -42,9 +41,6 @@ const nextConfig = {
 module.exports = isForIPFS
   ? {
       ...nextConfig,
-      experimental: {
-        appDir: false,
-      },
       output: 'export',
       images: {
         unoptimized: true,

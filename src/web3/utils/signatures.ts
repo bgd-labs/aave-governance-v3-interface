@@ -1,10 +1,10 @@
-import { IVotingMachineWithProofs } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineWithProofs';
-import { ethers } from 'ethers';
+import { WalletClient } from '@wagmi/core';
+import { Hex, hexToSignature } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 
 export async function getVoteSignatureParams({
-  signer,
+  walletClient,
   votingChainId,
   proposalId,
   voterAddress,
@@ -12,13 +12,13 @@ export async function getVoteSignatureParams({
   support,
   votingAssetsWithSlot,
 }: {
-  signer: ethers.providers.JsonRpcSigner;
+  walletClient: WalletClient;
   votingChainId: number;
   proposalId: number;
-  voterAddress: string;
-  representativeAddress?: string;
+  voterAddress: Hex;
+  representativeAddress?: Hex;
   support: boolean;
-  votingAssetsWithSlot: { underlyingAsset: string; slot: number }[];
+  votingAssetsWithSlot: { underlyingAsset: Hex; slot: number }[];
 }) {
   const domain = {
     name: 'Aave Voting Machine',
@@ -29,10 +29,10 @@ export async function getVoteSignatureParams({
   };
 
   if (!!representativeAddress) {
-    const sig = ethers.utils.splitSignature(
-      await signer._signTypedData(
+    const sig = hexToSignature(
+      await walletClient.signTypedData({
         domain,
-        {
+        types: {
           VotingAssetWithSlot: [
             { name: 'underlyingAsset', type: 'address' },
             { name: 'slot', type: 'uint128' },
@@ -60,29 +60,32 @@ export async function getVoteSignatureParams({
             },
           ],
         },
-        {
-          proposalId,
+        primaryType: 'SubmitVoteAsRepresentative',
+        message: {
+          proposalId: BigInt(proposalId),
           voter: voterAddress,
           representative: representativeAddress,
           support,
-          votingAssetsWithSlot,
+          votingAssetsWithSlot: votingAssetsWithSlot.map((asset) => {
+            return {
+              slot: BigInt(asset.slot),
+              underlyingAsset: asset.underlyingAsset,
+            };
+          }),
         },
-      ),
+      }),
     );
 
     return {
       v: sig.v,
       r: sig.r,
       s: sig.s,
-    } as IVotingMachineWithProofs.SignatureParamsStruct;
+    };
   } else {
-    const signerAddress = await signer.getAddress();
-    console.log('sig voter address', voterAddress);
-    console.log('sig signer address', signerAddress);
-    const sig = ethers.utils.splitSignature(
-      await signer._signTypedData(
+    const sig = hexToSignature(
+      await walletClient.signTypedData({
         domain,
-        {
+        types: {
           VotingAssetWithSlot: [
             { name: 'underlyingAsset', type: 'address' },
             { name: 'slot', type: 'uint128' },
@@ -106,56 +109,25 @@ export async function getVoteSignatureParams({
             },
           ],
         },
-        {
-          proposalId,
+        primaryType: 'SubmitVote',
+        message: {
+          proposalId: BigInt(proposalId),
           voter: voterAddress,
           support,
-          votingAssetsWithSlot,
+          votingAssetsWithSlot: votingAssetsWithSlot.map((asset) => {
+            return {
+              slot: BigInt(asset.slot),
+              underlyingAsset: asset.underlyingAsset,
+            };
+          }),
         },
-      ),
+      }),
     );
-
-    const signatureAddress = ethers.utils.verifyTypedData(
-      domain,
-      {
-        VotingAssetWithSlot: [
-          { name: 'underlyingAsset', type: 'address' },
-          { name: 'slot', type: 'uint128' },
-        ],
-        SubmitVote: [
-          {
-            name: 'proposalId',
-            type: 'uint256',
-          },
-          {
-            name: 'voter',
-            type: 'address',
-          },
-          {
-            name: 'support',
-            type: 'bool',
-          },
-          {
-            name: 'votingAssetsWithSlot',
-            type: 'VotingAssetWithSlot[]',
-          },
-        ],
-      },
-      {
-        proposalId,
-        voter: voterAddress,
-        support,
-        votingAssetsWithSlot,
-      },
-      sig,
-    );
-
-    console.log('sig signature address', signatureAddress);
 
     return {
       v: sig.v,
       r: sig.r,
       s: sig.s,
-    } as IVotingMachineWithProofs.SignatureParamsStruct;
+    };
   }
 }

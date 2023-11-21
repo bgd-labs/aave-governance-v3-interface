@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Field } from 'react-final-form';
+import { Hex, isAddress } from 'viem';
 
 import { useStore } from '../../store';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
@@ -12,7 +13,7 @@ import {
 } from '../../ui/utils/inputValidation';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
-import { isAddress, isEnsName } from '../../web3/utils/ensHelpers';
+import { isEnsName } from '../../web3/utils/ensHelpers';
 
 const Text = ({
   address,
@@ -115,10 +116,10 @@ export function RepresentationsTableItemField({
     if (address) {
       if (isAddress(address)) {
         fetchEnsNameByAddress(address).then(() => {
-          const addressData = ensData[address.toLocaleLowerCase()];
+          const addressData = ensData[address.toLocaleLowerCase() as Hex];
           setShownAddress(
             addressData && addressData.name
-              ? ensData[address.toLocaleLowerCase()].name
+              ? ensData[address.toLocaleLowerCase() as Hex].name
               : address,
           );
         });
@@ -133,10 +134,10 @@ export function RepresentationsTableItemField({
     if (addressTo && !forHelp) {
       if (isAddress(addressTo)) {
         fetchEnsNameByAddress(addressTo).then(() => {
-          const addressData = ensData[addressTo.toLocaleLowerCase()];
+          const addressData = ensData[addressTo.toLocaleLowerCase() as Hex];
           setShownAddressTo(
             addressData && addressData.name
-              ? ensData[addressTo.toLocaleLowerCase()].name
+              ? ensData[addressTo.toLocaleLowerCase() as Hex].name
               : addressTo,
           );
         });

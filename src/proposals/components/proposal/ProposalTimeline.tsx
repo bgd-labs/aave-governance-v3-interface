@@ -1,4 +1,4 @@
-import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, SxProps, useTheme } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import dayjs from 'dayjs';
@@ -197,22 +197,22 @@ const TimelineItem = ({
                 color === 'bigCanceled'
                   ? '$textLight'
                   : color === 'bigError'
-                  ? '$secondaryAgainst'
-                  : '$secondaryFor'
+                    ? '$secondaryAgainst'
+                    : '$secondaryFor'
               }
               bottomBorderColor={
                 color === 'bigCanceled'
                   ? '$disabled'
                   : color === 'bigError'
-                  ? '$mainAgainst'
-                  : '$mainFor'
+                    ? '$mainAgainst'
+                    : '$mainFor'
               }
               leftBorderColor={
                 color === 'bigCanceled'
                   ? '$disabled'
                   : color === 'bigError'
-                  ? '$mainAgainst'
-                  : '$mainFor'
+                    ? '$mainAgainst'
+                    : '$mainFor'
               }
               css={{
                 width: 36,
@@ -334,12 +334,12 @@ const StateWrapper = ({
           color === 'success'
             ? theme.palette.$mainFor
             : color === 'error'
-            ? theme.palette.$mainAgainst
-            : color === 'expired'
-            ? theme.palette.$textDisabled
-            : color === 'secondary'
-            ? theme.palette.$text
-            : theme.palette.$text,
+              ? theme.palette.$mainAgainst
+              : color === 'expired'
+                ? theme.palette.$textDisabled
+                : color === 'secondary'
+                  ? theme.palette.$text
+                  : theme.palette.$text,
       })}>
       {children}
     </Box>
@@ -510,10 +510,10 @@ export function ProposalTimeline({
       visibility: isExpired
         ? false
         : canceledTimestamp
-        ? false
-        : failedTimestamp
-        ? !failedTimestamp
-        : true,
+          ? false
+          : failedTimestamp
+            ? !failedTimestamp
+            : true,
     },
     {
       title: texts.proposals.timelinePointFinished,
@@ -521,10 +521,10 @@ export function ProposalTimeline({
       timestamp: isExpired
         ? expiredTimestamp
         : canceledTimestamp
-        ? canceledTimestamp
-        : failedTimestamp
-        ? failedTimestamp
-        : finishedTimestamp,
+          ? canceledTimestamp
+          : failedTimestamp
+            ? failedTimestamp
+            : finishedTimestamp,
       type: TimelineItemTypeType.finished,
       state: isFinished || !!canceledTimestamp ? state : undefined,
       visibility: true,
@@ -532,10 +532,10 @@ export function ProposalTimeline({
         isFinished && isExecuted
           ? 'bigSuccess'
           : isFinished && isFailed
-          ? 'bigError'
-          : (isFinished && isExpired) || !!canceledTimestamp
-          ? 'bigCanceled'
-          : 'bigRegular',
+            ? 'bigError'
+            : (isFinished && isExpired) || !!canceledTimestamp
+              ? 'bigCanceled'
+              : 'bigRegular',
     },
   ];
 
@@ -552,7 +552,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '24%',
+              left: '44%',
             }}>
             <CanceledItemWrapper
               sx={{
@@ -573,7 +573,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '49%',
+              left: '69%',
             }}>
             <CanceledItemWrapper
               sx={{
@@ -591,7 +591,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '74%',
+              left: '80%',
             }}>
             <CanceledItemWrapper
               sx={{
@@ -645,8 +645,8 @@ export function ProposalTimeline({
                 timeline.finished && !timeline.color
                   ? 'achieved'
                   : timeline.color
-                  ? timeline.color
-                  : 'regular'
+                    ? timeline.color
+                    : 'regular'
               }
               sx={{
                 '> div': {
@@ -733,8 +733,8 @@ export function ProposalTimeline({
                         timeline.state === ProposalStateWithName.Executed
                           ? 'success'
                           : timeline.state === ProposalStateWithName.Defeated
-                          ? 'error'
-                          : 'expired'
+                            ? 'error'
+                            : 'expired'
                       }>
                       <Box
                         component="p"
@@ -811,13 +811,13 @@ export function ProposalTimeline({
                             (timeline.position || 0) < 10
                               ? 1
                               : (timeline.position || 0) < 20 &&
-                                (timeline.position || 0) > 10
-                              ? 15
-                              : `calc(${
-                                  timeline.position <= 99
-                                    ? timeline.position
-                                    : 99
-                                }% - 24px)`,
+                                  (timeline.position || 0) > 10
+                                ? 15
+                                : `calc(${
+                                    timeline.position <= 99
+                                      ? timeline.position
+                                      : 99
+                                  }% - 24px)`,
                           hover: {
                             transform: !withoutDetails
                               ? 'scale(1.15)'
@@ -831,13 +831,13 @@ export function ProposalTimeline({
                               (timeline.position || 0) < 10
                                 ? 8
                                 : (timeline.position || 0) < 20 &&
-                                  (timeline.position || 0) > 10
-                                ? 15
-                                : `calc(${
-                                    timeline.position <= 99
-                                      ? timeline.position
-                                      : 99
-                                  }% - 35px)`,
+                                    (timeline.position || 0) > 10
+                                  ? 15
+                                  : `calc(${
+                                      timeline.position <= 99
+                                        ? timeline.position
+                                        : 99
+                                    }% - 35px)`,
                           },
                           '.black': {
                             fill: theme.palette.$mainElements,

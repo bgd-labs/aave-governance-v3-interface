@@ -4,16 +4,16 @@ import {
   getEstimatedState,
   ProposalState,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import {
   getSafeSingletonDeployment,
   SingletonDeployment,
 } from '@safe-global/safe-deployments';
 import { BigNumber } from 'bignumber.js';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 // @ts-ignore
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
@@ -100,34 +100,27 @@ export function VoteModal({
     setError,
     loading,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    txWalletType,
-    isError,
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
+    tx,
   } = useLastTxLocalStatus({
     type: 'vote',
     payload: {
       proposalId,
       support: !support,
-      voter:
-        representative.address ||
-        activeWallet?.accounts[0] ||
-        ethers.constants.AddressZero,
+      voter: representative.address || activeWallet?.address || zeroAddress,
     },
   });
 
   useEffect(() => {
-    if (txPending === false || isError === true) {
+    if (tx?.pending === false || tx?.isError) {
       store.startDetailedProposalDataPolling(
         fromList ? undefined : [proposalId],
       );
     }
-  }, [txPending, isError]);
+  }, [tx?.pending, tx?.isError]);
 
   if (!proposalData?.proposal) return null;
 
@@ -204,7 +197,6 @@ export function VoteModal({
   const handleVote = async (gelato?: boolean) => {
     store.stopDetailedProposalDataPolling();
     return await executeTxWithLocalStatuses({
-      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await vote({
           votingChainId: proposal.data.votingChainId,
@@ -234,18 +226,14 @@ export function VoteModal({
     <BasicActionModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      txHash={txHash}
-      txSuccess={txSuccess}
-      txPending={txPending}
       isTxStart={isTxStart}
-      isError={isError}
       setIsTxStart={setIsTxStart}
       error={error}
       setError={setError}
-      txWalletType={txWalletType}
       contentMinHeight={isTxStart ? 287 : 211}
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      tx={tx}
       topBlock={
         !isVotingModesInfoOpen && (
           <Box
@@ -282,7 +270,7 @@ export function VoteModal({
                 minHeight: 20,
               }}>
               {isTxStart ? (
-                <VotedState support={!support} isBig inProcess={isError} />
+                <VotedState support={!support} isBig inProcess={tx.isError} />
               ) : (
                 <ProposalEstimatedStatus
                   proposalId={proposalId}

@@ -1,4 +1,4 @@
-import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers';
 
 export type ProposalStateForFilter = {
   value: number | null;

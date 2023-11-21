@@ -11,7 +11,7 @@ import { useStore } from '../../store';
 import { BackButton3D, BigButton, Container } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { texts } from '../../ui/utils/texts';
-import { RpcSwitcherFormData } from '../store/providerSlice';
+import { RpcSwitcherFormData } from '../store/rpcSwitcherSlice';
 import { RpcSwitcherTableWrapper } from './RpcSwitcherTableWrapper';
 
 export function RpcSwitcherPage() {
@@ -20,19 +20,19 @@ export function RpcSwitcherPage() {
 
   const store = useStore();
   const {
-    appProviders,
-    appProvidersForm,
-    updateProviders,
+    appClients,
+    appClientsForm,
+    updateClients,
     isRpcSwitcherChangedView,
     setIsRpcSwitcherChangedView,
-    rpcHasError,
+    rpcFormErrors,
   } = store;
 
   const [isEdit, setIsEdit] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [formData, setFormData] = useState<RpcSwitcherFormData>([]);
 
-  const initialData: RpcSwitcherFormData = Object.entries(appProviders).map(
+  const initialData: RpcSwitcherFormData = Object.entries(appClients).map(
     ([key, value]) => {
       return {
         chainId: +key,
@@ -43,15 +43,15 @@ export function RpcSwitcherPage() {
 
   useEffect(() => {
     setFormData(initialData);
-  }, [appProviders]);
+  }, [appClients]);
 
   useEffect(() => {
-    if (!!Object.keys(appProviders).length) {
+    if (!!Object.keys(appClients).length) {
       setLoadingData(false);
     } else {
       setLoadingData(true);
     }
-  }, [Object.keys(appProviders).length]);
+  }, [Object.keys(appClients).length]);
 
   const handleFormSubmit = ({
     formData,
@@ -72,7 +72,7 @@ export function RpcSwitcherPage() {
   };
 
   const handleUpdateProviders = async () => {
-    updateProviders(formData);
+    updateClients(formData);
     setIsEdit(false);
     setIsRpcSwitcherChangedView(false);
   };
@@ -102,7 +102,7 @@ export function RpcSwitcherPage() {
           {!isEdit && isRpcSwitcherChangedView && (
             <RpcSwitcherTableWrapper
               loading={loadingData}
-              rpcSwitcherData={appProvidersForm}
+              rpcSwitcherData={appClientsForm}
               isEdit={isEdit}
               isViewChanges={isRpcSwitcherChangedView}
               formData={formData}>
@@ -120,10 +120,10 @@ export function RpcSwitcherPage() {
                 disabled={
                   isEqual(initialData, formData) ||
                   formData.some((item) => {
-                    if (rpcHasError.hasOwnProperty(item.rpcUrl)) {
+                    if (rpcFormErrors.hasOwnProperty(item.rpcUrl)) {
                       return (
-                        rpcHasError[item.rpcUrl].error ||
-                        rpcHasError[item.rpcUrl].chainId !== item.chainId
+                        rpcFormErrors[item.rpcUrl].error ||
+                        rpcFormErrors[item.rpcUrl].chainId !== item.chainId
                       );
                     }
                     return true;
@@ -149,7 +149,7 @@ export function RpcSwitcherPage() {
                       isEdit={isEdit}
                       isViewChanges={isRpcSwitcherChangedView}
                       loading={loadingData}
-                      rpcSwitcherData={appProvidersForm}
+                      rpcSwitcherData={appClientsForm}
                       formData={formData}
                       handleFormSubmit={handleSubmit}>
                       <BigButton
@@ -178,7 +178,7 @@ export function RpcSwitcherPage() {
           {!isEdit && !isRpcSwitcherChangedView && (
             <RpcSwitcherTableWrapper
               loading={loadingData}
-              rpcSwitcherData={appProvidersForm}
+              rpcSwitcherData={appClientsForm}
               isEdit={isEdit}
               isViewChanges={isRpcSwitcherChangedView}>
               {loadingData ? (

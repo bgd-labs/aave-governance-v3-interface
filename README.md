@@ -9,17 +9,18 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 ## Built on
 
 - Logic: [React](https://react.dev/),  [Next.js](https://nextjs.org/), [zustand](https://docs.pmnd.rs/zustand/getting-started/introduction).
-- Web3: [BGD web3 UI helpers](https://github.com/bgd-labs/fe-shared), [ether.js (v5.7.2)](https://docs.ethers.org/v5/), [web3-react](https://github.com/Uniswap/web3-react).
+- Web3: [viem](https://viem.sh/), [wagmi](https://wagmi.sh/), [@bgd-labs/frontend-web3-utils](https://github.com/bgd-labs/fe-shared).
 - Styling: [MUI system](https://mui.com/system/getting-started/), [headlessui](https://headlessui.com/).
+- Cache: [@bgd-labs/aave-governance-ui-helpers](https://github.com/bgd-labs/aave-governance-ui-helpers).
 
 ## Pre-requirements
 
-- [Node.js](https://nodejs.org/ru): version 18.x or higher.
+- [Node.js](https://nodejs.org/ru): version 18.17 or higher.
 - [Git](https://git-scm.com/downloads): version 2.3.x or higher.
 - Package manager: we recommend [Yarn](https://yarnpkg.com/), version 1.x or higher.
 
 ## Configurations
-- Blockchain RPC URLs and/or IPFS gateway URLs can be changed here [file](./src/utils/configs.ts).
+- Blockchain RPC URLs can be changed here [file](./src/utils/chains.ts) and IPFS gateway URLs can be changed here [file](./src/utils/configs.ts).
 - It is possible to run the application in SSR (Server-Side-Rendering) or IPFS mode, by changing `NEXT_PUBLIC_DEPLOY_FOR_IPFS`. The default is `false`, which is the most optimal option for all use cases.
 
 <br>

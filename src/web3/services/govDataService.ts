@@ -1,8 +1,10 @@
 'use client';
 
 import {
+  baseVotingStrategyContract,
   BasicProposal,
   blockLimit,
+  dataWarehouseContract,
   getBlocksForEvents,
   getDetailedProposalsData,
   getGovCoreConfigs,
@@ -15,40 +17,39 @@ import {
   getProposalQueued,
   getProposalVotingClosed,
   getVoters,
+  govCoreContract,
+  govCoreDataHelperContract,
   InitialProposal,
   Payload,
   PayloadAction,
   PayloadForCreation,
+  payloadsControllerContract as initPayloadControllerContract,
+  payloadsControllerDataHelperContract,
+  PayloadState,
   ProposalData,
   updateVotingMachineData,
+  VMProposalStructOutput,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IBaseVotingStrategy__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IBaseVotingStrategy__factory';
-import { IDataWarehouse__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IDataWarehouse__factory';
-import { IGovernanceCore } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore';
-import { IGovernanceCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceCore__factory';
-import { IGovernanceDataHelper } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper';
-import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
-import { IPayloadsControllerCore__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerCore__factory';
-import { IPayloadsControllerDataHelper } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerDataHelper';
-import { IPayloadsControllerDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IPayloadsControllerDataHelper__factory';
-import { IVotingMachineDataHelper } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineDataHelper';
-import { IVotingMachineDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineDataHelper__factory';
-import { IVotingMachineWithProofs } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineWithProofs';
-import { IVotingMachineWithProofs__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IVotingMachineWithProofs__factory';
+  votingMachineContract,
+  votingMachineDataHelperContract,
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
+import { WalletClient } from '@wagmi/core';
 import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  constants,
-  ethers,
-  providers,
-  utils,
-} from 'ethers';
-import { hexZeroPad } from 'ethers/lib/utils';
+  bytesToHex,
+  encodeFunctionData,
+  Hex,
+  pad,
+  stringToBytes,
+  toHex,
+  zeroAddress,
+  zeroHash,
+} from 'viem';
 
+import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { appConfig, isTestnet } from '../../utils/appConfig';
 import {
   formatToProofRLP,
   getExtendedBlock,
@@ -58,141 +59,267 @@ import {
 } from '../utils/helperToGetProofs';
 import { getVoteSignatureParams } from '../utils/signatures';
 
-import RepresentativeInputStruct = IGovernanceCore.RepresentativeInputStruct;
-
-import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src';
-
-import { appConfig, isTestnet } from '../../utils/appConfig';
-
 export const PAGE_SIZE = 10;
 
-export class GovDataService {
-  private readonly govCore: IGovernanceCore;
-  private govCoreDataHelper: IGovernanceDataHelper;
+function initContracts(clients: ClientsRecord, walletClient?: WalletClient) {
+  const govCore = govCoreContract({
+    contractAddress: appConfig.govCoreConfig.contractAddress,
+    client: clients[appConfig.govCoreChainId],
+    walletClient,
+  });
+  const govCoreDataHelper = govCoreDataHelperContract({
+    contractAddress: appConfig.govCoreConfig.dataHelperContractAddress,
+    client: clients[appConfig.govCoreChainId],
+    walletClient,
+  });
 
-  private readonly votingMachines: Record<number, IVotingMachineWithProofs>;
-  private readonly votingMachineDataHelpers: Record<
-    number,
-    IVotingMachineDataHelper
-  >;
-  private readonly payloadsControllerDataHelpers: Record<
-    number,
-    IPayloadsControllerDataHelper
-  >;
-
-  private signer: providers.JsonRpcSigner | undefined;
-  private providers: Record<
-    number,
-    StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
-  >;
-
-  constructor(
-    providers: Record<
-      number,
-      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
-    >,
-  ) {
-    this.providers = providers;
-    // contracts
-    // core
-    this.govCore = IGovernanceCore__factory.connect(
-      appConfig.govCoreConfig.contractAddress,
-      this.providers[appConfig.govCoreChainId],
-    );
-    this.govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-      appConfig.govCoreConfig.dataHelperContractAddress,
-      this.providers[appConfig.govCoreChainId],
-    );
-    // voting
-    const initialVotingMachineContracts: Record<
-      number,
-      IVotingMachineWithProofs
-    > = {};
+  const votingMachines = {
+    [appConfig.votingMachineChainIds[0]]: votingMachineContract({
+      contractAddress:
+        appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
+          .contractAddress,
+      client: clients[appConfig.votingMachineChainIds[0]],
+      walletClient,
+    }),
+  };
+  if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
       const votingMachineConfig = appConfig.votingMachineConfig[chainId];
-      initialVotingMachineContracts[chainId] =
-        IVotingMachineWithProofs__factory.connect(
-          votingMachineConfig.contractAddress,
-          this.providers[chainId],
-        );
+      votingMachines[chainId] = votingMachineContract({
+        contractAddress: votingMachineConfig.contractAddress,
+        client: clients[chainId],
+        walletClient,
+      });
     });
-    this.votingMachines = initialVotingMachineContracts;
-    const initialVotingMachineDataHelperContracts: Record<
-      number,
-      IVotingMachineDataHelper
-    > = {};
+  }
+
+  const votingMachineDataHelpers = {
+    [appConfig.votingMachineChainIds[0]]: votingMachineDataHelperContract({
+      contractAddress:
+        appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
+          .dataHelperContractAddress,
+      client: clients[appConfig.votingMachineChainIds[0]],
+      walletClient,
+    }),
+  };
+  if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
       const votingMachineConfig = appConfig.votingMachineConfig[chainId];
-      initialVotingMachineDataHelperContracts[chainId] =
-        IVotingMachineDataHelper__factory.connect(
-          votingMachineConfig.dataHelperContractAddress,
-          this.providers[chainId],
-        );
+      votingMachineDataHelpers[chainId] = votingMachineDataHelperContract({
+        contractAddress: votingMachineConfig.dataHelperContractAddress,
+        client: clients[chainId],
+        walletClient,
+      });
     });
-    this.votingMachineDataHelpers = initialVotingMachineDataHelperContracts;
-    // payloads controllers
-    const initialPayloadsControllerDataHelperContracts: Record<
-      number,
-      IPayloadsControllerDataHelper
-    > = {};
+  }
+
+  const payloadsControllerDataHelpers = {
+    [appConfig.payloadsControllerChainIds[0]]:
+      payloadsControllerDataHelperContract({
+        contractAddress:
+          appConfig.payloadsControllerConfig[
+            appConfig.payloadsControllerChainIds[0]
+          ].dataHelperContractAddress,
+        client: clients[appConfig.payloadsControllerChainIds[0]],
+        walletClient,
+      }),
+  };
+  if (appConfig.payloadsControllerChainIds.length > 1) {
     appConfig.payloadsControllerChainIds.forEach((chainId) => {
       const payloadsControllerConfig =
         appConfig.payloadsControllerConfig[chainId];
-      initialPayloadsControllerDataHelperContracts[chainId] =
-        IPayloadsControllerDataHelper__factory.connect(
-          payloadsControllerConfig.dataHelperContractAddress,
-          this.providers[chainId],
-        );
+      payloadsControllerDataHelpers[chainId] =
+        payloadsControllerDataHelperContract({
+          contractAddress: payloadsControllerConfig.dataHelperContractAddress,
+          client: clients[chainId],
+          walletClient,
+        });
     });
-    this.payloadsControllerDataHelpers =
-      initialPayloadsControllerDataHelperContracts;
   }
 
-  connectSigner(signer: providers.JsonRpcSigner) {
-    this.signer = signer;
+  return {
+    govCore,
+    govCoreDataHelper,
+    votingMachines,
+    votingMachineDataHelpers,
+    payloadsControllerDataHelpers,
+  };
+}
+
+export class GovDataService {
+  private govCore;
+  private govCoreDataHelper;
+
+  private votingMachines;
+  private votingMachineDataHelpers;
+  private payloadsControllerDataHelpers;
+
+  private walletClient: WalletClient | undefined = undefined;
+  private clients: ClientsRecord;
+
+  constructor(clients: ClientsRecord) {
+    this.clients = clients;
+    // contracts
+    // core
+    this.govCore = initContracts(this.clients).govCore;
+    this.govCoreDataHelper = initContracts(this.clients).govCoreDataHelper;
+    // voting
+    this.votingMachines = initContracts(this.clients).votingMachines;
+    this.votingMachineDataHelpers = initContracts(
+      this.clients,
+    ).votingMachineDataHelpers;
+    // payloads controllers
+    this.payloadsControllerDataHelpers = initContracts(
+      this.clients,
+    ).payloadsControllerDataHelpers;
   }
 
-  async getGovCoreConfigs() {
-    return await getGovCoreConfigs(
-      this.govCoreDataHelper,
-      appConfig.govCoreConfig.contractAddress,
-    );
+  connectSigner(walletClient: WalletClient) {
+    this.walletClient = walletClient;
+    // contracts
+    // core
+    this.govCore = initContracts(this.clients, this.walletClient).govCore;
+    this.govCoreDataHelper = initContracts(
+      this.clients,
+      this.walletClient,
+    ).govCoreDataHelper;
+    // voting
+    this.votingMachines = initContracts(
+      this.clients,
+      this.walletClient,
+    ).votingMachines;
+    this.votingMachineDataHelpers = initContracts(
+      this.clients,
+      this.walletClient,
+    ).votingMachineDataHelpers;
+    // payloads controllers
+    this.payloadsControllerDataHelpers = initContracts(
+      this.clients,
+      this.walletClient,
+    ).payloadsControllerDataHelpers;
   }
 
-  async getTotalProposalsCount(): Promise<number> {
-    const proposalsCount = await this.govCore.getProposalsCount();
-    return proposalsCount.toNumber();
+  async getGovCoreConfigs(
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
+  ) {
+    const rpcUrl =
+      this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+
+    const govCoreConfigs = await getGovCoreConfigs({
+      client: this.clients[appConfig.govCoreChainId],
+      govCoreContractAddress: this.govCore.address,
+      govCoreDataHelperContractAddress: this.govCoreDataHelper.address,
+    });
+
+    if (
+      !!setRpcError &&
+      govCoreConfigs.contractsConstants.expirationTime > 1000
+    ) {
+      setRpcError({
+        isError: false,
+        rpcUrl,
+        chainId: appConfig.govCoreChainId,
+      });
+    } else if (
+      !!setRpcError &&
+      govCoreConfigs.contractsConstants.expirationTime <= 1000
+    ) {
+      setRpcError({
+        isError: true,
+        rpcUrl,
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+
+    return govCoreConfigs;
+  }
+
+  async getTotalProposalsCount(
+    prevProposalCount?: number,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
+  ): Promise<number> {
+    const rpcUrl =
+      this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+
+    try {
+      const proposalsCount = await this.govCore.read.getProposalsCount();
+      if (!!setRpcError) {
+        setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+      }
+      return Number(proposalsCount);
+    } catch {
+      if (!!setRpcError) {
+        setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+      }
+      if (prevProposalCount) {
+        return prevProposalCount;
+      } else {
+        return 0;
+      }
+    }
   }
 
   async getTotalPayloadsCount(
-    payloadsController: string,
+    payloadsController: Hex,
     chainId: number,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<number> {
-    const payloadsControllerContract = IPayloadsControllerCore__factory.connect(
-      payloadsController,
-      this.providers[chainId],
-    );
+    const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
 
-    return await payloadsControllerContract.getPayloadsCount();
+    try {
+      const payloadsControllerContract = initPayloadControllerContract({
+        client: this.clients[chainId],
+        contractAddress: payloadsController,
+      });
+
+      const payloadsCount =
+        await payloadsControllerContract.read.getPayloadsCount();
+      if (!!setRpcError) {
+        setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: chainId,
+        });
+      }
+      return Number(payloadsCount);
+    } catch {
+      if (!!setRpcError) {
+        setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: chainId,
+        });
+      }
+      return 0;
+    }
   }
 
   async getPayloads(
     chainId: number,
-    payloadsController: string,
+    payloadsController: Hex,
     payloadsIds: number[],
   ): Promise<Payload[]> {
     const payloadsControllerDataHelper =
       this.payloadsControllerDataHelpers[chainId];
 
     const initialPayloadsData =
-      (await payloadsControllerDataHelper.getPayloadsData(
+      (await payloadsControllerDataHelper.read.getPayloadsData([
         payloadsController,
         payloadsIds,
-      )) || [];
+      ])) || [];
 
     return initialPayloadsData.map((payload) => {
       return {
-        id: payload.id.toNumber(),
+        creator: payload.data.creator,
+        id: Number(payload.id),
         chainId,
         maximumAccessLevelRequired: payload.data.maximumAccessLevelRequired,
         state: payload.data.state,
@@ -211,8 +338,9 @@ export class GovDataService {
 
   async getVotingData(
     initialProposals: InitialProposal[],
-    userAddress?: string,
-    representative?: string,
+    userAddress?: Hex,
+    representative?: Hex,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const votingMachineChainIds = initialProposals
       .map((data) => data.votingChainId)
@@ -231,24 +359,36 @@ export class GovDataService {
             };
           });
 
-        if (representative && userAddress) {
-          if (userAddress) {
-            return (
-              (await votingMachineDataHelper.getProposalsData(
-                appConfig.votingMachineConfig[chainId].contractAddress,
-                formattedInitialProposals,
-                representative || userAddress || constants.AddressZero,
-              )) || []
-            );
+        const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
+
+        try {
+          if (!!setRpcError) {
+            setRpcError({ isError: false, rpcUrl, chainId });
           }
+          if (representative && userAddress) {
+            if (userAddress) {
+              return (
+                (await votingMachineDataHelper.read.getProposalsData([
+                  this.votingMachines[chainId].address,
+                  formattedInitialProposals,
+                  representative || userAddress || zeroAddress,
+                ])) || []
+              );
+            }
+          }
+          return (
+            (await votingMachineDataHelper.read.getProposalsData([
+              this.votingMachines[chainId].address,
+              formattedInitialProposals,
+              userAddress || zeroAddress,
+            ])) || []
+          );
+        } catch {
+          if (!!setRpcError) {
+            setRpcError({ isError: true, rpcUrl, chainId });
+          }
+          return;
         }
-        return (
-          (await votingMachineDataHelper.getProposalsData(
-            appConfig.votingMachineConfig[chainId].contractAddress,
-            formattedInitialProposals,
-            userAddress || constants.AddressZero,
-          )) || []
-        );
       }),
     );
 
@@ -258,22 +398,24 @@ export class GovDataService {
   async getDetailedProposalsData(
     from: number,
     to?: number,
-    userAddress?: string,
-    representative?: string,
+    userAddress?: Hex,
+    representative?: Hex,
     pageSize?: number,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<BasicProposal[]> {
-    const govCoreDataHelperData = await this.govCoreDataHelper.getProposalsData(
-      appConfig.govCoreConfig.contractAddress,
-      from,
-      to || 0,
-      pageSize || PAGE_SIZE,
-    );
+    const govCoreDataHelperData =
+      await this.govCoreDataHelper.read.getProposalsData([
+        this.govCore.address,
+        BigInt(from),
+        BigInt(to || 0),
+        BigInt(pageSize || PAGE_SIZE),
+      ]);
 
     const initialProposals = govCoreDataHelperData.map((proposal) => {
       return {
-        id: proposal.id.toNumber(),
-        votingChainId: proposal.votingChainId.toNumber(),
-        snapshotBlockHash: proposal.proposalData.snapshotBlockHash.toString(),
+        id: proposal.id,
+        votingChainId: Number(proposal.votingChainId),
+        snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
       };
     });
 
@@ -281,29 +423,31 @@ export class GovDataService {
       initialProposals,
       userAddress,
       representative,
+      setRpcError,
     );
 
     const proposalsIds = govCoreDataHelperData.map((proposal) =>
-      proposal.id.toNumber(),
+      Number(proposal.id),
     );
 
     return getDetailedProposalsData(
       govCoreDataHelperData,
-      votingMachineDataHelperData,
+      votingMachineDataHelperData as VMProposalStructOutput[],
       proposalsIds,
     );
   }
 
   async getOnlyVotingMachineData(
     proposals: ProposalData[],
-    userAddress?: string,
-    representative?: string,
+    userAddress?: Hex,
+    representative?: Hex,
+    setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const initialProposals = proposals.map((proposal) => {
       return {
-        id: proposal?.id || 0,
+        id: BigInt(proposal?.id || 0),
         votingChainId: proposal?.votingChainId || appConfig.govCoreChainId,
-        snapshotBlockHash: proposal?.snapshotBlockHash || constants.HashZero,
+        snapshotBlockHash: (proposal?.snapshotBlockHash as Hex) || zeroHash,
       };
     });
 
@@ -311,13 +455,16 @@ export class GovDataService {
       initialProposals,
       userAddress,
       representative,
+      setRpcError,
     );
 
-    const proposalsIds = initialProposals.map((proposal) => proposal.id);
+    const proposalsIds = initialProposals.map((proposal) =>
+      Number(proposal.id),
+    );
 
     return updateVotingMachineData(
       proposals,
-      votingMachineDataHelperData,
+      votingMachineDataHelperData as VMProposalStructOutput[],
       proposalsIds,
     );
   }
@@ -329,10 +476,10 @@ export class GovDataService {
     lastBlockNumber: number | undefined,
   ): Promise<VotersData[]> {
     const currentBlock =
-      (await this.providers[votingChainId].getBlockNumber()) || 0;
+      (await this.clients[votingChainId].getBlockNumber()) || 0;
 
     const { startBlock, endBlock } = getBlocksForEvents(
-      currentBlock,
+      Number(currentBlock),
       startBlockNumber,
       endBlockNumber,
       lastBlockNumber,
@@ -341,13 +488,14 @@ export class GovDataService {
     const voters: VotersData[] = [];
 
     if (!!endBlock) {
-      const newVoters = await getVoters(
+      const newVoters = await getVoters({
+        contractAddress: this.votingMachines[votingChainId].address,
+        client: this.clients[votingChainId],
         endBlock,
         startBlock,
         blockLimit,
-        this.votingMachines[votingChainId],
-        votingChainId,
-      );
+        chainId: votingChainId,
+      });
 
       voters.push(...newVoters);
     }
@@ -357,21 +505,21 @@ export class GovDataService {
 
   // voting strategy contract
   async getVotingStrategyContract() {
-    const votingStrategyAddress = await this.govCore.getPowerStrategy();
+    const votingStrategyAddress = await this.govCore.read.getPowerStrategy();
 
-    return IBaseVotingStrategy__factory.connect(
-      votingStrategyAddress,
-      this.providers[appConfig.govCoreChainId],
-    );
+    return baseVotingStrategyContract({
+      client: this.clients[appConfig.govCoreChainId],
+      contractAddress: votingStrategyAddress,
+    });
   }
 
   // representations
-  async getRepresentationData(address: string) {
-    const data = await this.govCoreDataHelper.getRepresentationData(
+  async getRepresentationData(address: Hex) {
+    const data = await this.govCoreDataHelper.read.getRepresentationData([
       appConfig.govCoreConfig.contractAddress,
       address,
-      appConfig.votingMachineChainIds,
-    );
+      appConfig.votingMachineChainIds.map((chainId) => BigInt(chainId)),
+    ]);
 
     return {
       representative: data[0],
@@ -379,50 +527,51 @@ export class GovDataService {
     };
   }
 
-  async updateRepresentatives({ data }: { data: RepresentativeInputStruct[] }) {
-    let connectedGovCore = this.govCore;
-    if (this.signer) {
-      connectedGovCore = this.govCore.connect(this.signer);
-    }
-    return connectedGovCore.updateRepresentativesForChain(data);
+  async updateRepresentatives({
+    data,
+  }: {
+    data: { representative: Hex; chainId: bigint }[];
+  }) {
+    return this.govCore.write.updateRepresentativesForChain([data], {
+      // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+      value: BigInt(0) as any,
+    });
   }
   // end representations
 
   // tx's
   activateVoting(proposalId: number) {
-    let connectedGovCore = this.govCore;
-    if (this.signer) {
-      connectedGovCore = this.govCore.connect(this.signer);
-    }
-    return connectedGovCore.activateVoting(proposalId);
+    return this.govCore.write.activateVoting([BigInt(proposalId)]);
   }
 
   async sendProofs(
-    user: string,
+    user: Hex,
     blockNumber: number,
     asset: string,
     chainId: number,
     baseBalanceSlotRaw: number,
     withSlot?: boolean,
   ) {
-    if (this.signer) {
+    if (this.walletClient) {
       const blockData = await getExtendedBlock(
-        this.providers[appConfig.govCoreChainId],
+        this.clients[appConfig.govCoreChainId],
         blockNumber,
       );
       const blockHeaderRLP = prepareBLockRLP(blockData);
 
       const slot = getSolidityStorageSlotBytes(
-        hexZeroPad(utils.hexlify(baseBalanceSlotRaw), 32),
+        pad(toHex(baseBalanceSlotRaw), { size: 32 }),
         user,
       );
-      const exchangeRateSlot = hexZeroPad('0x51', 32);
-      const delegatedStateSlot = hexZeroPad('0x40', 32);
+      const exchangeRateSlot = pad('0x51', { size: 32 });
+      const delegatedStateSlot = pad('0x40', { size: 32 });
 
-      const connectedDataWarehouse = new ethers.Contract(
-        appConfig.votingMachineConfig[chainId].dataWarehouseAddress,
-        IDataWarehouse__factory.abi,
-      ).connect(this.signer);
+      const connectedDataWarehouse = dataWarehouseContract({
+        contractAddress:
+          appConfig.votingMachineConfig[chainId].dataWarehouseAddress,
+        client: this.clients[chainId],
+        walletClient: this.walletClient,
+      });
 
       const AAVEAddress =
         asset.toLowerCase() === appConfig.additional.aaveAddress.toLowerCase()
@@ -445,7 +594,7 @@ export class GovDataService {
 
       if (AAVEAddress) {
         const rawAccountProofData = await getProof(
-          this.providers[appConfig.govCoreChainId],
+          this.clients[appConfig.govCoreChainId],
           AAVEAddress,
           [slot],
           blockNumber,
@@ -455,17 +604,17 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.processStorageRoot(
+        return connectedDataWarehouse.write.processStorageRoot([
           AAVEAddress,
-          blockData.hash,
+          blockData.hash as Hex,
           blockHeaderRLP,
           accountStateProofRLP,
-        );
+        ]);
       }
 
       if (aAAVEAddress) {
         const rawAccountProofData = await getProof(
-          this.providers[appConfig.govCoreChainId],
+          this.clients[appConfig.govCoreChainId],
           aAAVEAddress,
           [slot, delegatedStateSlot],
           blockNumber,
@@ -475,17 +624,17 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.processStorageRoot(
+        return connectedDataWarehouse.write.processStorageRoot([
           aAAVEAddress,
-          blockData.hash,
+          blockData.hash as Hex,
           blockHeaderRLP,
           accountStateProofRLP,
-        );
+        ]);
       }
 
       if (STKAAVEAddress && !withSlot) {
         const rawAccountProofData = await getProof(
-          this.providers[appConfig.govCoreChainId],
+          this.clients[appConfig.govCoreChainId],
           STKAAVEAddress,
           [slot, exchangeRateSlot],
           blockNumber,
@@ -495,17 +644,17 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.processStorageRoot(
+        return connectedDataWarehouse.write.processStorageRoot([
           STKAAVEAddress,
-          blockData.hash,
+          blockData.hash as Hex,
           blockHeaderRLP,
           accountStateProofRLP,
-        );
+        ]);
       }
 
       if (STKAAVEAddress && withSlot) {
         const slotProof = await getProof(
-          this.providers[appConfig.govCoreChainId],
+          this.clients[appConfig.govCoreChainId],
           STKAAVEAddress,
           [exchangeRateSlot],
           blockNumber,
@@ -513,22 +662,21 @@ export class GovDataService {
 
         const slotProofRLP = formatToProofRLP(slotProof.storageProof[0].proof);
 
-        return connectedDataWarehouse.processStorageSlot(
+        return connectedDataWarehouse.write.processStorageSlot([
           STKAAVEAddress,
-          blockData.hash,
+          blockData.hash as Hex,
           exchangeRateSlot,
           slotProofRLP,
-        );
+        ]);
       }
 
       if (RepresentationsAddress) {
-        const representationsSlot = hexZeroPad(
-          utils.hexlify(baseBalanceSlotRaw),
-          32,
-        );
+        const representationsSlot = pad(toHex(baseBalanceSlotRaw), {
+          size: 32,
+        });
 
         const rawAccountProofData = await getProof(
-          this.providers[appConfig.govCoreChainId],
+          this.clients[appConfig.govCoreChainId],
           RepresentationsAddress,
           [representationsSlot],
           blockNumber,
@@ -538,28 +686,27 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.processStorageRoot(
+        return connectedDataWarehouse.write.processStorageRoot([
           RepresentationsAddress,
-          blockData.hash,
+          blockData.hash as Hex,
           blockHeaderRLP,
           accountStateProofRLP,
-        );
+        ]);
       }
     }
   }
 
   activateVotingOnVotingMachine(votingChainId: number, proposalId: number) {
     let connectedVotingMachine = this.votingMachines[votingChainId];
-    if (this.signer) {
-      connectedVotingMachine = connectedVotingMachine.connect(this.signer);
-    }
-    return connectedVotingMachine.startProposalVote(proposalId);
+    return connectedVotingMachine.write.startProposalVote([BigInt(proposalId)]);
   }
 
   // proofs for vote
-  async getCoreBlockNumber(blockHash: string) {
-    return (await this.providers[appConfig.govCoreChainId].getBlock(blockHash))
-      .number;
+  async getCoreBlockNumber(blockHash: Hex) {
+    return Number(
+      (await this.clients[appConfig.govCoreChainId].getBlock({ blockHash }))
+        .number,
+    );
   }
 
   async getProofs({
@@ -567,13 +714,15 @@ export class GovDataService {
     slot,
     blockNumber,
   }: {
-    underlyingAsset: string;
+    underlyingAsset: Hex;
     slot: string;
     blockNumber: number;
   }) {
-    const rawProofData = await this.providers[appConfig.govCoreChainId].send(
-      'eth_getProof',
-      [underlyingAsset, [slot], BigNumber.from(blockNumber).toHexString()],
+    const rawProofData = await getProof(
+      this.clients[appConfig.govCoreChainId],
+      underlyingAsset,
+      [slot],
+      blockNumber,
     );
 
     return formatToProofRLP(rawProofData.storageProof[0].proof);
@@ -585,13 +734,13 @@ export class GovDataService {
     blockNumber,
     baseBalanceSlotRaw,
   }: {
-    userAddress: string;
-    underlyingAsset: string;
+    userAddress: Hex;
+    underlyingAsset: Hex;
     blockNumber: number;
     baseBalanceSlotRaw: number;
   }) {
     const hashedHolderSlot = getSolidityStorageSlotBytes(
-      hexZeroPad(utils.hexlify(baseBalanceSlotRaw), 32),
+      pad(toHex(baseBalanceSlotRaw), { size: 32 }),
       userAddress,
     );
 
@@ -603,7 +752,7 @@ export class GovDataService {
 
     return {
       underlyingAsset,
-      slot: ethers.BigNumber.from(baseBalanceSlotRaw),
+      slot: BigInt(baseBalanceSlotRaw),
       proof,
     };
   }
@@ -621,26 +770,35 @@ export class GovDataService {
     proposalId: number;
     support: boolean;
     proofs: {
-      underlyingAsset: string;
-      slot: BigNumberish;
-      proof: BytesLike;
+      underlyingAsset: Hex;
+      slot: bigint;
+      proof: Hex;
     }[];
-    voterAddress?: string;
-    proofOfRepresentation?: string;
+    voterAddress?: Hex;
+    proofOfRepresentation?: Hex;
   }) {
     let connectedVotingMachine = this.votingMachines[votingChainId];
-    if (this.signer) {
-      connectedVotingMachine = connectedVotingMachine.connect(this.signer);
-    }
     return !!voterAddress && !!proofOfRepresentation
-      ? connectedVotingMachine.submitVoteAsRepresentative(
-          proposalId,
-          support,
-          voterAddress,
-          proofOfRepresentation,
-          proofs,
+      ? connectedVotingMachine.write.submitVoteAsRepresentative(
+          [
+            BigInt(proposalId),
+            support,
+            voterAddress,
+            proofOfRepresentation,
+            proofs,
+          ],
+          {
+            // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+            value: BigInt(0) as any,
+          },
         )
-      : connectedVotingMachine.submitVote(proposalId, support, proofs);
+      : connectedVotingMachine.write.submitVote(
+          [BigInt(proposalId), support, proofs],
+          {
+            // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+            value: BigInt(0) as any,
+          },
+        );
   }
 
   async voteBySignature({
@@ -656,24 +814,22 @@ export class GovDataService {
     votingChainId: number;
     proposalId: number;
     support: boolean;
-    votingAssetsWithSlot: { underlyingAsset: string; slot: number }[];
+    votingAssetsWithSlot: { underlyingAsset: Hex; slot: number }[];
     proofs: {
-      underlyingAsset: string;
-      slot: BigNumberish;
-      proof: BytesLike;
+      underlyingAsset: Hex;
+      slot: bigint;
+      proof: Hex;
     }[];
-    signerAddress: string;
-    voterAddress?: string;
-    proofOfRepresentation?: string;
+    signerAddress: Hex;
+    voterAddress?: Hex;
+    proofOfRepresentation?: Hex;
   }) {
     const relay = new GelatoRelay();
     let connectedVotingMachine = this.votingMachines[votingChainId];
-    if (this.signer) {
-      connectedVotingMachine = connectedVotingMachine.connect(this.signer);
-
+    if (this.walletClient) {
       const signatureParams = !!voterAddress
         ? await getVoteSignatureParams({
-            signer: this.signer,
+            walletClient: this.walletClient,
             votingChainId,
             proposalId,
             voterAddress,
@@ -682,7 +838,7 @@ export class GovDataService {
             votingAssetsWithSlot,
           })
         : await getVoteSignatureParams({
-            signer: this.signer,
+            walletClient: this.walletClient,
             votingChainId,
             proposalId,
             voterAddress: signerAddress,
@@ -694,26 +850,37 @@ export class GovDataService {
         ? appConfig.gelatoApiKeys.testnet
         : appConfig.gelatoApiKeys.mainnet;
 
-      const { data } =
+      const data =
         !!voterAddress && !!proofOfRepresentation
-          ? await connectedVotingMachine.populateTransaction.submitVoteAsRepresentativeBySignature(
-              proposalId,
-              voterAddress,
-              signerAddress,
-              support,
-              proofOfRepresentation,
-              proofs,
-              signatureParams,
-            )
-          : await connectedVotingMachine.populateTransaction.submitVoteBySignature(
-              proposalId,
-              signerAddress,
-              support,
-              proofs,
-              signatureParams.v,
-              signatureParams.r,
-              signatureParams.s,
-            );
+          ? encodeFunctionData({
+              abi: connectedVotingMachine.abi,
+              functionName: 'submitVoteAsRepresentativeBySignature',
+              args: [
+                BigInt(proposalId),
+                voterAddress,
+                signerAddress,
+                support,
+                proofOfRepresentation,
+                proofs,
+                {
+                  ...signatureParams,
+                  v: Number(signatureParams.v),
+                },
+              ],
+            })
+          : encodeFunctionData({
+              abi: connectedVotingMachine.abi,
+              functionName: 'submitVoteBySignature',
+              args: [
+                BigInt(proposalId),
+                signerAddress,
+                support,
+                proofs,
+                Number(signatureParams.v),
+                signatureParams.r,
+                signatureParams.s,
+              ],
+            });
 
       const request: SponsoredCallRequest = {
         chainId: BigInt(votingChainId),
@@ -723,141 +890,162 @@ export class GovDataService {
 
       return relay.sponsoredCall(request, gelatoApiKey);
     } else {
-      return connectedVotingMachine.submitVote(proposalId, support, proofs);
+      return connectedVotingMachine.write.submitVote([
+        BigInt(proposalId),
+        support,
+        proofs,
+      ]);
     }
   }
 
   closeAndSendVote(votingChainId: number, proposalId: number) {
     let connectedVotingMachine = this.votingMachines[votingChainId];
-    if (this.signer) {
-      connectedVotingMachine = connectedVotingMachine.connect(this.signer);
-    }
-    return connectedVotingMachine.closeAndSendVote(proposalId);
+    return connectedVotingMachine.write.closeAndSendVote([BigInt(proposalId)]);
   }
 
   executeProposal(proposalId: number) {
-    let connectedGovCore = this.govCore;
-    if (this.signer) {
-      connectedGovCore = this.govCore.connect(this.signer);
-    }
-    return connectedGovCore.executeProposal(proposalId);
+    return this.govCore.write.executeProposal([BigInt(proposalId)]);
   }
 
-  executePayload(
-    chainId: number,
-    payloadId: number,
-    payloadsController: string,
-  ) {
-    let connectedPayloadsController = IPayloadsControllerCore__factory.connect(
-      payloadsController,
-      this.providers[chainId],
-    );
-    if (this.signer) {
-      connectedPayloadsController = connectedPayloadsController.connect(
-        this.signer,
-      );
-    }
-    return connectedPayloadsController.executePayload(payloadId);
+  executePayload(chainId: number, payloadId: number, payloadsController: Hex) {
+    const payloadsControllerContract = initPayloadControllerContract({
+      client: this.clients[chainId],
+      contractAddress: payloadsController,
+      walletClient: this.walletClient,
+    });
+    return payloadsControllerContract.write.executePayload([payloadId], {
+      // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+      value: BigInt(0) as any,
+    });
   }
 
   async createPayload(
     chainId: number,
     payloadActions: PayloadAction[],
-    payloadsController: string,
+    payloadsController: Hex,
   ) {
-    let connectedPayloadsController = IPayloadsControllerCore__factory.connect(
-      payloadsController,
-      this.providers[chainId],
-    );
+    const payloadsControllerContract = initPayloadControllerContract({
+      client: this.clients[chainId],
+      contractAddress: payloadsController,
+      walletClient: this.walletClient,
+    });
 
     const formattedPayloadActions = payloadActions.map((payloadData) => {
       return {
         target: payloadData.payloadAddress,
         withDelegateCall: payloadData.withDelegateCall,
         accessLevel: payloadData.accessLevel,
-        value: payloadData.value,
+        value: BigInt(payloadData.value),
         signature: payloadData.signature,
-        callData: utils.toUtf8Bytes(payloadData.callData || ''),
+        callData: bytesToHex(stringToBytes(payloadData.callData || '')),
       };
     });
 
-    if (this.signer) {
-      connectedPayloadsController = connectedPayloadsController.connect(
-        this.signer,
-      );
-    }
-    return connectedPayloadsController.createPayload(formattedPayloadActions);
+    return payloadsControllerContract.write.createPayload([
+      formattedPayloadActions,
+    ]);
   }
 
   async createProposal(
-    votingPortalAddress: string,
+    votingPortalAddress: Hex,
     payloads: {
       chain: number;
       accessLevel: number;
       id: number;
-      payloadsController: string;
+      payloadsController: Hex;
     }[],
-    ipfsHash: string,
+    ipfsHash: Hex,
     cancellationFee: string,
   ) {
-    let connectedGovCore = this.govCore;
+    const payloadsChainIds = payloads
+      .map((payload) => payload.chain)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    const payloadsControllers = payloads
+      .map((payload) => payload.payloadsController)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+    const payloadsData = await Promise.all(
+      payloadsChainIds.map(async (chainId) => {
+        return await Promise.all(
+          payloadsControllers.map(async (controller) => {
+            const payloadsIds = payloads
+              .filter(
+                (payload) =>
+                  payload.chain === chainId &&
+                  payload.payloadsController === controller,
+              )
+              .flat()
+              .map((payload) => payload.id);
+
+            return await this.getPayloads(chainId, controller, payloadsIds);
+          }),
+        );
+      }),
+    );
+
+    if (
+      payloadsData
+        .flat()
+        .flat()
+        .some((payload) => payload.state === PayloadState.Expired)
+    ) {
+      throw new Error('One ore multiple payloads has expired status');
+    }
+
     const formattedPayloads = payloads.map((payload) => {
       return {
-        chain: payload.chain,
+        chain: BigInt(payload.chain),
         accessLevel: payload.accessLevel,
         payloadsController: payload.payloadsController,
         payloadId: payload.id,
       } as PayloadForCreation;
     });
 
-    if (this.signer) {
-      connectedGovCore = this.govCore.connect(this.signer);
-    }
-    return connectedGovCore.createProposal(
-      formattedPayloads,
-      votingPortalAddress,
-      ipfsHash,
+    return this.govCore.write.createProposal(
+      [formattedPayloads, votingPortalAddress, ipfsHash],
       {
-        value: cancellationFee,
+        value: BigInt(cancellationFee),
       },
     );
   }
 
   // only for admin
   async cancelProposal(proposalId: number) {
-    let connectedGovCore = this.govCore;
-    if (this.signer) {
-      connectedGovCore = this.govCore.connect(this.signer);
-    }
-    return connectedGovCore.cancelProposal(proposalId);
+    return this.govCore.write.cancelProposal([BigInt(proposalId)]);
   }
 
   // history events
   async getPayloadsCreatedEvents(
     chainId: number,
-    address: string,
+    address: Hex,
     startBlock: number,
     endBlock: number,
   ) {
-    const payloadsController = IPayloadsControllerCore__factory.connect(
-      address,
-      this.providers[chainId],
-    );
-
-    return getPayloadsCreated(
+    return getPayloadsCreated({
+      contractAddress: address,
+      client: this.clients[chainId],
       startBlock,
       endBlock,
-      payloadsController,
-      address,
       chainId,
-    );
+    });
   }
 
   async getProposalCreatedEvents(startBlock: number, endBlock: number) {
-    return getProposalCreated(startBlock, endBlock, this.govCore);
+    return getProposalCreated({
+      contractAddress: this.govCore.address,
+      client: this.clients[appConfig.govCoreChainId],
+      startBlock,
+      endBlock,
+    });
   }
   async getProposalActivatedEvents(startBlock: number, endBlock: number) {
-    return getProposalActivated(startBlock, endBlock, this.govCore);
+    return getProposalActivated({
+      contractAddress: this.govCore.address,
+      client: this.clients[appConfig.govCoreChainId],
+      startBlock,
+      endBlock,
+    });
   }
 
   async getProposalActivatedOnVMEvents(
@@ -866,7 +1054,12 @@ export class GovDataService {
     endBlock: number,
   ) {
     const votingMachine = this.votingMachines[votingChainId];
-    return getProposalActivatedOnVM(startBlock, endBlock, votingMachine);
+    return getProposalActivatedOnVM({
+      contractAddress: votingMachine.address,
+      client: this.clients[votingChainId],
+      startBlock,
+      endBlock,
+    });
   }
 
   async getProposalVotingClosed(
@@ -875,50 +1068,50 @@ export class GovDataService {
     endBlock: number,
   ) {
     const votingMachine = this.votingMachines[votingChainId];
-    return getProposalVotingClosed(startBlock, endBlock, votingMachine);
+    return getProposalVotingClosed({
+      contractAddress: votingMachine.address,
+      client: this.clients[votingChainId],
+      startBlock,
+      endBlock,
+    });
   }
 
   async getProposalQueuedEvents(startBlock: number, endBlock: number) {
-    return getProposalQueued(startBlock, endBlock, this.govCore);
+    return getProposalQueued({
+      contractAddress: this.govCore.address,
+      client: this.clients[appConfig.govCoreChainId],
+      startBlock,
+      endBlock,
+    });
   }
 
   async getPayloadsQueuedEvents(
     chainId: number,
-    address: string,
+    address: Hex,
     startBlock: number,
     endBlock: number,
   ) {
-    const payloadsController = IPayloadsControllerCore__factory.connect(
-      address,
-      this.providers[chainId],
-    );
-
-    return getPayloadsQueued(
+    return getPayloadsQueued({
+      contractAddress: address,
+      client: this.clients[chainId],
       startBlock,
       endBlock,
-      payloadsController,
-      address,
       chainId,
-    );
+    });
   }
 
   async getPayloadsExecutedEvents(
     chainId: number,
-    address: string,
+    address: Hex,
     startBlock: number,
     endBlock: number,
   ) {
-    const payloadsController = IPayloadsControllerCore__factory.connect(
-      address,
-      this.providers[chainId],
-    );
-
-    return getPayloadsExecuted(
+    return getPayloadsExecuted({
+      contractAddress: address,
+      client: this.clients[chainId],
       startBlock,
       endBlock,
-      payloadsController,
-      address,
       chainId,
-    );
+    });
   }
 }

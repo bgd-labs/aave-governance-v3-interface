@@ -3,10 +3,13 @@ import makeBlockie from 'ethereum-blockies-base64';
 import React from 'react';
 
 import CopyIcon from '/public/images/icons/copy.svg';
+import DelegationIcon from '/public/images/icons/delegationIcon.svg';
+import LinkIcon from '/public/images/icons/linkIcon.svg';
+import RepresentationIcon from '/public/images/representation/representationVotingPower.svg';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
 import { TransactionInfoItem } from '../../../transactions/components/TransactionInfoItem';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
+import { AllTransactions } from '../../../transactions/store/transactionsSlice';
 import { CopyToClipboard, Divider, Image, Link } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { ROUTES } from '../../../ui/utils/routes';
@@ -21,10 +24,7 @@ interface AccountInfoModalContentProps {
   activeAddress: string;
   chainId: number;
   isActive: boolean;
-  allTransactions: (TransactionUnion & {
-    status?: number | undefined;
-    pending: boolean;
-  })[];
+  allTransactions: AllTransactions;
   onAllTransactionButtonClick: () => void;
   onDisconnectButtonClick: () => void;
   onDelegateButtonClick: () => void;
@@ -34,6 +34,96 @@ interface AccountInfoModalContentProps {
   isAvatarExists?: boolean;
   forTest?: boolean;
   representedAddresses?: RepresentedAddress[];
+}
+
+type internalLink = {
+  forTest?: boolean;
+  onClick: () => void;
+  route: string;
+  title: string;
+  iconType: 'delegate' | 'representation';
+};
+
+function InternalLink({
+  onClick,
+  route,
+  forTest,
+  title,
+  iconType,
+}: internalLink) {
+  const theme = useTheme();
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        mb: 12,
+        [`@media only screen and (min-width: 470px)`]: {
+          mb: 0,
+          mr: forTest ? 6 : 18,
+        },
+        [theme.breakpoints.up('md')]: {
+          mr: forTest ? 16 : 24,
+        },
+        div: {
+          p: {
+            color: theme.palette.$textSecondary,
+          },
+        },
+        path: {
+          transition: 'all 0.2s ease',
+          stroke: theme.palette.$textSecondary,
+        },
+        hover: {
+          div: {
+            p: {
+              color: theme.palette.$text,
+            },
+          },
+          path: { stroke: theme.palette.$text },
+        },
+      }}>
+      {!forTest && (
+        <IconBox
+          sx={{
+            width: 16,
+            height: 16,
+            mr: 6,
+            '> svg': {
+              width: 16,
+              height: 16,
+            },
+          }}>
+          {iconType === 'delegate' ? (
+            <DelegationIcon />
+          ) : (
+            <RepresentationIcon />
+          )}
+        </IconBox>
+      )}
+
+      {!forTest ? (
+        <Link href={route} css={{ lineHeight: 1 }} onClick={onClick}>
+          <Box component="p" sx={{ typography: 'headline' }}>
+            {title}
+          </Box>
+        </Link>
+      ) : (
+        <Box
+          component="p"
+          sx={{
+            typography: 'descriptorAccent',
+            cursor: 'pointer',
+            lineHeight: 1,
+            transition: 'all 0.2s ease',
+          }}
+          onClick={onClick}>
+          {title}
+        </Box>
+      )}
+    </Box>
+  );
 }
 
 export function AccountInfoModalContent({
@@ -66,7 +156,7 @@ export function AccountInfoModalContent({
 
   return (
     <>
-      <Box>
+      <Box sx={{ mb: 24 }}>
         <Box
           sx={{
             display: 'flex',
@@ -86,31 +176,101 @@ export function AccountInfoModalContent({
               sx={{ width: 34, height: 34, borderRadius: '50%' }}
             />
 
-            <Box sx={{ display: 'flex', ml: 6, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', ml: 10, alignItems: 'center' }}>
               <Box component="h3" sx={{ typography: 'h3', fontWeight: '600' }}>
                 {ensNameAbbreviated}
               </Box>
-              <CopyToClipboard copyText={activeAddress}>
+
+              <Box sx={{ mx: 8 }}>
+                <CopyToClipboard copyText={activeAddress}>
+                  <IconBox
+                    sx={{
+                      cursor: 'pointer',
+                      width: 14,
+                      height: 14,
+                      '> svg': {
+                        width: 14,
+                        height: 14,
+                      },
+                      path: {
+                        transition: 'all 0.2s ease',
+                        stroke: theme.palette.$textSecondary,
+                      },
+                      hover: { path: { stroke: theme.palette.$main } },
+                    }}>
+                    <CopyIcon />
+                  </IconBox>
+                </CopyToClipboard>
+              </Box>
+
+              <Link
+                href={`${chainInfoHelper.getChainParameters(chainId)
+                  .blockExplorers?.default.url}/address/${activeAddress}`}
+                css={{
+                  color: '$textSecondary',
+                  lineHeight: 1,
+                  hover: { color: theme.palette.$text },
+                }}
+                inNewWindow>
                 <IconBox
                   sx={{
                     cursor: 'pointer',
-                    width: 15,
-                    height: 15,
+                    width: 16,
+                    height: 16,
                     '> svg': {
-                      width: 15,
-                      height: 15,
+                      width: 16,
+                      height: 16,
                     },
-                    ml: 4,
                     path: {
                       transition: 'all 0.2s ease',
                       stroke: theme.palette.$textSecondary,
                     },
                     hover: { path: { stroke: theme.palette.$main } },
                   }}>
-                  <CopyIcon />
+                  <LinkIcon />
                 </IconBox>
-              </CopyToClipboard>
+              </Link>
             </Box>
+          </Box>
+        </Box>
+
+        <Divider
+          sx={{ my: 14, borderBottomColor: theme.palette.$secondaryBorder }}
+        />
+
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            [`@media only screen and (min-width: 470px)`]: {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              [`@media only screen and (min-width: 470px)`]: {
+                flexDirection: 'row',
+              },
+            }}>
+            <InternalLink
+              onClick={onDelegateButtonClick}
+              route={ROUTES.delegate}
+              forTest={forTest}
+              title={texts.walletConnect.delegations}
+              iconType="delegate"
+            />
+
+            <InternalLink
+              onClick={onRepresentationsButtonClick}
+              route={ROUTES.representations}
+              forTest={forTest}
+              title={texts.walletConnect.representations}
+              iconType="representation"
+            />
           </Box>
 
           <Box
@@ -122,94 +282,8 @@ export function AccountInfoModalContent({
               transition: 'all 0.2s ease',
               hover: { color: theme.palette.$text },
             }}>
-            <Box component="p" sx={{ typography: 'descriptor' }}>
-              {texts.walletConnect.disconnect}
-            </Box>
+            <Box component="p">{texts.walletConnect.disconnect}</Box>
           </Box>
-        </Box>
-
-        <Divider sx={{ mt: 12, mb: 16 }} />
-
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          {!forTest ? (
-            <Link
-              href={ROUTES.delegate}
-              css={{
-                color: '$textSecondary',
-                lineHeight: 1,
-                hover: { color: theme.palette.$text },
-              }}
-              onClick={onDelegateButtonClick}>
-              <Box component="p" sx={{ typography: 'descriptor' }}>
-                {texts.walletConnect.delegations}
-              </Box>
-            </Link>
-          ) : (
-            <Box
-              component="p"
-              sx={{
-                typography: 'descriptor',
-                color: '$textSecondary',
-                cursor: 'pointer',
-                lineHeight: 1,
-                transition: 'all 0.2s ease',
-                hover: { color: theme.palette.$text },
-              }}
-              onClick={onDelegateButtonClick}>
-              {texts.walletConnect.delegations}
-            </Box>
-          )}
-
-          {!forTest ? (
-            <Link
-              href={ROUTES.representations}
-              css={{
-                color: '$textSecondary',
-                lineHeight: 1,
-                hover: { color: theme.palette.$text },
-              }}
-              onClick={onRepresentationsButtonClick}>
-              <Box component="p" sx={{ typography: 'descriptor' }}>
-                {texts.walletConnect.representations}
-              </Box>
-            </Link>
-          ) : (
-            <Box
-              component="p"
-              sx={{
-                typography: 'descriptor',
-                color: '$textSecondary',
-                cursor: 'pointer',
-                lineHeight: 1,
-                transition: 'all 0.2s ease',
-                hover: { color: theme.palette.$text },
-              }}
-              onClick={onRepresentationsButtonClick}>
-              {texts.walletConnect.representations}
-            </Box>
-          )}
-
-          <Link
-            href={`${
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              chainInfoHelper.getChainParameters(chainId).blockExplorerUrls[0]
-            }address/${activeAddress}`}
-            css={{
-              color: '$textSecondary',
-              lineHeight: 1,
-              hover: { color: theme.palette.$text },
-            }}
-            inNewWindow>
-            <Box component="p" sx={{ typography: 'descriptor' }}>
-              {texts.other.viewOnExplorer}
-            </Box>
-          </Link>
         </Box>
       </Box>
 
@@ -225,7 +299,6 @@ export function AccountInfoModalContent({
           <Box
             sx={{
               display: 'flex',
-              mt: 50,
               alignItems: 'center',
               flexDirection: 'column',
               position: 'relative',
@@ -233,19 +306,30 @@ export function AccountInfoModalContent({
             }}>
             <Box
               component="h3"
-              sx={{ typography: 'h3', textAlign: 'center', fontWeight: 600 }}>
+              sx={{
+                typography: 'h3',
+                textAlign: 'left',
+                fontWeight: 600,
+                width: '100%',
+              }}>
               {allTransactions.length === 0
                 ? texts.walletConnect.transactions
                 : texts.walletConnect.lastTransaction(allTransactions.length)}
             </Box>
 
-            <Divider sx={{ mt: 14, mb: 24, width: '100%' }} />
+            <Divider
+              sx={{
+                my: 14,
+                borderBottomColor: theme.palette.$secondaryBorder,
+                width: '100%',
+              }}
+            />
 
             {!!allTransactions.length ? (
               <>
                 <Box
                   sx={{
-                    height: isRepresentedAvailable ? 150 : 230,
+                    height: isRepresentedAvailable ? 200 : 260,
                     width: '100%',
                   }}>
                   {allTransactions
@@ -280,7 +364,8 @@ export function AccountInfoModalContent({
                 sx={{
                   typography: 'body',
                   color: '$textSecondary',
-                  textAlign: 'center',
+                  textAlign: 'left',
+                  width: '100%',
                 }}>
                 {texts.walletConnect.transactionsEmpty}
               </Box>

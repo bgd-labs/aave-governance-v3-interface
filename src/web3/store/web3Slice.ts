@@ -1,13 +1,11 @@
 import {
+  ClientsRecord,
   createWalletSlice,
   IWalletSlice,
-  StaticJsonRpcBatchProvider,
   StoreSlice,
-} from '@bgd-labs/frontend-web3-utils/src';
-import { ethers } from 'ethers';
+} from '@bgd-labs/frontend-web3-utils';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
-import { chainInfoHelper } from '../../utils/configs';
 import { DelegationService } from '../services/delegationService';
 import { GovDataService } from '../services/govDataService';
 
@@ -16,16 +14,14 @@ import { GovDataService } from '../services/govDataService';
  * change provider, trigger data refetch if provider changed and have globally available instances of rpcs and data providers
  */
 export type IWeb3Slice = IWalletSlice & {
+  // need for connect wallet button to not show last tx status always after connected wallet
+  walletConnectedTimeLock: boolean;
+
   govDataService: GovDataService;
   delegationService: DelegationService;
 
   connectSigner: () => void;
-  initDataServices: (
-    providers: Record<
-      string,
-      StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider
-    >,
-  ) => void;
+  initDataServices: (clients: ClientsRecord) => void;
 };
 
 export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
@@ -36,24 +32,23 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
     walletConnected: () => {
       get().connectSigner();
     },
-    getChainParameters: chainInfoHelper.getChainParameters,
   })(set, get),
   govDataService: new GovDataService({}),
   delegationService: new DelegationService({}),
 
+  walletConnectedTimeLock: false,
   connectSigner() {
     const activeWallet = get().activeWallet;
-    if (activeWallet?.signer) {
-      get().govDataService.connectSigner(activeWallet.signer);
-      get().delegationService.connectSigner(activeWallet.signer);
+    set({ walletConnectedTimeLock: true });
+    if (activeWallet?.walletClient) {
+      get().govDataService.connectSigner(activeWallet.walletClient);
+      get().delegationService.connectSigner(activeWallet.walletClient);
     }
+    setTimeout(() => set({ walletConnectedTimeLock: false }), 1000);
   },
-  initDataServices(providers) {
-    set({ delegationService: new DelegationService(providers) });
-    set({ govDataService: new GovDataService(providers) });
-    if (this.activeWallet?.signer) {
-      get().govDataService.connectSigner(this.activeWallet.signer);
-      get().delegationService.connectSigner(this.activeWallet.signer);
-    }
+  initDataServices(clients) {
+    set({ delegationService: new DelegationService(clients) });
+    set({ govDataService: new GovDataService(clients) });
+    get().connectSigner();
   },
 });

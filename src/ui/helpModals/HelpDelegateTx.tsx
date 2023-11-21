@@ -1,4 +1,3 @@
-import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
 import { DelegatedText } from '../../delegate/components/DelegatedText';
@@ -9,6 +8,7 @@ import {
 } from '../../proposals/components/actionModals/ActionModalContentWrapper';
 import { ActionModalContent } from '../../transactions/components/ActionModalContent';
 import { texts } from '../utils/texts';
+import { getTestTx } from './getTestTx';
 
 interface HelpDelegateTxProps {
   txPending: boolean;
@@ -38,15 +38,12 @@ export function HelpDelegateTx({
     <>
       <ActionModalContent
         isTxStart={isTxStart}
-        txHash={ethers.constants.AddressZero}
-        txPending={txPending}
-        txSuccess={txSuccess}
         setIsTxStart={setIsTxStart}
         setError={setError}
         error={error}
-        isError={false}
         setIsOpen={handleCancelClick}
         withoutTryAgainWhenError
+        tx={getTestTx({ txPending, txSuccess })}
         successElement={
           <DelegatedText
             delegateData={delegateData}

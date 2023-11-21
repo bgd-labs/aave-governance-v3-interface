@@ -1,7 +1,8 @@
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
 import { Listbox } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
+import { Hex } from 'viem';
+import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
@@ -28,12 +29,8 @@ interface RepresentingFormProps {
 }
 
 const testInitialAddress = {
-  chainsIds: [
-    ChainIdByName.Avalanche,
-    ChainIdByName.EthereumMainnet,
-    ChainIdByName.Polygon,
-  ],
-  address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b',
+  chainsIds: [avalanche.id, mainnet.id, polygon.id],
+  address: '0x2Ae626304D770eed47E5C80bF64E44A2352FF53b' as Hex,
 };
 
 export function RepresentingForm({
@@ -61,8 +58,7 @@ export function RepresentingForm({
     <Box
       sx={{
         display: 'flex',
-        mt: 30,
-        mb: 30,
+        my: 24,
         alignItems: 'center',
         flexDirection: 'column',
         position: 'relative',
@@ -70,26 +66,41 @@ export function RepresentingForm({
       <Box
         component="h3"
         sx={{
+          width: '100%',
           typography: 'h3',
           textAlign: 'center',
           fontWeight: 600,
           display: 'inline-flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
         }}>
         {texts.walletConnect.representing}
       </Box>
 
-      <Divider sx={{ mt: 13, mb: 20, width: '100%' }} />
+      <Divider
+        sx={{
+          my: 14,
+          borderBottomColor: theme.palette.$secondaryBorder,
+          width: '100%',
+        }}
+      />
 
-      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          alignSelf: 'flex-start',
+          maxWidth: 450,
+          position: 'relative',
+        }}>
         <Box sx={{ width: '100%' }}>
           <Listbox
             value={localAddress}
             onChange={(value: RepresentativeAddress) => {
               setLocalAddress(value);
               if (!isForTest) {
-                setRepresentativeAddress(value.address, value.chainsIds);
+                setRepresentativeAddress(value.address as Hex, value.chainsIds);
               }
             }}>
             {({ open }) => (
@@ -142,12 +153,14 @@ export function RepresentingForm({
                       {localAddress.address === ''
                         ? texts.other.yourself
                         : ENSDataExists(
-                            store,
-                            localAddress.address,
-                            ENSProperty.NAME,
-                          )
-                        ? ensData[localAddress.address.toLocaleLowerCase()].name
-                        : localAddress.address}
+                              store,
+                              localAddress.address,
+                              ENSProperty.NAME,
+                            )
+                          ? ensData[
+                              localAddress.address.toLocaleLowerCase() as Hex
+                            ].name
+                          : localAddress.address}
                     </Box>
                   </Box>
 
@@ -225,12 +238,14 @@ export function RepresentingForm({
                           {option.address === ''
                             ? texts.other.yourself
                             : ENSDataExists(
-                                store,
-                                option.address,
-                                ENSProperty.NAME,
-                              )
-                            ? ensData[option.address.toLocaleLowerCase()].name
-                            : option.address}
+                                  store,
+                                  option.address,
+                                  ENSProperty.NAME,
+                                )
+                              ? ensData[
+                                  option.address.toLocaleLowerCase() as Hex
+                                ].name
+                              : option.address}
                         </Box>
                       </Box>
                     </Listbox.Option>
@@ -243,12 +258,9 @@ export function RepresentingForm({
 
         {!!localAddress.address && (
           <Link
-            href={`${
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                .blockExplorerUrls[0]
-            }address/${localAddress.address}`}
+            href={`${chainInfoHelper.getChainParameters(
+              appConfig.govCoreChainId,
+            ).blockExplorers?.default.url}/address/${localAddress.address}`}
             css={{
               color: '$textSecondary',
               lineHeight: 1,

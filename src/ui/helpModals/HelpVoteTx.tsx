@@ -5,10 +5,9 @@ import {
   ProposalState,
   ProposalWithLoadings,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
@@ -28,6 +27,7 @@ import { GelatoSwitcher } from '../components/GelatoSwitcher';
 import { ToggleButton } from '../components/ToggleButton';
 import { IconBox } from '../primitives/IconBox';
 import { texts } from '../utils/texts';
+import { getTestTx } from './getTestTx';
 
 interface HelpVoteTxProps {
   support: boolean;
@@ -145,22 +145,19 @@ export function HelpVoteTx({
 
   return (
     <ActionModalContent
-      txHash={ethers.constants.AddressZero}
       setIsOpen={(value) => {
         setTxPending(value);
         setIsTxStart(value);
         setTxSuccess(value);
         setIsVoteButtonClick(value);
       }}
-      isError={false}
       error={error}
       setError={setError}
       isTxStart={isTxStart}
       setIsTxStart={setIsTxStart}
-      txSuccess={txSuccess}
-      txPending={txPending}
       contentMinHeight={isTxStart ? 287 : 211}
       closeButtonText={texts.faq.tx.tryAgain}
+      tx={getTestTx({ txPending, txSuccess })}
       topBlock={
         !isVotingModesInfoOpen && (
           <Box

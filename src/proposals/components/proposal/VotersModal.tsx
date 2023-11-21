@@ -1,4 +1,4 @@
-import { VotersData } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, useTheme } from '@mui/system';
 import React, { useState } from 'react';
 
@@ -111,11 +111,8 @@ export function VotersModal({
           transition: 'all 0.2s ease',
           hover: { opacity: '0.5' },
         }}
-        href={`${
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          chainInfoHelper.getChainParameters(vote.chainId).blockExplorerUrls[0]
-        }address/${vote.address}`}>
+        href={`${chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
+          ?.default.url}/address/${vote.address}`}>
         <Box component="p" sx={{ typography: 'body' }}>
           {formatVoterAddress(vote)}
         </Box>

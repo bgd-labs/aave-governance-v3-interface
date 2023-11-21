@@ -1,7 +1,7 @@
 import {
   ProposalEstimatedState,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
@@ -130,8 +130,8 @@ export function ProposalVoteInfo({
           estimatedStatus === ProposalEstimatedState.Defeated && !isFinished
             ? '$secondaryAgainst'
             : estimatedStatus === ProposalEstimatedState.Succeed && !isFinished
-            ? '$secondaryFor'
-            : '$light'
+              ? '$secondaryFor'
+              : '$light'
         }
         wrapperCss={{ mb: 12 }}
         css={{

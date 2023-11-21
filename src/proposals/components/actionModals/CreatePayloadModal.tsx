@@ -15,14 +15,10 @@ export function CreatePayloadModal({
   isOpen,
   setIsOpen,
   isTxStart,
-  txHash,
-  txPending,
-  txSuccess,
-  txWalletType,
+  tx,
   setIsTxStart,
   setError,
   error,
-  isError,
   payloadId,
   fullTxErrorMessage,
   setFullTxErrorMessage,
@@ -31,33 +27,25 @@ export function CreatePayloadModal({
   | 'isOpen'
   | 'setIsOpen'
   | 'isTxStart'
-  | 'txHash'
-  | 'txPending'
-  | 'txSuccess'
-  | 'txWalletType'
   | 'setIsTxStart'
   | 'setError'
-  | 'isError'
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
+  | 'tx'
 > & { payloadId: number }) {
   return (
     <BasicActionModal
       isTxStart={isTxStart}
-      txHash={txHash}
-      txPending={txPending}
-      txSuccess={txSuccess}
-      txWalletType={txWalletType}
       setIsTxStart={setIsTxStart}
       setError={setError}
       error={error}
-      isError={isError}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      tx={tx}
       successElement={
         <Box component="p" sx={{ typography: 'body' }}>
           {texts.proposalActions.createPayloadSuccess(payloadId)}

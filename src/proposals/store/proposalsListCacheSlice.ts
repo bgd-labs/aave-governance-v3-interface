@@ -1,5 +1,5 @@
-import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers/src';
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 
 export interface IProposalsListCacheSlice {
   loadingListCache: boolean;
@@ -13,7 +13,7 @@ export interface IProposalsListCacheSlice {
 
 export const createProposalsListCacheSlice: StoreSlice<
   IProposalsListCacheSlice
-> = (set, get) => ({
+> = (set) => ({
   loadingListCache: true,
   setLoadingListCache: (value) => set({ loadingListCache: value }),
 

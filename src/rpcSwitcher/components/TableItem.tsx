@@ -4,7 +4,7 @@ import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { getChainName } from '../../ui/utils/getChainName';
-import { RpcSwitcherFormData } from '../store/providerSlice';
+import { RpcSwitcherFormData } from '../store/rpcSwitcherSlice';
 import { RpcSwitcherTableItemField } from './RpcSwitcherTableItemField';
 
 export interface TableItemProps {

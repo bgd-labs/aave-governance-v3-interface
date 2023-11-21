@@ -1,4 +1,4 @@
-import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
