@@ -40,18 +40,11 @@ export function ActionModal({
     setError,
     loading,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    txWalletType,
-    isError,
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
-    replacedTxHash,
-    isTxReplaced,
-    txChainId,
+    tx,
   } = useLastTxLocalStatus({ type, payload });
 
   const handleClick = async () =>
@@ -63,22 +56,15 @@ export function ActionModal({
     <BasicActionModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      txHash={txHash}
-      txSuccess={txSuccess}
-      txPending={txPending}
       isTxStart={isTxStart}
       setIsTxStart={setIsTxStart}
       error={error}
-      isError={isError}
       setError={setError}
       topBlock={topBlock}
-      txWalletType={txWalletType}
       contentMinHeight={contentMinHeight || 240}
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
-      replacedTxHash={replacedTxHash}
-      txChainId={txChainId}
-      isTxReplaced={isTxReplaced}>
+      tx={tx}>
       {children}
 
       <Box

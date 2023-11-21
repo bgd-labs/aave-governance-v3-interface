@@ -67,9 +67,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
       <Box sx={{ textAlign: 'left' }}>
         {tx.localTimestamp && (
           <Box component="span" sx={{ typography: 'headline' }}>
-            {tx.type === 'test'
-              ? dayjs.unix(tx.localTimestamp).format('MMM D, h:mm A')
-              : dayjs(tx.localTimestamp).format('MMM D, h:mm A')}
+            {dayjs.unix(tx.localTimestamp).format('MMM D, h:mm A')}
           </Box>
         )}
       </Box>
@@ -267,7 +265,6 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                 state,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
-                state.activeWallet?.isContractAddress,
               )}
               css={{
                 display: 'inline-flex',
@@ -388,7 +385,6 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                 state,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
-                state.activeWallet?.isContractAddress,
                 tx.replacedTxHash,
               )}
               css={{

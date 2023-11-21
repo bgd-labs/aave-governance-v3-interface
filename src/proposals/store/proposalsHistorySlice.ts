@@ -3,7 +3,6 @@ import {
   checkHash,
   getBlockNumberByTimestamp,
   getProposalStepsAndAmounts,
-  HashZero,
   PayloadState,
   Proposal,
   ProposalState,
@@ -11,7 +10,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { Hex } from 'viem';
+import { Hex, zeroHash } from 'viem';
 
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { texts } from '../../ui/utils/texts';
@@ -141,9 +140,9 @@ export const createProposalsHistorySlice: StoreSlice<
             id: txId,
             hash:
               typeof historyItem?.txInfo.hash !== 'undefined' &&
-              historyItem?.txInfo.hash !== HashZero
+              historyItem?.txInfo.hash !== zeroHash
                 ? historyItem?.txInfo.hash
-                : HashZero,
+                : zeroHash,
             chainId: txChainId,
             hashLoading: false,
           },
@@ -410,7 +409,7 @@ export const createProposalsHistorySlice: StoreSlice<
           txInfo: {
             ...draft.proposalHistory[historyId].txInfo,
             hashLoading:
-              draft.proposalHistory[historyId].txInfo.hash === HashZero,
+              draft.proposalHistory[historyId].txInfo.hash === zeroHash,
           },
         };
       }),
@@ -419,7 +418,7 @@ export const createProposalsHistorySlice: StoreSlice<
   setHistoryItemHash: (historyId, filteredEvents) => {
     const historyItem = get().proposalHistory[historyId];
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         filteredEvents.forEach((event) =>
           set((state) =>
@@ -429,7 +428,7 @@ export const createProposalsHistorySlice: StoreSlice<
                 txInfo: {
                   ...draft.proposalHistory[historyId].txInfo,
                   hash:
-                    draft.proposalHistory[historyId].txInfo.hash !== HashZero
+                    draft.proposalHistory[historyId].txInfo.hash !== zeroHash
                       ? draft.proposalHistory[historyId].txInfo.hash
                       : event.transactionHash,
                 },
@@ -456,7 +455,7 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         try {
           const { minBlockNumber, maxBlockNumber } =
@@ -507,7 +506,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         try {
           const { minBlockNumber, maxBlockNumber } =
@@ -555,7 +554,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         try {
           const { minBlockNumber, maxBlockNumber } =
@@ -603,7 +602,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (proposal.proposal.data.votingMachineData.createdBlock > 0) {
         try {
           const events =
@@ -647,7 +646,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (
         proposal.proposal.data.votingMachineData
           .votingClosedAndSentBlockNumber > 0
@@ -695,7 +694,7 @@ export const createProposalsHistorySlice: StoreSlice<
 
     get().setHistoryItemLoading(historyId);
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         try {
           const { minBlockNumber, maxBlockNumber } =
@@ -749,7 +748,7 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         try {
           const { minBlockNumber, maxBlockNumber } =
@@ -806,7 +805,7 @@ export const createProposalsHistorySlice: StoreSlice<
           payload.id === txInfo.id && payload.chainId === txInfo.chainId,
       )?.payloadsController || '';
 
-    if (historyItem.txInfo.hash === HashZero) {
+    if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
         try {
           const { minBlockNumber, maxBlockNumber } =

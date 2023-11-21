@@ -16,39 +16,25 @@ export function RepresentationsModal({
   isOpen,
   setIsOpen,
   isTxStart,
-  txHash,
-  txPending,
-  txSuccess,
-  txWalletType,
   setIsTxStart,
   setError,
   error,
-  isError,
   formData,
   initialData,
   fullTxErrorMessage,
   setFullTxErrorMessage,
-  isTxReplaced,
-  replacedTxHash,
-  txChainId,
+  tx,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
   | 'setIsOpen'
   | 'isTxStart'
-  | 'txHash'
-  | 'txPending'
-  | 'txSuccess'
-  | 'txWalletType'
   | 'setIsTxStart'
   | 'setError'
-  | 'isError'
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
-  | 'isTxReplaced'
-  | 'replacedTxHash'
-  | 'txChainId'
+  | 'tx'
 > & {
   initialData: RepresentationFormData[];
   formData: RepresentationFormData[];
@@ -56,27 +42,20 @@ export function RepresentationsModal({
   return (
     <BasicActionModal
       isTxStart={isTxStart}
-      txHash={txHash}
-      txPending={txPending}
-      txSuccess={txSuccess}
-      txWalletType={txWalletType}
       setIsTxStart={setIsTxStart}
       setError={setError}
       error={error}
-      isError={isError}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
-      isTxReplaced={isTxReplaced}
-      replacedTxHash={replacedTxHash}
-      txChainId={txChainId}
+      tx={tx}
       successElement={<TxText initialData={initialData} formData={formData} />}
       topBlock={
         <ActionModalTitle
           title={
-            txSuccess && isTxStart
+            tx?.isSuccess && isTxStart
               ? texts.representationsPage.txSuccess
               : texts.representationsPage.txTitle
           }

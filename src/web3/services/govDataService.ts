@@ -19,7 +19,6 @@ import {
   getVoters,
   govCoreContract,
   govCoreDataHelperContract,
-  HashZero,
   InitialProposal,
   Payload,
   PayloadAction,
@@ -46,6 +45,7 @@ import {
   stringToBytes,
   toHex,
   zeroAddress,
+  zeroHash,
 } from 'viem';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -318,6 +318,7 @@ export class GovDataService {
 
     return initialPayloadsData.map((payload) => {
       return {
+        creator: payload.data.creator,
         id: Number(payload.id),
         chainId,
         maximumAccessLevelRequired: payload.data.maximumAccessLevelRequired,
@@ -446,7 +447,7 @@ export class GovDataService {
       return {
         id: BigInt(proposal?.id || 0),
         votingChainId: proposal?.votingChainId || appConfig.govCoreChainId,
-        snapshotBlockHash: (proposal?.snapshotBlockHash as Hex) || HashZero,
+        snapshotBlockHash: (proposal?.snapshotBlockHash as Hex) || zeroHash,
       };
     });
 

@@ -27,14 +27,15 @@ export function AccountInfoModal({
   isAvatarExists,
   representedAddresses,
 }: AccountInfoModalProps) {
-  const { activeWallet, disconnectActiveWallet, setModalOpen } = useStore();
+  const store = useStore();
+  const { activeWallet, disconnectActiveWallet, setModalOpen } = store;
 
-  const allTransactions = useStore((state) =>
-    selectAllTransactionsByWallet<TransactionUnion>(
-      state,
-      activeWallet?.address || '',
-    ),
-  );
+  const allTransactions = activeWallet
+    ? selectAllTransactionsByWallet<TransactionUnion>(
+        store,
+        activeWallet.address,
+      )
+    : [];
 
   const handleDisconnectClick = async () => {
     await disconnectActiveWallet();

@@ -16,59 +16,38 @@ export function DelegateModal({
   isOpen,
   setIsOpen,
   isTxStart,
-  txHash,
-  txPending,
-  txSuccess,
-  txWalletType,
   setIsTxStart,
   setError,
   error,
-  isError,
   delegateData,
   formDelegateData,
   fullTxErrorMessage,
   setFullTxErrorMessage,
-  isTxReplaced,
-  replacedTxHash,
-  txChainId,
+  tx,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
   | 'setIsOpen'
   | 'isTxStart'
-  | 'txHash'
-  | 'txPending'
-  | 'txSuccess'
-  | 'txWalletType'
   | 'setIsTxStart'
   | 'setError'
-  | 'isError'
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
-  | 'isTxReplaced'
-  | 'replacedTxHash'
-  | 'txChainId'
+  | 'tx'
 > & { delegateData: DelegateItem[]; formDelegateData: DelegateData[] }) {
   return (
     <BasicActionModal
       isTxStart={isTxStart}
-      txHash={txHash}
-      txPending={txPending}
-      txSuccess={txSuccess}
-      txWalletType={txWalletType}
       setIsTxStart={setIsTxStart}
       setError={setError}
       error={error}
-      isError={isError}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
-      isTxReplaced={isTxReplaced}
-      replacedTxHash={replacedTxHash}
-      txChainId={txChainId}
+      tx={tx}
       successElement={
         <DelegatedText
           delegateData={delegateData}
@@ -78,7 +57,7 @@ export function DelegateModal({
       topBlock={
         <ActionModalTitle
           title={
-            txSuccess && isTxStart
+            tx?.isSuccess && isTxStart
               ? texts.delegatePage.delegateTxSuccess
               : texts.delegatePage.delegateTxTitle
           }

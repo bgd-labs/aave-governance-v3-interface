@@ -24,7 +24,7 @@ export function DelegatedText({
 }: DelegatedTextProps) {
   const store = useStore();
   const { activeWallet, ensData } = store;
-  const activeAddress = activeWallet?.address || '';
+  const activeAddress = activeWallet?.address;
 
   const delegatedData: TxDelegateData[] = [];
   for (const formDelegateItem of formDelegateData) {

@@ -173,18 +173,11 @@ export function CreateProposalForm() {
     error,
     setError,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    txWalletType,
-    isError,
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
-    isTxReplaced,
-    replacedTxHash,
-    txChainId,
+    tx,
   } = useLastTxLocalStatus({
     type: 'createProposal',
     payload: { proposalId: totalProposalCount },
@@ -198,7 +191,6 @@ export function CreateProposalForm() {
     setIsCreateProposalModalOpen(true);
 
     await executeTxWithLocalStatuses({
-      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await createProposal(
           appConfig.govCoreConfig.votingPortals[votingChainId],
@@ -493,22 +485,15 @@ export function CreateProposalForm() {
 
       <CreateProposalModal
         error={error}
-        isError={isError}
         setError={setError}
         isOpen={isCreateProposalModalOpen}
         setIsOpen={setIsCreateProposalModalOpen}
         isTxStart={isTxStart}
         setIsTxStart={setIsTxStart}
-        txWalletType={txWalletType}
-        txSuccess={txSuccess}
-        txHash={txHash}
-        txPending={txPending}
         proposalId={totalProposalCount}
         fullTxErrorMessage={fullTxErrorMessage}
         setFullTxErrorMessage={setFullTxErrorMessage}
-        isTxReplaced={isTxReplaced}
-        replacedTxHash={replacedTxHash}
-        txChainId={txChainId}
+        tx={tx}
       />
     </>
   );
