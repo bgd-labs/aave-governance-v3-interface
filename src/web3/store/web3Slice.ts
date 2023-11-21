@@ -1,9 +1,9 @@
 import {
+  ClientsRecord,
   createWalletSlice,
   IWalletSlice,
   StoreSlice,
 } from '@bgd-labs/frontend-web3-utils';
-import { PublicClient } from '@wagmi/core';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { DelegationService } from '../services/delegationService';
@@ -21,7 +21,7 @@ export type IWeb3Slice = IWalletSlice & {
   delegationService: DelegationService;
 
   connectSigner: () => void;
-  initDataServices: (clients: Record<string, PublicClient>) => void;
+  initDataServices: (clients: ClientsRecord) => void;
 };
 
 export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
