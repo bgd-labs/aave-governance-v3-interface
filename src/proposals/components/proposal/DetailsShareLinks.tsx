@@ -1,7 +1,4 @@
-import {
-  ipfsGateway,
-  ProposalMetadata,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled } from '@mui/system';
 import React from 'react';
 
@@ -15,6 +12,7 @@ import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
+import { ipfsGateway } from '../../../utils/configs';
 
 const StyledLink = styled(Link)(({ theme }) => ({
   marginRight: 12,

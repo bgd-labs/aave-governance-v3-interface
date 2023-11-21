@@ -3,8 +3,7 @@ import {
   CoreNetworkName,
   payloadsControllerChainIds,
   votingMachineChainIds,
-} from '@bgd-labs/aave-governance-ui-helpers/src/helpers/appConfig';
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src/helpers/chains';
+} from '@bgd-labs/aave-governance-ui-helpers';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 export const isTermsAndConditionsVisible =
@@ -17,7 +16,7 @@ export const WC_PROJECT_ID =
 // @ts-ignore
 export const isTestnet = coreName === 'goerli' || coreName === 'sepolia';
 
-export const appUsedNetworks: ChainIdByName[] = [
+export const appUsedNetworks: number[] = [
   ...votingMachineChainIds[coreName],
   ...payloadsControllerChainIds[coreName],
 ].filter((value, index, self) => self.indexOf(value) === index);

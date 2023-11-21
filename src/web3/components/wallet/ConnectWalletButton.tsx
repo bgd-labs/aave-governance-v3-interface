@@ -1,7 +1,8 @@
 import {
-  selectAllTransactions,
+  selectAllTransactionsByWallet,
   selectPendingTransactionByWallet,
-} from '@bgd-labs/frontend-web3-utils/src';
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import makeBlockie from 'ethereum-blockies-base64';
@@ -22,7 +23,6 @@ import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
 import { getLocalStorageLastConnectedWallet } from '../../../utils/localStorage';
-import { selectActiveWallet } from '../../store/web3Selectors';
 import { RepresentingButton } from './RepresentingButton';
 
 interface ConnectWalletButtonProps {
@@ -40,18 +40,19 @@ export function ConnectWalletButton({
   isAvatarExists,
   representative,
 }: ConnectWalletButtonProps) {
+  const store = useStore();
+  const { walletActivating, activeWallet, walletConnectedTimeLock } = store;
+
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
   const [loading, setLoading] = useState(true);
 
-  const walletActivating = useStore((state) => state.walletActivating);
-  const getActiveAddress = useStore((state) => state.getActiveAddress);
-  const allTransactions = useStore((state) => selectAllTransactions(state));
-
-  const activeWallet = useStore(selectActiveWallet);
-
   const isActive = activeWallet?.isActive;
-  const activeAddress = getActiveAddress() || '';
+  const activeAddress = activeWallet?.address || '';
+
+  const allTransactions = !!activeAddress
+    ? selectAllTransactionsByWallet(store, activeAddress)
+    : [];
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName
@@ -64,11 +65,11 @@ export function ConnectWalletButton({
   const [lastTransactionError, setLastTransactionError] = useState(false);
 
   useEffect(() => {
-    if (lastTransaction?.status && activeWallet) {
-      if (lastTransaction.status === 1) {
+    if (lastTransaction?.status && activeWallet && !walletConnectedTimeLock) {
+      if (lastTransaction.status === TransactionStatus.Success) {
         setLastTransactionSuccess(true);
         setTimeout(() => setLastTransactionSuccess(false), 1000);
-      } else if (lastTransaction.status === 0) {
+      } else if (lastTransaction.status === TransactionStatus.Reverted) {
         setLastTransactionError(true);
         setTimeout(() => setLastTransactionError(false), 1000);
       }
@@ -84,12 +85,12 @@ export function ConnectWalletButton({
   }, [lastConnectedWallet]);
 
   // get all pending tx's from connected wallet
-  const allPendingTransactions = useStore((state) =>
-    selectPendingTransactionByWallet(state, activeAddress),
-  );
+  const allPendingTransactions = activeAddress
+    ? selectPendingTransactionByWallet(store, activeAddress)
+    : [];
   // filtered pending tx's, if now > tx.timestamp + 30 min, than remove tx from pending array to not show loading spinner in connect wallet button
   const filteredPendingTx = allPendingTransactions.filter(
-    (tx) => dayjs().unix() <= dayjs(tx.localTimestamp).unix() + 1800,
+    (tx) => dayjs().unix() <= dayjs.unix(tx.localTimestamp).unix() + 1800,
   );
 
   return (
@@ -196,7 +197,7 @@ export function ConnectWalletButton({
                 }}
                 textCss={{ typography: 'buttonSmall', color: '$textLight' }}
                 iconSize={12}
-                chainId={activeWallet?.chainId || appConfig.govCoreChainId}
+                chainId={activeWallet?.chain?.id || appConfig.govCoreChainId}
               />
 
               <Box
@@ -214,18 +215,18 @@ export function ConnectWalletButton({
                   backgroundColor: lastTransactionError
                     ? '$error'
                     : lastTransactionSuccess
-                    ? '$mainFor'
-                    : '$light',
+                      ? '$mainFor'
+                      : '$light',
                   transition: 'all 0.2s ease',
                   color: '$text',
                   hover: {
                     backgroundColor: lastTransactionError
                       ? theme.palette.$error
                       : lastTransactionSuccess
-                      ? theme.palette.$mainFor
-                      : theme.palette.mode === 'dark'
-                      ? theme.palette.$mainButton
-                      : theme.palette.$middleLight,
+                        ? theme.palette.$mainFor
+                        : theme.palette.mode === 'dark'
+                          ? theme.palette.$mainButton
+                          : theme.palette.$middleLight,
                     '.ConnectWalletButton__text': {
                       color:
                         !lastTransactionError && !lastTransactionSuccess
@@ -237,10 +238,10 @@ export function ConnectWalletButton({
                     backgroundColor: lastTransactionError
                       ? '$error'
                       : lastTransactionSuccess
-                      ? '$mainFor'
-                      : theme.palette.mode === 'dark'
-                      ? '$disabled'
-                      : '$secondary',
+                        ? '$mainFor'
+                        : theme.palette.mode === 'dark'
+                          ? '$disabled'
+                          : '$secondary',
                   },
                   '&:disabled': {
                     cursor: 'not-allowed',
@@ -296,16 +297,16 @@ export function ConnectWalletButton({
                     color: lastTransactionError
                       ? '$textWhite'
                       : lastTransactionSuccess
-                      ? '$textWhite'
-                      : '$text',
+                        ? '$textWhite'
+                        : '$text',
                   }}>
                   {lastTransactionError
                     ? 'Error'
                     : lastTransactionSuccess
-                    ? 'Success'
-                    : ensNameAbbreviated
-                    ? ensNameAbbreviated
-                    : textCenterEllipsis(activeAddress, 4, 4)}
+                      ? 'Success'
+                      : ensNameAbbreviated
+                        ? ensNameAbbreviated
+                        : textCenterEllipsis(activeAddress, 4, 4)}
                 </Box>
                 <Box
                   sx={{

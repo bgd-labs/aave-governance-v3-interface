@@ -1,13 +1,32 @@
-import { StaticJsonRpcBatchProvider } from '@bgd-labs/frontend-web3-utils/src';
-import { BigNumber, BytesLike, ethers, utils } from 'ethers';
+import { PublicClient } from '@wagmi/core';
 import {
-  defaultAbiCoder,
-  hexStripZeros,
-  hexZeroPad,
+  Block,
+  concat,
+  encodeAbiParameters,
+  fromRlp,
+  Hex,
   keccak256,
-} from 'ethers/lib/utils.js';
+  pad,
+  parseAbiParameters,
+  toHex,
+  toRlp,
+} from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
+
+export type Proof = {
+  balance: Hex; //QUANTITY - the balance of the account. Seeeth_getBalance
+  codeHash: Hex; //DATA, 32 Bytes - hash of the code of the account. For a simple Account without code it will return "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+  nonce: Hex; //QUANTITY, - nonce of the account. See eth_getTransactionCount
+  storageHash: Hex; //DATA, 32 Bytes - SHA3 of the StorageRoot. All storage will deliver a MerkleProof starting with this rootHash.
+  accountProof: Hex[]; //ARRAY - Array of rlp-serialized MerkleTree-Nodes, starting with the stateRoot-Node, following the path of the SHA3 (address) as key.
+  storageProof: {
+    //ARRAY - Array of storage-entries as requested. Each entry is an object with these properties:
+    key: Hex; //QUANTITY - the requested storage key
+    value: Hex; //QUANTITY - the storage value
+    proof: Hex[]; //ARRAY - Array of rlp-serialized MerkleTree-Nodes, starting with the storageHash-Node, following the path of the SHA3 (key) as path.
+  }[];
+};
 
 export const slots = {
   [appConfig.additional.stkAAVEAddress.toLowerCase()]: {
@@ -26,105 +45,98 @@ export const slots = {
   },
 };
 
-export function formatToProofRLP(rawData: string[]): string {
-  return ethers.utils.RLP.encode(
-    rawData.map((d) => ethers.utils.RLP.decode(d)),
-  );
-}
+export const formatToProofRLP = (rawData: Hex[]): Hex => {
+  return toRlp(rawData.map((d: Hex) => fromRlp(d, 'hex')));
+};
 
 export const getProof = async (
-  provider:
-    | ethers.providers.JsonRpcBatchProvider
-    | ethers.providers.JsonRpcProvider,
-  address: string,
+  client: PublicClient,
+  address: Hex,
   storageKeys: string[],
   blockNumber: number,
-) => {
-  return await provider.send('eth_getProof', [
-    address,
-    storageKeys,
-    BigNumber.from(blockNumber).toHexString(),
-  ]);
+): Promise<Proof> => {
+  return (await client.request({
+    method: 'eth_getProof' as any,
+    params: [address, storageKeys, toHex(blockNumber)] as any,
+  })) as unknown as Proof;
 };
 
 export const getExtendedBlock = async (
-  provider:
-    | ethers.providers.JsonRpcBatchProvider
-    | ethers.providers.JsonRpcProvider,
+  client: PublicClient,
   blockNumber: number,
-) => {
-  return provider.send('eth_getBlockByNumber', [
-    BigNumber.from(blockNumber).toHexString(),
-    false,
-  ]);
+): Promise<Block> => {
+  return client.getBlock({
+    blockNumber: BigInt(blockNumber),
+    includeTransactions: false,
+  });
 };
 
-// IMPORTANT valid only for post-London blocks, as it includes `baseFeePerGas`
-export function prepareBLockRLP(rawBlock: any) {
-  const rawData = [
+// IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
+export const prepareBLockRLP = (rawBlock: Block): Hex => {
+  const rawData: Hex[] = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,
     rawBlock.miner,
     rawBlock.stateRoot,
     rawBlock.transactionsRoot,
     rawBlock.receiptsRoot,
-    rawBlock.logsBloom,
-    '0x', //BigNumber.from(rawBlock.difficulty).toHexString(),
-    BigNumber.from(rawBlock.number).toHexString(),
-    BigNumber.from(rawBlock.gasLimit).toHexString(),
-    rawBlock.gasUsed === '0x0'
-      ? '0x'
-      : BigNumber.from(rawBlock.gasUsed).toHexString(),
-    BigNumber.from(rawBlock.timestamp).toHexString(),
+    rawBlock.logsBloom as Hex,
+    '0x', //toHex(rawBlock.difficulty),
+    toHex(rawBlock.number || 0), // 0 to account for type null
+    toHex(rawBlock.gasLimit),
+    toHex(rawBlock.gasUsed),
+    toHex(rawBlock.timestamp),
     rawBlock.extraData,
     rawBlock.mixHash,
-    rawBlock.nonce,
-    BigNumber.from(rawBlock.baseFeePerGas).toHexString(),
-    rawBlock.withdrawalsRoot,
+    rawBlock.nonce as Hex,
+    toHex(rawBlock.baseFeePerGas || 0), // 0 to account for type null
+    rawBlock.withdrawalsRoot as Hex,
   ];
-  console.log('raw data array: ', rawData);
-  return ethers.utils.RLP.encode(rawData);
-}
+  return toRlp(rawData);
+};
 
-export function getSolidityStorageSlotBytes(
-  mappingSlot: BytesLike,
-  key: string,
-) {
-  const slot = hexZeroPad(mappingSlot, 32);
-  return hexStripZeros(
-    keccak256(defaultAbiCoder.encode(['address', 'uint256'], [key, slot])),
+export const getSolidityStorageSlotBytes = (
+  mappingSlot: Hex,
+  key: Hex,
+): Hex => {
+  const slot = pad(mappingSlot).toString();
+  return (
+    //hexStripZeros
+    keccak256(
+      encodeAbiParameters(parseAbiParameters('address, uint256'), [
+        key,
+        BigInt(slot),
+      ]),
+    )
   );
-}
+};
 
 export function getSolidityTwoLevelStorageSlotHash(
-  rawSlot: string,
-  voter: string,
+  rawSlot: Hex,
+  voter: Hex,
   chainId: number,
 ) {
-  const abiCoder = new ethers.utils.AbiCoder();
   // ABI Encode the first level of the mapping
   // abi.encode(address(voter), uint256(MAPPING_SLOT))
   // The keccak256 of this value will be the "slot" of the inner mapping
-  const firstLevelEncoded = abiCoder.encode(
-    ['address', 'uint256'],
-    [voter, ethers.BigNumber.from(rawSlot)],
+  const firstLevelEncoded = encodeAbiParameters(
+    [
+      { name: 'voter', type: 'address' },
+      { name: 'rawSlot', type: 'uint256' },
+    ],
+    [voter, BigInt(rawSlot)],
   );
 
   // ABI Encode the second level of the mapping
   // abi.encode(uint256(chainId))
-  const secondLevelEncoded = abiCoder.encode(
-    ['uint256'],
-    [ethers.BigNumber.from(chainId)],
+  const secondLevelEncoded = encodeAbiParameters(
+    [{ name: 'chainId', type: 'uint256' }],
+    [BigInt(chainId)],
   );
 
   // Compute the storage slot of [address][uint256]
   // keccak256(abi.encode(uint256(chainId)) . abi.encode(address(voter), uint256(MAPPING_SLOT)))
-  return ethers.utils.keccak256(
-    ethers.utils.concat([
-      secondLevelEncoded,
-      ethers.utils.keccak256(firstLevelEncoded),
-    ]),
-  );
+  return keccak256(concat([secondLevelEncoded, keccak256(firstLevelEncoded)]));
 }
 
 export function getVoteBalanceSlot(
@@ -136,35 +148,3 @@ export function getVoteBalanceSlot(
     ? slots[underlyingAsset.toLowerCase()].delegation || 64
     : slots[underlyingAsset.toLowerCase()].balance || 0;
 }
-
-const generateProofs = async (
-  provider: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider,
-  token: string,
-  slot: string,
-  blockNumber: number,
-) => {
-  const rawAccountProofData = await getProof(
-    provider,
-    token,
-    [slot],
-    blockNumber,
-  );
-
-  // storageProofRLP
-  return formatToProofRLP(rawAccountProofData.storageProof[0].proof);
-};
-
-export const generateProofsRepresentativeByChain = async (
-  provider: StaticJsonRpcBatchProvider | ethers.providers.JsonRpcProvider,
-  token: string,
-  rawSlot: number,
-  voter: string,
-  chainId: number,
-  blockNumber: number,
-) => {
-  const hexSlot = utils.hexlify(rawSlot);
-  const slot = getSolidityTwoLevelStorageSlotHash(hexSlot, voter, chainId);
-
-  // storageProofRLP
-  return generateProofs(provider, token, slot, blockNumber);
-};

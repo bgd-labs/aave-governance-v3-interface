@@ -16,27 +16,26 @@ import {
   VotersData,
   VotingBalance,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
-import { produce } from 'immer';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { Draft, produce } from 'immer';
+import { Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
-import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { ipfsGateway } from '../../utils/configs';
+import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import {
-  generateProofsRepresentativeByChain,
-  slots,
-} from '../../web3/utils/helperToGetProofs';
-import {
   formatBalances,
+  getProofOfRepresentative,
   getVotingAssetsWithSlot,
   getVotingProofs,
 } from '../utils/formatBalances';
@@ -87,7 +86,7 @@ export interface IProposalsSlice {
   setDetailedPayloadsData: (key: string, data: Payload) => void;
   getDetailedPayloadsData: (
     chainId: number,
-    payloadsController: string,
+    payloadsController: Hex,
     ids: number[],
   ) => Promise<void>;
 
@@ -211,7 +210,7 @@ export const createProposalsSlice: StoreSlice<
     IProposalsHistorySlice &
     IRepresentationsSlice &
     IEnsSlice &
-    IProviderSlice
+    IRpcSwitcherSlice
 > = (set, get) => ({
   isInitialLoading: true,
 
@@ -220,7 +219,10 @@ export const createProposalsSlice: StoreSlice<
   getTotalProposalCount: async (internal) => {
     set({ totalProposalCountLoading: true });
     const totalProposalCount =
-      await get().govDataService.getTotalProposalsCount();
+      await get().govDataService.getTotalProposalsCount(
+        get().totalProposalCount,
+        get().setRpcError,
+      );
     set({ totalProposalCount, totalProposalCountLoading: false });
     if (internal) {
       set({ isInitialLoading: false });
@@ -244,6 +246,7 @@ export const createProposalsSlice: StoreSlice<
                 await get().govDataService.getTotalPayloadsCount(
                   payloadsController,
                   chainId,
+                  get().setRpcError,
                 );
 
               set({
@@ -284,7 +287,23 @@ export const createProposalsSlice: StoreSlice<
 
   getPaginatedProposalsData: async () => {
     if (get().isInitialLoading) {
-      await get().getTotalProposalCount();
+      const rpcUrl = get().appClients[appConfig.govCoreChainId].rpcUrl;
+
+      try {
+        await get().getTotalProposalCount();
+        get().setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+      } catch {
+        get().setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+        return;
+      }
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData(activeIds);
@@ -354,7 +373,7 @@ export const createProposalsSlice: StoreSlice<
   setGovCoreConfigs: async () => {
     if (!get().configs.length) {
       const { configs, contractsConstants } =
-        await get().govDataService.getGovCoreConfigs();
+        await get().govDataService.getGovCoreConfigs(get().setRpcError);
       set({ configs, contractsConstants });
     }
   },
@@ -388,21 +407,28 @@ export const createProposalsSlice: StoreSlice<
       ) && payloadsController;
 
     if (payloadController) {
-      const payloadsData = await get().govDataService.getPayloads(
-        chainId,
-        payloadsController,
-        ids,
-      );
+      const rpcUrl = get().appClients[chainId].rpcUrl;
 
-      set((state) =>
-        produce(state, (draft) => {
-          payloadsData.forEach((payload) => {
-            draft.detailedPayloadsData[
-              `${payload.payloadsController}_${payload.id}`
-            ] = payload;
-          });
-        }),
-      );
+      try {
+        const payloadsData = await get().govDataService.getPayloads(
+          chainId,
+          payloadsController,
+          ids,
+        );
+
+        set((state) =>
+          produce(state, (draft) => {
+            payloadsData.forEach((payload) => {
+              draft.detailedPayloadsData[
+                `${payload.payloadsController}_${payload.id}`
+              ] = payload;
+            });
+          }),
+        );
+        get().setRpcError({ isError: false, rpcUrl, chainId });
+      } catch {
+        get().setRpcError({ isError: true, rpcUrl, chainId });
+      }
     }
   },
 
@@ -492,7 +518,7 @@ export const createProposalsSlice: StoreSlice<
       set({ detailedProposalsDataLoading: true });
       set((state) =>
         produce(state, (draft) => {
-          draft.detailedProposalsData[id] = data;
+          draft.detailedProposalsData[id] = data as Draft<ProposalData>;
         }),
       );
       set({ detailedProposalsDataLoading: false });
@@ -500,7 +526,7 @@ export const createProposalsSlice: StoreSlice<
   },
 
   getDetailedProposalsData: async (ids, from, to, pageSize) => {
-    const userAddress = get().getActiveAddress();
+    const userAddress = get().activeWallet?.address;
     const representativeAddress = get().representative.address;
 
     set((state) =>
@@ -537,29 +563,35 @@ export const createProposalsSlice: StoreSlice<
           fr <= 0 ? (get().totalProposalCount > 9 ? 1 : 0) : fr,
           to <= 0 ? 0 : to,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
+          PAGE_SIZE,
+          get().setRpcError,
         );
       } else if ((from || from === 0 || from === -1) && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
           from < 0 ? 0 : from,
           0,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
           pageSize,
+          get().setRpcError,
         );
       } else if (from && from > 0 && to && to > 0 && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
           from,
           to,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
+          PAGE_SIZE,
+          get().setRpcError,
         );
       } else if (!isProposalNotInCache) {
         const proposals = ids.map((id) => get().detailedProposalsData[id]);
         proposalsData = await get().govDataService.getOnlyVotingMachineData(
           proposals,
           userAddress,
-          representativeAddress,
+          representativeAddress as Hex,
+          get().setRpcError,
         );
       }
 
@@ -642,7 +674,7 @@ export const createProposalsSlice: StoreSlice<
                 proposal.ipfsHash,
                 draft.detailedProposalsData[proposal.id]?.title,
               ),
-            };
+            } as Draft<ProposalData>;
           });
         }),
       );
@@ -698,7 +730,10 @@ export const createProposalsSlice: StoreSlice<
 
     const interval = setInterval(async () => {
       const totalProposalCountFromContract =
-        await get().govDataService.getTotalProposalsCount();
+        await get().govDataService.getTotalProposalsCount(
+          get().totalProposalCount,
+          get().setRpcError,
+        );
       const currentProposalCount = get().totalProposalCount;
 
       if (totalProposalCountFromContract > currentProposalCount) {
@@ -727,7 +762,7 @@ export const createProposalsSlice: StoreSlice<
     set({ blockHashBalance: {} });
   },
   getL1Balances: async (ids) => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
     const blockHashes = get().blockHashBalance;
 
     const newBlockHashes: {
@@ -776,7 +811,8 @@ export const createProposalsSlice: StoreSlice<
           ) {
             newBlockHashes.push({
               hash: proposalData.votingMachineData.l1BlockHash,
-              underlyingAssets: proposalData.votingMachineData.votingAssets,
+              underlyingAssets: proposalData.votingMachineData
+                .votingAssets as Hex[],
               votingChainId: proposalData.votingChainId,
             });
           }
@@ -795,9 +831,9 @@ export const createProposalsSlice: StoreSlice<
       const balances = await Promise.all(
         newBlockHashes.map((item) => {
           return get().delegationService.getDelegatedVotingPowerByBlockHash(
-            item.hash,
+            item.hash as Hex,
             userAddress,
-            item.underlyingAssets,
+            item.underlyingAssets as Hex[],
           );
         }),
       );
@@ -832,8 +868,8 @@ export const createProposalsSlice: StoreSlice<
   getProposalCreatorBalance: async (creator, underlyingAssets) => {
     const creatorDelegatedPower =
       await get().delegationService.getDelegatedPropositionPower(
-        underlyingAssets,
-        creator,
+        underlyingAssets as Hex[],
+        creator as Hex,
       );
 
     const creatorPropositionPower = creatorDelegatedPower.map((power) =>
@@ -901,7 +937,8 @@ export const createProposalsSlice: StoreSlice<
           if (ENSDataExists(get(), vote.address, ENSProperty.NAME)) {
             newVotersData.push({
               ...vote,
-              ensName: get().ensData[vote.address.toLocaleLowerCase()].name,
+              ensName:
+                get().ensData[vote.address.toLocaleLowerCase() as Hex].name,
             });
           } else {
             newVotersData.push(vote);
@@ -927,7 +964,7 @@ export const createProposalsSlice: StoreSlice<
             } else {
               await get().fetchEnsNameByAddress(vote.address);
               const ensName =
-                get().ensData[vote.address.toLocaleLowerCase()].name;
+                get().ensData[vote.address.toLocaleLowerCase() as Hex].name;
               if (ensName) {
                 return {
                   ...vote,
@@ -1062,22 +1099,25 @@ export const createProposalsSlice: StoreSlice<
     baseBalanceSlotRaw,
     withSlot,
   ) => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
       const proposalData = get().detailedProposalsData[proposalId];
 
       if (checkHash(proposalData.snapshotBlockHash).notZero) {
-        const block = await get().appProviders[
+        const block = await get().appClients[
           appConfig.govCoreChainId
-        ].instance.getBlock(proposalData.snapshotBlockHash);
+        ].instance.getBlock({
+          blockHash: proposalData.snapshotBlockHash as Hex,
+        });
 
         await get().executeTx({
+          // @ts-ignore
           body: () => {
             get().setModalOpen(true);
             return get().govDataService.sendProofs(
               activeAddress,
-              block.number,
+              Number(block.number),
               asset,
               votingChainId,
               baseBalanceSlotRaw,
@@ -1127,7 +1167,7 @@ export const createProposalsSlice: StoreSlice<
     balances,
     voterAddress,
   }) => {
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
     const proposal = get().detailedProposalsData[proposalId];
     const govDataService = get().govDataService;
 
@@ -1137,27 +1177,19 @@ export const createProposalsSlice: StoreSlice<
 
         if (voterAddress) {
           const proofs = await getVotingProofs(
-            proposal.snapshotBlockHash,
+            proposal.snapshotBlockHash as Hex,
             formattedBalances,
             govDataService,
-            voterAddress,
+            voterAddress as Hex,
           );
 
           if (proofs && proofs.length > 0) {
-            const blockNumber = await govDataService.getCoreBlockNumber(
-              proposal.snapshotBlockHash,
+            const proofOfRepresentative = await getProofOfRepresentative(
+              proposal.votingMachineData.l1BlockHash,
+              govDataService,
+              voterAddress as Hex,
+              votingChainId,
             );
-
-            const proofOfRepresentative =
-              await generateProofsRepresentativeByChain(
-                get().appProviders[appConfig.govCoreChainId].instance,
-                appConfig.govCoreConfig.contractAddress,
-                slots[appConfig.govCoreConfig.contractAddress.toLowerCase()]
-                  .balance,
-                voterAddress,
-                votingChainId,
-                blockNumber,
-              );
 
             await get().executeTx({
               body: () => {
@@ -1171,7 +1203,7 @@ export const createProposalsSlice: StoreSlice<
                         getVotingAssetsWithSlot(formattedBalances),
                       proofs,
                       signerAddress: activeAddress,
-                      voterAddress,
+                      voterAddress: voterAddress as Hex,
                       proofOfRepresentation: proofOfRepresentative,
                     })
                   : govDataService.vote({
@@ -1179,7 +1211,7 @@ export const createProposalsSlice: StoreSlice<
                       proposalId,
                       support,
                       proofs,
-                      voterAddress,
+                      voterAddress: voterAddress as Hex,
                       proofOfRepresentation: proofOfRepresentative,
                     });
               },
@@ -1313,7 +1345,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.createPayload(
           chainId,
           payloadActions,
-          payloadsController,
+          payloadsController as Hex,
         );
       },
       params: {
@@ -1367,9 +1399,9 @@ export const createProposalsSlice: StoreSlice<
         body: () => {
           get().setModalOpen(true);
           return govDataService.createProposal(
-            votingPortalAddress,
+            votingPortalAddress as Hex,
             formattedPayloads,
-            ipfsHash,
+            ipfsHash as Hex,
             cancellationFee,
           );
         },

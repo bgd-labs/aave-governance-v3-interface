@@ -1,6 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import makeBlockie from 'ethereum-blockies-base64';
 import React, { useEffect, useState } from 'react';
+import { Hex } from 'viem';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
@@ -137,15 +138,19 @@ export function RepresentingButton() {
                   path: { stroke: theme.palette.$textSecondary },
                 },
               }}
-              href={`${
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                  .blockExplorerUrls[0]
-              }address/${representative.address}`}>
+              href={`${chainInfoHelper.getChainParameters(
+                appConfig.govCoreChainId,
+              ).blockExplorers?.default.url}/address/${
+                representative.address
+              }`}>
               <Box>
-                {ENSDataExists(store, representative.address, ENSProperty.NAME)
-                  ? ensData[representative.address.toLocaleLowerCase()].name
+                {ENSDataExists(
+                  store,
+                  representative.address as Hex,
+                  ENSProperty.NAME,
+                )
+                  ? ensData[representative.address.toLocaleLowerCase() as Hex]
+                      .name
                   : representative.address}
               </Box>
               <IconBox

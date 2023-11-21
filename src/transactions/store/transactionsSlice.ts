@@ -4,8 +4,10 @@ import {
   ITransactionsSlice,
   IWalletSlice,
   StoreSlice,
+  TransactionStatus,
   WalletType,
-} from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/frontend-web3-utils';
+import { Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
@@ -17,14 +19,13 @@ import {
   IRepresentationsSlice,
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
-import { selectAppProviders } from '../../rpcSwitcher/store/providerSelectors';
-import { IProviderSlice } from '../../rpcSwitcher/store/providerSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 type BaseTx = BT & {
-  status?: number;
+  status?: TransactionStatus;
   pending: boolean;
   walletType: WalletType;
 };
@@ -147,6 +148,14 @@ export type TransactionUnion =
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion>;
 
+export type TxWithStatus = TransactionUnion & {
+  status?: TransactionStatus;
+  pending: boolean;
+  replacedTxHash?: Hex;
+};
+
+export type AllTransactions = TxWithStatus[];
+
 export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,
   IProposalsListCacheSlice &
@@ -158,7 +167,7 @@ export const createTransactionsSlice: StoreSlice<
     IProposalsHistorySlice &
     IRepresentationsSlice &
     IEnsSlice &
-    IProviderSlice
+    IRpcSwitcherSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
@@ -170,7 +179,7 @@ export const createTransactionsSlice: StoreSlice<
         case 'createPayload':
           await get().getDetailedPayloadsData(
             data.payload.chainId,
-            data.payload.payloadsController,
+            data.payload.payloadsController as Hex,
             [data.payload.payloadId],
           );
           set({
@@ -229,8 +238,7 @@ export const createTransactionsSlice: StoreSlice<
           break;
       }
     },
-    defaultProviders: get()?.initProvidersLoaded
-      ? selectAppProviders(get())
-      : {},
+    // for initial don't set default clients because of rpc switcher flow
+    defaultClients: {},
   })(set, get),
 });

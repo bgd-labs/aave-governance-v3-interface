@@ -1,18 +1,29 @@
 'use client';
 
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
 import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
+import { Hex } from 'viem';
+
+import WarningIcon from '/public/images/icons/warningIcon.svg';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
-import { BackButton3D, BigButton, Container } from '../../ui';
+import {
+  BackButton3D,
+  BigButton,
+  BoxWith3D,
+  Container,
+  Link,
+  NoSSR,
+} from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
+import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import {
   checkIsGetAddressByENSNamePending,
@@ -24,6 +35,7 @@ import { DelegateModal } from './DelegateModal';
 import { DelegateTableWrapper } from './DelegateTableWrapper';
 
 export function DelegatePage() {
+  const theme = useTheme();
   const router = useRouter();
 
   const store = useStore();
@@ -38,7 +50,6 @@ export function DelegatePage() {
     setIsDelegateChangedView,
     delegate,
     incorrectDelegationToFields,
-
     ensData,
   } = store;
 
@@ -58,15 +69,11 @@ export function DelegatePage() {
     setError,
     loading,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    isError,
-    txWalletType,
     fullTxErrorMessage,
     setFullTxErrorMessage,
     executeTxWithLocalStatuses,
+    tx,
   } = useLastTxLocalStatus({
     type: 'delegate',
     payload: {
@@ -80,7 +87,7 @@ export function DelegatePage() {
     getDelegateData();
     setIsEdit(false);
     setIsDelegateChangedView(false);
-  }, [activeWallet?.accounts[0]]);
+  }, [activeWallet?.address]);
 
   useEffect(() => {
     if (!!delegateData.length) {
@@ -90,21 +97,22 @@ export function DelegatePage() {
     }
   }, [delegateData.length]);
 
+  // TODO: need fix `ensName` should be string
   useEffect(() => {
     setFormDelegateData(
       delegateData.map((data) => {
         return {
           underlyingAsset: data.underlyingAsset,
           votingToAddress:
-            ensData[data.votingToAddress.toLocaleLowerCase()]?.name ||
-            data.votingToAddress,
+            (ensData[data.votingToAddress.toLocaleLowerCase() as Hex]
+              ?.name as Hex) || data.votingToAddress,
           propositionToAddress:
-            ensData[data.propositionToAddress.toLocaleLowerCase()]?.name ||
-            data.propositionToAddress,
+            (ensData[data.propositionToAddress.toLocaleLowerCase() as Hex]
+              ?.name as Hex) || data.propositionToAddress,
         };
       }),
     );
-  }, [activeWallet?.accounts[0], delegateData]);
+  }, [activeWallet?.address, delegateData]);
 
   const handleFormSubmit = ({
     formDelegateData,
@@ -115,9 +123,15 @@ export function DelegatePage() {
       return {
         underlyingAsset: data.underlyingAsset,
         votingToAddress:
-          data.votingToAddress === undefined ? '' : data.votingToAddress,
+          data.votingToAddress === undefined ||
+          data.votingToAddress.toLocaleLowerCase() ===
+            activeWallet?.address.toLocaleLowerCase()
+            ? ''
+            : data.votingToAddress,
         propositionToAddress:
-          data.propositionToAddress === undefined
+          data.propositionToAddress === undefined ||
+          data.propositionToAddress.toLocaleLowerCase() ===
+            activeWallet?.address.toLocaleLowerCase()
             ? ''
             : data.propositionToAddress,
       };
@@ -134,7 +148,6 @@ export function DelegatePage() {
     setDelegateModalOpen(true);
     if (!!stateDelegateData.length && !!submittedFormData.length) {
       await executeTxWithLocalStatuses({
-        errorMessage: 'Tx error',
         callbackFunction: async () =>
           await delegate(stateDelegateData, formDelegateData, timestampTx),
       });
@@ -144,8 +157,68 @@ export function DelegatePage() {
   return (
     <>
       <Container>
-        <Box sx={{ mb: 12 }}>
+        <Box
+          sx={{
+            mb: 12,
+            display: 'flex',
+            flexDirection: 'column',
+            [theme.breakpoints.up('sm')]: {
+              alignItems: 'flex-start',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            },
+          }}>
           <BackButton3D onClick={router.back} isVisibleOnMobile />
+          {activeWallet &&
+            activeWallet.isContractAddress &&
+            activeWallet.walletType === 'WalletConnect' && (
+              <NoSSR>
+                <Box
+                  sx={{
+                    mt: 16,
+                    [theme.breakpoints.up('sm')]: {
+                      mt: 0,
+                      ml: 16,
+                    },
+                  }}>
+                  <BoxWith3D
+                    borderSize={10}
+                    contentColor="$mainLight"
+                    css={{ p: 8, color: '$text' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+                      <IconBox
+                        sx={{
+                          position: 'relative',
+                          top: 4,
+                          mr: 8,
+                          width: 16,
+                          height: 12,
+                          '> svg': {
+                            width: 16,
+                            height: 12,
+                          },
+                        }}>
+                        <WarningIcon />
+                      </IconBox>
+                      <Box>
+                        {texts.delegatePage.walletConnectSafeWarning}{' '}
+                        <Link
+                          css={{
+                            color: '$textSecondary',
+                            fontWeight: 600,
+                            hover: { color: theme.palette.$text },
+                          }}
+                          href="https://github.com/bgd-labs/aave-governance-v3-interface/issues/24"
+                          inNewWindow>
+                          {texts.other.readMore}
+                        </Link>
+                        .
+                      </Box>
+                    </Box>
+                  </BoxWith3D>
+                </Box>
+              </NoSSR>
+            )}
         </Box>
       </Container>
 
@@ -170,7 +243,7 @@ export function DelegatePage() {
                 </BigButton>
                 <BigButton
                   onClick={handleDelegate}
-                  loading={loading || txPending}
+                  loading={loading || tx.pending}
                   disabled={
                     isEqual(
                       delegateData.map((data) => {
@@ -250,25 +323,29 @@ export function DelegatePage() {
                             return {
                               underlyingAsset: data.underlyingAsset,
                               votingToAddress:
-                                data.votingToAddress === undefined
+                                data.votingToAddress === undefined ||
+                                data.votingToAddress.toLocaleLowerCase() ===
+                                  activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.votingToAddress)
-                                  ? getAddressByENSNameIfExists(
-                                      store,
-                                      data.votingToAddress,
-                                    ) ||
-                                    data.votingToAddress.toLocaleLowerCase()
-                                  : data.votingToAddress.toLocaleLowerCase(),
+                                    ? getAddressByENSNameIfExists(
+                                        store,
+                                        data.votingToAddress,
+                                      ) ||
+                                      data.votingToAddress.toLocaleLowerCase()
+                                    : data.votingToAddress.toLocaleLowerCase(),
                               propositionToAddress:
-                                data.propositionToAddress === undefined
+                                data.propositionToAddress === undefined ||
+                                data.propositionToAddress.toLocaleLowerCase() ===
+                                  activeWallet.address.toLocaleLowerCase()
                                   ? ''
                                   : isEnsName(data.propositionToAddress)
-                                  ? getAddressByENSNameIfExists(
-                                      store,
-                                      data.propositionToAddress,
-                                    ) ||
-                                    data.propositionToAddress.toLocaleLowerCase()
-                                  : data.propositionToAddress.toLocaleLowerCase(),
+                                    ? getAddressByENSNameIfExists(
+                                        store,
+                                        data.propositionToAddress,
+                                      ) ||
+                                      data.propositionToAddress.toLocaleLowerCase()
+                                    : data.propositionToAddress.toLocaleLowerCase(),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length
@@ -323,13 +400,9 @@ export function DelegatePage() {
           setError={setError}
           isTxStart={isTxStart}
           setIsTxStart={setIsTxStart}
-          txWalletType={txWalletType}
-          txSuccess={txSuccess}
-          txHash={txHash}
-          txPending={txPending}
-          isError={isError}
           fullTxErrorMessage={fullTxErrorMessage}
           setFullTxErrorMessage={setFullTxErrorMessage}
+          tx={tx}
         />
       )}
     </>

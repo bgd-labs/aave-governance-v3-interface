@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
+import { Hex } from 'viem';
 
 import { getRepresentedAddresses } from '../../../representations/utils/getRepresentedAddresses';
 import { useStore } from '../../../store';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
 import { selectENSAvatar } from '../../store/ensSelectors';
-import { selectActiveWallet } from '../../store/web3Selectors';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
 
 export function WalletWidget() {
   const store = useStore();
-  const activeWallet = useStore(selectActiveWallet);
   const {
+    activeWallet,
     connectWalletModalOpen,
     setConnectWalletModalOpen,
     accountInfoModalOpen,
@@ -20,14 +20,13 @@ export function WalletWidget() {
     allTransactionModalOpen,
     setAllTransactionModalOpen,
     resetWalletConnectionError,
-    getActiveAddress,
     representative,
     representationData,
     ensData,
     fetchEnsNameByAddress,
   } = store;
 
-  const activeAddress = getActiveAddress() || '';
+  const activeAddress = activeWallet?.address || '';
 
   const [shownUserName, setShownUserName] = useState<string | undefined>(
     activeAddress,
@@ -41,7 +40,7 @@ export function WalletWidget() {
     if (activeAddress) {
       setShownUserName(activeAddress);
       fetchEnsNameByAddress(activeAddress).then(() => {
-        const addressData = ensData[activeAddress.toLocaleLowerCase()];
+        const addressData = ensData[activeAddress.toLocaleLowerCase() as Hex];
         setShownUserName(
           addressData && addressData.name ? addressData.name : activeAddress,
         );

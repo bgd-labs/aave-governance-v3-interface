@@ -2,8 +2,7 @@ import {
   CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { IGovernanceDataHelper__factory } from '@bgd-labs/aave-governance-ui-helpers/src/contracts/IGovernanceDataHelper__factory';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -11,7 +10,7 @@ import { ProposalPageSSR } from '../src/proposals/components/proposalList/Propos
 import { metaTexts } from '../src/ui/utils/metaTexts';
 import { appConfig } from '../src/utils/appConfig';
 import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
-import { initialProviders } from '../src/utils/initialProviders';
+import { initialClients } from '../src/utils/initialClients';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -88,15 +87,12 @@ export default async function Page({
     }
   }
 
-  const govCoreDataHelper = IGovernanceDataHelper__factory.connect(
-    appConfig.govCoreConfig.dataHelperContractAddress,
-    initialProviders[appConfig.govCoreChainId],
-  );
-
-  const { configs, contractsConstants } = await getGovCoreConfigs(
-    govCoreDataHelper,
-    appConfig.govCoreConfig.contractAddress,
-  );
+  const { configs, contractsConstants } = await getGovCoreConfigs({
+    client: initialClients[appConfig.govCoreChainId],
+    govCoreContractAddress: appConfig.govCoreConfig.contractAddress,
+    govCoreDataHelperContractAddress:
+      appConfig.govCoreConfig.dataHelperContractAddress,
+  });
 
   const cachedProposalsData = cachedIdsByPage.map((id) => {
     const proposal = data.proposals.filter((proposal) => proposal.id === id)[0];

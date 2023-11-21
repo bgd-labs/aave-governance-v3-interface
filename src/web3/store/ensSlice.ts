@@ -1,6 +1,7 @@
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { produce } from 'immer';
+import { Hex } from 'viem';
 
 import {
   getLocalStorageEnsAddresses,
@@ -27,22 +28,22 @@ export type EnsDataItem = {
 };
 
 export interface IEnsSlice {
-  ensData: Record<string, EnsDataItem>;
+  ensData: Record<Hex, EnsDataItem>;
   addressesNameInProgress: Record<string, boolean>;
   addressesAvatarInProgress: Record<string, boolean>;
 
   initEns: () => void;
   setEns: (ens: Record<string, EnsDataItem>) => void;
   setProperty: (
-    address: string,
+    address: Hex,
     property: ENSProperty,
     value?: string,
     isExists?: boolean,
   ) => void;
 
-  fetchEnsNameByAddress: (address: string) => Promise<void>;
-  fetchEnsAvatarByAddress: (address: string, name?: string) => Promise<void>;
-  fetchAddressByEnsName: (name: string) => Promise<string | undefined>;
+  fetchEnsNameByAddress: (address: Hex) => Promise<void>;
+  fetchEnsAvatarByAddress: (address: Hex, name?: string) => Promise<void>;
+  fetchAddressByEnsName: (name: string) => Promise<Hex | undefined>;
 }
 
 export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
@@ -55,9 +56,9 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
     if (ens) {
       set((state) =>
         produce(state, (draft) => {
-          const parsedEns: Record<string, EnsDataItem> = JSON.parse(ens);
+          const parsedEns: Record<Hex, EnsDataItem> = JSON.parse(ens);
           for (const key in parsedEns) {
-            draft.ensData[key] = parsedEns[key];
+            draft.ensData[key as Hex] = parsedEns[key as Hex];
           }
         }),
       );
@@ -67,7 +68,7 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
     set((state) =>
       produce(state, (draft) => {
         for (const key in ens) {
-          draft.ensData[key] = ens[key];
+          draft.ensData[key as Hex] = ens[key];
         }
       }),
     );
@@ -93,7 +94,7 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
   },
 
   fetchEnsNameByAddress: async (address) => {
-    const lowercasedAddress = address.toLocaleLowerCase();
+    const lowercasedAddress = address.toLocaleLowerCase() as Hex;
     // check if already exist or pending
     if (
       ENSDataHasBeenFetched(get(), lowercasedAddress, ENSProperty.NAME) ||
@@ -119,7 +120,7 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
     get().setProperty(lowercasedAddress, ENSProperty.NAME, name);
   },
   fetchEnsAvatarByAddress: async (address, name) => {
-    const lowercasedAddress = address.toLocaleLowerCase();
+    const lowercasedAddress = address.toLocaleLowerCase() as Hex;
     // check if already exist or pending
     if (
       ENSDataHasBeenFetched(get(), lowercasedAddress, ENSProperty.AVATAR) ||
@@ -153,8 +154,9 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
   },
   fetchAddressByEnsName: async (name) => {
     const address = Object.keys(get().ensData).find(
-      (address) => get().ensData[address.toLocaleLowerCase()].name === name,
-    );
+      (address) =>
+        get().ensData[address.toLocaleLowerCase() as Hex].name === name,
+    ) as Hex | undefined;
 
     if (address) {
       return address;
@@ -176,11 +178,11 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
 
     if (addressFromEns) {
       get().setProperty(
-        addressFromEns.toLocaleLowerCase(),
+        addressFromEns.toLocaleLowerCase() as Hex,
         ENSProperty.NAME,
         name,
       );
-      return addressFromEns;
+      return addressFromEns as Hex;
     }
 
     return;

@@ -202,6 +202,8 @@ export const texts = {
     tableHeaderProposition: 'Proposition',
     tableItemDelegated: 'Delegated',
     tableItemNotDelegated: 'Not Delegated',
+    walletConnectSafeWarning:
+      'Note that when connecting a Safe wallet via WalletConnect, the delegation transaction tracking is broken on our side.',
   },
   representationsPage: {
     notConnectedWallet: 'Wallet is not connected',
@@ -239,8 +241,10 @@ export const texts = {
     pendingDescription: 'Waiting while the transaction is getting executed',
     success: 'Success',
     error: 'Error',
+    replaced: 'Replaced',
     executed: 'Transaction executed',
     notExecuted: `The transaction failed`,
+    txReplaced: `The transaction replaced`,
     tryAgain: 'Try again',
     testTransaction: 'You made test transaction',
     createPayloadTx: 'You create payload',
@@ -250,6 +254,7 @@ export const texts = {
     activateVotingOnVotingMachineTx:
       'You activate voting on voting machine for the proposal',
     voteTx: 'You voted',
+    voteTxAsRepresentative: 'as a representative of',
     closeVoteTx: 'You closed voting for the proposal',
     sendVoteResultsTx: 'and sent voting results to',
     executeProposalTx: 'You executed the proposal',
@@ -307,6 +312,8 @@ export const texts = {
     copied: 'Copied',
     copy: 'Copy',
     viewOnExplorer: 'View on explorer',
+    transactionHash: 'Transaction hash',
+    replacedTransactionHash: 'Replaced transaction hash',
     cancel: 'Cancel',
     close: 'Close',
     required: 'Required',
@@ -335,7 +342,14 @@ export const texts = {
     on: 'On',
     copyError: 'Copy error text',
     userNotFound: 'User not found',
+    readMore: 'Read more',
     rpcIsNotSupported: "This RPC doesn't support our contracts logic",
+    rpcError: (rpcErrorsLength: number, rpcUrl?: string) =>
+      `At the moment we cannot get data from ${
+        rpcErrorsLength > 1
+          ? "multiple RPC's"
+          : `this RPC (${!!rpcUrl && rpcUrl})`
+      }. Try to use the application later or go to the RPC change screen.`,
   },
   terms: {
     description:

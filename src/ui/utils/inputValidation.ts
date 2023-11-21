@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { isAddress } from 'viem';
 
 import { texts } from './texts';
 
@@ -6,12 +6,12 @@ export const required = (value: any) =>
   value || value === 0 ? undefined : texts.other.requiredValidation;
 
 export const addressValidator = (value: any) =>
-  ethers.utils.isAddress(value) || value === '' || value === undefined
+  isAddress(value) || value === '' || value === undefined
     ? undefined
     : texts.other.addressValidation;
 
 export const ensNameOrAddressValidator = (value: string) =>
-  (value && (value.endsWith('.eth') || ethers.utils.isAddress(value))) ||
+  (value && (value.endsWith('.eth') || isAddress(value))) ||
   value === '' ||
   value === undefined
     ? undefined

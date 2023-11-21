@@ -1,9 +1,11 @@
+import { Hex } from 'viem';
+
 import { DelegateData } from '../types';
 
 interface GetFormDelegateDataParams {
-  underlyingAsset?: string;
-  votingToAddress?: string;
-  propositionToAddress?: string;
+  underlyingAsset?: Hex;
+  votingToAddress?: Hex | '';
+  propositionToAddress?: Hex | '';
   formDelegateData?: DelegateData[];
 }
 

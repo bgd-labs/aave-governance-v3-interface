@@ -81,16 +81,16 @@ export function HelpVotingModal() {
               setTxSuccess(false);
             }
           : isVoteButtonClick
-          ? () => {
-              setIsVoteButtonClick(false);
-              setTxSuccess(false);
-            }
-          : !isFirstStepOnMobile
-          ? () => setIsFirstStepOnMobile(true)
-          : () => {
-              setIsHelpVotingModalOpen(false);
-              setIsHelpNavigationModalOpen(true);
-            }
+            ? () => {
+                setIsVoteButtonClick(false);
+                setTxSuccess(false);
+              }
+            : !isFirstStepOnMobile
+              ? () => setIsFirstStepOnMobile(true)
+              : () => {
+                  setIsHelpVotingModalOpen(false);
+                  setIsHelpNavigationModalOpen(true);
+                }
       }
       withCloseButton>
       <HelpModalContainer
@@ -431,8 +431,8 @@ export function HelpVotingModal() {
               !txPending && txSuccess
                 ? texts.faq.voting.txSuccess
                 : txPending && !txSuccess
-                ? texts.faq.voting.txPending
-                : texts.faq.voting.txStart
+                  ? texts.faq.voting.txPending
+                  : texts.faq.voting.txStart
             }
             withTxOnMobile={!isFirstStepOnTxMobile}
             txStartImage={
@@ -446,8 +446,8 @@ export function HelpVotingModal() {
                   ? ProposalTxVotedAgainstImageDark
                   : ProposalTxVotedAgainstImage
                 : theme.palette.mode === 'dark'
-                ? ProposalTxVotedForImageDark
-                : ProposalTxVotedForImage
+                  ? ProposalTxVotedForImageDark
+                  : ProposalTxVotedForImage
             }
             txStartImageMobile={
               theme.palette.mode === 'dark'
@@ -460,8 +460,8 @@ export function HelpVotingModal() {
                   ? 'images/helpModals/proposalTxVotedAgainstDark.svg'
                   : 'images/helpModals/proposalTxVotedAgainst.svg'
                 : theme.palette.mode === 'dark'
-                ? 'images/helpModals/proposalTxVotedForDark.svg'
-                : 'images/helpModals/proposalTxVotedFor.svg'
+                  ? 'images/helpModals/proposalTxVotedForDark.svg'
+                  : 'images/helpModals/proposalTxVotedFor.svg'
             }
             txPending={txPending}
             txSuccess={txSuccess}
@@ -489,8 +489,8 @@ export function HelpVotingModal() {
                 {!txPending && txSuccess
                   ? texts.faq.voting.txSuccess
                   : txPending && !txSuccess
-                  ? texts.faq.voting.txPending
-                  : texts.faq.voting.txStart}
+                    ? texts.faq.voting.txPending
+                    : texts.faq.voting.txStart}
               </Box>
               {!txPending && !txSuccess && (
                 <>

@@ -1,35 +1,44 @@
-import { ethers } from 'ethers';
+import {
+  TransactionStatus,
+  TxAdapter,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils';
+import { zeroAddress, zeroHash } from 'viem';
 
 import { TransactionUnion } from '../../transactions/store/transactionsSlice';
 
 export type TransactionItem = TransactionUnion & {
   status?: number | undefined;
   pending: boolean;
+  walletType: WalletType;
 };
 
 export const generateStatus = () => {
   if (Math.round(Math.random()) > 0) {
-    return 1;
+    return TransactionStatus.Success;
   } else {
-    return 2;
+    return TransactionStatus.Reverted;
   }
 };
 
 export const makeTestTransaction = (
   timestamp: number,
   pending: boolean,
-  status?: number,
+  status?: TransactionStatus,
 ) => {
   return {
+    adapter: TxAdapter.Ethereum,
+    txKey: zeroHash,
     type: 'test',
     chainId: 1,
-    from: ethers.constants.AddressZero,
-    hash: ethers.constants.HashZero,
+    from: zeroAddress,
+    hash: zeroHash,
     nonce: timestamp,
     pending: pending,
-    to: ethers.constants.AddressZero,
+    to: zeroAddress,
     timestamp: timestamp,
     localTimestamp: timestamp,
+    walletType: 'Injected',
     status,
   } as TransactionItem;
 };

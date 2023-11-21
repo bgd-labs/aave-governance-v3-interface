@@ -72,7 +72,7 @@ export function RpcSwitcherTableItemField({
 }: RpcSwitcherTableItemAddressProps) {
   const isRpcUrlToVisible = rpcUrl !== rpcUrlTo;
 
-  const { checkRpcUrl, rpcHasError } = useStore();
+  const { checkRpcUrl, rpcFormErrors, rpcAppErrors } = useStore();
 
   useEffect(() => {
     if (rpcUrlTo && rpcUrlTo !== rpcUrl && chainId) {
@@ -82,7 +82,16 @@ export function RpcSwitcherTableItemField({
 
   return (
     <>
-      {!isEdit && !isViewChanges && <Text rpcUrl={rpcUrl} />}
+      {!isEdit && !isViewChanges && (
+        <Text
+          rpcUrl={rpcUrl}
+          isError={
+            Object.values(rpcAppErrors).filter(
+              (error) => error.chainId === chainId,
+            )[0].error
+          }
+        />
+      )}
       {isEdit && !isViewChanges && (
         <Field name={inputName} validate={composeValidators(rpcUrlValidator)}>
           {(props) => {
@@ -91,11 +100,12 @@ export function RpcSwitcherTableItemField({
                 onCrossClick={
                   chainId &&
                   props.input.value !==
-                    chainInfoHelper.getChainParameters(chainId).rpcUrls[0]
+                    chainInfoHelper.getChainParameters(chainId).rpcUrls.default
+                      .http[0]
                     ? () => {
                         props.input.onChange(
-                          chainInfoHelper.getChainParameters(chainId)
-                            .rpcUrls[0],
+                          chainInfoHelper.getChainParameters(chainId).rpcUrls
+                            .default.http[0],
                         );
                       }
                     : undefined
@@ -137,9 +147,9 @@ export function RpcSwitcherTableItemField({
               rpcUrl={rpcUrlTo}
               isError={
                 rpcUrlTo
-                  ? rpcHasError.hasOwnProperty(rpcUrlTo)
-                    ? rpcHasError[rpcUrlTo].error === true ||
-                      rpcHasError[rpcUrlTo].chainId !== chainId
+                  ? rpcFormErrors.hasOwnProperty(rpcUrlTo)
+                    ? rpcFormErrors[rpcUrlTo].error === true ||
+                      rpcFormErrors[rpcUrlTo].chainId !== chainId
                     : false
                   : false
               }

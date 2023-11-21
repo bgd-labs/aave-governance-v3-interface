@@ -24,12 +24,12 @@ const TextBox = ({
         color: isClicked
           ? '$textDisabled'
           : value
-          ? isHovered
-            ? '$textWhite'
-            : isOff
-            ? '$text'
-            : '$textWhite'
-          : '$textDisabled',
+            ? isHovered
+              ? '$textWhite'
+              : isOff
+                ? '$text'
+                : '$textWhite'
+            : '$textDisabled',
         width: 30,
         display: 'inline-flex',
         alignItems: 'center',
@@ -40,14 +40,14 @@ const TextBox = ({
           value && !isHovered && !isClicked
             ? 3
             : value && isHovered && !isClicked
-            ? 1
-            : 0,
+              ? 1
+              : 0,
         bottom:
           value && !isHovered && !isClicked
             ? 3
             : value && isHovered && !isClicked
-            ? 1
-            : 0,
+              ? 1
+              : 0,
       }}>
       {text}
     </Box>

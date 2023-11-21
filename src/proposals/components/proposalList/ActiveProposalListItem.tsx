@@ -2,10 +2,10 @@ import {
   formatProposal,
   ProposalState,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { ethers } from 'ethers';
 import React, { useState } from 'react';
+import { createWalletClient, custom, zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
@@ -14,6 +14,7 @@ import { disablePageLoader } from '../../../ui/utils/disablePageLoader';
 import { ROUTES } from '../../../ui/utils/routes';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
+import { chainInfoHelper } from '../../../utils/configs';
 import { ProposalEstimatedStatus } from '../ProposalEstimatedStatus';
 import { ProposalStatusWithDate } from '../ProposalStatusWithDate';
 import { VoteBar } from '../VoteBar';
@@ -36,20 +37,21 @@ export function ActiveProposalListItem({
   isForHelpModal,
 }: ActiveProposalListItemProps) {
   const theme = useTheme();
-  const { isRendered, appProviders } = useStore();
+  const { isRendered, appClients } = useStore();
   let activeWallet = useStore((state) => state.activeWallet);
 
   const [isClicked, setIsClicked] = useState(false);
 
   if (isForHelpModal) {
     activeWallet = {
-      walletType: 'Metamask',
-      accounts: [ethers.constants.AddressZero],
-      chainId: appConfig.govCoreChainId,
-      provider: appProviders[appConfig.govCoreChainId].instance,
-      signer: appProviders[appConfig.govCoreChainId].instance.getSigner(
-        ethers.constants.AddressZero,
-      ),
+      walletType: 'Injected',
+      address: zeroAddress,
+      chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
+      client: appClients[appConfig.govCoreChainId].instance,
+      walletClient: createWalletClient({
+        chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
+        transport: custom(window.ethereum),
+      }),
       isActive: true,
       isContractAddress: false,
     };

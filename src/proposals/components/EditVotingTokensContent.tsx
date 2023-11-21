@@ -1,7 +1,7 @@
 import {
   Balance,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 

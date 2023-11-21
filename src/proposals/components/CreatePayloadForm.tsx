@@ -1,4 +1,4 @@
-import { PayloadAction } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { PayloadAction } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
 import React, { useEffect, useState } from 'react';
@@ -56,15 +56,11 @@ export function CreatePayloadForm() {
     error,
     setError,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    txWalletType,
-    isError,
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
+    tx,
   } = useLastTxLocalStatus({
     type: 'createPayload',
     payload: {
@@ -81,7 +77,6 @@ export function CreatePayloadForm() {
   }: FormProperties) => {
     setIsCreatePayloadModalOpen(true);
     await executeTxWithLocalStatuses({
-      errorMessage: 'Tx error',
       callbackFunction: async () =>
         await createPayload(
           chainId,
@@ -467,14 +462,10 @@ export function CreatePayloadForm() {
         setIsOpen={setIsCreatePayloadModalOpen}
         isTxStart={isTxStart}
         setIsTxStart={setIsTxStart}
-        txWalletType={txWalletType}
-        txSuccess={txSuccess}
-        txHash={txHash}
-        txPending={txPending}
-        isError={isError}
         payloadId={initialPayloadsCount[payloadsController]}
         fullTxErrorMessage={fullTxErrorMessage}
         setFullTxErrorMessage={setFullTxErrorMessage}
+        tx={tx}
       />
     </>
   );

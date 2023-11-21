@@ -1,5 +1,19 @@
-import { ChainIdByName } from '@bgd-labs/aave-governance-ui-helpers/src';
 import { SxProps } from '@mui/system';
+import {
+  arbitrum,
+  avalanche,
+  avalancheFuji,
+  base,
+  bsc,
+  bscTestnet,
+  goerli,
+  mainnet,
+  metis,
+  optimism,
+  polygon,
+  polygonMumbai,
+  sepolia,
+} from 'viem/chains';
 
 import { chainInfoHelper } from '../../utils/configs';
 import { Image } from '../primitives/Image';
@@ -13,31 +27,31 @@ interface NetworkIconProps {
 
 const getIconNetworkName = (chainId: number) => {
   switch (chainId) {
-    case ChainIdByName.EthereumMainnet:
+    case mainnet.id:
       return 'ethereum';
-    case ChainIdByName.Sepolia:
+    case sepolia.id:
       return 'ethereum';
-    case ChainIdByName.Goerli:
+    case goerli.id:
       return 'ethereum';
-    case ChainIdByName.Polygon:
+    case polygon.id:
       return 'polygon';
-    case ChainIdByName.Mumbai:
+    case polygonMumbai.id:
       return 'polygon';
-    case ChainIdByName.Avalanche:
+    case avalanche.id:
       return 'avalanche';
-    case ChainIdByName.AvalancheFuji:
+    case avalancheFuji.id:
       return 'avalanche';
-    case ChainIdByName.Binance:
+    case bsc.id:
       return 'bsc';
-    case ChainIdByName.BnbTest:
+    case bscTestnet.id:
       return 'bsc';
-    case ChainIdByName.Base:
+    case base.id:
       return 'base';
-    case ChainIdByName.Arbitrum:
+    case arbitrum.id:
       return 'arbitrum';
-    case ChainIdByName.Metis:
+    case metis.id:
       return 'metis';
-    case ChainIdByName.Optimism:
+    case optimism.id:
       return 'optimism';
     default:
       return 'ethereum';
@@ -59,7 +73,7 @@ export function NetworkIcon({ chainId, size, css }: NetworkIconProps) {
       src={setRelativePath(
         `/images/networks/${networkIconName.toLowerCase()}.svg`,
       )}
-      alt={`${chainInfoHelper.getChainParameters(chainId).chainName} icon`}
+      alt={`${chainInfoHelper.getChainParameters(chainId).name} icon`}
     />
   );
 }

@@ -15,49 +15,37 @@ export function CreateProposalModal({
   isOpen,
   setIsOpen,
   isTxStart,
-  txHash,
-  txPending,
-  txSuccess,
-  txWalletType,
   setIsTxStart,
   setError,
   error,
-  isError,
   proposalId,
   fullTxErrorMessage,
   setFullTxErrorMessage,
+  tx,
 }: Pick<
   BasicActionModalProps,
   | 'isOpen'
   | 'setIsOpen'
   | 'isTxStart'
-  | 'txHash'
-  | 'txPending'
-  | 'txSuccess'
-  | 'txWalletType'
   | 'setIsTxStart'
   | 'setError'
-  | 'isError'
   | 'error'
   | 'fullTxErrorMessage'
   | 'setFullTxErrorMessage'
+  | 'tx'
 > & { proposalId: number }) {
   return (
     <BasicActionModal
       isTxStart={isTxStart}
-      txHash={txHash}
-      txPending={txPending}
-      txSuccess={txSuccess}
-      txWalletType={txWalletType}
       setIsTxStart={setIsTxStart}
       setError={setError}
       error={error}
-      isError={isError}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withoutTryAgainWhenError
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      tx={tx}
       successElement={
         <Box component="p" sx={{ typography: 'body' }}>
           {texts.proposalActions.createProposalSuccess(proposalId)}

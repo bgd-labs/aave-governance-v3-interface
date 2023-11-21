@@ -1,4 +1,4 @@
-import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils/src';
+import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
 import React from 'react';
 
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
@@ -18,17 +18,21 @@ export function TransactionsModal({
   setIsOpen,
   representedAddresses,
 }: TransactionsModalProps) {
-  const { getActiveAddress, setAccountInfoModalOpen } = useStore();
-  const activeAddress = getActiveAddress() || '';
+  const store = useStore();
+  const { activeWallet, setAccountInfoModalOpen } = store;
 
-  const allTransactions = useStore((state) =>
-    selectAllTransactionsByWallet<TransactionUnion>(state, activeAddress),
-  );
+  const allTransactions = activeWallet
+    ? selectAllTransactionsByWallet<TransactionUnion>(
+        store,
+        activeWallet.address,
+      )
+    : [];
 
   return (
     <BasicModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
+      maxWidth={680}
       withCloseButton
       withoutAnimationWhenOpen>
       <TransactionsModalContent

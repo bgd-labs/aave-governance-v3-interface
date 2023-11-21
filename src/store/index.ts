@@ -1,6 +1,6 @@
 'use client';
 
-import { IWalletSlice } from '@bgd-labs/frontend-web3-utils/src';
+import { IWalletSlice } from '@bgd-labs/frontend-web3-utils';
 import { create, StoreApi } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -25,9 +25,9 @@ import {
   IRepresentationsSlice,
 } from '../representations/store/representationsSlice';
 import {
-  createProviderSlice,
-  IProviderSlice,
-} from '../rpcSwitcher/store/providerSlice';
+  createRpcSwitcherSlice,
+  IRpcSwitcherSlice,
+} from '../rpcSwitcher/store/rpcSwitcherSlice';
 import {
   createTransactionsSlice,
   TransactionsSlice,
@@ -46,7 +46,7 @@ export type RootState = IProposalsSlice &
   IProposalsHistorySlice &
   IRepresentationsSlice &
   IEnsSlice &
-  IProviderSlice;
+  IRpcSwitcherSlice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -61,7 +61,7 @@ const createRootSlice = (
   ...createProposalsHistorySlice(set, get),
   ...createRepresentationsSlice(set, get),
   ...createEnsSlice(set, get),
-  ...createProviderSlice(set, get),
+  ...createRpcSwitcherSlice(set, get),
 });
 
 export const useStore = create(devtools(createRootSlice, { serialize: true }));

@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
-import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 import WalletFirstImage from '/public/images/helpModals/wallet1.svg';
 import WalletFirstImageDark from '/public/images/helpModals/wallet1Dark.svg';
@@ -85,13 +85,13 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
               setWalletActivating(false);
             }
           : !isFirstStepOnMobile
-          ? () => setIsFirstStepOnMobile(true)
-          : () => {
-              setIsHelpWalletModalOpen(false);
-              infoType === InfoType.Vote
-                ? setIsHelpVotingModalOpen(true)
-                : setIsHelpNavigationModalOpen(true);
-            }
+            ? () => setIsFirstStepOnMobile(true)
+            : () => {
+                setIsHelpWalletModalOpen(false);
+                infoType === InfoType.Vote
+                  ? setIsHelpVotingModalOpen(true)
+                  : setIsHelpNavigationModalOpen(true);
+              }
       }
       withCloseButton>
       <HelpModalContainer
@@ -260,7 +260,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
                     onWalletButtonClick={() => {
                       setWalletActivating(true);
                       setTimeout(() => {
-                        setActiveWallet(ethers.constants.AddressZero);
+                        setActiveWallet(zeroAddress);
                         setWalletActivating(false);
                       }, 1000);
                     }}

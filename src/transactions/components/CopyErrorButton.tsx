@@ -8,14 +8,14 @@ import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 
 interface CopyErrorButtonProps {
-  errorMessage: string;
+  errorMessage: Error | string;
 }
 
 export function CopyErrorButton({ errorMessage }: CopyErrorButtonProps) {
   const theme = useTheme();
 
   return (
-    <CopyToClipboard copyText={errorMessage}>
+    <CopyToClipboard copyText={errorMessage.toString()}>
       <Box
         sx={{
           typography: 'descriptor',

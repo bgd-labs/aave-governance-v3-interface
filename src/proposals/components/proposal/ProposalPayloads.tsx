@@ -2,8 +2,11 @@ import {
   InitialPayload,
   Payload,
   PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -136,16 +139,18 @@ function PayloadItem({
     payload.cancelledAt > 0 ||
     payload.state === PayloadState.Expired;
 
-  const tx = selectLastTxByTypeAndPayload<TransactionUnion>(
-    store,
-    store.activeWallet?.accounts[0] || '',
-    'executePayload',
-    {
-      proposalId,
-      payloadId: payload.id,
-      chainId: payload.chainId,
-    },
-  );
+  const tx =
+    store.activeWallet &&
+    selectLastTxByTypeAndPayload<TransactionUnion>(
+      store,
+      store.activeWallet.address,
+      'executePayload',
+      {
+        proposalId,
+        payloadId: payload.id,
+        chainId: payload.chainId,
+      },
+    );
 
   return (
     <Box
@@ -222,7 +227,7 @@ function PayloadItem({
             <>
               {store.activeWallet?.isActive ? (
                 <SmallButton
-                  disabled={tx?.status === 1}
+                  disabled={tx?.status === TransactionStatus.Success}
                   loading={tx?.pending}
                   onClick={() => {
                     setSelectedPayloadForExecute({
@@ -290,7 +295,7 @@ function PayloadItem({
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
               {texts.proposals.payloadsDetails.actions(
-                payload.actionAddresses.length,
+                payload.actionAddresses?.length || 0,
               )}
             </Box>
             <Box
@@ -301,20 +306,16 @@ function PayloadItem({
                 listStyleType: 'disc',
                 pl: 12,
               }}>
-              {payload.actionAddresses.map((address, index) => (
+              {payload.actionAddresses?.map((address, index) => (
                 <Box
                   sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
                   key={index}>
                   <Link
                     css={{ display: 'inline-flex', alignItems: 'center' }}
                     inNewWindow
-                    href={`${
-                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      // @ts-ignore
-                      chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorerUrls[0]
-                    }address/${address}`}>
+                    href={`${chainInfoHelper.getChainParameters(
+                      payload.chainId || appConfig.govCoreChainId,
+                    ).blockExplorers?.default.url}/address/${address}`}>
                     <Box
                       component="li"
                       sx={{

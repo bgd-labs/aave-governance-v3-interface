@@ -1,9 +1,10 @@
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils/src';
-import { ethers } from 'ethers';
+import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
+import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
@@ -16,27 +17,27 @@ import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { getFormattedRepresentedAddresses } from '../utils/getRepresentedAddresses';
 
 export type RepresentationDataItem = {
-  representative: string;
-  represented: string[];
+  representative: Hex | '';
+  represented: Hex[];
 };
 
 export type RepresentationFormData = {
   chainId: number;
-  representative: string;
+  representative: Hex | '';
 };
 
 export type RepresentativeAddress = {
   chainsIds: number[];
-  address: string;
+  address: Hex | '';
 };
 
-export type RepresentedAddress = { chainId: number; address: string };
+export type RepresentedAddress = { chainId: number; address: Hex | '' };
 
 export interface IRepresentationsSlice {
   representativeLoading: boolean;
   representative: RepresentativeAddress;
   getRepresentingAddress: () => void;
-  setRepresentativeAddress: (address: string, chainsIds: number[]) => void;
+  setRepresentativeAddress: (address: Hex, chainsIds: number[]) => void;
 
   representationData: Record<number, RepresentationDataItem>;
   representationDataLoading: boolean;
@@ -56,7 +57,12 @@ export interface IRepresentationsSlice {
 
 export const createRepresentationsSlice: StoreSlice<
   IRepresentationsSlice,
-  IWeb3Slice & TransactionsSlice & IProposalsSlice & IUISlice & IEnsSlice
+  IWeb3Slice &
+    TransactionsSlice &
+    IProposalsSlice &
+    IUISlice &
+    IEnsSlice &
+    IRpcSwitcherSlice
 > = (set, get) => ({
   representativeLoading: true,
   representative: {
@@ -66,7 +72,7 @@ export const createRepresentationsSlice: StoreSlice<
   getRepresentingAddress: async () => {
     set({ representativeLoading: true });
 
-    const activeAddress = get().activeWallet?.accounts[0];
+    const activeAddress = get().activeWallet?.address;
     const addresses = getLocalStorageRepresentingAddresses();
     const data = get().representationData;
 
@@ -93,7 +99,7 @@ export const createRepresentationsSlice: StoreSlice<
     }
   },
   setRepresentativeAddress: (address, chainsIds) => {
-    const activeAddress = get().activeWallet?.accounts[0];
+    const activeAddress = get().activeWallet?.address;
     const formattedAddress = !address ? '' : address;
     set((state) =>
       produce(state, (draft) => {
@@ -112,53 +118,72 @@ export const createRepresentationsSlice: StoreSlice<
           address: formattedAddress,
         },
       };
-      setLocalStorageRepresentingAddresses(newAddresses);
+      setLocalStorageRepresentingAddresses(
+        newAddresses as Record<string, RepresentativeAddress>,
+      );
     } else if (activeAddress) {
       const newAddresses = {
         [activeAddress]: { chainsIds, address: formattedAddress },
       };
-      setLocalStorageRepresentingAddresses(newAddresses);
+      setLocalStorageRepresentingAddresses(
+        newAddresses as Record<string, RepresentativeAddress>,
+      );
     }
   },
 
   representationData: {},
   representationDataLoading: false,
   getRepresentationData: async () => {
-    const activeAddress = get().activeWallet?.accounts[0];
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
       set({ representationDataLoading: true });
 
-      const data =
-        await get().govDataService.getRepresentationData(activeAddress);
+      const rpcUrl = get().appClients[appConfig.govCoreChainId].rpcUrl;
 
-      appConfig.votingMachineChainIds.forEach((chainId) => {
-        const represented = data.represented
-          .filter((item) => item.chainId.toNumber() === chainId)
-          .map((item) => item.votersRepresented)
-          .flat();
+      try {
+        const data =
+          await get().govDataService.getRepresentationData(activeAddress);
 
-        const representative = data.representative
-          .filter((item) => item.chainId.toNumber() === chainId)
-          .map((item) => item.representative)[0];
+        appConfig.votingMachineChainIds.forEach((chainId) => {
+          const represented = data.represented
+            .filter((item) => Number(item.chainId) === chainId)
+            .map((item) => item.votersRepresented)
+            .flat();
 
-        const formattedRepresentative =
-          representative === ethers.constants.AddressZero ||
-          representative === activeAddress
-            ? ''
-            : representative;
+          const representative = data.representative
+            .filter((item) => Number(item.chainId) === chainId)
+            .map((item) => item.representative)[0];
 
-        set((state) =>
-          produce(state, (draft) => {
-            draft.representationData[chainId] = {
-              representative: formattedRepresentative,
-              represented: represented,
-            };
-          }),
-        );
+          const formattedRepresentative =
+            representative === zeroAddress || representative === activeAddress
+              ? ''
+              : representative;
 
+          set((state) =>
+            produce(state, (draft) => {
+              draft.representationData[chainId] = {
+                representative: formattedRepresentative,
+                represented: represented,
+              };
+            }),
+          );
+
+          setTimeout(() => set({ representationDataLoading: false }), 1);
+          get().setRpcError({
+            isError: false,
+            rpcUrl,
+            chainId: appConfig.govCoreChainId,
+          });
+        });
+      } catch {
+        get().setRpcError({
+          isError: true,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
         setTimeout(() => set({ representationDataLoading: false }), 1);
-      });
+      }
     } else {
       set({ representativeLoading: false });
     }
@@ -167,10 +192,10 @@ export const createRepresentationsSlice: StoreSlice<
   updateRepresentatives: async (initialData, formData, timestamp) => {
     await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
     const govDataService = get().govDataService;
-    const activeAddress = get().getActiveAddress();
+    const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
-      const formattedData: { representative: string; chainId: number }[] = [];
+      const formattedData: { representative: Hex; chainId: bigint }[] = [];
       for await (const item of formData) {
         let representative = item.representative;
 
@@ -190,9 +215,9 @@ export const createRepresentationsSlice: StoreSlice<
               representative === undefined ||
               representative === '' ||
               representative === activeAddress
-                ? ethers.constants.AddressZero
+                ? zeroAddress
                 : representative,
-            chainId: item.chainId,
+            chainId: BigInt(item.chainId),
           });
         }
       }

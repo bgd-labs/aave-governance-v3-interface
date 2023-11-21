@@ -1,7 +1,7 @@
 import {
   normalizeBN,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers/src';
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import dynamic from 'next/dynamic';

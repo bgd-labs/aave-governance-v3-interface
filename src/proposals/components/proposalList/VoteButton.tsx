@@ -1,4 +1,7 @@
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
@@ -28,22 +31,22 @@ export function VoteButton({
   isForHelpModal,
 }: VoteButtonProps) {
   const store = useStore();
-  const { representative, getActiveAddress, supportObject } = store;
+  const { activeWallet, representative, supportObject } = store;
 
-  const activeAddress = getActiveAddress();
+  const activeAddress = activeWallet?.address;
 
-  const tx = useStore((state) =>
+  const tx =
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      state,
-      activeAddress || '',
+      store,
+      activeWallet.address,
       'vote',
       {
         proposalId,
         support: !supportObject[proposalId],
         voter: representative.address || activeAddress,
       },
-    ),
-  );
+    );
 
   const buttonLoading =
     tx &&
@@ -51,7 +54,7 @@ export function VoteButton({
     tx.payload.proposalId === proposalId &&
     tx.payload.voter === (representative.address || activeAddress) &&
     tx.chainId === votingChainId &&
-    (tx.pending || tx.status === 1);
+    (tx.pending || tx.status === TransactionStatus.Success);
 
   const disabled = !checkIsVotingAvailable(store, votingChainId);
 

@@ -1,4 +1,7 @@
-import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils/src';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
 
@@ -76,18 +79,18 @@ export function ProposalVotingPower({
     setIsRepresentationInfoModalOpen,
   } = store;
 
-  const tx = useStore((state) =>
+  const tx =
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      state,
-      activeWallet?.accounts[0] || '',
+      store,
+      activeWallet.address,
       'vote',
       {
         proposalId,
         support: !supportObject[proposalId],
-        voter: representative.address || activeWallet?.accounts[0],
+        voter: representative.address || activeWallet?.address,
       },
-    ),
-  );
+    );
 
   const disabled = !checkIsVotingAvailable(store, votingChainId);
 
@@ -309,9 +312,10 @@ export function ProposalVotingPower({
                                       tx.payload.proposalId === proposalId &&
                                       tx.payload.voter ===
                                         (representative.address ||
-                                          activeWallet.accounts[0]) &&
+                                          activeWallet.address) &&
                                       tx.chainId === votingChainId &&
-                                      (tx.pending || tx.status === 1)
+                                      (tx.pending ||
+                                        tx.status === TransactionStatus.Success)
                                     }
                                     onClick={onClick}>
                                     <Box

@@ -1,14 +1,15 @@
 import dayjs from 'dayjs';
+import { Hex } from 'viem';
 
 import { ENS_TTL } from '../utils/ensHelpers';
 import { ENSProperty, IEnsSlice } from './ensSlice';
 
 export const ENSDataExists = (
   store: IEnsSlice,
-  address: string,
+  address: Hex,
   property: ENSProperty,
 ) => {
-  const lowercasedAddress = address.toLocaleLowerCase();
+  const lowercasedAddress = address.toLocaleLowerCase() as Hex;
   return Boolean(
     store.ensData[lowercasedAddress] &&
       store.ensData[lowercasedAddress][property],
@@ -17,7 +18,7 @@ export const ENSDataExists = (
 
 export const ENSDataHasBeenFetched = (
   store: IEnsSlice,
-  address: string,
+  address: Hex,
   property: ENSProperty,
 ) => {
   const currentTime = dayjs().unix();
@@ -36,17 +37,18 @@ export const checkIsGetAddressByENSNamePending = (
 
 export const getAddressByENSNameIfExists = (store: IEnsSlice, name: string) => {
   return Object.keys(store.ensData).find(
-    (address) => store.ensData[address.toLocaleLowerCase()].name === name,
+    (address) =>
+      store.ensData[address.toLocaleLowerCase() as Hex].name === name,
   );
 };
 
 export const selectENSAvatar = (
   store: IEnsSlice,
-  address: string,
+  address: Hex,
   setAvatar: (value: string | undefined) => void,
   setIsAvatarExists: (value: boolean | undefined) => void,
 ) => {
-  const lowercasedAddress = address.toLocaleLowerCase();
+  const lowercasedAddress = address.toLocaleLowerCase() as Hex;
   const ENSData = store.ensData[lowercasedAddress];
 
   if (ENSData && ENSData.name) {

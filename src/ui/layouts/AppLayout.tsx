@@ -11,7 +11,6 @@ import { RepresentationInfoModal } from '../../representations/components/Repres
 import { useStore } from '../../store';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import Web3HelperProvider from '../../web3/providers/Web3HelperProvider';
-import Web3Provider from '../../web3/providers/Web3Provider';
 import { TermsAndConditionsModal } from '../components/TermsAndConditionsModal';
 import { TermsPreAppModal } from '../components/TermsPreAppModal';
 import { HelpModalProvider } from '../helpModals/HelpModalProvider';
@@ -34,7 +33,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Web3Provider />
       <Web3HelperProvider />
 
       <MainLayout>{children}</MainLayout>

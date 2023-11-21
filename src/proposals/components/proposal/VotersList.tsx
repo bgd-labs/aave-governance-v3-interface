@@ -1,4 +1,4 @@
-import { VotersData } from '@bgd-labs/aave-governance-ui-helpers/src';
+import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
@@ -77,21 +77,21 @@ export function VotersListItemsWrapper({
         pb: !voters?.length
           ? 24
           : voters?.length <= votersCountForViewAll
-          ? 32
-          : 24,
+            ? 32
+            : 24,
         [theme.breakpoints.up('sm')]: {
           pb: !voters?.length
             ? 24
             : voters?.length <= votersCountForViewAll
-            ? 30
-            : 24,
+              ? 30
+              : 24,
         },
         [theme.breakpoints.up('lg')]: {
           pb: !voters?.length
             ? 24
             : voters?.length <= votersCountForViewAll
-            ? 34
-            : 24,
+              ? 34
+              : 24,
         },
       })}>
       {children}
@@ -116,11 +116,8 @@ export function VotersListItem({ vote }: { vote: VotersData }) {
           transition: 'all 0.2s ease',
           hover: { opacity: '0.5' },
         }}
-        href={`${
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          chainInfoHelper.getChainParameters(vote.chainId).blockExplorerUrls[0]
-        }address/${vote.address}`}>
+        href={`${chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
+          ?.default.url}/address/${vote.address}`}>
         <Box component="p" sx={{ typography: 'descriptor' }}>
           {formatVoterAddress(vote)}
         </Box>

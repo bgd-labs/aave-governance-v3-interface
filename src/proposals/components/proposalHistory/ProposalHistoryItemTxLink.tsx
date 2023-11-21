@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
-import { ethers } from 'ethers';
 import React from 'react';
+import { zeroHash } from 'viem';
 
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
@@ -28,7 +28,7 @@ export function ProposalHistoryItemTxLink({
         mb: 8,
         [theme.breakpoints.up('sm')]: { mt: 4, mb: 0 },
       }}>
-      {item.txInfo.hash === ethers.constants.HashZero ? (
+      {item.txInfo.hash === zeroHash ? (
         <Box
           component="button"
           type="button"
@@ -76,11 +76,8 @@ export function ProposalHistoryItemTxLink({
       ) : (
         <>
           <Link
-            href={`${
-              // @ts-ignore
-              chainInfoHelper.getChainParameters(item.txInfo.chainId)
-                .blockExplorerUrls[0]
-            }tx/${item.txInfo.hash}`}
+            href={`${chainInfoHelper.getChainParameters(item.txInfo.chainId)
+              .blockExplorers?.default.url}/tx/${item.txInfo.hash}`}
             css={{
               color: '$textSecondary',
               hover: { color: theme.palette.$text },
