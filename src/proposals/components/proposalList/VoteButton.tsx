@@ -35,18 +35,18 @@ export function VoteButton({
 
   const activeAddress = activeWallet?.address;
 
-  const tx = useStore((state) =>
+  const tx =
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      state,
-      activeAddress || '',
+      store,
+      activeWallet.address,
       'vote',
       {
         proposalId,
         support: !supportObject[proposalId],
         voter: representative.address || activeAddress,
       },
-    ),
-  );
+    );
 
   const buttonLoading =
     tx &&

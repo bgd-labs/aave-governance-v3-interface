@@ -1,6 +1,7 @@
 'use client';
 
 import { useLastTxLocalStatus as baseUseTxLocalStatus } from '@bgd-labs/frontend-web3-utils';
+import { zeroAddress } from 'viem';
 
 import { useStore } from '../../store';
 import { TransactionUnion } from '../store/transactionsSlice';
@@ -13,7 +14,7 @@ export function useLastTxLocalStatus({
 
   return baseUseTxLocalStatus<TransactionUnion>({
     state,
-    activeAddress: state.activeWallet?.address || '',
+    activeAddress: state.activeWallet?.address || zeroAddress,
     type,
     payload,
   });

@@ -14,7 +14,7 @@ import {
 } from '../delegate/store/delegationSlice';
 import {
   createPayloadsExplorerSlice,
-  IPayloadsExplorerSliceSlice,
+  IPayloadsExplorerSlice,
 } from '../payloadsExplorer/store/payloadsExplorerSlice';
 import {
   createProposalsHistorySlice,
@@ -56,7 +56,7 @@ export type RootState = IProposalsSlice &
   IEnsSlice &
   IRpcSwitcherSlice &
   ICreateByParamsSlice &
-  IPayloadsExplorerSliceSlice;
+  IPayloadsExplorerSlice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],

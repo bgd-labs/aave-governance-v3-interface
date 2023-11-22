@@ -50,7 +50,6 @@ export function DelegatePage() {
     setIsDelegateChangedView,
     delegate,
     incorrectDelegationToFields,
-
     ensData,
   } = store;
 
@@ -70,18 +69,11 @@ export function DelegatePage() {
     setError,
     loading,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    isError,
-    txWalletType,
     fullTxErrorMessage,
     setFullTxErrorMessage,
     executeTxWithLocalStatuses,
-    isTxReplaced,
-    replacedTxHash,
-    txChainId,
+    tx,
   } = useLastTxLocalStatus({
     type: 'delegate',
     payload: {
@@ -251,7 +243,7 @@ export function DelegatePage() {
                 </BigButton>
                 <BigButton
                   onClick={handleDelegate}
-                  loading={loading || txPending}
+                  loading={loading || tx.pending}
                   disabled={
                     isEqual(
                       delegateData.map((data) => {
@@ -408,16 +400,9 @@ export function DelegatePage() {
           setError={setError}
           isTxStart={isTxStart}
           setIsTxStart={setIsTxStart}
-          txWalletType={txWalletType}
-          txSuccess={txSuccess}
-          txHash={txHash}
-          txPending={txPending}
-          isError={isError}
           fullTxErrorMessage={fullTxErrorMessage}
           setFullTxErrorMessage={setFullTxErrorMessage}
-          isTxReplaced={isTxReplaced}
-          replacedTxHash={replacedTxHash}
-          txChainId={txChainId}
+          tx={tx}
         />
       )}
     </>

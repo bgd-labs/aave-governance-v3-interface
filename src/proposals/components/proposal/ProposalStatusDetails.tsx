@@ -119,12 +119,14 @@ export function ProposalStatusDetails({
     type,
     payload,
   }: Pick<TransactionUnion, 'type' | 'payload'>) => {
-    const tx = selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
-      activeWallet?.address || '',
-      type,
-      payload,
-    );
+    const tx =
+      activeWallet &&
+      selectLastTxByTypeAndPayload<TransactionUnion>(
+        store,
+        activeWallet.address,
+        type,
+        payload,
+      );
 
     const isPending =
       tx &&

@@ -12,7 +12,7 @@ import { Hex } from 'viem';
 import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
-import { IPayloadsExplorerSliceSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
+import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';
 import { IProposalsListCacheSlice } from '../../proposals/store/proposalsListCacheSlice';
 import { getProposalDataById } from '../../proposals/store/proposalsSelectors';
@@ -153,7 +153,7 @@ export type TransactionsSlice = ITransactionsSlice<TransactionUnion>;
 export type TxWithStatus = TransactionUnion & {
   status?: TransactionStatus;
   pending: boolean;
-  replacedTxHash?: string;
+  replacedTxHash?: Hex;
 };
 
 export type AllTransactions = TxWithStatus[];
@@ -171,7 +171,7 @@ export const createTransactionsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     ICreateByParamsSlice &
-    IPayloadsExplorerSliceSlice
+    IPayloadsExplorerSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {

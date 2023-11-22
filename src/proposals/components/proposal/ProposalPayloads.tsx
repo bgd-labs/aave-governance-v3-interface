@@ -159,16 +159,18 @@ function PayloadItem({
     payload.cancelledAt > 0 ||
     payload.state === PayloadState.Expired;
 
-  const tx = selectLastTxByTypeAndPayload<TransactionUnion>(
-    store,
-    store.activeWallet?.address || '',
-    'executePayload',
-    {
-      proposalId,
-      payloadId: payload.id,
-      chainId: payload.chainId,
-    },
-  );
+  const tx =
+    store.activeWallet &&
+    selectLastTxByTypeAndPayload<TransactionUnion>(
+      store,
+      store.activeWallet.address,
+      'executePayload',
+      {
+        proposalId,
+        payloadId: payload.id,
+        chainId: payload.chainId,
+      },
+    );
 
   return (
     <>

@@ -12,7 +12,7 @@ import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 type PayloadsData = Record<number, Record<Hex, Payload[]>>;
-export interface IPayloadsExplorerSliceSlice {
+export interface IPayloadsExplorerSlice {
   totalPayloadsCountByAddress: Record<Hex, number>;
   payloadsExplorePagination: Record<
     Hex,
@@ -32,7 +32,7 @@ const step = 16;
 const initialSize = 48;
 
 export const createPayloadsExplorerSlice: StoreSlice<
-  IPayloadsExplorerSliceSlice,
+  IPayloadsExplorerSlice,
   IWeb3Slice &
     TransactionsSlice &
     IProposalsSlice &

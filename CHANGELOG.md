@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.0.1...v1.0.2) (2023-11-21)
+
+
+### Bug Fixes
+
+* added next js bundle analysis ([f382728](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f382728700e2a54b3ff648df50160ec7431e9523))
+
 ## [1.0.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.0.0...v1.0.1) (2023-10-13)
 
 

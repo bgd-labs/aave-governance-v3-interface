@@ -23,7 +23,7 @@ import { Hex } from 'viem';
 
 import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
-import { IPayloadsExplorerSliceSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
+import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
@@ -214,7 +214,7 @@ export const createProposalsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     ICreateByParamsSlice &
-    IPayloadsExplorerSliceSlice
+    IPayloadsExplorerSlice
 > = (set, get) => ({
   isInitialLoading: true,
 

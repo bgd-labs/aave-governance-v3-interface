@@ -1,6 +1,6 @@
-import { HashZero } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
+import { zeroHash } from 'viem';
 
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
@@ -28,7 +28,7 @@ export function ProposalHistoryItemTxLink({
         mb: 8,
         [theme.breakpoints.up('sm')]: { mt: 4, mb: 0 },
       }}>
-      {item.txInfo.hash === HashZero ? (
+      {item.txInfo.hash === zeroHash ? (
         <Box
           component="button"
           type="button"

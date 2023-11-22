@@ -50,7 +50,9 @@ export function ConnectWalletButton({
   const isActive = activeWallet?.isActive;
   const activeAddress = activeWallet?.address || '';
 
-  const allTransactions = selectAllTransactionsByWallet(store, activeAddress);
+  const allTransactions = !!activeAddress
+    ? selectAllTransactionsByWallet(store, activeAddress)
+    : [];
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName
@@ -83,12 +85,12 @@ export function ConnectWalletButton({
   }, [lastConnectedWallet]);
 
   // get all pending tx's from connected wallet
-  const allPendingTransactions = useStore((state) =>
-    selectPendingTransactionByWallet(state, activeAddress),
-  );
+  const allPendingTransactions = activeAddress
+    ? selectPendingTransactionByWallet(store, activeAddress)
+    : [];
   // filtered pending tx's, if now > tx.timestamp + 30 min, than remove tx from pending array to not show loading spinner in connect wallet button
   const filteredPendingTx = allPendingTransactions.filter(
-    (tx) => dayjs().unix() <= dayjs(tx.localTimestamp).unix() + 1800,
+    (tx) => dayjs().unix() <= dayjs.unix(tx.localTimestamp).unix() + 1800,
   );
 
   return (

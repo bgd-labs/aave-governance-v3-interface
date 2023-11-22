@@ -70,18 +70,11 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     error,
     setError,
     isTxStart,
-    txHash,
-    txPending,
-    txSuccess,
     setIsTxStart,
-    txWalletType,
-    isError,
     executeTxWithLocalStatuses,
     fullTxErrorMessage,
     setFullTxErrorMessage,
-    isTxReplaced,
-    replacedTxHash,
-    txChainId,
+    tx,
   } = useLastTxLocalStatus({
     type: 'createProposal',
     payload: { proposalId: totalProposalCount },
@@ -370,8 +363,8 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                     mt: 24,
                   }}>
                   <BigButton
-                    disabled={txSuccess}
-                    loading={txPending}
+                    disabled={tx.isSuccess}
+                    loading={tx.pending}
                     onClick={handleCreate}>
                     {texts.proposalActions.createProposal}
                   </BigButton>
@@ -385,22 +378,15 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
 
       <CreateProposalModal
         error={error}
-        isError={isError}
         setError={setError}
         isOpen={isCreateProposalModalOpen}
         setIsOpen={setIsCreateProposalModalOpen}
         isTxStart={isTxStart}
         setIsTxStart={setIsTxStart}
-        txWalletType={txWalletType}
-        txSuccess={txSuccess}
-        txHash={txHash}
-        txPending={txPending}
         proposalId={totalProposalCount}
         fullTxErrorMessage={fullTxErrorMessage}
         setFullTxErrorMessage={setFullTxErrorMessage}
-        isTxReplaced={isTxReplaced}
-        replacedTxHash={replacedTxHash}
-        txChainId={txChainId}
+        tx={tx}
       />
     </>
   );
