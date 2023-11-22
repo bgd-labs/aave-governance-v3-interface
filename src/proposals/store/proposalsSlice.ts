@@ -21,7 +21,9 @@ import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
+import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
+import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
@@ -94,7 +96,7 @@ export interface IProposalsSlice {
   ipfsDataErrors: Record<string, string>;
   setIpfsDataErrors: (ipfsHash: string, text?: string) => void;
   setIpfsData: (hash: string, data: ProposalMetadata) => void;
-  getIpfsData: (ids: number[]) => Promise<void>;
+  getIpfsData: (ids: number[], hash?: Hex) => Promise<void>;
 
   detailedProposalsData: Record<number, ProposalData>;
   detailedProposalsDataLoadings: Record<number, boolean>;
@@ -210,7 +212,9 @@ export const createProposalsSlice: StoreSlice<
     IProposalsHistorySlice &
     IRepresentationsSlice &
     IEnsSlice &
-    IRpcSwitcherSlice
+    IRpcSwitcherSlice &
+    ICreateByParamsSlice &
+    IPayloadsExplorerSlice
 > = (set, get) => ({
   isInitialLoading: true,
 
@@ -450,7 +454,7 @@ export const createProposalsSlice: StoreSlice<
       );
     }
   },
-  getIpfsData: async (ids) => {
+  getIpfsData: async (ids, hash) => {
     const ipfsData = get().ipfsData;
 
     const newIpfsHashes: string[] = [];
@@ -462,6 +466,8 @@ export const createProposalsSlice: StoreSlice<
         typeof ipfsData[proposalData.ipfsHash] === 'undefined'
       ) {
         newIpfsHashes.push(proposalData.ipfsHash);
+      } else if (!proposalData && hash) {
+        newIpfsHashes.push(hash);
       }
     });
 

@@ -5,9 +5,17 @@ import { create, StoreApi } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import {
+  createByParamsSlice,
+  ICreateByParamsSlice,
+} from '../createByParams/store/createByParamsSlice';
+import {
   createDelegationSlice,
   IDelegationSlice,
 } from '../delegate/store/delegationSlice';
+import {
+  createPayloadsExplorerSlice,
+  IPayloadsExplorerSlice,
+} from '../payloadsExplorer/store/payloadsExplorerSlice';
 import {
   createProposalsHistorySlice,
   IProposalsHistorySlice,
@@ -46,7 +54,9 @@ export type RootState = IProposalsSlice &
   IProposalsHistorySlice &
   IRepresentationsSlice &
   IEnsSlice &
-  IRpcSwitcherSlice;
+  IRpcSwitcherSlice &
+  ICreateByParamsSlice &
+  IPayloadsExplorerSlice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -62,6 +72,8 @@ const createRootSlice = (
   ...createRepresentationsSlice(set, get),
   ...createEnsSlice(set, get),
   ...createRpcSwitcherSlice(set, get),
+  ...createByParamsSlice(set, get),
+  ...createPayloadsExplorerSlice(set, get),
 });
 
 export const useStore = create(devtools(createRootSlice, { serialize: true }));

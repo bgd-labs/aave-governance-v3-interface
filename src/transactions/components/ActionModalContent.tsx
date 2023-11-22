@@ -26,7 +26,7 @@ export interface ActionModalContentProps {
   children: ReactNode;
   isTxStart: boolean;
   setIsTxStart: (value: boolean) => void;
-  error: string;
+  error: Error | string;
   setError: (value: string) => void;
   successElement?: ReactNode;
   closeButtonText?: string;

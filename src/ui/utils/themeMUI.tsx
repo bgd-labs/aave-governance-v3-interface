@@ -48,7 +48,7 @@ export const getDesignTokens = (mode: 'light' | 'dark') => {
       keys: ['xs', 'xsm', 'sm', 'md', 'lg', 'xl'],
       values: {
         xs: 0,
-        xsm: 420,
+        xsm: 465,
         sm: 768,
         md: 1024,
         lg: 1400,

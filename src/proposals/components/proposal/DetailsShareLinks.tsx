@@ -27,9 +27,14 @@ const StyledLink = styled(Link)(({ theme }) => ({
 interface DetailsShareLinksProps {
   ipfs?: ProposalMetadata;
   ipfsError?: string;
+  forCreate?: boolean;
 }
 
-export function DetailsShareLinks({ ipfs, ipfsError }: DetailsShareLinksProps) {
+export function DetailsShareLinks({
+  ipfs,
+  ipfsError,
+  forCreate,
+}: DetailsShareLinksProps) {
   const store = useStore();
   const sm = useMediaQuery(media.sm);
 
@@ -72,37 +77,39 @@ export function DetailsShareLinks({ ipfs, ipfsError }: DetailsShareLinksProps) {
 
   return (
     <NoSSR>
-      <StyledLink
-        sx={(theme) => ({
-          path: {
-            fill: theme.palette.$textDisabled,
-            transition: 'all 0.2s ease',
-          },
-          '&:hover': {
-            color: theme.palette.$text,
+      {!forCreate && (
+        <StyledLink
+          sx={(theme) => ({
             path: {
-              fill: theme.palette.$text,
+              fill: theme.palette.$textDisabled,
+              transition: 'all 0.2s ease',
             },
-          },
-        })}
-        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          ipfs?.title || '',
-        )}&url=${
-          typeof window !== 'undefined' &&
-          encodeURIComponent(window.location.href)
-        }`}
-        inNewWindow>
-        <IconBox
-          sx={{
-            width: 20,
-            height: 20,
-            mr: 4,
-            '> svg': { width: 20, height: 20 },
-          }}>
-          <Twitter />
-        </IconBox>
-        {texts.proposals.detailsShareTwitter}
-      </StyledLink>
+            '&:hover': {
+              color: theme.palette.$text,
+              path: {
+                fill: theme.palette.$text,
+              },
+            },
+          })}
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            ipfs?.title || '',
+          )}&url=${
+            typeof window !== 'undefined' &&
+            encodeURIComponent(window.location.href)
+          }`}
+          inNewWindow>
+          <IconBox
+            sx={{
+              width: 20,
+              height: 20,
+              mr: 4,
+              '> svg': { width: 20, height: 20 },
+            }}>
+            <Twitter />
+          </IconBox>
+          {texts.proposals.detailsShareTwitter}
+        </StyledLink>
+      )}
       <StyledLink
         sx={(theme) => ({
           path: {

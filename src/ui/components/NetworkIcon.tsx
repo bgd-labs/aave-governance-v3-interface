@@ -1,4 +1,4 @@
-import { SxProps } from '@mui/system';
+import { Box, SxProps } from '@mui/system';
 import {
   arbitrum,
   avalanche,
@@ -18,11 +18,13 @@ import {
 import { chainInfoHelper } from '../../utils/configs';
 import { Image } from '../primitives/Image';
 import { setRelativePath } from '../utils/relativePath';
+import { Tooltip } from './Tooltip';
 
 interface NetworkIconProps {
   chainId: number;
   size?: number;
   css?: SxProps;
+  withTooltip?: boolean;
 }
 
 const getIconNetworkName = (chainId: number) => {
@@ -58,22 +60,53 @@ const getIconNetworkName = (chainId: number) => {
   }
 };
 
-export function NetworkIcon({ chainId, size, css }: NetworkIconProps) {
+export function NetworkIcon({
+  chainId,
+  size,
+  css,
+  withTooltip,
+}: NetworkIconProps) {
   const networkIconName = getIconNetworkName(chainId);
+  const chain = chainInfoHelper.getChainParameters(chainId);
 
   return (
-    <Image
-      className="NetworkIcon"
-      sx={{
-        borderRadius: '50%',
-        width: size || 16,
-        height: size || 16,
-        ...css,
-      }}
-      src={setRelativePath(
-        `/images/networks/${networkIconName.toLowerCase()}.svg`,
+    <>
+      {withTooltip ? (
+        <Tooltip
+          tooltipContent={
+            <Box sx={{ py: 2, px: 4, typography: 'descriptor' }}>
+              {chain.name}
+            </Box>
+          }>
+          <Image
+            className="NetworkIcon"
+            sx={{
+              borderRadius: '50%',
+              width: size || 16,
+              height: size || 16,
+              ...css,
+            }}
+            src={setRelativePath(
+              `/images/networks/${networkIconName.toLowerCase()}.svg`,
+            )}
+            alt={`${chainInfoHelper.getChainParameters(chainId).name} icon`}
+          />
+        </Tooltip>
+      ) : (
+        <Image
+          className="NetworkIcon"
+          sx={{
+            borderRadius: '50%',
+            width: size || 16,
+            height: size || 16,
+            ...css,
+          }}
+          src={setRelativePath(
+            `/images/networks/${networkIconName.toLowerCase()}.svg`,
+          )}
+          alt={`${chainInfoHelper.getChainParameters(chainId).name} icon`}
+        />
       )}
-      alt={`${chainInfoHelper.getChainParameters(chainId).name} icon`}
-    />
+    </>
   );
 }
