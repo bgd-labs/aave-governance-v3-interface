@@ -19,11 +19,11 @@ export function GlobalStyles() {
       fontFamily: FONT,
       minWidth: 365,
       fontWeight: '400',
-      fontSize: 12,
+      fontSize: 14,
       lineHeight: '20px',
       [`@media only screen and (${media.lg})`]: {
         fontSize: 15,
-        lineHeight: '22px',
+        lineHeight: '24px',
       },
     },
 
