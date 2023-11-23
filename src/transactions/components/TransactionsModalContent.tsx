@@ -1,7 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { RepresentedAddress } from '../../representations/store/representationsSlice';
 import { BackButton3D, Divider } from '../../ui';
 import { texts } from '../../ui/utils/texts';
 import { AllTransactions } from '../store/transactionsSlice';
