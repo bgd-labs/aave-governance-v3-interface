@@ -267,7 +267,7 @@ export class DelegationService {
     );
 
     return delegateHelperContract.write.batchMetaDelegate([sigs], {
-      gasPrice: BigInt(Number(gasLimit) + 100000),
+      gas: gasLimit + BigInt(100000),
     });
   }
 
