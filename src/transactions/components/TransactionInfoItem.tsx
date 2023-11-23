@@ -121,19 +121,30 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
               {tx.payload.voter !== state.activeWallet?.address && (
                 <>
                   {texts.transactions.voteTxAsRepresentative}{' '}
-                  <Link
-                    css={{
-                      color: '$textSecondary',
-                      fontWeight: 500,
-                      hover: { opacity: 0.7 },
-                    }}
-                    href={`${chainInfoHelper.getChainParameters(tx.chainId)
-                      .blockExplorers?.default.url}/address/${
-                      tx.payload.voter
-                    }`}
-                    inNewWindow>
-                    {textCenterEllipsis(tx.payload.voter, 6, 4)}
-                  </Link>
+                  <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <Link
+                      css={{
+                        color: '$textSecondary',
+                        fontWeight: 500,
+                        hover: { opacity: 0.7 },
+                      }}
+                      href={`${chainInfoHelper.getChainParameters(tx.chainId)
+                        .blockExplorers?.default.url}/address/${
+                        tx.payload.voter
+                      }`}
+                      inNewWindow>
+                      {textCenterEllipsis(tx.payload.voter, 6, 4)}
+                    </Link>
+                    <CopyAndExternalIconsSet
+                      iconSize={12}
+                      externalLink={`${chainInfoHelper.getChainParameters(
+                        tx.chainId,
+                      ).blockExplorers?.default.url}/address/${
+                        tx.payload.voter
+                      }`}
+                      sx={{ '.CopyAndExternalIconsSet__link': { ml: 3 } }}
+                    />
+                  </Box>
                 </>
               )}{' '}
               for the proposal <b>#{tx.payload.proposalId}</b> on{' '}

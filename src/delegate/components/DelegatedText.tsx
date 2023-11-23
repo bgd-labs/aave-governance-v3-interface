@@ -3,8 +3,12 @@ import React from 'react';
 import { Hex } from 'viem';
 
 import { useStore } from '../../store';
+import { Link } from '../../ui';
+import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
+import { appConfig } from '../../utils/appConfig';
+import { chainInfoHelper } from '../../utils/configs';
 import { getTokenName, Token } from '../../utils/getTokenName';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty } from '../../web3/store/ensSlice';
@@ -142,46 +146,77 @@ export function DelegatedText({
 
         const middleText =
           typeof data.bothAddresses !== 'undefined'
-            ? `${texts.delegatePage.votingAndPropositionPowers} ${
-                isBothPowersDelegated
-                  ? `to ${
-                      formattedBothAddresses?.startsWith('0x')
-                        ? textCenterEllipsis(formattedBothAddresses, 6, 4)
-                        : formattedBothAddresses
-                    }`
-                  : ''
-              }`
+            ? `${texts.delegatePage.votingAndPropositionPowers} to`
             : typeof data.votingToAddress !== 'undefined'
-              ? `${texts.delegatePage.votingPower} ${
-                  isVotingPowerDelegated
-                    ? `to ${
-                        formattedVotingToAddress?.startsWith('0x')
-                          ? textCenterEllipsis(formattedVotingToAddress, 6, 4)
-                          : formattedVotingToAddress
-                      }`
-                    : ''
-                }`
+              ? `${texts.delegatePage.votingPower} to`
               : typeof data.propositionToAddress !== 'undefined'
-                ? `${texts.delegatePage.propositionPower} ${
-                    isPropositionPowerDelegated
-                      ? `to ${
-                          formattedPropositionToAddress?.startsWith('0x')
-                            ? textCenterEllipsis(
-                                formattedPropositionToAddress,
-                                6,
-                                4,
-                              )
-                            : formattedPropositionToAddress
-                        }`
-                      : ''
-                  }`
+                ? `${texts.delegatePage.propositionPower} to`
+                : '';
+
+        const address =
+          typeof data.bothAddresses !== 'undefined'
+            ? isBothPowersDelegated
+              ? formattedBothAddresses?.startsWith('0x')
+                ? textCenterEllipsis(formattedBothAddresses, 6, 4)
+                : formattedBothAddresses
+              : ''
+            : typeof data.votingToAddress !== 'undefined'
+              ? isVotingPowerDelegated
+                ? formattedVotingToAddress?.startsWith('0x')
+                  ? textCenterEllipsis(formattedVotingToAddress, 6, 4)
+                  : formattedVotingToAddress
+                : ''
+              : typeof data.propositionToAddress !== 'undefined'
+                ? isPropositionPowerDelegated
+                  ? formattedPropositionToAddress?.startsWith('0x')
+                    ? textCenterEllipsis(formattedPropositionToAddress, 6, 4)
+                    : formattedPropositionToAddress
+                  : ''
                 : '';
 
         const endText = delegatedData.length - 1 !== index ? 'and ' : '';
 
+        const link =
+          typeof data.bothAddresses !== 'undefined' && data.bothAddresses !== ''
+            ? `${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
+                .blockExplorers?.default.url}/address/${data.bothAddresses}`
+            : typeof data.votingToAddress !== 'undefined' &&
+                data.votingToAddress !== ''
+              ? `${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
+                  .blockExplorers?.default.url}/address/${data.votingToAddress}`
+              : typeof data.propositionToAddress !== 'undefined' &&
+                  data.propositionToAddress !== ''
+                ? `${chainInfoHelper.getChainParameters(
+                    appConfig.govCoreChainId,
+                  ).blockExplorers?.default.url}/address/${
+                    data.propositionToAddress
+                  }`
+                : undefined;
+
         return (
-          <Box component="span" key={index}>
-            {firstText} <b>{data.symbol}</b> {middleText} {endText}
+          <Box sx={{ display: 'inline' }} key={index}>
+            {firstText} <b>{data.symbol}</b> {middleText}{' '}
+            {!!link ? (
+              <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                <Link
+                  href={link}
+                  css={{
+                    color: '$textSecondary',
+                    hover: { opacity: '0.7 !important' },
+                  }}
+                  inNewWindow>
+                  {address}
+                </Link>
+                <CopyAndExternalIconsSet
+                  iconSize={12}
+                  externalLink={link}
+                  sx={{ '.CopyAndExternalIconsSet__link': { ml: 3 } }}
+                />
+              </Box>
+            ) : (
+              <>{middleText}</>
+            )}{' '}
+            {endText}
           </Box>
         );
       })}
