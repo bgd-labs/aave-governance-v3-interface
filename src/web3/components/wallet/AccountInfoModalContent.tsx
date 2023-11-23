@@ -329,7 +329,6 @@ export function AccountInfoModalContent({
               <>
                 <Box
                   sx={{
-                    height: isRepresentedAvailable ? 200 : 260,
                     width: '100%',
                   }}>
                   {allTransactions

@@ -68,7 +68,10 @@ export const texts = {
       timeLocked: 'Time-locked',
       cancelledAt: 'Cancelled at',
       expired: 'Expired at',
-      expiredIn: 'Expired in',
+      expiredIn: 'Expire in',
+      accessLevel: 'Access level',
+      creator: 'Creator',
+      seatbelt: 'Seatbelt',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status',
       more: (active: boolean) => (active ? 'Hide' : 'Show more'),
@@ -350,6 +353,7 @@ export const texts = {
           ? "multiple RPC's"
           : `this RPC (${!!rpcUrl && rpcUrl})`
       }. Try to use the application later or go to the RPC change screen.`,
+    payloadsNetwork: 'Payloads network',
   },
   terms: {
     description:
