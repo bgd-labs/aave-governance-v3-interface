@@ -4,7 +4,7 @@ import isEqual from 'lodash/isEqual';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
+import ArrowToRight from '/public/images/icons/arrowRight.svg';
 
 import { DelegateTableWrapper } from '../../delegate/components/DelegateTableWrapper';
 import { DelegateData } from '../../delegate/types';

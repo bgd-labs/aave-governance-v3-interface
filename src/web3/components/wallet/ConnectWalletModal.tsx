@@ -1,5 +1,5 @@
 import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useStore } from '../../../store';
 import { BasicModal } from '../../../ui';
@@ -39,12 +39,6 @@ export const wallets: Wallet[] = [
     title: 'Safe wallet',
     isVisible: typeof window !== 'undefined' && window !== window.parent,
   },
-  {
-    walletType: 'Impersonated',
-    icon: `url(${setRelativePath('/images/wallets/impersonated.svg')})`,
-    title: 'Impersonated',
-    isVisible: false,
-  },
 ];
 
 export function ConnectWalletModal({
@@ -52,12 +46,6 @@ export function ConnectWalletModal({
   setIsOpen,
 }: ConnectWalletModalProps) {
   const { walletActivating, walletConnectionError, setModalOpen } = useStore();
-
-  const [impersonatedFormOpen, setImpersonatedFormOpen] = useState(false);
-
-  useEffect(() => {
-    setImpersonatedFormOpen(false);
-  }, [isOpen]);
 
   useEffect(() => {
     if (!walletActivating && !walletConnectionError) {
@@ -71,8 +59,6 @@ export function ConnectWalletModal({
       <ConnectWalletModalContent
         walletActivating={walletActivating}
         wallets={wallets}
-        impersonatedFormOpen={impersonatedFormOpen}
-        setImpersonatedFormOpen={setImpersonatedFormOpen}
         walletConnectionError={walletConnectionError}
       />
     </BasicModal>

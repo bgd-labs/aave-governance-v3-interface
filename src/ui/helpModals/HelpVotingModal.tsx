@@ -7,7 +7,7 @@ import ProposalTxVotedAgainstImage from '/public/images/helpModals/proposalTxVot
 import ProposalTxVotedAgainstImageDark from '/public/images/helpModals/proposalTxVotedAgainstDark.svg';
 import ProposalTxVotedForImage from '/public/images/helpModals/proposalTxVotedFor.svg';
 import ProposalTxVotedForImageDark from '/public/images/helpModals/proposalTxVotedForDark.svg';
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
+import ArrowToRight from '/public/images/icons/arrowRight.svg';
 
 import { ActiveProposalListItem } from '../../proposals/components/proposalList/ActiveProposalListItem';
 import { useStore } from '../../store';

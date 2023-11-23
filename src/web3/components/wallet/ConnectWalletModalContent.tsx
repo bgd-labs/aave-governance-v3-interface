@@ -4,14 +4,11 @@ import React from 'react';
 import { BoxWith3D } from '../../../ui';
 import { RocketLoader } from '../../../ui/components/RocketLoader';
 import { texts } from '../../../ui/utils/texts';
-import { ImpersonatedForm } from './ImpersonatedForm';
 import { Wallet, WalletItem } from './WalletItem';
 
 interface ConnectWalletModalContentProps {
   walletActivating: boolean;
   wallets: Wallet[];
-  impersonatedFormOpen?: boolean;
-  setImpersonatedFormOpen?: (value: boolean) => void;
   onWalletButtonClick?: () => void;
   walletConnectionError?: string;
   withoutHelpText?: boolean;
@@ -20,8 +17,6 @@ interface ConnectWalletModalContentProps {
 export function ConnectWalletModalContent({
   walletActivating,
   wallets,
-  impersonatedFormOpen,
-  setImpersonatedFormOpen,
   onWalletButtonClick,
   walletConnectionError,
   withoutHelpText,
@@ -33,6 +28,7 @@ export function ConnectWalletModalContent({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
+        pt: 20,
       }}>
       <Box
         sx={{
@@ -43,7 +39,7 @@ export function ConnectWalletModalContent({
         }}>
         <Box
           component="h2"
-          sx={{ typography: 'h1', mb: 20, textAlign: 'center' }}>
+          sx={{ typography: 'h2', mb: 30, textAlign: 'center' }}>
           {texts.walletConnect.connectWallet}
         </Box>
 
@@ -54,7 +50,7 @@ export function ConnectWalletModalContent({
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            minHeight: 245,
+            minHeight: 190,
           }}>
           {walletActivating ? (
             <Box
@@ -67,9 +63,7 @@ export function ConnectWalletModalContent({
               }}>
               <RocketLoader />
 
-              <Box
-                component="h3"
-                sx={{ typography: 'h3', mb: 7, fontWeight: '600' }}>
+              <Box component="h3" sx={{ typography: 'h2', mb: 8 }}>
                 {texts.walletConnect.connecting}
               </Box>
               <Box component="h3" sx={{ typography: 'h3' }}>
@@ -78,25 +72,18 @@ export function ConnectWalletModalContent({
             </Box>
           ) : (
             <>
-              {impersonatedFormOpen && !!setImpersonatedFormOpen ? (
-                <ImpersonatedForm closeClick={setImpersonatedFormOpen} />
-              ) : (
-                <>
-                  {wallets.map((wallet) => (
-                    <React.Fragment key={wallet.walletType}>
-                      {wallet.isVisible && (
-                        <WalletItem
-                          walletType={wallet.walletType}
-                          icon={wallet.icon}
-                          title={wallet.title}
-                          setOpenImpersonatedForm={setImpersonatedFormOpen}
-                          onClick={onWalletButtonClick}
-                        />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </>
-              )}
+              {wallets.map((wallet) => (
+                <React.Fragment key={wallet.walletType}>
+                  {wallet.isVisible && (
+                    <WalletItem
+                      walletType={wallet.walletType}
+                      icon={wallet.icon}
+                      title={wallet.title}
+                      onClick={onWalletButtonClick}
+                    />
+                  )}
+                </React.Fragment>
+              ))}
             </>
           )}
 
@@ -106,7 +93,7 @@ export function ConnectWalletModalContent({
               contentColor="$error"
               borderSize={4}
               wrapperCss={{
-                mb: 10,
+                mb: 12,
                 width: '100%',
               }}
               css={{

@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import { useEffect } from 'react';
 
-import ToRightArrow from '/public/images/icons/toRightArrow.svg';
+import RightArrow from '/public/images/icons/arrowRight.svg';
 
 import { useStore } from '../../store';
 import { BasicModal, BoxWith3D } from '..';
@@ -208,10 +208,10 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
                         '> svg': {
                           width: 20,
                           height: 20,
-                          path: { fill: theme.palette.$textSecondary },
+                          path: { stroke: theme.palette.$textSecondary },
                         },
                       }}>
-                      <ToRightArrow />
+                      <RightArrow />
                     </IconBox>
                   </BoxWith3D>
                 </Box>

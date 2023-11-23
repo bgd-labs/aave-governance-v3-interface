@@ -96,7 +96,6 @@ export function WalletWidget() {
       <TransactionsModal
         isOpen={allTransactionModalOpen}
         setIsOpen={setAllTransactionModalOpen}
-        representedAddresses={representedAddresses}
       />
     </>
   );

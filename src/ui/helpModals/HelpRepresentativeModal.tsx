@@ -5,7 +5,7 @@ import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import RepresentatiivesWalletImage from '/public/images/helpModals/RepresentatiivesWallet.svg';
 import RepresentatiivesWalletImageDark from '/public/images/helpModals/RepresentatiivesWalletDark.svg';
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
+import ArrowToRight from '/public/images/icons/arrowRight.svg';
 
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
 import { useStore } from '../../store';

@@ -6,7 +6,6 @@ import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
-import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import {
   RepresentativeAddress,
@@ -14,9 +13,12 @@ import {
 } from '../../../representations/store/representationsSlice';
 import { formatRepresentedAddresses } from '../../../representations/utils/getRepresentedAddresses';
 import { useStore } from '../../../store';
-import { Divider, Link } from '../../../ui';
+import { Divider } from '../../../ui';
+import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
+import { media } from '../../../ui/utils/themeMUI';
+import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
 import { ENSDataExists } from '../../store/ensSelectors';
@@ -26,6 +28,7 @@ import { ChainsIcons } from './ChainsIcons';
 interface RepresentingFormProps {
   representedAddresses: RepresentedAddress[];
   isForTest?: boolean;
+  isTransactionsVisible?: boolean;
 }
 
 const testInitialAddress = {
@@ -36,8 +39,10 @@ const testInitialAddress = {
 export function RepresentingForm({
   representedAddresses,
   isForTest,
+  isTransactionsVisible,
 }: RepresentingFormProps) {
   const theme = useTheme();
+  const sm = useMediaQuery(media.sm);
   const store = useStore();
   const { setRepresentativeAddress, activeWallet, representative, ensData } =
     store;
@@ -58,18 +63,21 @@ export function RepresentingForm({
     <Box
       sx={{
         display: 'flex',
-        my: 24,
+        my: 20,
         alignItems: 'center',
         flexDirection: 'column',
         position: 'relative',
+        [theme.breakpoints.up('sm')]: {
+          pb: isTransactionsVisible ? 0 : 40,
+          my: 24,
+        },
       }}>
       <Box
-        component="h3"
+        component="h2"
         sx={{
           width: '100%',
-          typography: 'h3',
+          typography: 'h2',
           textAlign: 'center',
-          fontWeight: 600,
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'flex-start',
@@ -91,10 +99,8 @@ export function RepresentingForm({
           alignItems: 'center',
           width: '100%',
           alignSelf: 'flex-start',
-          maxWidth: 450,
-          position: 'relative',
         }}>
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%', maxWidth: 510, position: 'relative' }}>
           <Listbox
             value={localAddress}
             onChange={(value: RepresentativeAddress) => {
@@ -115,24 +121,22 @@ export function RepresentingForm({
                     fontWeight: '400',
                     fontSize: 10,
                     lineHeight: '12px',
-                    p: '7px 5px',
-                    border: `1px solid ${theme.palette.$disabled}`,
-                    borderColor: open ? '$main' : '$disabled',
+                    p: '8px 5px',
+                    border: `1px solid ${theme.palette.$main}`,
                     color: '$text',
                     transition: 'all 0.2s ease',
                     cursor: 'pointer',
                     [theme.breakpoints.up('sm')]: {
-                      fontSize: 11,
-                      lineHeight: '14px',
+                      typography: 'body',
                     },
                     [theme.breakpoints.up('lg')]: {
-                      p: '8px 10px',
+                      p: '6px 10px',
                     },
                     '&:active, &:focus': {
                       borderColor: '$main',
                     },
                     hover: {
-                      borderColor: theme.palette.$main,
+                      backgroundColor: theme.palette.$light,
                     },
                   }}>
                   <Box
@@ -174,9 +178,7 @@ export function RepresentingForm({
                     position: 'absolute',
                     top: 'calc(100% - 1px)',
                     border: `1px solid ${theme.palette.$main}`,
-                    width: !!localAddress.address
-                      ? 'calc(100% - 17px)'
-                      : '100%',
+                    width: '100%',
                     maxHeight: 250,
                     overflowY: 'auto',
                     zIndex: 2,
@@ -196,7 +198,7 @@ export function RepresentingForm({
                         fontWeight: '400',
                         fontSize: 10,
                         lineHeight: '12px',
-                        p: '7px 5px',
+                        p: '8px 5px',
                         color: '$text',
                         transition: 'all 0.2s ease',
                         cursor:
@@ -207,17 +209,16 @@ export function RepresentingForm({
                         backgroundColor:
                           option.address.toLowerCase() ===
                           localAddress.address.toLowerCase()
-                            ? '$disabled'
+                            ? '$light'
                             : '$mainLight',
                         [theme.breakpoints.up('sm')]: {
-                          fontSize: 11,
-                          lineHeight: '14px',
+                          typography: 'body',
                         },
                         [theme.breakpoints.up('lg')]: {
-                          p: '8px 10px',
+                          p: '6px 10px',
                         },
                         hover: {
-                          backgroundColor: theme.palette.$disabled,
+                          backgroundColor: theme.palette.$light,
                         },
                       }}>
                       <Box
@@ -257,34 +258,17 @@ export function RepresentingForm({
         </Box>
 
         {!!localAddress.address && (
-          <Link
-            href={`${chainInfoHelper.getChainParameters(
-              appConfig.govCoreChainId,
+          <CopyAndExternalIconsSet
+            iconSize={16}
+            copyText={sm ? localAddress.address : undefined}
+            externalLink={`${chainInfoHelper.getChainParameters(
+              localAddress.chainsIds[0],
             ).blockExplorers?.default.url}/address/${localAddress.address}`}
-            css={{
-              color: '$textSecondary',
-              lineHeight: 1,
-              hover: { color: theme.palette.$text },
+            sx={{
+              '.CopyAndExternalIconsSet__copy, .CopyAndExternalIconsSet__link':
+                { ml: 8 },
             }}
-            inNewWindow>
-            <IconBox
-              sx={{
-                ml: 5,
-                width: 12,
-                height: 12,
-                '> svg': {
-                  width: 12,
-                  height: 12,
-                  path: { stroke: theme.palette.$textSecondary },
-                  hover: {
-                    color: theme.palette.$text,
-                    path: { stroke: theme.palette.$text },
-                  },
-                },
-              }}>
-              <LinkIcon />
-            </IconBox>
-          </Link>
+          />
         )}
       </Box>
     </Box>

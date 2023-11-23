@@ -201,7 +201,7 @@ export function ConnectWalletButton({
                   },
                 }}
                 textCss={{ typography: 'buttonSmall', color: '$textLight' }}
-                iconSize={12}
+                iconSize={16}
                 chainId={activeWallet?.chain?.id || appConfig.govCoreChainId}
               />
 

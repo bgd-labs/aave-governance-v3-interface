@@ -9,27 +9,18 @@ export type Wallet = {
   walletType: WalletType;
   icon: string;
   title: string;
-  setOpenImpersonatedForm?: (value: boolean) => void;
   onClick?: () => void;
   isVisible?: boolean;
 };
 
-export function WalletItem({
-  walletType,
-  title,
-  icon,
-  setOpenImpersonatedForm,
-  onClick,
-}: Wallet) {
+export function WalletItem({ walletType, title, icon, onClick }: Wallet) {
   const connectWallet = useStore((state) => state.connectWallet);
 
   const handleWalletClick = async () => {
-    if (walletType === 'Impersonated' && setOpenImpersonatedForm) {
-      setOpenImpersonatedForm(true);
-    } else {
-      await connectWallet(walletType);
-    }
+    await connectWallet(walletType);
   };
+
+  const iconSize = 28;
 
   return (
     <Box
@@ -43,14 +34,14 @@ export function WalletItem({
         contentColor="$mainLight"
         borderSize={4}
         wrapperCss={{
-          mb: 10,
+          mb: 12,
         }}
         css={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           transition: 'all 0.2s ease',
-          p: '10px 15px',
+          p: '8px 14px',
         }}>
         <Box component="h3" sx={{ typography: 'h3', color: '$text' }}>
           {title}
@@ -59,14 +50,14 @@ export function WalletItem({
         {walletType === 'Injected' ? (
           <Box
             sx={(theme) => ({
-              width: 28,
-              height: 28,
+              width: iconSize,
+              height: iconSize,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               '> svg': {
-                width: 28,
-                height: 28,
+                width: iconSize,
+                height: iconSize,
                 path: {
                   stroke: theme.palette.$main,
                 },
@@ -77,8 +68,8 @@ export function WalletItem({
         ) : (
           <Box
             sx={{
-              width: 28,
-              height: 28,
+              width: iconSize,
+              height: iconSize,
               background: icon,
               backgroundSize: 'contain',
               backgroundPosition: 'center',

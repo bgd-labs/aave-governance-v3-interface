@@ -7,7 +7,7 @@ import WalletFirstImage from '/public/images/helpModals/wallet1.svg';
 import WalletFirstImageDark from '/public/images/helpModals/wallet1Dark.svg';
 import WalletSecondImage from '/public/images/helpModals/wallet2.svg';
 import WalletSecondImageDark from '/public/images/helpModals/wallet2Dark.svg';
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
+import ArrowToRight from '/public/images/icons/arrowRight.svg';
 
 import { useStore } from '../../store';
 import { TransactionsModalContent } from '../../transactions/components/TransactionsModalContent';

@@ -36,19 +36,16 @@ const ContentWrapper = ({
           '> div': { width: '100%', height: '100%', display: 'flex' },
         }}
         css={{
-          position: 'relative',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          p: '45px 12px 15px',
           [theme.breakpoints.up('sm')]: {
+            position: 'relative',
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            width: '100%',
             display: 'block',
             maxHeight: 'calc(100vh - 20px)',
             height: 'unset',
             maxWidth: maxWidth || 450,
-            p: '50px 30px 30px',
+            p: '24px 30px',
           },
         }}>
         <Box sx={contentCss}>{children}</Box>
@@ -63,7 +60,7 @@ const ContentWrapper = ({
           width: '100%',
           height: '100%',
           display: 'flex',
-          p: '45px 12px 15px',
+          p: '24px 8px',
           [theme.breakpoints.up('sm')]: {
             display: 'none',
           },
@@ -136,7 +133,7 @@ export function BasicModal({
           sx={{
             display: 'flex',
             position: 'fixed',
-            top: 80,
+            top: 70,
             left: 0,
             right: 0,
             bottom: 0,

@@ -10,18 +10,12 @@ import { TransactionInfoItem } from './TransactionInfoItem';
 interface TransactionsModalContentProps {
   allTransactions: AllTransactions;
   onBackButtonClick: () => void;
-  representedAddresses?: RepresentedAddress[];
 }
 
 export function TransactionsModalContent({
   allTransactions,
   onBackButtonClick,
-  representedAddresses,
 }: TransactionsModalContentProps) {
-  const isRepresentedAvailable =
-    typeof representedAddresses !== 'undefined' &&
-    !!representedAddresses.length;
-
   return (
     <Box>
       <Box
@@ -39,14 +33,11 @@ export function TransactionsModalContent({
       />
 
       <Box
-        sx={(theme) => ({
+        sx={{
           overflowY: 'scroll',
-          height: isRepresentedAvailable ? 364 : 324,
+          height: 440,
           pr: 20,
-          [theme.breakpoints.up('lg')]: {
-            height: isRepresentedAvailable ? 368 : 324,
-          },
-        })}>
+        }}>
         {allTransactions.map((tx, index) => (
           <TransactionInfoItem key={index} tx={tx} />
         ))}
