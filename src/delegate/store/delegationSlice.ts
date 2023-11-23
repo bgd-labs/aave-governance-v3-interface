@@ -10,7 +10,10 @@ import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
+import {
+  TransactionsSlice,
+  TxType,
+} from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName, Token } from '../../utils/getTokenName';
@@ -218,7 +221,7 @@ export const createDelegationSlice: StoreSlice<
             return delegationService.batchMetaDelegate(sigs);
           },
           params: {
-            type: 'delegate',
+            type: TxType.delegate,
             desiredChainID: appConfig.govCoreChainId,
             payload: {
               delegateData: stateDelegateData,
@@ -251,7 +254,7 @@ export const createDelegationSlice: StoreSlice<
             return safeSdk.txs.send({ txs: txsData });
           },
           params: {
-            type: 'delegate',
+            type: TxType.delegate,
             desiredChainID: appConfig.govCoreChainId,
             payload: {
               delegateData: stateDelegateData,
@@ -284,7 +287,7 @@ export const createDelegationSlice: StoreSlice<
             );
           },
           params: {
-            type: 'delegate',
+            type: TxType.delegate,
             desiredChainID: appConfig.govCoreChainId,
             payload: {
               delegateData: stateDelegateData,

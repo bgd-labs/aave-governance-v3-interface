@@ -26,7 +26,10 @@ import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
+import {
+  TransactionsSlice,
+  TxType,
+} from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
@@ -1089,7 +1092,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.activateVoting(proposalId);
       },
       params: {
-        type: 'activateVoting',
+        type: TxType.activateVoting,
         desiredChainID: appConfig.govCoreChainId,
         payload: {
           proposalId,
@@ -1131,7 +1134,7 @@ export const createProposalsSlice: StoreSlice<
             );
           },
           params: {
-            type: 'sendProofs',
+            type: TxType.sendProofs,
             desiredChainID: votingChainId,
             payload: {
               proposalId,
@@ -1156,7 +1159,7 @@ export const createProposalsSlice: StoreSlice<
         );
       },
       params: {
-        type: 'activateVotingOnVotingMachine',
+        type: TxType.activateVotingOnVotingMachine,
         desiredChainID: votingChainId,
         payload: {
           proposalId,
@@ -1222,7 +1225,7 @@ export const createProposalsSlice: StoreSlice<
                     });
               },
               params: {
-                type: 'vote',
+                type: TxType.vote,
                 desiredChainID: votingChainId,
                 payload: {
                   proposalId,
@@ -1262,7 +1265,7 @@ export const createProposalsSlice: StoreSlice<
                     });
               },
               params: {
-                type: 'vote',
+                type: TxType.vote,
                 desiredChainID: votingChainId,
                 payload: {
                   proposalId,
@@ -1286,7 +1289,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.closeAndSendVote(votingChainId, proposalId);
       },
       params: {
-        type: 'closeAndSendVote',
+        type: TxType.closeAndSendVote,
         desiredChainID: votingChainId,
         payload: {
           proposalId,
@@ -1304,7 +1307,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.executeProposal(proposalId);
       },
       params: {
-        type: 'executeProposal',
+        type: TxType.executeProposal,
         desiredChainID: appConfig.govCoreChainId,
         payload: {
           proposalId,
@@ -1326,7 +1329,7 @@ export const createProposalsSlice: StoreSlice<
         );
       },
       params: {
-        type: 'executePayload',
+        type: TxType.executePayload,
         desiredChainID: payload.chainId,
         payload: {
           proposalId,
@@ -1355,7 +1358,7 @@ export const createProposalsSlice: StoreSlice<
         );
       },
       params: {
-        type: 'createPayload',
+        type: TxType.createPayload,
         desiredChainID: chainId,
         payload: {
           chainId,
@@ -1412,7 +1415,7 @@ export const createProposalsSlice: StoreSlice<
           );
         },
         params: {
-          type: 'createProposal',
+          type: TxType.createProposal,
           desiredChainID: appConfig.govCoreChainId,
           payload: {
             proposalId: proposalsCount,
@@ -1430,7 +1433,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.cancelProposal(proposalId);
       },
       params: {
-        type: 'cancelProposal',
+        type: TxType.cancelProposal,
         desiredChainID: appConfig.govCoreChainId,
         payload: {
           proposalId,

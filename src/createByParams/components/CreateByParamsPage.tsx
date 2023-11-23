@@ -11,6 +11,7 @@ import { DetailsShareLinks } from '../../proposals/components/proposal/DetailsSh
 import { ProposalPayloads } from '../../proposals/components/proposal/ProposalPayloads';
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../transactions/store/transactionsSlice';
 import {
   BackButton3D,
   BigButton,
@@ -76,7 +77,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     setFullTxErrorMessage,
     tx,
   } = useLastTxLocalStatus({
-    type: 'createProposal',
+    type: TxType.createProposal,
     payload: { proposalId: totalProposalCount },
   });
 

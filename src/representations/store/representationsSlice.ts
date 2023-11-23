@@ -5,7 +5,10 @@ import { Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
+import {
+  TransactionsSlice,
+  TxType,
+} from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
 import {
@@ -228,7 +231,7 @@ export const createRepresentationsSlice: StoreSlice<
           return govDataService.updateRepresentatives({ data: formattedData });
         },
         params: {
-          type: 'representations',
+          type: TxType.representations,
           desiredChainID: appConfig.govCoreChainId,
           payload: { initialData, data: formData, timestamp },
         },

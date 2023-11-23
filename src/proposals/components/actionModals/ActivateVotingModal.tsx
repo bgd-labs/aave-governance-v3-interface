@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
 import {
   ActionModalContentWrapper,
@@ -19,7 +20,7 @@ export function ActivateVotingModal({
 
   return (
     <ActionModal
-      type="activateVoting"
+      type={TxType.activateVoting}
       payload={{ proposalId }}
       callbackFunction={async () => await activateVoting(proposalId)}
       isOpen={isOpen}

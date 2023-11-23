@@ -13,7 +13,10 @@ import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 
 import { useStore } from '../../../store';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Timer } from '../../../ui';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
@@ -130,22 +133,22 @@ export function ProposalStatusDetails({
 
     const isPending =
       tx &&
-      tx.type !== 'delegate' &&
-      tx.type !== 'test' &&
-      tx.type !== 'createPayload' &&
-      tx.type !== 'cancelProposal' &&
-      tx.type !== 'representations' &&
+      tx.type !== TxType.delegate &&
+      tx.type !== TxType.test &&
+      tx.type !== TxType.createPayload &&
+      tx.type !== TxType.cancelProposal &&
+      tx.type !== TxType.representations &&
       tx.type === type &&
       tx.payload.proposalId === proposalId &&
       tx.pending;
 
     const isSuccess =
       tx &&
-      tx.type !== 'delegate' &&
-      tx.type !== 'test' &&
-      tx.type !== 'createPayload' &&
-      tx.type !== 'cancelProposal' &&
-      tx.type !== 'representations' &&
+      tx.type !== TxType.delegate &&
+      tx.type !== TxType.test &&
+      tx.type !== TxType.createPayload &&
+      tx.type !== TxType.cancelProposal &&
+      tx.type !== TxType.representations &&
       tx.type === type &&
       tx.payload.proposalId === proposalId &&
       tx.status === TransactionStatus.Success;
@@ -219,13 +222,13 @@ export function ProposalStatusDetails({
                 <BigButton
                   loading={
                     getTxStatus({
-                      type: 'activateVoting',
+                      type: TxType.activateVoting,
                       payload: { proposalId },
                     }).isPending
                   }
                   disabled={
                     getTxStatus({
-                      type: 'activateVoting',
+                      type: TxType.activateVoting,
                       payload: { proposalId },
                     }).isSuccess
                   }
@@ -267,7 +270,7 @@ export function ProposalStatusDetails({
                   key={index}
                   loading={
                     getTxStatus({
-                      type: 'sendProofs',
+                      type: TxType.sendProofs,
                       payload: {
                         proposalId,
                         blockHash: blockHash,
@@ -278,7 +281,7 @@ export function ProposalStatusDetails({
                   }
                   disabled={
                     getTxStatus({
-                      type: 'sendProofs',
+                      type: TxType.sendProofs,
                       payload: {
                         proposalId,
                         blockHash: blockHash,
@@ -312,13 +315,13 @@ export function ProposalStatusDetails({
               <BigButton
                 disabled={
                   getTxStatus({
-                    type: 'activateVotingOnVotingMachine',
+                    type: TxType.activateVotingOnVotingMachine,
                     payload: { proposalId },
                   }).isSuccess
                 }
                 loading={
                   getTxStatus({
-                    type: 'activateVotingOnVotingMachine',
+                    type: TxType.activateVotingOnVotingMachine,
                     payload: { proposalId },
                   }).isPending
                 }
@@ -354,13 +357,13 @@ export function ProposalStatusDetails({
             <BigButton
               disabled={
                 getTxStatus({
-                  type: 'closeAndSendVote',
+                  type: TxType.closeAndSendVote,
                   payload: { proposalId },
                 }).isSuccess
               }
               loading={
                 getTxStatus({
-                  type: 'closeAndSendVote',
+                  type: TxType.closeAndSendVote,
                   payload: { proposalId },
                 }).isPending
               }
@@ -407,13 +410,13 @@ export function ProposalStatusDetails({
               <BigButton
                 disabled={
                   getTxStatus({
-                    type: 'executeProposal',
+                    type: TxType.executeProposal,
                     payload: { proposalId },
                   }).isSuccess
                 }
                 loading={
                   getTxStatus({
-                    type: 'executeProposal',
+                    type: TxType.executeProposal,
                     payload: { proposalId },
                   }).isPending
                 }

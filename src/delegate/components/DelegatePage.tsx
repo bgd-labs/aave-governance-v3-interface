@@ -13,6 +13,7 @@ import WarningIcon from '/public/images/icons/warningIcon.svg';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../transactions/store/transactionsSlice';
 import {
   BackButton3D,
   BigButton,
@@ -75,7 +76,7 @@ export function DelegatePage() {
     executeTxWithLocalStatuses,
     tx,
   } = useLastTxLocalStatus({
-    type: 'delegate',
+    type: TxType.delegate,
     payload: {
       delegateData: stateDelegateData,
       formDelegateData: submittedFormData,

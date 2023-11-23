@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
 import { getTokenName } from '../../../utils/getTokenName';
 import {
@@ -33,7 +34,7 @@ export function SendProofsModal({
 
   return (
     <ActionModal
-      type="sendProofs"
+      type={TxType.sendProofs}
       payload={{ proposalId, blockHash, underlyingAsset, withSlot }}
       callbackFunction={async () =>
         await sendProofs(

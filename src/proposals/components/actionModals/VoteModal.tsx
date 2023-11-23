@@ -23,6 +23,7 @@ import { checkIsVotingAvailable } from '../../../representations/store/represent
 import { useStore } from '../../../store';
 import { BasicActionModal } from '../../../transactions/components/BasicActionModal';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { BigButton, ToggleButton, Tooltip } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { GelatoSwitcher } from '../../../ui/components/GelatoSwitcher';
@@ -106,7 +107,7 @@ export function VoteModal({
     setFullTxErrorMessage,
     tx,
   } = useLastTxLocalStatus({
-    type: 'vote',
+    type: TxType.vote,
     payload: {
       proposalId,
       support: !support,

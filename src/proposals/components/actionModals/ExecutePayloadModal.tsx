@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
 import {
   ActionModalContentWrapper,
@@ -23,7 +24,7 @@ export function ExecutePayloadModal({
 
   return (
     <ActionModal
-      type="executePayload"
+      type={TxType.executePayload}
       payload={{
         proposalId,
         payloadId: payload.id,

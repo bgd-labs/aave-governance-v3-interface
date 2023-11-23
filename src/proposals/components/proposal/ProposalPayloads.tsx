@@ -20,7 +20,10 @@ import LinkIcon from '/public/images/icons/linkIcon.svg';
 import { SeatBeltReportModal } from '../../../createByParams/components/SeatBeltReportModal';
 import { NewPayload } from '../../../createByParams/store/createByParamsSlice';
 import { useStore } from '../../../store';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
 import {
   BoxWith3D,
   CopyToClipboard,
@@ -164,7 +167,7 @@ function PayloadItem({
     selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
       store.activeWallet.address,
-      'executePayload',
+      TxType.executePayload,
       {
         proposalId,
         payloadId: payload.id,
