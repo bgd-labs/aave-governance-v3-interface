@@ -30,8 +30,7 @@ export function TransactionsModal({
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       maxWidth={690}
-      withCloseButton
-      withoutAnimationWhenOpen>
+      withCloseButton>
       <TransactionsModalContent
         allTransactions={allTransactions
           .filter(

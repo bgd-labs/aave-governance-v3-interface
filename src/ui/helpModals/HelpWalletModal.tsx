@@ -74,7 +74,6 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       isOpen={isHelpWalletModalOpen}
       setIsOpen={setIsHelpWalletModalOpen}
       maxWidth={helpModalWidth}

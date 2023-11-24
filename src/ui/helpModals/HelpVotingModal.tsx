@@ -68,7 +68,6 @@ export function HelpVotingModal() {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpVotingModalOpen}
       setIsOpen={setIsHelpVotingModalOpen}

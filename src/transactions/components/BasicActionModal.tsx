@@ -9,6 +9,7 @@ import {
 export interface BasicActionModalProps extends ActionModalContentProps {
   isOpen: boolean;
   setFullTxErrorMessage: (value: string) => void;
+  withMinHeight?: boolean;
 }
 
 export function BasicActionModal({
@@ -26,6 +27,7 @@ export function BasicActionModal({
   fullTxErrorMessage,
   setFullTxErrorMessage,
   tx,
+  withMinHeight,
 }: BasicActionModalProps) {
   useEffect(() => {
     setIsTxStart(false);
@@ -34,7 +36,11 @@ export function BasicActionModal({
   }, [isOpen]);
 
   return (
-    <BasicModal isOpen={isOpen} setIsOpen={setIsOpen} withCloseButton>
+    <BasicModal
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      withCloseButton
+      withMinHeight={withMinHeight}>
       <ActionModalContent
         topBlock={topBlock}
         setIsOpen={setIsOpen}

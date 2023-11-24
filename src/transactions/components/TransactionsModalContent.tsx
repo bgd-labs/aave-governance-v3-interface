@@ -17,9 +17,7 @@ export function TransactionsModalContent({
 }: TransactionsModalContentProps) {
   return (
     <Box>
-      <Box
-        component="h3"
-        sx={{ typography: 'h3', textAlign: 'left', fontWeight: '600' }}>
+      <Box component="h2" sx={{ typography: 'h2', textAlign: 'left' }}>
         {texts.transactions.allTransactions}
       </Box>
 

@@ -215,7 +215,6 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpDelegateModalOpen}
       setIsOpen={setIsHelpDelegateModalOpen}

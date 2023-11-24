@@ -137,7 +137,6 @@ export function HelpRepresentationModal({
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpRepresentationModalOpen}
       setIsOpen={setIsHelpRepresentationModalOpen}

@@ -25,7 +25,6 @@ export function HelpDelegationVP() {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       isOpen={isHelpDelegationVotingPowerModalOpen}
       setIsOpen={setIsHelpDelegationVotingPowerModalOpen}
       maxWidth={helpModalWidth}

@@ -57,7 +57,7 @@ export function ConnectWalletButton({
 
   const ensNameAbbreviated = ensName
     ? ensName.length > 11
-      ? textCenterEllipsis(ensName, 6, 2)
+      ? textCenterEllipsis(ensName, 5, 3)
       : ensName
     : undefined;
 

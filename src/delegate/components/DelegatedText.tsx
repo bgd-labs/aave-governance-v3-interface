@@ -144,15 +144,6 @@ export function DelegatedText({
                 .name
             : data.propositionToAddress;
 
-        const middleText =
-          typeof data.bothAddresses !== 'undefined'
-            ? `${texts.delegatePage.votingAndPropositionPowers} to`
-            : typeof data.votingToAddress !== 'undefined'
-              ? `${texts.delegatePage.votingPower} to`
-              : typeof data.propositionToAddress !== 'undefined'
-                ? `${texts.delegatePage.propositionPower} to`
-                : '';
-
         const address =
           typeof data.bothAddresses !== 'undefined'
             ? isBothPowersDelegated
@@ -172,6 +163,19 @@ export function DelegatedText({
                     ? textCenterEllipsis(formattedPropositionToAddress, 6, 4)
                     : formattedPropositionToAddress
                   : ''
+                : '';
+
+        const middleText =
+          typeof data.bothAddresses !== 'undefined'
+            ? `${texts.delegatePage.votingAndPropositionPowers} ${
+                !!address ? 'to' : ''
+              }`
+            : typeof data.votingToAddress !== 'undefined'
+              ? `${texts.delegatePage.votingPower} ${!!address ? 'to' : ''}`
+              : typeof data.propositionToAddress !== 'undefined'
+                ? `${texts.delegatePage.propositionPower} ${
+                    !!address ? 'to' : ''
+                  }`
                 : '';
 
         const endText = delegatedData.length - 1 !== index ? 'and ' : '';
@@ -196,7 +200,7 @@ export function DelegatedText({
         return (
           <Box sx={{ display: 'inline' }} key={index}>
             {firstText} <b>{data.symbol}</b> {middleText}{' '}
-            {!!link ? (
+            {!!link && (
               <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
                 <Link
                   href={link}
@@ -208,13 +212,11 @@ export function DelegatedText({
                   {address}
                 </Link>
                 <CopyAndExternalIconsSet
-                  iconSize={12}
+                  iconSize={10}
                   externalLink={link}
                   sx={{ '.CopyAndExternalIconsSet__link': { ml: 3 } }}
                 />
               </Box>
-            ) : (
-              <>{middleText}</>
             )}{' '}
             {endText}
           </Box>

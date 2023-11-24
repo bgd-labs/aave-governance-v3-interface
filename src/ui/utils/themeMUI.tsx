@@ -132,7 +132,7 @@ export const getDesignTokens = (mode: 'light' | 'dark') => {
         fontFamily: FONT,
         fontWeight: '600',
         fontSize: 14,
-        lineHeight: '17px',
+        lineHeight: '20px',
       },
       body: {
         fontFamily: FONT,
@@ -142,7 +142,7 @@ export const getDesignTokens = (mode: 'light' | 'dark') => {
       },
       descriptor: {
         fontFamily: FONT,
-        fontWeight: '400',
+        fontWeight: '300',
         fontSize: 11,
         lineHeight: '13px',
       },

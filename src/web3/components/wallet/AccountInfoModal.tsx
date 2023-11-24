@@ -48,7 +48,6 @@ export function AccountInfoModal({
       isOpen={isOpen}
       setIsOpen={(value) => setTimeout(() => setIsOpen(value), 1)}
       withCloseButton
-      withoutAnimationWhenOpen
       maxWidth={690}>
       <AccountInfoModalContent
         ensName={ensName}

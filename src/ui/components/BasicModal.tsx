@@ -13,15 +13,34 @@ const ContentWrapper = ({
   children,
   maxWidth,
   contentCss,
+  withMinHeight,
 }: {
   children: ReactNode;
   maxWidth?: number | string;
   contentCss?: SxProps;
+  withMinHeight?: boolean;
 }) => {
   const theme = useTheme();
 
   return (
     <>
+      <Box
+        sx={{
+          backgroundColor: '$mainLight',
+          position: 'relative',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          p: '24px 8px',
+          [theme.breakpoints.up('sm')]: {
+            display: 'none',
+          },
+        }}>
+        {children}
+      </Box>
+
       <BoxWith3D
         borderSize={10}
         contentColor="$mainLight"
@@ -44,29 +63,26 @@ const ContentWrapper = ({
             display: 'block',
             maxHeight: 'calc(100vh - 20px)',
             height: 'unset',
-            maxWidth: maxWidth || 450,
+            maxWidth: maxWidth || 460,
             p: '24px 30px',
+            minHeight: 'unset',
+            '@media only screen and (min-height: 575px)': {
+              minHeight: withMinHeight ? 500 : 'unset',
+            },
           },
         }}>
-        <Box sx={contentCss}>{children}</Box>
+        <Box
+          sx={{
+            width: '100%',
+            minHeight: 'inherit',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}>
+          <Box sx={{ width: '100%', ...contentCss }}>{children}</Box>
+        </Box>
       </BoxWith3D>
-
-      <Box
-        sx={{
-          backgroundColor: '$mainLight',
-          position: 'relative',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          p: '24px 8px',
-          [theme.breakpoints.up('sm')]: {
-            display: 'none',
-          },
-        }}>
-        {children}
-      </Box>
     </>
   );
 };
@@ -78,11 +94,11 @@ export interface BasicModalProps {
   maxWidth?: number | string;
   withCloseButton?: boolean;
   withoutOverlap?: boolean;
-  withoutAnimationWhenOpen?: boolean;
   onBackButtonClick?: () => void;
   contentCss?: SxProps;
   modalCss?: SxProps;
   initialFocus?: any;
+  withMinHeight?: boolean;
 }
 
 export function BasicModal({
@@ -92,11 +108,11 @@ export function BasicModal({
   maxWidth,
   withCloseButton,
   withoutOverlap,
-  withoutAnimationWhenOpen,
   onBackButtonClick,
   contentCss,
   modalCss,
   initialFocus,
+  withMinHeight,
 }: BasicModalProps) {
   const theme = useTheme();
 
@@ -148,29 +164,21 @@ export function BasicModal({
             sx={{
               width: '100%',
               height: '100%',
-              '@keyframes modalOpen': {
-                '0%': {
-                  opacity: withoutAnimationWhenOpen ? 1 : 0.5,
-                },
-                '100%': {
-                  opacity: 1,
-                },
-              },
-              '@media (hover: hover) and (pointer: fine)': {
-                animation: `modalOpen 0.3s`,
-              },
               [theme.breakpoints.up('sm')]: {
                 m: 12,
-                maxWidth: maxWidth || 450,
+                maxWidth: maxWidth || 460,
                 height: 'unset',
               },
             }}>
-            <ContentWrapper contentCss={contentCss} maxWidth={maxWidth}>
+            <ContentWrapper
+              contentCss={contentCss}
+              maxWidth={maxWidth}
+              withMinHeight={withMinHeight}>
               <Box
                 sx={{
                   margin: 'auto',
                   width: '100%',
-                  maxWidth: maxWidth || 450,
+                  maxWidth: maxWidth || 460,
                   [theme.breakpoints.up('sm')]: {
                     margin: '0 auto',
                     maxWidth: 'unset',

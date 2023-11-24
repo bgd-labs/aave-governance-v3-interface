@@ -22,18 +22,23 @@ const Button = styled('button')({
 export function ToggleButton({ value, onToggle, css }: ToggleButtonProps) {
   const theme = useTheme();
   const width = '100%';
+  const mobileHeight = 52;
   const height = 60;
 
   return (
     <Box
       sx={{
         width: width,
-        minHeight: height,
+        minHeight: mobileHeight,
         position: 'relative',
         backgroundColor: '$paper',
         border: `1px solid ${theme.palette.$main}`,
-        mb: 20,
+        mb: 18,
         ...css,
+        [theme.breakpoints.up('lg')]: {
+          minHeight: height,
+          mb: 24,
+        },
       }}>
       <Box
         sx={{
@@ -57,7 +62,10 @@ export function ToggleButton({ value, onToggle, css }: ToggleButtonProps) {
           <BoxWith3D
             alwaysWithBorders
             borderSize={4}
-            css={{ height }}
+            css={{
+              height: mobileHeight,
+              [theme.breakpoints.up('lg')]: { height },
+            }}
             contentColor={value ? '$mainAgainst' : '$mainFor'}
             bottomBorderColor={value ? '$secondaryAgainst' : '$secondaryFor'}
             leftBorderColor={value ? '$secondaryAgainst' : '$secondaryFor'}>
@@ -69,11 +77,14 @@ export function ToggleButton({ value, onToggle, css }: ToggleButtonProps) {
           onClick={() => onToggle(false)}
           type="button"
           sx={{
-            minHeight: height,
-            color: !value ? '$textWhite' : '$text',
+            minHeight: mobileHeight,
+            color: !value ? '$textWhite' : '$secondaryBorder',
             transform: !value ? 'translate(1px, -2px)' : 'unset',
             hover: {
               color: !value ? theme.palette.$textWhite : theme.palette.$mainFor,
+            },
+            [theme.breakpoints.up('lg')]: {
+              minHeight: height,
             },
           }}>
           <Box component="p" sx={{ typography: 'buttonLarge' }}>
@@ -84,13 +95,16 @@ export function ToggleButton({ value, onToggle, css }: ToggleButtonProps) {
           onClick={() => onToggle(true)}
           type="button"
           sx={{
-            minHeight: height,
-            color: value ? '$textWhite' : '$text',
+            minHeight: mobileHeight,
+            color: value ? '$textWhite' : '$secondaryBorder',
             transform: value ? 'translate(4px, -2px)' : 'unset',
             hover: {
               color: value
                 ? theme.palette.$textWhite
                 : theme.palette.$mainAgainst,
+            },
+            [theme.breakpoints.up('lg')]: {
+              minHeight: height,
             },
           }}>
           <Box component="p" sx={{ typography: 'buttonLarge' }}>

@@ -37,7 +37,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
     return (
       <ChainNameWithIcon
         chainId={tx.chainId}
-        iconSize={8}
+        iconSize={10}
         css={{
           display: 'inline-block',
           '.NetworkIcon': { mr: 2 },
@@ -51,7 +51,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
     return (
       <ChainNameWithIcon
         chainId={appConfig.govCoreChainId}
-        iconSize={8}
+        iconSize={10}
         css={{
           display: 'inline-block',
           '.NetworkIcon': { mr: 2 },

@@ -173,6 +173,9 @@ const TimelineItem = ({
             minWidth: 80,
             top: 'calc(100% + 12px)',
             color: finished ? '$text' : '$textSecondary',
+            [theme.breakpoints.up('lg')]: {
+              minWidth: 100,
+            },
           },
         }}>
         {color === 'bigCanceled' ||
@@ -340,6 +343,9 @@ const StateWrapper = ({
                 : color === 'secondary'
                   ? theme.palette.$text
                   : theme.palette.$text,
+        [theme.breakpoints.up('lg')]: {
+          top: 'calc(100% + 40px)',
+        },
       })}>
       {children}
     </Box>
@@ -620,7 +626,7 @@ export function ProposalTimeline({
           overflowX: 'auto',
           px: 40,
           width: '100%',
-          '@media only screen and (min-width: 920px)': { overflowX: 'hidden' },
+          '@media only screen and (min-width: 960px)': { overflowX: 'hidden' },
         }}>
         <Box
           sx={{
@@ -630,9 +636,9 @@ export function ProposalTimeline({
             alignItems: 'center',
             justifyContent: 'space-between',
             pb: 57,
-            pt: 35,
+            pt: 45,
             minWidth: 500,
-            '@media only screen and (min-width: 920px)': {
+            '@media only screen and (min-width: 960px)': {
               minWidth: 'unset',
             },
           }}>

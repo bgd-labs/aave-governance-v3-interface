@@ -88,7 +88,6 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       isOpen={isHelpNavigationModalOpen}
       setIsOpen={setIsHelpNavigationModalOpen}
       maxWidth={helpModalWidth}

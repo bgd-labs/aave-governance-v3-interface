@@ -68,7 +68,7 @@ export function TxText({
 
         return (
           <Box sx={{ display: 'inline' }} key={item.chainId}>
-            {firstText} by{' '}
+            {firstText} {isRepresent ? 'by' : ''}{' '}
             {isRepresent && (
               <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
                 <Link
@@ -100,7 +100,7 @@ export function TxText({
             <b>
               <ChainNameWithIcon
                 chainId={item.chainId}
-                iconSize={8}
+                iconSize={10}
                 css={{
                   position: 'relative',
                   bottom: inTxHistory ? 0 : 2,

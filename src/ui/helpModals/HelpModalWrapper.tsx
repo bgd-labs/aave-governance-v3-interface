@@ -27,7 +27,6 @@ export function HelpModalWrapper({
       setIsOpen={
         typeof setIsOpen !== 'undefined' ? setIsOpen : setIsHelpModalOpen
       }
-      withoutAnimationWhenOpen
       maxWidth={500}
       onBackButtonClick={onBackButtonClick}
       contentCss={{

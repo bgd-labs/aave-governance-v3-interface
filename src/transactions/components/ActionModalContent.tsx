@@ -54,6 +54,9 @@ export function ActionModalContent({
 
   const rocketSize = 77;
 
+  const isFinalStatus =
+    !tx?.pending && (tx?.isError || tx?.isSuccess || tx?.isReplaced);
+
   return (
     <>
       {topBlock}
@@ -75,60 +78,72 @@ export function ActionModalContent({
                 justifyContent: 'center',
                 textAlign: 'center',
                 flex: 1,
-                py: 20,
+                py: 24,
                 flexDirection: 'column',
+                position: 'relative',
+                top: !isFinalStatus ? 30 : 0,
+                [theme.breakpoints.up('lg')]: {
+                  py: 40,
+                },
               }}>
-              {tx?.pending && (
-                <Box sx={{ lineHeight: 0, ml: -13 }}>
-                  <RocketLoader size={rocketSize} />
-                </Box>
-              )}
-              {tx?.isError && (
-                <IconBox
-                  sx={{
-                    width: rocketSize,
-                    height: rocketSize,
-                    '> svg': {
+              <Box
+                sx={{
+                  minHeight: 80,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {tx?.pending && (
+                  <Box sx={{ lineHeight: 0, ml: -13 }}>
+                    <RocketLoader size={rocketSize} />
+                  </Box>
+                )}
+                {tx?.isError && (
+                  <IconBox
+                    sx={{
                       width: rocketSize,
                       height: rocketSize,
-                    },
-                  }}>
-                  <RocketError />
-                </IconBox>
-              )}
-              {tx?.isSuccess && (
-                <IconBox
-                  sx={{
-                    width: rocketSize,
-                    height: rocketSize,
-                    '> svg': {
+                      '> svg': {
+                        width: rocketSize,
+                        height: rocketSize,
+                      },
+                    }}>
+                    <RocketError />
+                  </IconBox>
+                )}
+                {tx?.isSuccess && (
+                  <IconBox
+                    sx={{
                       width: rocketSize,
                       height: rocketSize,
-                    },
-                  }}>
-                  <RocketSuccess />
-                </IconBox>
-              )}
-              {tx?.isReplaced && (
-                <IconBox
-                  sx={{
-                    width: rocketSize,
-                    height: rocketSize,
-                    '> svg': {
+                      '> svg': {
+                        width: rocketSize,
+                        height: rocketSize,
+                      },
+                    }}>
+                    <RocketSuccess />
+                  </IconBox>
+                )}
+                {tx?.isReplaced && (
+                  <IconBox
+                    sx={{
                       width: rocketSize,
                       height: rocketSize,
-                    },
-                  }}>
-                  <RocketReplaced />
-                </IconBox>
-              )}
+                      '> svg': {
+                        width: rocketSize,
+                        height: rocketSize,
+                      },
+                    }}>
+                    <RocketReplaced />
+                  </IconBox>
+                )}
+              </Box>
 
               <Box
                 component="h3"
                 sx={{
-                  typography: 'h3',
-                  mb: 8,
-                  fontWeight: 600,
+                  mb: 4,
+                  typography: 'headline',
                   color: tx?.isError ? '$error' : '$text',
                 }}>
                 {tx?.pending && texts.transactions.pending}
@@ -136,7 +151,7 @@ export function ActionModalContent({
                 {tx?.isError && texts.transactions.error}
                 {tx?.isReplaced && texts.transactions.replaced}
               </Box>
-              <Box sx={{ typography: 'h3' }}>
+              <Box>
                 {tx?.pending && texts.transactions.pendingDescription}
                 {tx?.isSuccess && !!successElement
                   ? successElement
@@ -144,6 +159,18 @@ export function ActionModalContent({
                 {tx?.isError && texts.transactions.notExecuted}
                 {tx?.isReplaced && texts.transactions.txReplaced}
               </Box>
+            </Box>
+
+            <Box
+              sx={{
+                mb: isFinalStatus ? 24 : 0,
+                mt: isFinalStatus ? 0 : 24,
+                minHeight: 15,
+                [theme.breakpoints.up('lg')]: {
+                  mb: isFinalStatus ? 40 : 0,
+                  mt: isFinalStatus ? 0 : 40,
+                },
+              }}>
               {tx?.isError && (
                 <Box
                   sx={{
@@ -151,7 +178,6 @@ export function ActionModalContent({
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    my: 12,
                   }}>
                   {fullTxErrorMessage && (
                     <CopyErrorButton errorMessage={fullTxErrorMessage} />
@@ -163,7 +189,6 @@ export function ActionModalContent({
                   <Box
                     sx={{
                       display: 'flex',
-                      mt: 40,
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
@@ -222,7 +247,7 @@ export function ActionModalContent({
                   <Box
                     sx={{
                       display: 'flex',
-                      mt: 8,
+                      mt: 12,
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
@@ -278,6 +303,13 @@ export function ActionModalContent({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                minHeight: 40,
+                [theme.breakpoints.up('sm')]: {
+                  minHeight: 50,
+                },
+                [theme.breakpoints.up('lg')]: {
+                  minHeight: 55,
+                },
               }}>
               {(tx?.isSuccess || tx?.isReplaced) && (
                 <BigButton alwaysWithBorders onClick={() => setIsOpen(false)}>

@@ -25,7 +25,6 @@ export function HelpDelegationPP() {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       isOpen={isHelpDelegationPropositionPowerModalOpen}
       setIsOpen={setIsHelpDelegationPropositionPowerModalOpen}
       maxWidth={helpModalWidth}

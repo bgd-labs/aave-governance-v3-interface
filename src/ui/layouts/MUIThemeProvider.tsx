@@ -61,10 +61,10 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
     fontFamily: FONT,
     fontWeight: '600',
     fontSize: 14,
-    lineHeight: '17px',
+    lineHeight: '20px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 15,
-      lineHeight: '18px',
+      lineHeight: '24px',
     },
   };
   // @ts-ignore
@@ -81,12 +81,12 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   // @ts-ignore
   currentTheme.typography.descriptor = {
     fontFamily: FONT,
-    fontWeight: '400',
+    fontWeight: '300',
     fontSize: 11,
     lineHeight: '13px',
     [currentTheme.breakpoints.up('lg')]: {
-      fontSize: 13,
-      lineHeight: '15px',
+      fontSize: 12,
+      lineHeight: '14px',
     },
   };
   // @ts-ignore
@@ -96,8 +96,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
     fontSize: 11,
     lineHeight: '13px',
     [currentTheme.breakpoints.up('lg')]: {
-      fontSize: 13,
-      lineHeight: '15px',
+      fontSize: 12,
+      lineHeight: '14px',
     },
   };
   // @ts-ignore
