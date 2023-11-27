@@ -2,8 +2,11 @@ import { Metadata } from 'next';
 import React from 'react';
 import { Hex } from 'viem';
 
-import { CreateByParamsPage } from '../../src/createByParams/components/CreateByParamsPage';
-import { InitialParams, PayloadParams } from '../../src/createByParams/types';
+import { ProposalCreateOverviewPage } from '../../src/proposalCreateOverview/components/ProposalCreateOverviewPage';
+import {
+  InitialParams,
+  PayloadParams,
+} from '../../src/proposalCreateOverview/types';
 import { metaTexts } from '../../src/ui/utils/metaTexts';
 
 export const metadata: Metadata = {
@@ -16,7 +19,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function CreateByParams({
+export default async function ProposalCreateOverview({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -48,5 +51,5 @@ export default async function CreateByParams({
     payloads: Object.values(payloads),
   };
 
-  return <CreateByParamsPage initialParams={initialParams} />;
+  return <ProposalCreateOverviewPage initialParams={initialParams} />;
 }

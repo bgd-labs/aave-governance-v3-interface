@@ -17,8 +17,8 @@ import ArrowToTop from '/public/images/icons/arrowToTop.svg';
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { SeatBeltReportModal } from '../../../createByParams/components/SeatBeltReportModal';
-import { NewPayload } from '../../../createByParams/store/createByParamsSlice';
+import { SeatBeltReportModal } from '../../../proposalCreateOverview/components/SeatBeltReportModal';
+import { NewPayload } from '../../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { useStore } from '../../../store';
 import {
   TransactionUnion,

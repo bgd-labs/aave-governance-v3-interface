@@ -21,9 +21,9 @@ import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
-import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
+import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import {
@@ -216,7 +216,7 @@ export const createProposalsSlice: StoreSlice<
     IRepresentationsSlice &
     IEnsSlice &
     IRpcSwitcherSlice &
-    ICreateByParamsSlice &
+    IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice
 > = (set, get) => ({
   isInitialLoading: true,

@@ -3,10 +3,13 @@ import queryString from 'query-string';
 import React from 'react';
 import { Hex } from 'viem';
 
-import { CreateByParamsPage } from '../src/createByParams/components/CreateByParamsPage';
-import { InitialParams, PayloadParams } from '../src/createByParams/types';
+import { ProposalCreateOverviewPage } from '../src/proposalCreateOverview/components/ProposalCreateOverviewPage';
+import {
+  InitialParams,
+  PayloadParams,
+} from '../src/proposalCreateOverview/types';
 
-export default function CreateByParams() {
+export default function ProposalCreateOverview() {
   const searchParams = useSearchParams();
 
   if (!searchParams) return null;
@@ -38,5 +41,5 @@ export default function CreateByParams() {
     payloads: Object.values(payloads),
   };
 
-  return <CreateByParamsPage initialParams={initialParams} />;
+  return <ProposalCreateOverviewPage initialParams={initialParams} />;
 }

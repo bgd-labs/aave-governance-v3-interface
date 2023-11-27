@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import { ReactNode, useRef } from 'react';
 
 import { useStore } from '../../store';

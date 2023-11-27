@@ -9,10 +9,10 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Hex } from 'viem';
 
-import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
+import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';
 import { IProposalsListCacheSlice } from '../../proposals/store/proposalsListCacheSlice';
 import { getProposalDataById } from '../../proposals/store/proposalsSelectors';
@@ -186,7 +186,7 @@ export const createTransactionsSlice: StoreSlice<
     IRepresentationsSlice &
     IEnsSlice &
     IRpcSwitcherSlice &
-    ICreateByParamsSlice &
+    IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({

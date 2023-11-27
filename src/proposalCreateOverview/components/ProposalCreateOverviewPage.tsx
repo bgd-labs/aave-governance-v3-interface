@@ -28,11 +28,13 @@ import { appConfig } from '../../utils/appConfig';
 import { chainInfoHelper } from '../../utils/configs';
 import { InitialParams } from '../types';
 
-interface CreateByParamsPageProps {
+interface ProposalCreateOverviewPageProps {
   initialParams: InitialParams;
 }
 
-export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
+export function ProposalCreateOverviewPage({
+  initialParams,
+}: ProposalCreateOverviewPageProps) {
   const router = useRouter();
   const theme = useTheme();
 
