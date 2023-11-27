@@ -33,19 +33,18 @@ export function SelectField({
           <Listbox.Button
             as={Box}
             sx={{
+              transition: 'all 0.2s ease',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               width: '100%',
               fontWeight: '400',
+              border: `1px solid ${theme.palette.$main}`,
               fontSize: 11,
               lineHeight: '14px',
               p: '7px 5px',
-              border: `1px solid ${theme.palette.$disabled}`,
-              borderColor: open ? '$main' : '$disabled',
-              color: !(value || value === 0) ? '$disabled' : '$text',
-              transition: 'all 0.2s ease',
-              cursor: 'pointer',
+              color: !(value || value === 0) ? '$textDisabled' : '$text',
               [theme.breakpoints.up('xsm')]: {
                 fontSize: 12,
                 lineHeight: '15px',
@@ -56,10 +55,10 @@ export function SelectField({
                 lineHeight: '16px',
               },
               '&:active, &:focus': {
-                borderColor: '$main',
+                backgroundColor: theme.palette.$light,
               },
               hover: {
-                borderColor: theme.palette.$main,
+                backgroundColor: theme.palette.$light,
               },
             }}>
             {!!(value || value === 0)
@@ -100,8 +99,7 @@ export function SelectField({
                   color: '$text',
                   transition: 'all 0.2s ease',
                   cursor: option === value ? 'default' : 'pointer',
-                  backgroundColor:
-                    option === value ? '$disabled' : '$mainLight',
+                  backgroundColor: option === value ? '$light' : '$mainLight',
                   [theme.breakpoints.up('xsm')]: {
                     fontSize: 12,
                     lineHeight: '15px',
@@ -112,7 +110,7 @@ export function SelectField({
                     lineHeight: '16px',
                   },
                   hover: {
-                    backgroundColor: theme.palette.$disabled,
+                    backgroundColor: theme.palette.$light,
                   },
                 }}>
                 {withChainName

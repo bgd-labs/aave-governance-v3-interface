@@ -24,6 +24,7 @@ import {
 } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
+import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import {
@@ -157,10 +158,9 @@ export function DelegatePage() {
 
   return (
     <>
-      <Container>
+      <TopPanelContainer>
         <Box
           sx={{
-            mb: 12,
             display: 'flex',
             flexDirection: 'column',
             [theme.breakpoints.up('sm')]: {
@@ -221,7 +221,7 @@ export function DelegatePage() {
               </NoSSR>
             )}
         </Box>
-      </Container>
+      </TopPanelContainer>
 
       <Container>
         {activeWallet?.isActive ? (

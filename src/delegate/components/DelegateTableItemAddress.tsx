@@ -49,10 +49,9 @@ const Text = ({
           <Box
             component="p"
             sx={(theme) => ({
-              typography: 'h3',
+              typography: 'h2',
               ml: 4,
-              position: 'relative',
-              [theme.breakpoints.up('lg')]: { top: 1 },
+              [theme.breakpoints.up('lg')]: { typography: 'h2' },
             })}>
             to{' '}
             {isEnsName

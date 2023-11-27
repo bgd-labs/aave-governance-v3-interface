@@ -45,15 +45,11 @@ export function DelegateTable({
       <Box
         sx={{
           display: 'none',
-          px: 24,
           [theme.breakpoints.up('md')]: {
             display: 'block',
           },
-          [theme.breakpoints.up('lg')]: {
-            px: 48,
-          },
         }}>
-        <Box sx={{ pt: forHelp ? 0 : 15 }}>
+        <Box>
           <Box
             sx={{
               display: 'flex',

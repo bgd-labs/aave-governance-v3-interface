@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, useTheme } from '@mui/system';
+import { useTheme } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
 import { isEqual } from 'lodash';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import { Form } from 'react-final-form';
 import { useStore } from '../../store';
 import { BackButton3D, BigButton, Container } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
+import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { texts } from '../../ui/utils/texts';
 import { RpcSwitcherFormData } from '../store/rpcSwitcherSlice';
 import { RpcSwitcherTableWrapper } from './RpcSwitcherTableWrapper';
@@ -79,11 +80,9 @@ export function RpcSwitcherPage() {
 
   return (
     <>
-      <Container>
-        <Box sx={{ mb: 12 }}>
-          <BackButton3D onClick={router.back} isVisibleOnMobile />
-        </Box>
-      </Container>
+      <TopPanelContainer>
+        <BackButton3D onClick={router.back} isVisibleOnMobile />
+      </TopPanelContainer>
 
       <Container
         sx={{

@@ -1,8 +1,11 @@
-import { Box, useTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import React, { ReactNode } from 'react';
 import { FieldArray } from 'react-final-form-arrays';
 
-import { BoxWith3D } from '../../ui';
+import {
+  TableContainer,
+  TableContainerChildren,
+} from '../../ui/components/TableContainer';
 import {
   RepresentationDataItem,
   RepresentationFormData,
@@ -21,25 +24,6 @@ interface RepresentationsTableWrapperProps {
   forHelp?: boolean;
 }
 
-const ChildrenWrapper = ({
-  children,
-  forTest,
-}: {
-  children: ReactNode;
-  forTest?: boolean;
-}) => {
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        mt: forTest ? 20 : 40,
-      }}>
-      {children}
-    </Box>
-  );
-};
-
 export function RepresentationsTableWrapper({
   representationData,
   loading,
@@ -51,15 +35,8 @@ export function RepresentationsTableWrapper({
   handleFormSubmit,
   forHelp,
 }: RepresentationsTableWrapperProps) {
-  const theme = useTheme();
   return (
-    <BoxWith3D
-      borderSize={10}
-      contentColor="$mainLight"
-      css={{
-        pb: forHelp ? 20 : 40,
-        [theme.breakpoints.up('sm')]: { pb: forHelp ? 20 : 34 },
-      }}>
+    <TableContainer forHelp={forHelp}>
       {typeof handleFormSubmit === 'function' ? (
         <Box component="form" onSubmit={handleFormSubmit}>
           <FieldArray name="formData">
@@ -74,7 +51,9 @@ export function RepresentationsTableWrapper({
               />
             )}
           </FieldArray>
-          <ChildrenWrapper forTest={forHelp}>{children}</ChildrenWrapper>
+          <TableContainerChildren forHelp={forHelp}>
+            {children}
+          </TableContainerChildren>
         </Box>
       ) : (
         <>
@@ -87,9 +66,11 @@ export function RepresentationsTableWrapper({
             fields={fields}
             formData={formData}
           />
-          <ChildrenWrapper forTest={forHelp}>{children}</ChildrenWrapper>
+          <TableContainerChildren forHelp={forHelp}>
+            {children}
+          </TableContainerChildren>
         </>
       )}
-    </BoxWith3D>
+    </TableContainer>
   );
 }

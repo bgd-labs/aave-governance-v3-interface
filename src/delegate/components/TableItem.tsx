@@ -60,13 +60,13 @@ export function TableItem({
           justifyContent: 'space-between',
           alignItems: 'center',
           [theme.breakpoints.up('sm')]: {
-            height: 85,
+            height: 84,
           },
           [theme.breakpoints.up('md')]: {
-            height: forHelp ? 85 : 110,
+            height: forHelp ? 85 : 108,
           },
           [theme.breakpoints.up('lg')]: {
-            height: forHelp ? 90 : 115,
+            height: forHelp ? 90 : 116,
           },
         }}>
         <Box
@@ -78,13 +78,13 @@ export function TableItem({
             maxWidth: 200,
           }}>
           {!symbol ? (
-            <Box sx={{ mr: 20 }}>
+            <Box sx={{ mr: 16 }}>
               <CustomSkeleton circle width={35} height={35} />
             </Box>
           ) : (
             <TokenIcon
               symbol={symbol}
-              css={{ mr: 20, width: 35, height: 35 }}
+              css={{ mr: 16, width: 35, height: 35 }}
             />
           )}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -98,7 +98,21 @@ export function TableItem({
               </Box>
             )}
             {(!amount && amount !== 0) || dataLoading ? (
-              <CustomSkeleton width={30} height={18} />
+              <Box
+                sx={{
+                  '*': { lineHeight: 1 },
+                  '.TableItem__value--loading': {
+                    height: 17,
+                    [theme.breakpoints.up('lg')]: {
+                      height: 19,
+                    },
+                  },
+                }}>
+                <CustomSkeleton
+                  className="TableItem__value--loading"
+                  width={30}
+                />
+              </Box>
             ) : (
               <FormattedNumber
                 value={amount}

@@ -43,10 +43,10 @@ export function MobileCard({
         contentColor="$mainLight"
         borderSize={4}
         wrapperCss={{
-          mb: 25,
+          mb: 24,
         }}
         css={{
-          p: 10,
+          p: '7px 12px',
         }}>
         <Box
           sx={{
@@ -74,7 +74,7 @@ export function MobileCard({
             )}
           </Box>
           {(!amount && amount !== 0) || dataLoading ? (
-            <CustomSkeleton width={30} height={16} />
+            <CustomSkeleton width={30} height={17} />
           ) : (
             <FormattedNumber value={amount} variant="h3" visibleDecimals={2} />
           )}
@@ -85,7 +85,7 @@ export function MobileCard({
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          mb: 25,
+          mb: 24,
           alignItems: 'center',
           flexWrap: 'wrap',
         }}>
@@ -102,7 +102,7 @@ export function MobileCard({
           sx={{
             display: 'flex',
             minWidth: isEdit ? '100%' : 'unset',
-            mt: isEdit ? 10 : 0,
+            mt: isEdit ? 8 : 0,
             justifyContent: 'flex-end',
             [theme.breakpoints.up('sm')]: {
               minWidth: 350,
@@ -113,7 +113,9 @@ export function MobileCard({
             [theme.breakpoints.up('md')]: { flex: 'auto' },
           }}>
           {loading || dataLoading ? (
-            <CustomSkeleton width={150} height={16} />
+            <Box sx={{ '*': { lineHeight: 1 } }}>
+              <CustomSkeleton width={150} height={17} />
+            </Box>
           ) : (
             <DelegateTableItemAddress
               isEdit={!!isEdit}
@@ -147,7 +149,7 @@ export function MobileCard({
           sx={{
             display: 'flex',
             minWidth: isEdit ? '100%' : 'unset',
-            mt: isEdit ? 10 : 0,
+            mt: isEdit ? 8 : 0,
             justifyContent: 'flex-end',
             [theme.breakpoints.up('sm')]: {
               minWidth: 350,
@@ -158,7 +160,9 @@ export function MobileCard({
             [theme.breakpoints.up('md')]: { flex: 'auto' },
           }}>
           {loading || dataLoading ? (
-            <CustomSkeleton width={150} height={16} />
+            <Box sx={{ '*': { lineHeight: 1 } }}>
+              <CustomSkeleton width={150} height={17} />
+            </Box>
           ) : (
             <DelegateTableItemAddress
               isEdit={!!isEdit}

@@ -19,17 +19,17 @@ export function TableHeaderTitle({
       <Box
         component="h2"
         sx={(theme) => ({
-          typography: 'h2',
+          typography: 'h1',
           display: 'inline-flex',
           width: '100%',
           alignItems: 'center',
           justifyContent: center ? 'center' : right ? 'flex-end' : 'flex-start',
           [theme.breakpoints.up('sm')]: {
-            typography: 'h2',
+            typography: 'h1',
             height: 47,
           },
           [theme.breakpoints.up('md')]: {
-            typography: 'h2',
+            typography: 'h1',
             height: 62,
           },
         })}>

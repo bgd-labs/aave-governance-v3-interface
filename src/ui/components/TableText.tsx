@@ -45,9 +45,8 @@ export function TableText({
         }
       }}
       sx={(theme) => ({
-        typography: 'h3',
+        typography: 'h2',
         display: 'inline-flex',
-        fontWeight: 600,
         textDecoration: isCrossed ? 'line-through' : 'unset',
         mb: isCrossed ? 12 : 0,
         color: isError
@@ -88,13 +87,14 @@ export function TableText({
               component="h3"
               sx={(theme) => ({
                 typography: 'body',
+                lineHeight: '1 !important',
                 backgroundColor: '$disabled',
                 position: 'relative',
                 px: 5,
                 py: 1,
                 [theme.breakpoints.up('md')]: {
                   typography: 'h3',
-                  p: 5,
+                  p: '2px 5px',
                   top: 1,
                 },
               })}>
@@ -109,6 +109,7 @@ export function TableText({
                       component="p"
                       sx={(theme) => ({
                         typography: 'body',
+                        lineHeight: '1 !important',
                         backgroundColor: '$light',
                         position: 'relative',
                         cursor: isActionsAvailable ? 'pointer' : 'default',
@@ -116,7 +117,7 @@ export function TableText({
                         py: 1,
                         [theme.breakpoints.up('md')]: {
                           typography: 'h3',
-                          p: 5,
+                          p: '2px 5px',
                           top: 1,
                         },
                       })}>
@@ -136,7 +137,13 @@ export function TableText({
                     alignItems: isErrorOnRight ? 'flex-end' : 'center',
                   },
                 })}>
-                <Box sx={{ display: 'inline-flex' }}>{children}</Box>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    '*': { wordBreak: 'break-word' },
+                  }}>
+                  {children}
+                </Box>
 
                 {isError && (
                   <Box

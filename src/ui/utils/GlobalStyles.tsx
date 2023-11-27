@@ -207,7 +207,7 @@ export function GlobalStyles() {
       },
 
       '.Divider': {
-        borderBottomColor: '#C6C3D1',
+        borderBottomColor: '#555069',
       },
 
       '.ProposalListItemFinalStatus__text': {
@@ -377,7 +377,7 @@ export function GlobalStyles() {
       },
 
       '.Divider': {
-        borderBottomColor: '#47557C',
+        borderBottomColor: '#475072',
       },
 
       '.ProposalListItemFinalStatus__text': {

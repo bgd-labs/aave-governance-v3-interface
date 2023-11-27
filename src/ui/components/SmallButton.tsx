@@ -34,21 +34,22 @@ export function SmallButton({
         position: 'relative',
         hover: {
           '.SmallButton__inner': {
-            borderTop: `1px solid ${theme.palette.$mainBorder}`,
-            borderRight: `1px solid ${theme.palette.$mainBorder}`,
+            borderTop: `1px solid ${theme.palette.$main}`,
+            borderRight: `1px solid ${theme.palette.$main}`,
             width: 'calc(100% - 2px)',
             height: 'calc(100% - 2px)',
           },
           '.SmallButton__rotateLine': {
-            backgroundColor: `${theme.palette.$mainBorder} !important`,
+            backgroundColor: `${theme.palette.$main} !important`,
           },
         },
         '&:active': {
           '.SmallButton__inner': {
-            borderTop: `1px solid ${theme.palette.$mainBorder}`,
-            borderRight: `1px solid ${theme.palette.$mainBorder}`,
+            borderTop: `1px solid ${theme.palette.$main}`,
+            borderRight: `1px solid ${theme.palette.$main}`,
             width: 'calc(100% - 4px)',
             height: 'calc(100% - 4px)',
+            backgroundColor: theme.palette.$appBackground,
           },
           '.SmallButton__rotateLine': {
             backgroundColor: '$mainBorder',
@@ -78,7 +79,7 @@ export function SmallButton({
           position: 'absolute',
           top: 0,
           left: 0,
-          backgroundColor: '$buttonBorderLeft',
+          backgroundColor: '$text',
           zIndex: 1,
         }}
       />
@@ -90,7 +91,7 @@ export function SmallButton({
           position: 'absolute',
           top: 0,
           right: 0,
-          backgroundColor: '$buttonBorderBottom',
+          backgroundColor: '$secondary',
           zIndex: 2,
         }}
       />
@@ -104,7 +105,7 @@ export function SmallButton({
           height: 0,
           borderStyle: 'solid',
           borderWidth: '4px 4px 0 0',
-          borderColor: `${theme.palette.$buttonBorderLeft} transparent transparent transparent`,
+          borderColor: `${theme.palette.$text} transparent transparent transparent`,
         }}
       />
       <Box

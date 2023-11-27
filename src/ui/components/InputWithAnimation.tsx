@@ -25,13 +25,22 @@ export function InputWithAnimation({
         justifyContent: 'center',
         position: 'relative',
         width: '100%',
+        transition: 'all 0.3s ease',
         '&:focus-within': {
+          backgroundColor: theme.palette.$light,
           '.InputWithAnimation__placeholder': {
             left: 6,
             transform: 'translateX(0)',
+            color: theme.palette.$text,
             [theme.breakpoints.up('lg')]: {
               left: 11,
             },
+          },
+        },
+        hover: {
+          backgroundColor: theme.palette.$light,
+          '.InputWithAnimation__placeholder': {
+            color: theme.palette.$text,
           },
         },
       }}>
@@ -59,7 +68,7 @@ export function InputWithAnimation({
           {animatedPlaceholder}
         </Box>
       )}
-      <Input sx={{ backgroundColor: 'transparent' }} {...rest} />
+      <Input sx={{ backgroundColor: 'transparent !important' }} {...rest} />
     </Box>
   );
 }
