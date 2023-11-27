@@ -93,7 +93,7 @@ export function VoteBar({
     <Box
       sx={{
         width: '100%',
-        mb: 6,
+        mb: 4,
         '&:last-of-type': { mb: 0 },
       }}>
       <Box

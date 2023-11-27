@@ -61,7 +61,7 @@ export const texts = {
       payload: 'Payload',
       payloads: 'Payloads',
       created: 'Created at',
-      executedIn: 'Executed in',
+      executedIn: 'Execution will be available in',
       execute: 'Execute',
       executedAt: 'Executed at',
       execution: 'Ready for execution',

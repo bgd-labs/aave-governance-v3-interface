@@ -16,15 +16,10 @@ export function Loading() {
           display: 'flex',
           width: '100%',
           flexDirection: 'column',
-          p: '15px',
           [theme.breakpoints.up('sm')]: {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-          },
-          [theme.breakpoints.up('lg')]: {
-            flex: 1,
-            p: 0,
           },
         }}>
         <Box
@@ -95,8 +90,11 @@ export function Loading() {
         <Box
           sx={{
             width: '100%',
-            [theme.breakpoints.up('sm')]: { width: 247, ml: 20 },
-            [theme.breakpoints.up('lg')]: { width: 296 },
+            '*': {
+              lineHeight: '1 !important',
+            },
+            [theme.breakpoints.up('sm')]: { width: 250, ml: 18 },
+            [theme.breakpoints.up('lg')]: { width: 300 },
           }}>
           <Box sx={{ width: '100%', mb: 12 }}>
             <Box
@@ -106,10 +104,10 @@ export function Loading() {
                 justifyContent: 'space-between',
                 width: '100%',
               }}>
-              <CustomSkeleton width={50} height={14} />
-              <CustomSkeleton width={50} height={14} />
+              <CustomSkeleton width={60} height={21} />
+              <CustomSkeleton width={60} height={21} />
             </Box>
-            <CustomSkeleton width="100%" height={4} />
+            <CustomSkeleton width="100%" height={8} />
           </Box>
           <Box sx={{ width: '100%' }}>
             <Box
@@ -119,10 +117,10 @@ export function Loading() {
                 justifyContent: 'space-between',
                 width: '100%',
               }}>
-              <CustomSkeleton width={50} height={14} />
-              <CustomSkeleton width={50} height={14} />
+              <CustomSkeleton width={60} height={21} />
+              <CustomSkeleton width={60} height={21} />
             </Box>
-            <CustomSkeleton width="100%" height={4} />
+            <CustomSkeleton width="100%" height={8} />
           </Box>
         </Box>
       </Box>
@@ -132,8 +130,7 @@ export function Loading() {
           sx={{
             width: '100%',
             display: 'block',
-            px: 20,
-            pb: 24,
+            mt: 12,
             [theme.breakpoints.up('md')]: { display: 'none' },
           }}>
           <Box

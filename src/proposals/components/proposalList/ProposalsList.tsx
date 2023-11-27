@@ -13,6 +13,7 @@ import { useStore } from '../../../store';
 import { BigButton, BoxWith3D, FilterDropdown } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { SearchButton } from '../../../ui/components/SearchButton';
+import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { setRelativePath } from '../../../ui/utils/relativePath';
 import { texts } from '../../../ui/utils/texts';
@@ -135,136 +136,141 @@ export function ProposalsList({
   return (
     <>
       {!isRendered ? (
-        <Box
-          sx={(theme) => ({
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            mb: 12,
-            [theme.breakpoints.up('md')]: {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            },
-          })}>
+        <TopPanelContainer withoutContainer>
           <Box
-            sx={{
+            sx={(theme) => ({
               display: 'flex',
-              width: '100%',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              mb: 9,
-              [theme.breakpoints.up('xs')]: {
-                '.react-loading-skeleton': {
-                  width: '36px !important',
-                  height: '36px !important',
-                },
-              },
-              [theme.breakpoints.up('sm')]: {
-                '.react-loading-skeleton': {
-                  width: '38px !important',
-                  height: '38px !important',
-                },
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              '*': {
+                lineHeight: '1 !important',
               },
               [theme.breakpoints.up('md')]: {
-                width: 'unset',
-                mb: 0,
-                '.react-loading-skeleton': {
-                  width: '40px !important',
-                  height: '40px !important',
-                },
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               },
-              [theme.breakpoints.up('lg')]: {
-                '.react-loading-skeleton': {
-                  width: '42px !important',
-                  height: '42px !important',
-                },
-              },
-            }}>
+            })}>
             <Box
-              component="h2"
               sx={{
-                typography: 'h1',
-                display: 'block',
-                pl: 6,
-                [theme.breakpoints.up('sm')]: { typography: 'h1', pl: 8 },
+                display: 'flex',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 9,
+                [theme.breakpoints.up('xs')]: {
+                  '.react-loading-skeleton': {
+                    width: '36px !important',
+                    height: '36px !important',
+                  },
+                },
+                [theme.breakpoints.up('sm')]: {
+                  '.react-loading-skeleton': {
+                    width: '40px !important',
+                    height: '40px !important',
+                  },
+                },
                 [theme.breakpoints.up('md')]: {
-                  typography: 'h1',
-                  display: 'none',
+                  width: 'unset',
+                  mb: 0,
+                  '.react-loading-skeleton': {
+                    width: '42px !important',
+                    height: '42px !important',
+                  },
+                },
+                [theme.breakpoints.up('lg')]: {
+                  '.react-loading-skeleton': {
+                    width: '46px !important',
+                    height: '46px !important',
+                  },
                 },
               }}>
-              {texts.proposals.proposalListTitle}
+              <Box
+                component="h2"
+                sx={{
+                  typography: 'h1',
+                  display: 'block',
+                  pl: 6,
+                  [theme.breakpoints.up('sm')]: { typography: 'h1', pl: 8 },
+                  [theme.breakpoints.up('md')]: {
+                    typography: 'h1',
+                    display: 'none',
+                  },
+                }}>
+                {texts.proposals.proposalListTitle}
+              </Box>
+
+              <CustomSkeleton width={42} height={42} />
             </Box>
 
-            <CustomSkeleton width={42} height={42} />
+            <Box
+              sx={{
+                width: '100%',
+                [theme.breakpoints.up('xs')]: {
+                  '.react-loading-skeleton': {
+                    height: '28px !important',
+                  },
+                },
+                [theme.breakpoints.up('sm')]: {
+                  width: '136px',
+                  '.react-loading-skeleton': {
+                    height: '40px !important',
+                  },
+                },
+                [theme.breakpoints.up('md')]: {
+                  width: '138px',
+                  '.react-loading-skeleton': {
+                    height: '42px !important',
+                  },
+                },
+                [theme.breakpoints.up('lg')]: {
+                  width: '140px',
+                  '.react-loading-skeleton': {
+                    height: '46px !important',
+                  },
+                },
+              }}>
+              <CustomSkeleton width="100%" height={44} />
+            </Box>
           </Box>
-
-          <Box
-            sx={{
-              width: '100%',
-              [theme.breakpoints.up('xs')]: {
-                '.react-loading-skeleton': {
-                  height: '28px !important',
-                },
-              },
-              [theme.breakpoints.up('sm')]: {
-                width: '136px',
-                '.react-loading-skeleton': {
-                  height: '40px !important',
-                },
-              },
-              [theme.breakpoints.up('md')]: {
-                width: '138px',
-                '.react-loading-skeleton': {
-                  height: '42px !important',
-                },
-              },
-              [theme.breakpoints.up('lg')]: {
-                width: '140px',
-                '.react-loading-skeleton': {
-                  height: '44px !important',
-                },
-              },
-            }}>
-            <CustomSkeleton width="100%" height={44} />
-          </Box>
-        </Box>
+        </TopPanelContainer>
       ) : (
-        <Box
-          sx={(theme) => ({
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            mb: 12,
-            [theme.breakpoints.up('md')]: {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            },
-          })}>
-          <SearchButton
-            isOpen={isSearchButtonOpen}
-            setIsOpen={setIsSearchButtonOpen}
-            searchValue={searchValue}
-            setSearchValue={handleSearchValueChange}
-            disabled={
-              (!loadingListCache
-                ? totalProposalCount
-                : cachedTotalProposalsCount) === 0
-            }
-          />
+        <TopPanelContainer withoutContainer>
+          <Box
+            sx={(theme) => ({
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              [theme.breakpoints.up('md')]: {
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              },
+            })}>
+            <SearchButton
+              isOpen={isSearchButtonOpen}
+              setIsOpen={setIsSearchButtonOpen}
+              searchValue={searchValue}
+              setSearchValue={handleSearchValueChange}
+              disabled={
+                (!loadingListCache
+                  ? totalProposalCount
+                  : cachedTotalProposalsCount) === 0
+              }
+            />
 
-          <FilterDropdown
-            statuses={proposalStatusesForFilter}
-            selectedStatus={filteredState}
-            setSelectedStatus={setFilteredStateLocal}
-            disabled={
-              (!loadingListCache
-                ? totalProposalCount
-                : cachedTotalProposalsCount) === 0
-            }
-          />
-        </Box>
+            <FilterDropdown
+              statuses={proposalStatusesForFilter}
+              selectedStatus={filteredState}
+              setSelectedStatus={setFilteredStateLocal}
+              disabled={
+                (!loadingListCache
+                  ? totalProposalCount
+                  : cachedTotalProposalsCount) === 0
+              }
+            />
+          </Box>
+        </TopPanelContainer>
       )}
 
       {!loadingListCache && totalProposalCount === -1 ? (

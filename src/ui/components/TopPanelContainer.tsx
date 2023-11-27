@@ -5,11 +5,15 @@ import { Container } from '../index';
 
 interface TopPanelContainerProps {
   children: ReactNode;
+  withoutContainer?: boolean;
 }
 
-export function TopPanelContainer({ children }: TopPanelContainerProps) {
-  return (
-    <Container>
+export function TopPanelContainer({
+  children,
+  withoutContainer,
+}: TopPanelContainerProps) {
+  const Children = () => {
+    return (
       <Box
         sx={(theme) => ({
           mb: 18,
@@ -19,6 +23,18 @@ export function TopPanelContainer({ children }: TopPanelContainerProps) {
         })}>
         {children}
       </Box>
-    </Container>
+    );
+  };
+
+  return (
+    <>
+      {!withoutContainer ? (
+        <Container>
+          <Children />
+        </Container>
+      ) : (
+        <Children />
+      )}
+    </>
   );
 }

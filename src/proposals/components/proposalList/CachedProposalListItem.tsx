@@ -36,15 +36,10 @@ export function CachedProposalListItem({
               display: 'flex',
               width: '100%',
               flexDirection: 'column',
-              p: '15px',
               [theme.breakpoints.up('sm')]: {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              },
-              [theme.breakpoints.up('lg')]: {
-                flex: 1,
-                p: 0,
               },
             }}>
             <Box
@@ -62,8 +57,6 @@ export function CachedProposalListItem({
                     ? `${theme.palette.$text} !important`
                     : theme.palette.$text,
                   typography: 'h2',
-                  fontWeight: 700,
-                  [theme.breakpoints.up('sm')]: { fontWeight: 600 },
                 }}>
                 {proposal.data.title}
               </Box>

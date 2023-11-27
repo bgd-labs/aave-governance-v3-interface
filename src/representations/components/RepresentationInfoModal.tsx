@@ -30,9 +30,6 @@ export function RepresentationInfoModal() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          px: 25,
-          pt: 15,
-          pb: 35,
         }}>
         <Box
           ref={initialFocusRef}
@@ -55,22 +52,17 @@ export function RepresentationInfoModal() {
         />
         <Box
           sx={{
-            mb: 28,
-            mt: 5,
+            mb: 24,
+            mt: 8,
             textAlign: 'center',
             typography: 'body',
-            lineHeight: '20px !important',
-            [theme.breakpoints.up('lg')]: {
-              typography: 'body',
-              lineHeight: '22px !important',
-            },
           }}>
           {texts.representationsPage.representationInfo}
         </Box>
         <Box>
           <BigButton
             color="white"
-            css={{ mr: 16 }}
+            css={{ mr: 24 }}
             onClick={() => setIsRepresentationInfoModalOpen(false)}>
             {texts.other.close}
           </BigButton>

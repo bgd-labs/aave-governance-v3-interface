@@ -108,7 +108,7 @@ export function ActiveProposalListItem({
         }}>
         {texts.proposals.votingNotStartedStart}
         <ChainNameWithIcon
-          css={{ ml: 3, mr: 3 }}
+          css={{ mx: 4 }}
           iconSize={14}
           chainId={proposal.data.votingChainId}
         />
@@ -149,15 +149,10 @@ export function ActiveProposalListItem({
                   display: 'flex',
                   width: '100%',
                   flexDirection: 'column',
-                  p: '15px',
                   [theme.breakpoints.up('sm')]: {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    flex: 1,
-                    p: 0,
                   },
                 }}>
                 <Box
@@ -240,7 +235,7 @@ export function ActiveProposalListItem({
                         alignItems: 'center',
                         span: {
                           display: 'block',
-                          mt: 5,
+                          mt: 4,
                           color: '$text',
                         },
                       }}
@@ -338,8 +333,8 @@ export function ActiveProposalListItem({
                     <Box
                       sx={{
                         width: '100%',
-                        [theme.breakpoints.up('sm')]: { width: 247, ml: 20 },
-                        [theme.breakpoints.up('lg')]: { width: 296 },
+                        [theme.breakpoints.up('sm')]: { width: 250, ml: 18 },
+                        [theme.breakpoints.up('lg')]: { width: 300 },
                       }}>
                       <VoteBar
                         type="for"
@@ -365,8 +360,7 @@ export function ActiveProposalListItem({
                   sx={{
                     width: '100%',
                     display: 'block',
-                    px: activeWallet?.isActive ? 15 : 0,
-                    pb: activeWallet?.isActive ? 24 : 0,
+                    mt: 12,
                     [theme.breakpoints.up('md')]: { display: 'none' },
                   }}>
                   <Box
@@ -441,8 +435,6 @@ export function ActiveProposalListItem({
                         {isVotingActive && !isVotingFinished ? (
                           <Box
                             sx={{
-                              px: 15,
-                              pb: 24,
                               color: '$textSecondary',
                               typography: 'body',
                             }}>
@@ -453,8 +445,6 @@ export function ActiveProposalListItem({
                           !isVotingFinished && (
                             <Box
                               sx={{
-                                px: 15,
-                                pb: 24,
                                 color: '$textSecondary',
                                 typography: 'body',
                               }}>
