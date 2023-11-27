@@ -18,6 +18,7 @@ import {
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
+    'https://ethereum.publicnode.com',
     'https://cloudflare-eth.com',
     'https://eth.llamarpc.com',
     'https://rpc.mevblocker.io',
