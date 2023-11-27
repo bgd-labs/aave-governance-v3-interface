@@ -3,7 +3,7 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import { Hex } from 'viem';
+import { Hex, zeroAddress } from 'viem';
 
 import { CreateProposalModal } from '../../proposals/components/actionModals/CreateProposalModal';
 import { Details } from '../../proposals/components/proposal/Details';
@@ -354,6 +354,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
             }}>
             {newIpfsData &&
               !!(payloads || []).length &&
+              initialParams.votingPortal !== zeroAddress &&
               !Object.keys(createPayloadsErrors).length && (
                 <Box
                   sx={{

@@ -147,7 +147,7 @@ function initContracts(clients: ClientsRecord, walletClient?: WalletClient) {
 }
 
 export class GovDataService {
-  private govCore;
+  public govCore;
   private govCoreDataHelper;
 
   private votingMachines;
