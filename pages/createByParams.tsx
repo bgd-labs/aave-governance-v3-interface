@@ -12,6 +12,9 @@ export default function CreateByParams() {
   if (!searchParams) return null;
 
   // params
+  const proposalId = !!searchParams.get('proposalId')
+    ? (Number(searchParams.get('proposalId')) as number)
+    : undefined;
   const ipfsHash = !!searchParams.get('ipfsHash')
     ? (String(searchParams.get('ipfsHash')) as Hex)
     : undefined;
@@ -33,6 +36,7 @@ export default function CreateByParams() {
     });
 
   const initialParams: InitialParams = {
+    proposalId,
     ipfsHash,
     votingPortal,
     payloads: Object.values(payloads),

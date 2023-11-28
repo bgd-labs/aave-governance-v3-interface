@@ -22,6 +22,9 @@ export default async function CreateByParams({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   // params
+  const proposalId = !!searchParams['proposalId']
+    ? (Number(searchParams['proposalId']) as number)
+    : undefined;
   const ipfsHash = !!searchParams['ipfsHash']
     ? (String(searchParams['ipfsHash']) as Hex)
     : undefined;
@@ -43,6 +46,7 @@ export default async function CreateByParams({
     });
 
   const initialParams: InitialParams = {
+    proposalId,
     ipfsHash,
     votingPortal,
     payloads: Object.values(payloads),
