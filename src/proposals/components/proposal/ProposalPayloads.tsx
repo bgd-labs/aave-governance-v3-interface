@@ -10,7 +10,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Hex } from 'viem';
+import { Hex, toHex } from 'viem';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
@@ -287,14 +287,34 @@ function PayloadItem({
 
           <Box>
             {forCreate && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
-                <Box sx={{ typography: 'descriptorAccent' }}>
-                  {texts.proposals.payloadsDetails.accessLevel}:{' '}
-                  <Box sx={{ display: 'inline', typography: 'headline' }}>
-                    {payload.maximumAccessLevelRequired}
+              <>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    mb: 4,
+                    mt: 6,
+                  }}>
+                  <Box sx={{ typography: 'descriptorAccent' }}>
+                    Payload id / chain id (Hex):{' '}
+                    <Box
+                      sx={{
+                        display: 'inline',
+                        typography: 'headline',
+                      }}>
+                      {toHex(payload.id)} / {toHex(payload.chainId)}
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+                  <Box sx={{ typography: 'descriptorAccent' }}>
+                    {texts.proposals.payloadsDetails.accessLevel}:{' '}
+                    <Box sx={{ display: 'inline', typography: 'headline' }}>
+                      {payload.maximumAccessLevelRequired}
+                    </Box>
+                  </Box>
+                </Box>
+              </>
             )}
 
             {isPayloadOnInitialState && (

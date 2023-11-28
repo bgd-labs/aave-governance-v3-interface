@@ -24,6 +24,7 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://rpc.mevblocker.io',
   ],
   [polygon.id]: [
+    'https://polygon-pokt.nodies.app',
     'https://polygon.llamarpc.com',
     'https://polygon-bor.publicnode.com',
     'https://endpoints.omniatech.io/v1/matic/mainnet/public',
