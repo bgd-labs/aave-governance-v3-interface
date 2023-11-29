@@ -90,7 +90,7 @@ export function SettingsButton() {
                   '.SettingsButton__rpc--error': {
                     opacity: 1,
                   },
-                  '> div': {
+                  'div > div': {
                     '&:first-of-type': {
                       opacity: 0,
                     },
@@ -100,76 +100,76 @@ export function SettingsButton() {
                   },
                 },
               }}>
-              <SettingButtonIconWrapper
-                sx={{
-                  opacity: open ? 0 : 1,
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}>
-                <SettingsBordersIcon />
-              </SettingButtonIconWrapper>
-              <SettingButtonIconWrapper
-                sx={{
-                  opacity: open ? 1 : 0,
-                }}>
-                <SettingsIcon />
-              </SettingButtonIconWrapper>
+              <Box sx={{ position: 'relative' }}>
+                <SettingButtonIconWrapper
+                  sx={{
+                    opacity: open ? 0 : 1,
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}>
+                  <SettingsBordersIcon />
+                </SettingButtonIconWrapper>
+                <SettingButtonIconWrapper
+                  sx={{
+                    opacity: open ? 1 : 0,
+                  }}>
+                  <SettingsIcon />
+                </SettingButtonIconWrapper>
 
-              {isRpcHasError && (
-                <>
-                  <IconBox
-                    sx={{
-                      position: 'absolute',
-                      right: 7,
-                      bottom: -3,
-                      width: 10,
-                      height: 8,
-                      '> svg': {
+                {isRpcHasError && (
+                  <>
+                    <IconBox
+                      sx={{
+                        position: 'absolute',
+                        right: -3,
+                        bottom: -3,
                         width: 10,
                         height: 8,
+                        '> svg': {
+                          width: 10,
+                          height: 8,
+                          [theme.breakpoints.up('lg')]: {
+                            width: 12,
+                            height: 10,
+                          },
+                        },
                         [theme.breakpoints.up('lg')]: {
                           width: 12,
                           height: 10,
                         },
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        width: 12,
-                        height: 10,
-                        right: 6,
-                        bottom: -3,
-                      },
-                    }}>
-                    <WarningIcon />
-                  </IconBox>
+                      }}>
+                      <WarningIcon />
+                    </IconBox>
 
-                  <Box
-                    className="SettingsButton__rpc--error"
-                    sx={{
-                      padding: 4,
-                      typography: 'descriptor',
-                      backgroundColor: '$light',
-                      position: 'absolute',
-                      top: -16,
-                      right: 'calc(100% - 6px)',
-                      minWidth: 250,
-                      zIndex: 6,
-                      opacity: 0,
-                      transition: 'all 0.2s ease',
-                      pointerEvents: 'none',
-                      [theme.breakpoints.up('lg')]: {
-                        padding: 8,
-                        top: -18,
-                      },
-                    }}>
-                    {texts.other.rpcError(
-                      filteredAppErrors.length,
-                      textCenterEllipsis(filteredAppErrors[0].rpcUrl, 12, 12),
-                    )}
-                  </Box>
-                </>
-              )}
+                    <Box
+                      className="SettingsButton__rpc--error"
+                      sx={{
+                        padding: 4,
+                        typography: 'descriptor',
+                        backgroundColor: '$light',
+                        position: 'absolute',
+                        top: -16,
+                        right: 'calc(100% - 6px)',
+                        minWidth: 250,
+                        zIndex: 6,
+                        opacity: 0,
+                        transition: 'all 0.2s ease',
+                        pointerEvents: 'none',
+                        [theme.breakpoints.up('lg')]: {
+                          padding: 8,
+                          top: -18,
+                        },
+                      }}>
+                      {texts.other.rpcError(
+                        filteredAppErrors.length,
+                        textCenterEllipsis(filteredAppErrors[0].rpcUrl, 12, 12),
+                      )}
+                    </Box>
+                  </>
+                )}
+              </Box>
             </Menu.Button>
 
             <Menu.Items

@@ -13,6 +13,7 @@ import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
+import { IProposalCreateOverviewV2Slice } from '../../proposalCreateOverviewV2/store/proposalCreateOverviewV2Slice';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';
 import { IProposalsListCacheSlice } from '../../proposals/store/proposalsListCacheSlice';
 import { getProposalDataById } from '../../proposals/store/proposalsSelectors';
@@ -187,7 +188,8 @@ export const createTransactionsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
-    IPayloadsExplorerSlice
+    IPayloadsExplorerSlice &
+    IProposalCreateOverviewV2Slice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {

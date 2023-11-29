@@ -74,7 +74,13 @@ export function NetworkIcon({
       {withTooltip ? (
         <Tooltip
           tooltipContent={
-            <Box sx={{ py: 2, px: 4, typography: 'descriptor' }}>
+            <Box
+              sx={{
+                py: 2,
+                px: 4,
+                typography: 'descriptor',
+                whiteSpace: 'nowrap',
+              }}>
               {chain.name}
             </Box>
           }>

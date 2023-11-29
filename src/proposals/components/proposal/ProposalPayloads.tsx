@@ -10,7 +10,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Hex } from 'viem';
+import { Hex, toHex } from 'viem';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
@@ -194,17 +194,19 @@ function PayloadItem({
         }}>
         <Box
           onClick={() => {
-            if (isArrowVisibleForFirstPayload || inList) {
+            if ((isArrowVisibleForFirstPayload || inList) && !forCreate) {
               setIsActionsOpen(!isActionsOpen);
             }
           }}
           sx={{
             cursor:
-              isArrowVisibleForFirstPayload || inList ? 'pointer' : 'default',
+              (isArrowVisibleForFirstPayload || inList) && !forCreate
+                ? 'pointer'
+                : 'default',
             transition: 'all 0.2s ease',
             hover: {
               backgroundColor:
-                isArrowVisibleForFirstPayload || inList
+                (isArrowVisibleForFirstPayload || inList) && !forCreate
                   ? theme.palette.$light
                   : undefined,
             },
@@ -214,6 +216,7 @@ function PayloadItem({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              minHeight: 24,
             }}>
             <Box
               sx={{
@@ -222,7 +225,7 @@ function PayloadItem({
               }}>
               <NetworkIcon
                 chainId={payload.chainId}
-                size={10}
+                size={14}
                 css={{ mr: 4 }}
                 withTooltip={forCreate}
               />
@@ -270,7 +273,7 @@ function PayloadItem({
                   )}
                 </>
               )}
-              {(isArrowVisibleForFirstPayload || inList) && (
+              {(isArrowVisibleForFirstPayload || inList) && !forCreate && (
                 <IconBox
                   sx={{
                     width: 10,
@@ -287,14 +290,34 @@ function PayloadItem({
 
           <Box>
             {forCreate && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
-                <Box sx={{ typography: 'descriptorAccent' }}>
-                  {texts.proposals.payloadsDetails.accessLevel}:{' '}
-                  <Box sx={{ display: 'inline', typography: 'headline' }}>
-                    {payload.maximumAccessLevelRequired}
+              <>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    mb: 4,
+                    mt: 6,
+                  }}>
+                  <Box sx={{ typography: 'descriptorAccent' }}>
+                    Payload id / chain id (Hex):{' '}
+                    <Box
+                      sx={{
+                        display: 'inline',
+                        typography: 'headline',
+                      }}>
+                      {toHex(payload.id)} / {toHex(payload.chainId)}
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+                  <Box sx={{ typography: 'descriptorAccent' }}>
+                    {texts.proposals.payloadsDetails.accessLevel}:{' '}
+                    <Box sx={{ display: 'inline', typography: 'headline' }}>
+                      {payload.maximumAccessLevelRequired}
+                    </Box>
+                  </Box>
+                </Box>
+              </>
             )}
 
             {isPayloadOnInitialState && (
@@ -558,6 +581,7 @@ export function ProposalPayloads({
   forCreate,
 }: ProposalPayloadsProps) {
   const theme = useTheme();
+  const { createPayloadsErrors } = useStore();
 
   const [isFullView, setFullView] = useState(!!forCreate);
 
@@ -565,6 +589,9 @@ export function ProposalPayloads({
     !!payloads.length && payloads.length > 1
       ? payloads.slice(1, payloads.length)
       : [];
+
+  const isFirstPayloadError =
+    createPayloadsErrors[`${payloads[0].payloadsController}_${proposalId}`];
 
   return (
     <BoxWith3D
@@ -579,48 +606,95 @@ export function ProposalPayloads({
       <Box
         sx={(theme) => ({
           pr: 20,
-          maxHeight: payloads.length > 2 ? 200 : 'unset',
-          overflowY: payloads.length > 2 ? 'auto' : undefined,
+          maxHeight: payloads.length > 2 && !forCreate ? 200 : 'unset',
+          overflowY: payloads.length > 2 && !forCreate ? 'auto' : undefined,
           [theme.breakpoints.up('lg')]: {
-            maxHeight: payloads.length > 2 ? 300 : 'unset',
+            maxHeight: payloads.length > 2 && !forCreate ? 300 : 'unset',
             pr: 30,
           },
         })}>
-        <PayloadItem
-          proposalId={proposalId}
-          payload={payloads[0]}
-          payloadCount={1}
-          totalPayloadsCount={payloads.length}
-          isProposalExecuted={isProposalExecuted}
-          isFullView={isFullView}
-          setSelectedPayloadForExecute={setSelectedPayloadForExecute}
-          proposalQueuingTime={proposalQueuingTime}
-          forCreate={forCreate}
-          creator={payloads[0].creator || undefined}
-          createTransactionHash={payloads[0].transactionHash || undefined}
-          report={payloads[0].seatbeltMD || undefined}
-        />
+        {isFirstPayloadError ? (
+          <Box>
+            <Box sx={{ wordBreak: 'break-word' }}>
+              Cannot get payload id {payloads[0].id}
+              <br />
+              <br />
+              payloadController:{' '}
+              <Link
+                css={{ display: 'inline-block' }}
+                href={`${chainInfoHelper.getChainParameters(
+                  payloads[0].chainId || appConfig.govCoreChainId,
+                ).blockExplorers?.default.url}/address/${
+                  payloads[0].payloadsController
+                }`}
+                inNewWindow>
+                {payloads[0].payloadsController}
+              </Link>
+            </Box>
+          </Box>
+        ) : (
+          <PayloadItem
+            proposalId={proposalId}
+            payload={payloads[0]}
+            payloadCount={1}
+            totalPayloadsCount={payloads.length}
+            isProposalExecuted={isProposalExecuted}
+            isFullView={isFullView}
+            setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+            proposalQueuingTime={proposalQueuingTime}
+            forCreate={forCreate}
+            creator={payloads[0].creator || undefined}
+            createTransactionHash={payloads[0].transactionHash || undefined}
+            report={payloads[0].seatbeltMD || undefined}
+          />
+        )}
 
         {!!formattedPayloadsForList.length && isFullView && (
           <>
-            {formattedPayloadsForList.map((payload, index) => (
-              <PayloadItem
-                proposalId={proposalId}
-                key={`${payload.id}_${payload.chainId}`}
-                payload={payload}
-                isProposalExecuted={isProposalExecuted}
-                payloadCount={index + 2}
-                totalPayloadsCount={payloads.length}
-                isFullView={false}
-                inList
-                setSelectedPayloadForExecute={setSelectedPayloadForExecute}
-                proposalQueuingTime={proposalQueuingTime}
-                forCreate={forCreate}
-                creator={payload.creator || undefined}
-                createTransactionHash={payload.transactionHash || undefined}
-                report={payload.seatbeltMD || undefined}
-              />
-            ))}
+            {formattedPayloadsForList.map((payload, index) => {
+              const isError = false;
+              if (isError) {
+                return (
+                  <Box key={`${payload.id}_${payload.chainId}`}>
+                    <Box sx={{ wordBreak: 'break-word' }}>
+                      Cannot get payload id {payload.id}
+                      <br />
+                      <br />
+                      payloadController:{' '}
+                      <Link
+                        css={{ display: 'inline-block' }}
+                        href={`${chainInfoHelper.getChainParameters(
+                          payload.chainId || appConfig.govCoreChainId,
+                        ).blockExplorers?.default.url}/address/${
+                          payload.payloadsController
+                        }`}
+                        inNewWindow>
+                        {payload.payloadsController}
+                      </Link>
+                    </Box>
+                  </Box>
+                );
+              } else {
+                return (
+                  <PayloadItem
+                    proposalId={proposalId}
+                    key={`${payload.id}_${payload.chainId}`}
+                    payload={payload}
+                    isProposalExecuted={isProposalExecuted}
+                    payloadCount={index + 2}
+                    totalPayloadsCount={payloads.length}
+                    isFullView={false}
+                    inList
+                    setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+                    proposalQueuingTime={proposalQueuingTime}
+                    forCreate={forCreate}
+                    creator={payload.creator || undefined}
+                    createTransactionHash={payload.transactionHash || undefined}
+                    report={payload.seatbeltMD || undefined}
+                  />
+                );
+              }
+            })}
           </>
         )}
       </Box>

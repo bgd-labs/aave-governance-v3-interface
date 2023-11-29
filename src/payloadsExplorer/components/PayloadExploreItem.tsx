@@ -2,6 +2,7 @@ import { Payload, PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
+import { toHex } from 'viem';
 
 import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
@@ -91,7 +92,7 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
             }}>
             <NetworkIcon
               chainId={payload.chainId}
-              size={10}
+              size={14}
               css={{ mr: 4 }}
               withTooltip={true}
             />
@@ -114,6 +115,19 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
         </Box>
 
         <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+            <Box sx={{ typography: 'descriptorAccent' }}>
+              Payload id (Hex):{' '}
+              <Box
+                sx={{
+                  display: 'inline',
+                  typography: 'headline',
+                }}>
+                {toHex(payload.id)}
+              </Box>
+            </Box>
+          </Box>
+
           <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
               {texts.proposals.payloadsDetails.accessLevel}:{' '}
