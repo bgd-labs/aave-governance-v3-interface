@@ -2,10 +2,10 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import { zeroHash } from 'viem';
 
-import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { CopyToClipboard, Link, Spinner } from '../../../ui';
+import { Link, Spinner } from '../../../ui';
+import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
@@ -88,47 +88,14 @@ export function ProposalHistoryItemTxLink({
             </Box>
           </Link>
 
-          <IconBox
-            sx={{
-              width: 10,
-              height: 10,
-              ml: 2,
-              '> svg': {
-                width: 10,
-                height: 10,
-                path: {
-                  '&:first-of-type': {
-                    stroke: theme.palette.$textSecondary,
-                  },
-                  '&:last-of-type': {
-                    fill: theme.palette.$textSecondary,
-                  },
-                },
-              },
-            }}>
-            <LinkIcon />
-          </IconBox>
-
-          <CopyToClipboard copyText={item.txInfo.hash}>
-            <IconBox
-              sx={{
-                cursor: 'pointer',
-                width: 10,
-                height: 10,
-                '> svg': {
-                  width: 10,
-                  height: 10,
-                },
-                ml: 3,
-                path: {
-                  transition: 'all 0.2s ease',
-                  stroke: theme.palette.$textSecondary,
-                },
-                hover: { path: { stroke: theme.palette.$main } },
-              }}>
-              <CopyIcon />
-            </IconBox>
-          </CopyToClipboard>
+          <CopyAndExternalIconsSet
+            iconSize={10}
+            sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
+            externalLink={`${chainInfoHelper.getChainParameters(
+              item.txInfo.chainId,
+            ).blockExplorers?.default.url}/tx/${item.txInfo.hash}`}
+            copyText={item.txInfo.hash}
+          />
         </>
       )}
     </Box>

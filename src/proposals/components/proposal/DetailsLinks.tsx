@@ -57,9 +57,9 @@ export function DetailsLinks({
       <Box
         sx={{
           display: 'flex',
-          mb: 20,
-          px: 20,
-          [theme.breakpoints.up('sm')]: { px: 0, mb: 28 },
+          mb: 18,
+          px: 18,
+          [theme.breakpoints.up('sm')]: { px: 0, mb: 24 },
           '.react-loading-skeleton': { width: 70 },
           [theme.breakpoints.up('lg')]: {
             '.react-loading-skeleton': { width: 120 },
@@ -83,16 +83,16 @@ export function DetailsLinks({
       <Box
         sx={{
           display: 'flex',
-          mt: 28,
-          px: 20,
+          mt: 24,
+          px: 18,
           flexWrap: 'wrap',
-          [theme.breakpoints.up('sm')]: { px: 0, mb: 28 },
+          [theme.breakpoints.up('sm')]: { px: 0, mb: 24 },
         }}>
         {links.map((link, index) => (
           <Box
             sx={{
               width: '50%',
-              mb: 16,
+              mb: 12,
               [theme.breakpoints.up('sm')]: { width: 'auto', mb: 0 },
             }}
             key={index}>

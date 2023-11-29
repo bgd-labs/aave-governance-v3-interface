@@ -72,6 +72,7 @@ const ContentWrapper = ({
           },
         }}>
         <Box
+          className="BasicModal__content--wrapper"
           sx={{
             width: '100%',
             minHeight: 'inherit',

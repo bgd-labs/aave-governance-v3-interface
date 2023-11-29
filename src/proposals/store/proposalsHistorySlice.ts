@@ -174,7 +174,6 @@ export const createProposalsHistorySlice: StoreSlice<
         texts.proposalHistory.payloadCreated(
           index + 1,
           proposal.data.payloads.length,
-          payload.chainId,
         ),
         payload.id,
         payload.chainId,
@@ -213,10 +212,7 @@ export const createProposalsHistorySlice: StoreSlice<
       get().initProposalHistoryItem(
         historyId,
         HistoryItemType.OPEN_TO_VOTE,
-        texts.proposalHistory.proposalOpenForVoting(
-          proposal.data.id,
-          proposal.data.votingChainId,
-        ),
+        texts.proposalHistory.proposalOpenForVoting(proposal.data.id),
         proposal.data.id,
         proposal.data.votingChainId,
         proposal.data.votingMachineData.startTime,
@@ -247,10 +243,7 @@ export const createProposalsHistorySlice: StoreSlice<
       get().initProposalHistoryItem(
         historyId,
         HistoryItemType.VOTING_CLOSED,
-        texts.proposalHistory.proposalVotingClosed(
-          proposal.data.id,
-          proposal.data.votingChainId,
-        ),
+        texts.proposalHistory.proposalVotingClosed(proposal.data.id),
         proposal.data.id,
         proposal.data.votingChainId,
         proposal.data.votingMachineData.votingClosedAndSentTimestamp,
@@ -309,7 +302,6 @@ export const createProposalsHistorySlice: StoreSlice<
             texts.proposalHistory.payloadTimeLocked(
               index + 1,
               proposal.data.payloads.length,
-              payload.chainId,
             ),
             payload.id,
             payload.chainId,
@@ -334,7 +326,6 @@ export const createProposalsHistorySlice: StoreSlice<
             texts.proposalHistory.payloadExecuted(
               index + 1,
               proposal.data.payloads.length,
-              payload.chainId,
             ),
             payload.id,
             payload.chainId,
@@ -374,7 +365,6 @@ export const createProposalsHistorySlice: StoreSlice<
             texts.proposalHistory.payloadExpired(
               index + 1,
               proposal.data.payloads.length,
-              payload.chainId,
             ),
             payload.id,
             payload.chainId,

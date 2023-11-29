@@ -59,27 +59,27 @@ export function ProposalVoteInfo({
         className="ProposalLoading__SSR"
         borderSize={10}
         contentColor="$mainLight"
-        wrapperCss={{ mb: 12 }}
+        wrapperCss={{ mb: 18, [theme.breakpoints.up('lg')]: { mb: 24 } }}
         css={{
-          pt: 20,
-          px: 20,
+          pt: 18,
+          px: 18,
           pb:
-            !!voters?.length && voters.length <= votersCountForViewAll ? 0 : 20,
+            !!voters?.length && voters.length <= votersCountForViewAll ? 0 : 18,
           [theme.breakpoints.up('sm')]: {
-            pt: 20,
-            px: 18,
+            pt: 24,
+            px: 24,
             pb:
               !!voters?.length && voters.length <= votersCountForViewAll
                 ? 0
-                : 18,
+                : 24,
           },
           [theme.breakpoints.up('lg')]: {
-            pt: 25,
-            px: 22,
+            pt: 24,
+            px: 30,
             pb:
               !!voters?.length && voters.length <= votersCountForViewAll
                 ? 0
-                : 22,
+                : 24,
           },
         }}>
         <Box
@@ -133,27 +133,19 @@ export function ProposalVoteInfo({
               ? '$secondaryFor'
               : '$light'
         }
-        wrapperCss={{ mb: 12 }}
+        wrapperCss={{ mb: 18, [theme.breakpoints.up('lg')]: { mb: 24 } }}
         css={{
-          pt: 20,
-          px: 20,
+          pt: 18,
+          px: 18,
           pb:
-            !!voters?.length && voters.length <= votersCountForViewAll ? 0 : 20,
-          [theme.breakpoints.up('sm')]: {
-            pt: 20,
-            px: 18,
-            pb:
-              !!voters?.length && voters.length <= votersCountForViewAll
-                ? 0
-                : 18,
-          },
+            !!voters?.length && voters.length <= votersCountForViewAll ? 0 : 18,
           [theme.breakpoints.up('lg')]: {
-            pt: 25,
-            px: 22,
+            pt: 24,
+            px: 30,
             pb:
               !!voters?.length && voters.length <= votersCountForViewAll
                 ? 0
-                : 22,
+                : 24,
           },
         }}>
         <VoteBar

@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import { ReactNode } from 'react';
 
-import { BasicModal } from '../../ui';
+import { BasicModal, Divider } from '../../ui';
 import { texts } from '../../ui/utils/texts';
 
 interface DetailsModalWrapperProps {
@@ -21,13 +21,20 @@ export function DetailsModalWrapper({
     <BasicModal
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      maxWidth={830}
+      maxWidth={710}
       withCloseButton>
-      <Box
-        sx={(theme) => ({ [theme.breakpoints.up('sm')]: { p: '40px 60px' } })}>
-        <Box component="h2" sx={{ typography: 'h1', mb: 40 }}>
+      <Box sx={(theme) => ({ [theme.breakpoints.up('sm')]: { pt: 20 } })}>
+        <Box component="h2" sx={{ typography: 'h1' }}>
           {texts.proposals.detailsModalTitle(proposalId)}
         </Box>
+
+        <Divider
+          sx={(theme) => ({
+            mt: 18,
+            mb: 24,
+            [theme.breakpoints.up('lg')]: { mt: 24, mb: 30 },
+          })}
+        />
 
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
       </Box>

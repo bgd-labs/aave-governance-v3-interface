@@ -16,7 +16,13 @@ export function Details({ ipfs, ipfsError }: DetailsProps) {
   if (!ipfs && !ipfsError)
     return (
       <>
-        <Box sx={{ mb: 16 }}>
+        <Box
+          sx={(theme) => ({
+            mb: 18,
+            [theme.breakpoints.up('lg')]: {
+              mb: 24,
+            },
+          })}>
           <Box sx={{ mb: 8 }}>
             <CustomSkeleton width={100} height={16} />
           </Box>
@@ -37,9 +43,8 @@ export function Details({ ipfs, ipfsError }: DetailsProps) {
         <Box
           component="p"
           sx={{
+            typography: 'descriptor',
             color: '$light',
-            fontSize: 12,
-            lineHeight: '15px',
             textAlign: 'center',
           }}>
           {ipfsError}
@@ -49,13 +54,17 @@ export function Details({ ipfs, ipfsError }: DetailsProps) {
 
   return (
     <>
-      <Box sx={{ mb: 16 }}>
-        <Box component="p" sx={{ typography: 'headline', mb: 12 }}>
+      <Box
+        sx={(theme) => ({
+          mb: 18,
+          [theme.breakpoints.up('lg')]: {
+            mb: 24,
+          },
+        })}>
+        <Box component="p" sx={{ typography: 'h2', mb: 12 }}>
           {texts.proposals.author}
         </Box>
-        <Box component="p" sx={{ typography: 'body' }}>
-          {ipfs?.author}
-        </Box>
+        <Box component="p">{ipfs?.author}</Box>
       </Box>
 
       <MarkdownContainer

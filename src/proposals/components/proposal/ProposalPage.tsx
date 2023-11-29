@@ -17,6 +17,7 @@ import { Hex } from 'viem';
 import { useStore } from '../../../store';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
+import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
 import { ToTopButton } from '../../../ui/components/ToTopButton';
 import { getChainName } from '../../../ui/utils/getChainName';
 import { texts } from '../../../ui/utils/texts';
@@ -25,6 +26,7 @@ import { proposalStatuses } from '../../utils/statuses';
 import { ActivateVotingOnVotingMachineModal } from '../actionModals/ActivateVotingOnVotingMachineModal';
 import { ExecutePayloadModal } from '../actionModals/ExecutePayloadModal';
 import { VoteModal } from '../actionModals/VoteModal';
+import { BlockWrapper } from '../BlockWrapper';
 import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
@@ -253,7 +255,7 @@ export function ProposalPage({
   const Timeline = () => {
     if (!store.isRendered) {
       return (
-        <Box sx={{ mb: 21 }}>
+        <Box sx={{ mb: 18, [theme.breakpoints.up('lg')]: { mb: 24 } }}>
           <CustomSkeleton height={80} />
         </Box>
       );
@@ -305,9 +307,9 @@ export function ProposalPage({
   return (
     <>
       <Box>
-        <Box sx={{ display: 'flex', [theme.breakpoints.up('sm')]: { mb: 12 } }}>
+        <TopPanelContainer withoutContainer>
           <BackButton3D onClick={router.back} />
-        </Box>
+        </TopPanelContainer>
 
         <Box
           sx={{
@@ -340,22 +342,22 @@ export function ProposalPage({
               width: '100%',
               [theme.breakpoints.up('sm')]: {
                 width: 290,
-                mr: 15,
+                mr: 18,
                 position: 'sticky',
                 transition: 'all 0.5s ease',
                 top: 50,
               },
               [theme.breakpoints.up('lg')]: {
+                mr: 24,
                 width: 340,
+              },
+              '@media only screen and (max-height: 550px)': {
+                position: 'static',
               },
             }}>
             <NoSSR>
               {proposal.data.payloads.some((payload) => !payload?.state) && (
-                <BoxWith3D
-                  wrapperCss={{ mb: 12 }}
-                  borderSize={10}
-                  contentColor="$mainAgainst"
-                  css={{ p: '15px 20px' }}>
+                <BlockWrapper contentColor="$mainAgainst">
                   {proposal.data.payloads
                     .filter((payload) => !payload?.state)
                     .map((payload) => (
@@ -363,18 +365,16 @@ export function ProposalPage({
                         key={payload.id}
                         component="p"
                         sx={{
-                          mt: 4,
-                          typography: 'body',
+                          mt: 8,
+                          typography: 'descriptor',
                           color: '$light',
-                          fontSize: 12,
-                          lineHeight: '15px',
                           textAlign: 'center',
                         }}>
                         Payload id {payload.id} on{' '}
                         {getChainName(payload.chainId)} broken
                       </Box>
                     ))}
-                </BoxWith3D>
+                </BlockWrapper>
               )}
             </NoSSR>
 
@@ -399,29 +399,21 @@ export function ProposalPage({
               }
             />
 
-            <NoSSR>
-              <>
-                {isCreatorBalanceWarningVisible && (
-                  <BoxWith3D
-                    wrapperCss={{ mb: 12 }}
-                    borderSize={10}
-                    contentColor="$mainAgainst"
-                    css={{ p: '15px 20px' }}>
-                    <Box
-                      component="p"
-                      sx={{
-                        typography: 'body',
-                        color: '$light',
-                        fontSize: 12,
-                        lineHeight: '15px',
-                        textAlign: 'center',
-                      }}>
-                      {texts.proposals.canBeClosedByPropositionPower}
-                    </Box>
-                  </BoxWith3D>
-                )}
-              </>
-            </NoSSR>
+            {isCreatorBalanceWarningVisible && (
+              <NoSSR>
+                <BlockWrapper contentColor="$mainAgainst">
+                  <Box
+                    component="p"
+                    sx={{
+                      typography: 'descriptor',
+                      color: '$light',
+                      textAlign: 'center',
+                    }}>
+                    {texts.proposals.canBeClosedByPropositionPower}
+                  </Box>
+                </BlockWrapper>
+              </NoSSR>
+            )}
 
             <NoSSR>
               <ProposalPayloads
@@ -463,32 +455,30 @@ export function ProposalPage({
             </Box>
 
             <NoSSR>
-              <>
-                <ProposalStatusDetails
-                  creationTime={proposal.data.creationTime}
-                  coolDownBeforeVotingStart={
-                    proposal.config.coolDownBeforeVotingStart
-                  }
-                  proposalBasicStatus={proposal.data.basicState}
-                  proposalStatus={proposal.state}
-                  proposalId={proposal.data.id}
-                  votingMachineState={proposal.data.votingMachineState}
-                  proposalResultsSent={
-                    proposal.data.votingMachineData.sentToGovernance
-                  }
-                  proposalQueuingTime={proposal.data.queuingTime}
-                  cooldownPeriod={proposal.timings.cooldownPeriod}
-                  underlyingAssets={
-                    proposal.data.votingMachineData.votingAssets as Hex[]
-                  }
-                  blockHash={proposal.data.snapshotBlockHash}
-                  votingBlockHash={proposal.data.votingMachineData.l1BlockHash}
-                  votingChainId={proposal.data.votingChainId}
-                  hasRequiredRoots={
-                    proposal.data.votingMachineData.hasRequiredRoots
-                  }
-                />
-              </>
+              <ProposalStatusDetails
+                creationTime={proposal.data.creationTime}
+                coolDownBeforeVotingStart={
+                  proposal.config.coolDownBeforeVotingStart
+                }
+                proposalBasicStatus={proposal.data.basicState}
+                proposalStatus={proposal.state}
+                proposalId={proposal.data.id}
+                votingMachineState={proposal.data.votingMachineState}
+                proposalResultsSent={
+                  proposal.data.votingMachineData.sentToGovernance
+                }
+                proposalQueuingTime={proposal.data.queuingTime}
+                cooldownPeriod={proposal.timings.cooldownPeriod}
+                underlyingAssets={
+                  proposal.data.votingMachineData.votingAssets as Hex[]
+                }
+                blockHash={proposal.data.snapshotBlockHash}
+                votingBlockHash={proposal.data.votingMachineData.l1BlockHash}
+                votingChainId={proposal.data.votingChainId}
+                hasRequiredRoots={
+                  proposal.data.votingMachineData.hasRequiredRoots
+                }
+              />
             </NoSSR>
           </Box>
 
@@ -498,11 +488,11 @@ export function ProposalPage({
             borderSize={10}
             wrapperCss={{
               display: 'block',
-              mb: 12,
+              mb: 18,
               [theme.breakpoints.up('sm')]: { display: 'none' },
             }}
-            css={{ display: 'flex', flexDirection: 'column', py: 20 }}>
-            <Box sx={{ ml: 20 }}>
+            css={{ display: 'flex', flexDirection: 'column', py: 18 }}>
+            <Box sx={{ ml: 18 }}>
               <Timeline />
             </Box>
 
@@ -525,27 +515,28 @@ export function ProposalPage({
                 maxWidth: 'calc(100% - 305px)',
               },
               [theme.breakpoints.up('lg')]: {
-                maxWidth: 'calc(100% - 355px)',
+                maxWidth: 'calc(100% - 365px)',
               },
             }}
             css={{
-              p: '20px',
-              [theme.breakpoints.up('md')]: {
-                p: '25px 35px',
-              },
-              [theme.breakpoints.up('lg')]: {
-                p: '40px 40px 40px 48px',
-              },
+              p: 18,
+              [theme.breakpoints.up('lg')]: { p: '24px 30px' },
             }}>
             <Box
               sx={{
                 display: 'none',
                 [theme.breakpoints.up('sm')]: { display: 'block' },
               }}>
-              <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
+              <Box
+                component="h2"
+                sx={{
+                  typography: 'h1',
+                  mb: 18,
+                  [theme.breakpoints.up('lg')]: { typography: 'h1', mb: 24 },
+                }}>
                 {ipfsData?.title || proposalData.proposal.data.title}
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 48 }}>
                 <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
               </Box>
             </Box>
@@ -556,7 +547,6 @@ export function ProposalPage({
                 [theme.breakpoints.up('sm')]: {
                   display: 'flex',
                   flexDirection: 'column',
-                  mb: 0,
                 },
               }}>
               <Timeline />
@@ -574,7 +564,7 @@ export function ProposalPage({
           <Box
             sx={{
               display: 'block',
-              mt: 20,
+              mt: 18,
               [theme.breakpoints.up('sm')]: { display: 'none' },
             }}>
             <ProposalVotingPower

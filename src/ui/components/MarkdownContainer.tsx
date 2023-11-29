@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import Markdown from 'markdown-to-jsx';
 import React from 'react';
 
@@ -14,23 +14,21 @@ export function MarkdownContainer({
   markdown,
   replaceImgSrc,
 }: MarkdownContainerProps) {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
         wordBreak: 'break-word',
-        'h1, h2, h3, h4, h5, h6': { my: 12 },
+        'h1, h2, h3, h4, h5, h6': { my: 18 },
         table: {
           width: '100%',
           th: {
-            p: 10,
+            p: 12,
             borderBottomColor: '$main',
             borderBottomWidth: '1px',
             borderBottomStyle: 'solid',
           },
           td: {
-            p: 10,
+            p: 12,
             borderBottomColor: '$main',
             borderBottomWidth: '1px',
             borderBottomStyle: 'solid',
@@ -38,8 +36,8 @@ export function MarkdownContainer({
           },
         },
         pre: {
-          p: 10,
-          my: 12,
+          p: 12,
+          my: 18,
           borderRadius: '5px',
           borderColor: '$main',
           borderWidth: '1px',
@@ -49,7 +47,7 @@ export function MarkdownContainer({
           overflowX: 'auto',
         },
         code: {
-          p: 2,
+          p: 4,
           font: '12px Monaco,Consolas,"Andale  Mono","DejaVu Sans Mono",monospace',
         },
       }}>
@@ -70,7 +68,7 @@ export function MarkdownContainer({
                   sx={{
                     display: 'block',
                     maxWidth: '100%',
-                    mt: 8,
+                    mt: 12,
                     mx: 'auto',
                     height: 'auto',
                   }}
@@ -94,16 +92,14 @@ export function MarkdownContainer({
             },
             h1({ node, ...rest }) {
               return (
-                <Box
-                  component="h3"
-                  sx={{ typography: 'h3', my: 12, fontWeight: 600 }}>
+                <Box component="h2" sx={{ typography: 'h2', my: 18 }}>
                   {rest.children}
                 </Box>
               );
             },
             h2({ node, ...rest }) {
               return (
-                <Box component="p" sx={{ typography: 'headline', my: 12 }}>
+                <Box component="h3" sx={{ typography: 'headline', my: 18 }}>
                   {rest.children}
                 </Box>
               );
@@ -115,11 +111,6 @@ export function MarkdownContainer({
                   sx={{
                     typography: 'body',
                     mb: 8,
-                    lineHeight: '15px !important',
-                    [theme.breakpoints.up('lg')]: {
-                      typography: 'body',
-                      lineHeight: '22px !important',
-                    },
                   }}>
                   {rest.children}
                 </Box>
@@ -133,12 +124,7 @@ export function MarkdownContainer({
                     typography: 'body',
                     mb: 12,
                     pl: 30,
-                    lineHeight: '15px !important',
                     listStyleType: 'disc',
-                    [theme.breakpoints.up('lg')]: {
-                      typography: 'body',
-                      lineHeight: '22px !important',
-                    },
                   }}>
                   {rest.children}
                 </Box>
@@ -151,12 +137,6 @@ export function MarkdownContainer({
                   sx={{
                     typography: 'body',
                     mb: 12,
-                    pl: 30,
-                    lineHeight: '15px !important',
-                    [theme.breakpoints.up('lg')]: {
-                      typography: 'body',
-                      lineHeight: '22px !important',
-                    },
                   }}>
                   {rest.children}
                 </Box>

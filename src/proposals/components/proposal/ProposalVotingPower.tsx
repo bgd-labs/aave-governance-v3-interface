@@ -108,7 +108,6 @@ export function ProposalVotingPower({
           display: 'inline',
           textAlign: 'center',
           color: '$text',
-          lineHeight: '22px',
           '*': {
             display: 'inline',
           },

@@ -466,14 +466,14 @@ export function ProposalStatusDetails({
           borderSize={10}
           contentColor="$mainLight"
           wrapperCss={{
-            mt: 16,
-            [theme.breakpoints.up('sm')]: {
-              mt: 20,
+            my: 18,
+            [theme.breakpoints.up('lg')]: {
+              my: 24,
             },
           }}
           css={{
             display: 'flex',
-            p: 20,
+            p: 18,
             flexDirection: 'column',
             alignItems: 'flex-start',
             minHeight: 71,
@@ -486,6 +486,7 @@ export function ProposalStatusDetails({
             },
             [theme.breakpoints.up('lg')]: {
               minHeight: 118,
+              p: '24px 30px',
             },
           }}>
           <Box
@@ -497,13 +498,13 @@ export function ProposalStatusDetails({
               [theme.breakpoints.up('sm')]: {
                 typography: 'h3',
                 fontWeight: 600,
-                mb: 16,
+                mb: 18,
                 textAlign: 'center',
               },
               [theme.breakpoints.up('lg')]: {
                 typography: 'h3',
                 fontWeight: 600,
-                mb: 22,
+                mb: 24,
               },
             }}>
             {actions()?.title}

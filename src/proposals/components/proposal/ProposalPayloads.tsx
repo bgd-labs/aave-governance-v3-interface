@@ -14,7 +14,6 @@ import { Hex, toHex } from 'viem';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
-import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import { SeatBeltReportModal } from '../../../proposalCreateOverview/components/SeatBeltReportModal';
@@ -24,19 +23,15 @@ import {
   TransactionUnion,
   TxType,
 } from '../../../transactions/store/transactionsSlice';
-import {
-  BoxWith3D,
-  CopyToClipboard,
-  Link,
-  SmallButton,
-  Timer,
-} from '../../../ui';
+import { BoxWith3D, Link, SmallButton, Timer } from '../../../ui';
+import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
+import { PayloadActions } from './PayloadActions';
 
 interface ProposalPayloadsProps {
   proposalId: number;
@@ -50,9 +45,11 @@ interface ProposalPayloadsProps {
 export function PayloadItemStatusInfo({
   title,
   children,
+  isSecondary,
 }: {
   title?: string;
   children: ReactNode;
+  isSecondary?: boolean;
 }) {
   return (
     <Box
@@ -60,7 +57,7 @@ export function PayloadItemStatusInfo({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-end',
-        my: 4,
+        color: isSecondary ? '$textSecondary' : '$text',
       }}>
       {title && (
         <Box sx={{ typography: 'descriptorAccent', mr: 6 }}>{title}</Box>
@@ -199,6 +196,8 @@ function PayloadItem({
             }
           }}
           sx={{
+            px: 6,
+            pb: 4,
             cursor:
               (isArrowVisibleForFirstPayload || inList) && !forCreate
                 ? 'pointer'
@@ -288,7 +287,7 @@ function PayloadItem({
             </Box>
           </Box>
 
-          <Box>
+          <Box sx={{ pl: 18, mt: 4 }}>
             {forCreate && (
               <>
                 <Box
@@ -296,7 +295,6 @@ function PayloadItem({
                     display: 'flex',
                     flexDirection: 'column',
                     mb: 4,
-                    mt: 6,
                   }}>
                   <Box sx={{ typography: 'descriptorAccent' }}>
                     Payload id / chain id (Hex):{' '}
@@ -430,141 +428,64 @@ function PayloadItem({
               alignItems: 'flex-start',
               justifyContent: 'space-between',
               flexDirection: 'column',
-              mt: 4,
+              pl: 24,
             }}>
+            {!isFinalStatus && (
+              <Box sx={{ mb: 4 }}>
+                <PayloadItemStatusInfo
+                  isSecondary
+                  title={texts.proposals.payloadsDetails.expiredIn}>
+                  <Box sx={{ typography: 'descriptor' }}>
+                    <Timer timestamp={payloadExpiredTime} />
+                  </Box>
+                </PayloadItemStatusInfo>
+              </Box>
+            )}
+
             {creator && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
                 <Box
                   sx={{
                     typography: 'descriptorAccent',
                     wordBreak: 'break-word',
+                    color: '$textSecondary',
                   }}>
                   {texts.proposals.payloadsDetails.creator}:{' '}
-                  <Box sx={{ typography: 'descriptor' }}>
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      typography: 'descriptor',
+                    }}>
                     <Link
-                      css={{ display: 'inline-flex', alignItems: 'center' }}
+                      css={{
+                        color: '$textSecondary',
+                        transition: 'all 0.2s ease',
+                        hover: {
+                          opacity: 0.7,
+                        },
+                      }}
                       inNewWindow
                       href={`${chainInfoHelper.getChainParameters(
                         payload.chainId || appConfig.govCoreChainId,
                       ).blockExplorers?.default.url}/address/${creator}`}>
                       {textCenterEllipsis(creator, 15, 10)}
-                      <IconBox
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          ml: 2,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                            path: {
-                              '&:first-of-type': {
-                                stroke: theme.palette.$text,
-                              },
-                              '&:last-of-type': {
-                                fill: theme.palette.$text,
-                              },
-                            },
-                          },
-                        }}>
-                        <LinkIcon />
-                      </IconBox>
                     </Link>
-                  </Box>
-                </Box>
-              </Box>
-            )}
 
-            {!isFinalStatus && (
-              <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.expiredIn}>
-                <Box sx={{ typography: 'descriptor' }}>
-                  <Timer timestamp={payloadExpiredTime} />
-                </Box>
-              </PayloadItemStatusInfo>
-            )}
-
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ typography: 'descriptorAccent' }}>
-                {texts.proposals.payloadsDetails.actions(
-                  payload.actionAddresses?.length || 0,
-                )}
-              </Box>
-              <Box
-                component="ul"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  listStyleType: 'disc',
-                  pl: 12,
-                }}>
-                {payload.actionAddresses?.map((address, index) => (
-                  <Box
-                    sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
-                    key={index}>
-                    <Link
-                      css={{ display: 'inline-flex', alignItems: 'center' }}
-                      inNewWindow
-                      href={`${chainInfoHelper.getChainParameters(
+                    <CopyAndExternalIconsSet
+                      iconSize={10}
+                      copyText={creator}
+                      externalLink={`${chainInfoHelper.getChainParameters(
                         payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default.url}/address/${address}${
-                        forCreate ? '#code' : ''
-                      }`}>
-                      <Box
-                        component="li"
-                        sx={{
-                          typography: 'descriptor',
-                          transition: 'all 0.2s ease',
-                          hover: { opacity: 0.7 },
-                        }}>
-                        {textCenterEllipsis(address, 6, 6)}
-                      </Box>
-
-                      <IconBox
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          ml: 2,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                            path: {
-                              '&:first-of-type': {
-                                stroke: theme.palette.$text,
-                              },
-                              '&:last-of-type': {
-                                fill: theme.palette.$text,
-                              },
-                            },
-                          },
-                        }}>
-                        <LinkIcon />
-                      </IconBox>
-                    </Link>
-
-                    <CopyToClipboard copyText={address}>
-                      <IconBox
-                        sx={{
-                          cursor: 'pointer',
-                          width: 10,
-                          height: 10,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                          },
-                          ml: 3,
-                          path: {
-                            transition: 'all 0.2s ease',
-                            stroke: theme.palette.$textSecondary,
-                          },
-                          hover: { path: { stroke: theme.palette.$main } },
-                        }}>
-                        <CopyIcon />
-                      </IconBox>
-                    </CopyToClipboard>
+                      ).blockExplorers?.default.url}/address/${creator}`}
+                      sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
+                    />
                   </Box>
-                ))}
+                </Box>
               </Box>
-            </Box>
+            )}
+
+            <PayloadActions payload={payload} forCreate={forCreate} withLink />
           </Box>
         )}
       </Box>
@@ -598,19 +519,21 @@ export function ProposalPayloads({
       borderSize={10}
       contentColor="$mainLight"
       bottomBorderColor="$light"
-      wrapperCss={{ mb: 12 }}
+      wrapperCss={{ mb: 18, [theme.breakpoints.up('lg')]: { mb: 24 } }}
       css={{
-        p: '20px 0 20px 20px',
-        [theme.breakpoints.up('lg')]: { p: '24px 0 24px 30px' },
+        p: '18px 0 18px 12px',
+        [theme.breakpoints.up('lg')]: {
+          p: '24px 0 24px 24px',
+        },
       }}>
       <Box
         sx={(theme) => ({
-          pr: 20,
+          pr: 12,
           maxHeight: payloads.length > 2 && !forCreate ? 200 : 'unset',
           overflowY: payloads.length > 2 && !forCreate ? 'auto' : undefined,
           [theme.breakpoints.up('lg')]: {
             maxHeight: payloads.length > 2 && !forCreate ? 300 : 'unset',
-            pr: 30,
+            pr: 24,
           },
         })}>
         {isFirstPayloadError ? (
@@ -702,11 +625,14 @@ export function ProposalPayloads({
       {!forCreate && (
         <Box
           sx={{
-            mt: 10,
+            mt: 12,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            pr: 20,
+            pr: 12,
+            [theme.breakpoints.up('lg')]: {
+              pr: 24,
+            },
           }}>
           <Box
             onClick={() => setFullView(!isFullView)}
