@@ -11,12 +11,14 @@ export interface PaginationProps {
   pageCount: number;
   onPageChange: (value: number) => void;
   forcePage?: number;
+  withoutQuery?: boolean;
 }
 
 export function Pagination({
   pageCount,
   onPageChange,
   forcePage,
+  withoutQuery,
 }: PaginationProps) {
   const theme = useTheme();
   const router = useRouter();
@@ -246,7 +248,7 @@ export function Pagination({
           onPageChange(selectedItem.selected);
           if (typeof window !== 'undefined') {
             window.scrollTo(0, 0);
-            if (!isForIPFS) {
+            if (!isForIPFS && !withoutQuery) {
               router.replace(
                 pathname +
                   '?' +

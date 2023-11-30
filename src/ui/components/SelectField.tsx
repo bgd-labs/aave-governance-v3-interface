@@ -79,10 +79,13 @@ export function SelectField({
               top: 'calc(100% - 1px)',
               border: `1px solid ${theme.palette.$main}`,
               width: '100%',
-              maxHeight: 250,
+              maxHeight: 160,
               overflowY: 'auto',
               zIndex: 2,
               backgroundColor: '$mainLight',
+              [theme.breakpoints.up('md')]: {
+                maxHeight: 250,
+              },
             }}>
             {options.map((option: any) => (
               <Listbox.Option
