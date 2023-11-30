@@ -234,18 +234,6 @@ function PayloadItem({
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {!!report && forCreate && (
-                <SmallButton
-                  disabled={tx?.status === TransactionStatus.Success}
-                  loading={tx?.pending}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSeatbeltModalOpen(true);
-                  }}>
-                  {texts.proposals.payloadsDetails.seatbelt}
-                </SmallButton>
-              )}
-
               {isPayloadReadyForExecution && !isExecuted && (
                 <>
                   {store.activeWallet?.isActive ? (
@@ -485,7 +473,13 @@ function PayloadItem({
               </Box>
             )}
 
-            <PayloadActions payload={payload} forCreate={forCreate} withLink />
+            <PayloadActions
+              payload={payload}
+              forCreate={forCreate}
+              withLink
+              setIsSeatbeltModalOpen={setIsSeatbeltModalOpen}
+              report={report}
+            />
           </Box>
         )}
       </Box>

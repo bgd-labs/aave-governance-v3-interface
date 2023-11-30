@@ -31,11 +31,13 @@ import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
+import { LeftPanelWrapper } from './LeftPanelWrapper';
 import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
 import { ProposalTimeline } from './ProposalTimeline';
 import { ProposalVoteInfo } from './ProposalVoteInfo';
 import { ProposalVotingPower } from './ProposalVotingPower';
+import { RightPanelWrapper } from './RightPanelWrapper';
 
 interface ProposalPageProps {
   id: number;
@@ -337,24 +339,7 @@ export function ProposalPage({
               alignItems: 'flex-start',
             },
           }}>
-          <Box
-            sx={{
-              width: '100%',
-              [theme.breakpoints.up('sm')]: {
-                width: 290,
-                mr: 18,
-                position: 'sticky',
-                transition: 'all 0.5s ease',
-                top: 50,
-              },
-              [theme.breakpoints.up('lg')]: {
-                mr: 24,
-                width: 340,
-              },
-              '@media only screen and (max-height: 550px)': {
-                position: 'static',
-              },
-            }}>
+          <LeftPanelWrapper>
             <NoSSR>
               {proposal.data.payloads.some((payload) => !payload?.state) && (
                 <BlockWrapper contentColor="$mainAgainst">
@@ -480,7 +465,7 @@ export function ProposalPage({
                 }
               />
             </NoSSR>
-          </Box>
+          </LeftPanelWrapper>
 
           <BoxWith3D
             className="ProposalLoading__SSR"
@@ -504,24 +489,7 @@ export function ProposalPage({
             />
           </BoxWith3D>
 
-          <BoxWith3D
-            className="ProposalLoading__SSR"
-            borderSize={10}
-            contentColor="$mainLight"
-            wrapperCss={{
-              flex: 1,
-              maxWidth: '100%',
-              [theme.breakpoints.up('sm')]: {
-                maxWidth: 'calc(100% - 305px)',
-              },
-              [theme.breakpoints.up('lg')]: {
-                maxWidth: 'calc(100% - 365px)',
-              },
-            }}
-            css={{
-              p: 18,
-              [theme.breakpoints.up('lg')]: { p: '24px 30px' },
-            }}>
+          <RightPanelWrapper>
             <Box
               sx={{
                 display: 'none',
@@ -559,7 +527,7 @@ export function ProposalPage({
             </Box>
 
             <Details ipfs={ipfsData} ipfsError={ipfsDataError} />
-          </BoxWith3D>
+          </RightPanelWrapper>
 
           <Box
             sx={{

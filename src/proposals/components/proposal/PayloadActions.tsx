@@ -13,12 +13,16 @@ interface PayloadActionsProps {
   payload: NewPayload;
   forCreate?: boolean;
   withLink?: boolean;
+  setIsSeatbeltModalOpen?: (value: boolean) => void;
+  report?: string;
 }
 
 export function PayloadActions({
   payload,
   forCreate,
   withLink,
+  setIsSeatbeltModalOpen,
+  report,
 }: PayloadActionsProps) {
   return (
     <>
@@ -81,7 +85,7 @@ export function PayloadActions({
         </Box>
       </Box>
 
-      {withLink && (
+      {withLink && !report && !forCreate ? (
         <Link
           href={`https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads//${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
           inNewWindow
@@ -93,6 +97,21 @@ export function PayloadActions({
             {texts.proposals.payloadsDetails.seatbelt}
           </SmallButton>
         </Link>
+      ) : (
+        withLink &&
+        !!setIsSeatbeltModalOpen &&
+        !!report &&
+        forCreate && (
+          <Box sx={{ mt: 4 }}>
+            <SmallButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsSeatbeltModalOpen(true);
+              }}>
+              {texts.proposals.payloadsDetails.seatbelt}
+            </SmallButton>
+          </Box>
+        )
       )}
     </>
   );

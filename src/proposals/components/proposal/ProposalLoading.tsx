@@ -11,6 +11,7 @@ import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
 import { BlockWrapper } from '../BlockWrapper';
 import { Details } from './Details';
 import { DetailsShareLinks } from './DetailsShareLinks';
+import { LeftPanelWrapper } from './LeftPanelWrapper';
 
 interface ProposalLoadingProps {
   ipfsData?: ProposalMetadata;
@@ -197,24 +198,7 @@ export function ProposalLoading({
               alignItems: 'flex-start',
             },
           }}>
-          <Box
-            sx={{
-              width: '100%',
-              [theme.breakpoints.up('sm')]: {
-                width: 290,
-                mr: 18,
-                position: 'sticky',
-                transition: 'all 0.5s ease',
-                top: 50,
-              },
-              [theme.breakpoints.up('lg')]: {
-                mr: 24,
-                width: 340,
-              },
-              '@media only screen and (max-height: 550px)': {
-                position: 'static',
-              },
-            }}>
+          <LeftPanelWrapper>
             <BoxWith3D
               className="ProposalLoading__SSR"
               borderSize={10}
@@ -265,7 +249,7 @@ export function ProposalLoading({
                 </Box>
               </Box>
             </BoxWith3D>
-          </Box>
+          </LeftPanelWrapper>
 
           <Box
             sx={{
