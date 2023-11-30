@@ -15,6 +15,8 @@ interface PayloadActionsProps {
   withLink?: boolean;
   setIsSeatbeltModalOpen?: (value: boolean) => void;
   report?: string;
+  withoutTitle?: boolean;
+  textColor?: string;
 }
 
 export function PayloadActions({
@@ -23,6 +25,8 @@ export function PayloadActions({
   withLink,
   setIsSeatbeltModalOpen,
   report,
+  withoutTitle,
+  textColor,
 }: PayloadActionsProps) {
   return (
     <>
@@ -30,17 +34,20 @@ export function PayloadActions({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          color: '$textSecondary',
+          color: textColor || '$textSecondary',
           a: {
-            color: '$textSecondary',
+            color: textColor || '$textSecondary',
           },
         }}>
-        <Box sx={{ typography: 'descriptorAccent' }}>
-          {texts.proposals.payloadsDetails.actions(
-            payload.actionAddresses?.length || 0,
-          )}
-          :
-        </Box>
+        {!withoutTitle && (
+          <Box sx={{ typography: 'descriptorAccent' }}>
+            {texts.proposals.payloadsDetails.actions(
+              payload.actionAddresses?.length || 0,
+            )}
+            :
+          </Box>
+        )}
+
         <Box
           component="ul"
           sx={{

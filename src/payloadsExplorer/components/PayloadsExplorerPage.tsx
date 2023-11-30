@@ -1,23 +1,27 @@
 'use client';
 
 import { Box, useTheme } from '@mui/system';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
 import { useStore } from '../../store';
-import { Container, Pagination } from '../../ui';
+import { BackButton3D, Container, Pagination } from '../../ui';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { SelectField } from '../../ui/components/SelectField';
+import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { PayloadExploreItem } from './PayloadExploreItem';
+import { PayloadsControllerSelect } from './PayloadsControllerSelect';
 
 export function PayloadsExplorerPage() {
   const theme = useTheme();
+  const router = useRouter();
+
   const {
     getPayloadsExploreData,
     payloadsExploreData,
-    totalPayloadsCountByAddress,
     payloadsExplorePagination,
     setPayloadsExploreActivePage,
   } = useStore();
@@ -45,54 +49,55 @@ export function PayloadsExplorerPage() {
   return (
     <>
       <Container>
-        <Box sx={{ p: 12, backgroundColor: '$light' }}>
-          <InputWrapper
-            label={texts.other.payloadsNetwork}
-            css={{ mb: 25, zIndex: 6 }}>
-            <SelectField
-              withChainName
-              placeholder={texts.other.payloadsNetwork}
-              value={chainId}
-              onChange={(event) => {
-                setChainId(event);
-              }}
-              options={appConfig.payloadsControllerChainIds}
+        <TopPanelContainer withoutContainer>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <BackButton3D
+              onClick={router.back}
+              alwaysVisible
+              alwaysWithBorders
             />
-          </InputWrapper>
-        </Box>
+            <Box
+              sx={{
+                position: 'relative',
+                zIndex: 5,
+                maxWidth: '100%',
+                width: '100%',
+                [theme.breakpoints.up('sm')]: { maxWidth: 250 },
+              }}>
+              <InputWrapper>
+                <SelectField
+                  withChainIcon
+                  withChainName
+                  placeholder={texts.other.payloadsNetwork}
+                  value={chainId}
+                  onChange={(event) => {
+                    setChainId(event);
+                  }}
+                  options={appConfig.payloadsControllerChainIds}
+                />
+              </InputWrapper>
+            </Box>
+          </Box>
+        </TopPanelContainer>
 
-        <Box sx={{ typography: 'h1', my: 24 }}>Payloads</Box>
+        <TopPanelContainer withoutContainer>
+          <PayloadsControllerSelect
+            chainId={chainId}
+            controllerAddress={controllerAddress}
+            setControllerAddress={setControllerAddress}
+          />
+        </TopPanelContainer>
+
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            wordBreak: 'break-word',
-          }}>
-          <Box sx={{ typography: 'h2' }}>
-            Payloads controller: {controllerAddress}
-          </Box>
-          <Box sx={{ typography: 'h2' }}>
-            Count: {totalPayloadsCountByAddress[controllerAddress]}
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            mt: 24,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            gridGap: 6,
-            [theme.breakpoints.up('xsm')]: {
-              gridTemplateColumns: 'repeat(2, 1fr)',
-            },
-            [theme.breakpoints.up('sm')]: {
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridGap: 12,
-            },
+            mt: 18,
             [theme.breakpoints.up('lg')]: {
-              gridTemplateColumns: 'repeat(4, 1fr)',
+              mt: 24,
             },
           }}>
           {Object.values(payloadsData)

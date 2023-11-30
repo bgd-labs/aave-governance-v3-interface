@@ -448,7 +448,6 @@ function PayloadItem({
                     <Link
                       css={{
                         color: '$textSecondary',
-                        transition: 'all 0.2s ease',
                         hover: {
                           opacity: 0.7,
                         },

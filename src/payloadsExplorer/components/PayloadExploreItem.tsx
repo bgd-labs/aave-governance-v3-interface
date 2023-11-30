@@ -4,11 +4,12 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { toHex } from 'viem';
 
-import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
+import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
 import { PayloadItemStatusInfo } from '../../proposals/components/proposal/ProposalPayloads';
-import { BoxWith3D, CopyToClipboard, Link, SmallButton, Timer } from '../../ui';
+import { BoxWith3D, Link, SmallButton, Timer } from '../../ui';
+import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
@@ -66,16 +67,21 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
   return (
     <BoxWith3D
       contentColor="$mainLight"
-      wrapperCss={{
-        height: '100%',
-        '> div, .BoxWith3D__content': { height: '100%' },
-      }}
+      wrapperCss={{ mb: 18, [theme.breakpoints.up('sm')]: { mb: 24 } }}
       css={{
-        p: 8,
-        height: '100%',
-        position: 'relative',
-        flexWrap: 'wrap',
-        [theme.breakpoints.up('sm')]: { p: 12 },
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        p: '18px',
+        [theme.breakpoints.up('sm')]: {
+          p: '18px 24px',
+        },
+        [theme.breakpoints.up('lg')]: {
+          flexDirection: 'row',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          p: '22px 30px',
+        },
       }}>
       <Box>
         <Box
@@ -92,102 +98,69 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
             }}>
             <NetworkIcon
               chainId={payload.chainId}
-              size={14}
-              css={{ mr: 4 }}
+              size={16}
+              css={{ mr: 6 }}
               withTooltip={true}
             />
-            <Box sx={{ typography: 'body' }}>
-              {texts.proposals.payloadsDetails.payload} <b>{payloadNumber}</b>
+            <Box sx={{ typography: 'h2' }}>
+              {texts.proposals.payloadsDetails.payload} {payloadNumber}
             </Box>
           </Box>
-
-          <Link
-            href={`https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads//${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
-            inNewWindow
-            css={{ display: 'flex', alignItems: 'center' }}>
-            <SmallButton
-              onClick={(e) => {
-                e.stopPropagation();
-              }}>
-              {texts.proposals.payloadsDetails.seatbelt}
-            </SmallButton>
-          </Link>
         </Box>
 
-        <Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+        <Box sx={{ display: 'flex', mb: 4 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', mr: 12 }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
-              Payload id (Hex):{' '}
-              <Box
-                sx={{
-                  display: 'inline',
-                  typography: 'headline',
-                }}>
-                {toHex(payload.id)}
-              </Box>
+              Id(Hex): {toHex(payload.id)}
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ typography: 'descriptorAccent' }}>
               {texts.proposals.payloadsDetails.accessLevel}:{' '}
-              <Box sx={{ display: 'inline', typography: 'headline' }}>
-                {payload.maximumAccessLevelRequired}
-              </Box>
+              {payload.maximumAccessLevelRequired}
             </Box>
           </Box>
+        </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-            <Box
-              sx={{ typography: 'descriptorAccent', wordBreak: 'break-word' }}>
-              {texts.proposals.payloadsDetails.creator}:{' '}
-              <Box sx={{ typography: 'descriptor' }}>
-                <Link
-                  css={{ display: 'inline-flex', alignItems: 'center' }}
-                  inNewWindow
-                  href={`${chainInfoHelper.getChainParameters(
-                    payload.chainId || appConfig.govCoreChainId,
-                  ).blockExplorers?.default.url}/address/${payload.creator}`}>
-                  {textCenterEllipsis(payload.creator, 15, 10)}
-                  <IconBox
-                    sx={{
-                      width: 10,
-                      height: 10,
-                      ml: 2,
-                      '> svg': {
-                        width: 10,
-                        height: 10,
-                        path: {
-                          '&:first-of-type': {
-                            stroke: theme.palette.$text,
-                          },
-                          '&:last-of-type': {
-                            fill: theme.palette.$text,
-                          },
-                        },
-                      },
-                    }}>
-                    <LinkIcon />
-                  </IconBox>
-                </Link>
-              </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
+          <Box sx={{ typography: 'descriptorAccent', wordBreak: 'break-word' }}>
+            {texts.proposals.payloadsDetails.creator}:{' '}
+            <Box sx={{ display: 'inline-flex', typography: 'descriptor' }}>
+              <Link
+                css={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  hover: {
+                    opacity: 0.7,
+                  },
+                }}
+                inNewWindow
+                href={`${chainInfoHelper.getChainParameters(
+                  payload.chainId || appConfig.govCoreChainId,
+                ).blockExplorers?.default.url}/address/${payload.creator}`}>
+                {textCenterEllipsis(payload.creator, 8, 6)}
+              </Link>
+
+              <CopyAndExternalIconsSet
+                sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
+                iconSize={10}
+                copyText={payload.creator}
+                externalLink={`${chainInfoHelper.getChainParameters(
+                  payload.chainId || appConfig.govCoreChainId,
+                ).blockExplorers?.default.url}/address/${payload.creator}`}
+              />
             </Box>
           </Box>
+        </Box>
 
+        <Box sx={{ mb: 4 }}>
           {isPayloadOnInitialState && (
             <PayloadItemStatusInfo
               title={texts.proposals.payloadsDetails.created}>
               <>{dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')}</>
             </PayloadItemStatusInfo>
           )}
-
-          {!isPayloadOnInitialState &&
-            !isFinalStatus &&
-            !isPayloadReadyForExecution && (
-              <PayloadItemStatusInfo>
-                {texts.proposals.payloadsDetails.timeLocked}
-              </PayloadItemStatusInfo>
-            )}
 
           {!isPayloadOnInitialState &&
             !isPayloadReadyForExecution &&
@@ -233,16 +206,7 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
             </PayloadItemStatusInfo>
           )}
         </Box>
-      </Box>
 
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          flexDirection: 'column',
-          mt: 4,
-        }}>
         {!isFinalStatus && (
           <PayloadItemStatusInfo
             title={texts.proposals.payloadsDetails.expiredIn}>
@@ -251,117 +215,63 @@ export function PayloadExploreItem({ payload }: { payload: Payload }) {
             </Box>
           </PayloadItemStatusInfo>
         )}
+      </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ typography: 'descriptorAccent' }}>
-            {texts.proposals.payloadsDetails.actions(
-              payload.actionAddresses?.length || 0,
-            )}
-          </Box>
-          <Box
-            component="ul"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              listStyleType: 'disc',
-              pl: 12,
-            }}>
-            {payload.actionAddresses?.map((address, index) => (
-              <Box
-                sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
-                key={index}>
-                <Link
-                  css={{ display: 'inline-flex', alignItems: 'center' }}
-                  inNewWindow
-                  href={`${chainInfoHelper.getChainParameters(
-                    payload.chainId || appConfig.govCoreChainId,
-                  ).blockExplorers?.default.url}/address/${address}#code$`}>
-                  <Box
-                    component="li"
-                    sx={{
-                      typography: 'descriptor',
-                      transition: 'all 0.2s ease',
-                      hover: { opacity: 0.7 },
-                    }}>
-                    {textCenterEllipsis(address, 6, 6)}
-                  </Box>
-
-                  <IconBox
-                    sx={{
-                      width: 10,
-                      height: 10,
-                      ml: 2,
-                      '> svg': {
-                        width: 10,
-                        height: 10,
-                        path: {
-                          '&:first-of-type': {
-                            stroke: theme.palette.$text,
-                          },
-                          '&:last-of-type': {
-                            fill: theme.palette.$text,
-                          },
-                        },
-                      },
-                    }}>
-                    <LinkIcon />
-                  </IconBox>
-                </Link>
-
-                <CopyToClipboard copyText={address}>
-                  <IconBox
-                    sx={{
-                      cursor: 'pointer',
-                      width: 10,
-                      height: 10,
-                      '> svg': {
-                        width: 10,
-                        height: 10,
-                      },
-                      ml: 3,
-                      path: {
-                        transition: 'all 0.2s ease',
-                        stroke: theme.palette.$textSecondary,
-                      },
-                      hover: { path: { stroke: theme.palette.$main } },
-                    }}>
-                    <CopyIcon />
-                  </IconBox>
-                </CopyToClipboard>
-              </Box>
-            ))}
-          </Box>
+      <Box>
+        <Box sx={{ typography: 'h2', mb: 12 }}>
+          {texts.proposals.payloadsDetails.actions(
+            payload.actionAddresses?.length || 0,
+          )}
+          :
         </Box>
+        <PayloadActions payload={payload} withoutTitle textColor="$text" />
       </Box>
 
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'absolute',
-          right: 1,
-          bottom: 1,
-          border: `2px solid ${theme.palette[statusColor]}`,
-          color: `${theme.palette[statusColor]}`,
-          typography: 'headline',
-          p: '6px 12px',
+          alignItems: 'flex-end',
+          flexDirection: 'column',
         }}>
-        {isPayloadOnInitialState && 'Created'}
-        {!isPayloadOnInitialState &&
-          !isFinalStatus &&
-          !isPayloadReadyForExecution &&
-          'Queued'}
-        {!isPayloadOnInitialState &&
-          !isFinalStatus &&
-          isPayloadReadyForExecution && (
-            <Box sx={{}}>
-              Can be <br /> execute
-            </Box>
-          )}
-        {isExecuted && 'Executed'}
-        {payload.state === PayloadState.Expired && 'Expired'}
-        {payload.state === PayloadState.Cancelled && 'Cancelled'}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: `2px solid ${theme.palette[statusColor]}`,
+            color: `${theme.palette[statusColor]}`,
+            typography: 'headline',
+            p: '4px 8px',
+            mb: 12,
+            minWidth: 95,
+            [theme.breakpoints.up('lg')]: {
+              minWidth: 102,
+            },
+          }}>
+          {isPayloadOnInitialState && 'Created'}
+          {!isPayloadOnInitialState &&
+            !isFinalStatus &&
+            !isPayloadReadyForExecution &&
+            'Queued'}
+          {!isPayloadOnInitialState &&
+            !isFinalStatus &&
+            isPayloadReadyForExecution && <>Can be execute</>}
+          {isExecuted && 'Executed'}
+          {payload.state === PayloadState.Expired && 'Expired'}
+          {payload.state === PayloadState.Cancelled && 'Cancelled'}
+        </Box>
+
+        <Link
+          href={`https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads//${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
+          inNewWindow
+          css={{ display: 'flex', alignItems: 'center' }}>
+          <SmallButton
+            onClick={(e) => {
+              e.stopPropagation();
+            }}>
+            {texts.proposals.payloadsDetails.seatbelt}
+          </SmallButton>
+        </Link>
       </Box>
     </BoxWith3D>
   );

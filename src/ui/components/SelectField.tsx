@@ -6,6 +6,7 @@ import ArrowToTop from '/public/images/icons/arrowToTop.svg';
 
 import { IconBox } from '../primitives/IconBox';
 import { getChainName } from '../utils/getChainName';
+import { NetworkIcon } from './NetworkIcon';
 
 interface SelectFieldProps {
   value: any;
@@ -13,6 +14,7 @@ interface SelectFieldProps {
   options: any[];
   placeholder: string;
   withChainName?: boolean;
+  withChainIcon?: boolean;
   withMyself?: boolean;
 }
 
@@ -22,6 +24,7 @@ export function SelectField({
   options,
   placeholder,
   withChainName,
+  withChainIcon,
   withMyself,
 }: SelectFieldProps) {
   const theme = useTheme();
@@ -61,13 +64,19 @@ export function SelectField({
                 backgroundColor: theme.palette.$light,
               },
             }}>
-            {!!(value || value === 0)
-              ? withChainName
-                ? getChainName(value)
-                : value
-              : withMyself && value === ''
-                ? 'Myself'
-                : placeholder}
+            <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+              {!!(value || value === 0) && withChainIcon && (
+                <NetworkIcon chainId={value} size={14} css={{ mr: 8 }} />
+              )}
+              {!!(value || value === 0)
+                ? withChainName
+                  ? getChainName(value)
+                  : value
+                : withMyself && value === ''
+                  ? 'Myself'
+                  : placeholder}
+            </Box>
+
             <IconBox sx={{ path: { stroke: theme.palette.$main } }}>
               {open ? <ArrowToTop /> : <ArrowToBottom />}
             </IconBox>
