@@ -24,7 +24,14 @@ export function CopyAndExternalIconsSet({
   const theme = useTheme();
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', ...sx }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        zIndex: 10,
+        ...sx,
+      }}>
       {!!copyText && (
         <Box className="CopyAndExternalIconsSet__copy">
           <CopyToClipboard copyText={copyText}>

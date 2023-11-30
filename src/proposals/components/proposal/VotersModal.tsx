@@ -81,29 +81,29 @@ export function VotersModal({
     );
   };
 
-  const VotersTable = ({
-    voters,
-    unVoters,
-  }: {
-    voters: VotersData[];
-    unVoters: VotersData[];
-  }) => {
+  const VotersTable = ({ type }: { type: 'for' | 'against' }) => {
+    const isFor = type === 'for';
+
     return (
       <Box
         sx={{
           display: 'none',
           [theme.breakpoints.up('sm')]: {
             display: 'block',
-            width: !unVoters.length ? '70%' : 'calc(50% - 12px)',
-            margin: !unVoters.length ? '0 auto' : 'unset',
+            width: !(isFor ? votersAgainst : votersFor).length
+              ? '70%'
+              : 'calc(50% - 12px)',
+            margin: !(isFor ? votersAgainst : votersFor).length
+              ? '0 auto'
+              : 'unset',
           },
         }}>
         <BarWrapper>
           <VoteBar
-            type="against"
-            value={againstVotes}
-            requiredValue={requiredAgainstVotes}
-            linePercent={againstPercent}
+            type={type}
+            value={isFor ? forVotes : againstVotes}
+            requiredValue={isFor ? requiredForVotes : requiredAgainstVotes}
+            linePercent={isFor ? forPercent : againstPercent}
             isFinished={isFinished}
           />
         </BarWrapper>
@@ -115,7 +115,7 @@ export function VotersModal({
             {texts.proposals.votersListVotingPower}
           </Box>
         </ListItem>
-        {voters.map((vote, index) => (
+        {(type === 'for' ? votersFor : votersAgainst).map((vote, index) => (
           <ListItem key={index}>
             <ListItemAddress vote={vote} />
             <FormattedNumber value={vote.votingPower} visibleDecimals={3} />
@@ -251,12 +251,8 @@ export function VotersModal({
             )}
           </Box>
 
-          {!!votersFor.length && (
-            <VotersTable voters={votersFor} unVoters={votersAgainst} />
-          )}
-          {!!votersAgainst.length && (
-            <VotersTable voters={votersAgainst} unVoters={votersFor} />
-          )}
+          {!!votersFor.length && <VotersTable type="for" />}
+          {!!votersAgainst.length && <VotersTable type="against" />}
         </Box>
       </Box>
     </BasicModal>

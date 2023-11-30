@@ -67,6 +67,7 @@ export function RepresentingForm({
         alignItems: 'center',
         flexDirection: 'column',
         position: 'relative',
+        zIndex: 11,
         [theme.breakpoints.up('sm')]: {
           pb: isTransactionsVisible ? 0 : 40,
           my: 24,
