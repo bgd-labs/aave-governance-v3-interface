@@ -9,12 +9,14 @@ import { Hex } from 'viem';
 import { ExecutePayloadModal } from '../../proposals/components/actionModals/ExecutePayloadModal';
 import { useStore } from '../../store';
 import { BackButton3D, Container, Pagination } from '../../ui';
+import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { SelectField } from '../../ui/components/SelectField';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { PayloadExploreItem } from './PayloadExploreItem';
+import { PayloadExploreItemLoading } from './PayloadExploreItemLoading';
 import { PayloadItemDetailsModal } from './PayloadItemDetailsModal';
 import { PayloadsControllerSelect } from './PayloadsControllerSelect';
 
@@ -29,6 +31,7 @@ export function PayloadsExplorerPage() {
     setPayloadsExploreActivePage,
     isExecutePayloadModalOpen,
     setExecutePayloadModalOpen,
+    isRendered,
   } = useStore();
 
   const [chainId, setChainId] = useState<number>(appConfig.govCoreChainId);
@@ -52,9 +55,17 @@ export function PayloadsExplorerPage() {
   }, [controllerAddress]);
 
   const payloadsDataByChain = payloadsExploreData[chainId];
-  if (!payloadsDataByChain) return null;
-  const payloadsData = payloadsDataByChain[controllerAddress];
-  if (!payloadsData) return null;
+  const payloadsData = Object.values(
+    !!payloadsExploreData[chainId] && !!payloadsDataByChain[controllerAddress]
+      ? payloadsDataByChain[controllerAddress]
+      : {},
+  );
+
+  const filteredPayloadsData = payloadsData.filter((payload) =>
+    payloadsExplorePagination[controllerAddress].currentIds.some(
+      (id) => id === payload.id,
+    ),
+  );
 
   return (
     <>
@@ -74,23 +85,34 @@ export function PayloadsExplorerPage() {
             <Box
               sx={{
                 position: 'relative',
-                zIndex: 5,
+                zIndex: 8,
                 maxWidth: '100%',
                 width: '100%',
                 [theme.breakpoints.up('sm')]: { maxWidth: 250 },
               }}>
-              <InputWrapper>
-                <SelectField
-                  withChainIcon
-                  withChainName
-                  placeholder={texts.other.payloadsNetwork}
-                  value={chainId}
-                  onChange={(event) => {
-                    setChainId(event);
-                  }}
-                  options={appConfig.payloadsControllerChainIds}
-                />
-              </InputWrapper>
+              {isRendered ? (
+                <InputWrapper>
+                  <SelectField
+                    withChainIcon
+                    withChainName
+                    placeholder={texts.other.payloadsNetwork}
+                    value={chainId}
+                    onChange={(event) => {
+                      setChainId(event);
+                    }}
+                    options={appConfig.payloadsControllerChainIds}
+                  />
+                </InputWrapper>
+              ) : (
+                <Box
+                  sx={{
+                    lineHeight: '1 !important',
+                    width: '100%',
+                    '.react-loading-skeleton': { width: '100%' },
+                  }}>
+                  <CustomSkeleton height={31} />
+                </Box>
+              )}
             </Box>
           </Box>
         </TopPanelContainer>
@@ -110,28 +132,41 @@ export function PayloadsExplorerPage() {
               mt: 24,
             },
           }}>
-          {Object.values(payloadsData)
-            .filter((payload) =>
-              payloadsExplorePagination[controllerAddress].currentIds.some(
-                (id) => id === payload.id,
-              ),
-            )
-            .sort((a, b) => b.id - a.id)
-            .map((payload) => (
-              <PayloadExploreItem
-                key={`${payload.id}_${payload.chainId}`}
-                payload={payload}
-                setSelectedPayloadForExecute={setSelectedPayloadForExecute}
-                setSelectedPayloadForDetailsModal={
-                  setSelectedPayloadForDetailsModal
-                }
-              />
-            ))}
+          {!!payloadsExplorePagination[controllerAddress]?.currentIds.length &&
+            !filteredPayloadsData.length && (
+              <Box>
+                {payloadsExplorePagination[controllerAddress]?.currentIds.map(
+                  (id) => <PayloadExploreItemLoading key={id} />,
+                )}
+              </Box>
+            )}
+          {!!filteredPayloadsData.length && (
+            <>
+              {filteredPayloadsData
+                .sort((a, b) => b.id - a.id)
+                .map((payload) => (
+                  <PayloadExploreItem
+                    key={`${payload.id}_${payload.chainId}`}
+                    payload={payload}
+                    setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+                    setSelectedPayloadForDetailsModal={
+                      setSelectedPayloadForDetailsModal
+                    }
+                  />
+                ))}
+            </>
+          )}
+          {!payloadsExplorePagination[controllerAddress]?.currentIds.length &&
+            !filteredPayloadsData.length && <PayloadExploreItemLoading />}
         </Box>
 
         <Pagination
-          forcePage={payloadsExplorePagination[controllerAddress].activePage}
-          pageCount={payloadsExplorePagination[controllerAddress].pageCount}
+          forcePage={
+            payloadsExplorePagination[controllerAddress]?.activePage || 0
+          }
+          pageCount={
+            payloadsExplorePagination[controllerAddress]?.pageCount || 1
+          }
           onPageChange={(value) =>
             setPayloadsExploreActivePage(value, chainId, controllerAddress)
           }
