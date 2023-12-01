@@ -17,8 +17,10 @@ export function ExecutePayloadModal({
   setIsOpen,
   proposalId,
   payload,
+  withController,
 }: ActionModalBasicTypes & {
   payload: InitialPayload;
+  withController?: boolean;
 }) {
   const executePayload = useStore((state) => state.executePayload);
 
@@ -29,8 +31,13 @@ export function ExecutePayloadModal({
         proposalId,
         payloadId: payload.id,
         chainId: payload.chainId,
+        payloadController: withController
+          ? payload.payloadsController
+          : undefined,
       }}
-      callbackFunction={async () => await executePayload(proposalId, payload)}
+      callbackFunction={async () =>
+        await executePayload(proposalId, payload, withController)
+      }
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       actionButtonTitle={texts.other.confirm}

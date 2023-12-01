@@ -29,6 +29,9 @@ export interface IPayloadsExplorerSlice {
     address: Hex,
     activePage?: number,
   ) => Promise<void>;
+
+  isPayloadExplorerItemDetailsModalOpen: boolean;
+  setIsPayloadExplorerItemDetailsModalOpen: (value: boolean) => void;
 }
 
 const pageSize = 15;
@@ -70,7 +73,6 @@ export const createPayloadsExplorerSlice: StoreSlice<
   payloadsExploreData: {},
   getPayloadsExploreData: async (chainId, address, activePage) => {
     const initialCount = get().totalPayloadsCountByAddress[address];
-
     const totalPayloadsCount = initialCount
       ? initialCount
       : await get().govDataService.getTotalPayloadsCount(
@@ -85,73 +87,68 @@ export const createPayloadsExplorerSlice: StoreSlice<
       }),
     );
 
+    const payloadsIds = Array.from(Array(totalPayloadsCount).keys());
+    const finishedIdsInStore = !!get().payloadsExploreData[chainId]
+      ? Object.values(get().payloadsExploreData[chainId][address] || {})
+          .filter((payload) => payload.state >= PayloadState.Executed)
+          .map((payload) => payload.id)
+      : [];
+
+    const currentActiveIds: number[] = [];
+    for (let i = 0; i < payloadsIds.length; i++) {
+      let found = false;
+      for (let j = 0; j < finishedIdsInStore.length; j++) {
+        if (payloadsIds[i] === finishedIdsInStore[j]) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        currentActiveIds.push(payloadsIds[i]);
+      }
+    }
+
+    const currentPage = activePage || 0;
+    const size = totalPayloadsCount - currentPage * pageSize;
+    const from = size > totalPayloadsCount ? totalPayloadsCount : size;
+
+    const paginatedIds = Array.from(Array(from).keys()).filter(
+      (id) => id >= from - pageSize && id <= totalPayloadsCount - 1,
+    );
+
+    const idsForRequest: number[] = [];
+    for (let i = 0; i < paginatedIds.length; i++) {
+      let found = false;
+      for (let j = 0; j < currentActiveIds.length; j++) {
+        if (paginatedIds[i] === currentActiveIds[j]) {
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        idsForRequest.push(paginatedIds[i]);
+      }
+    }
+
+    set((state) =>
+      produce(state, (draft) => {
+        draft.payloadsExplorePagination[address] = {
+          pageCount:
+            pageSize < totalPayloadsCount
+              ? Math.ceil(totalPayloadsCount / pageSize)
+              : 1,
+          activePage: activePage || 0,
+          currentIds: paginatedIds,
+        };
+      }),
+    );
+
     if (totalPayloadsCount >= 1) {
-      const payloadsIds = Array.from(Array(totalPayloadsCount).keys());
-      const finishedIdsInStore = !!get().payloadsExploreData[chainId]
-        ? Object.values(get().payloadsExploreData[chainId][address] || {})
-            .filter((payload) => payload.state >= PayloadState.Executed)
-            .map((payload) => payload.id)
-        : [];
-
-      const currentActiveIds: number[] = [];
-      if (finishedIdsInStore.length > 0) {
-        for (let i = 0; i < payloadsIds.length; i++) {
-          let found = false;
-          for (let j = 0; j < finishedIdsInStore.length; j++) {
-            if (payloadsIds[i] === finishedIdsInStore[j]) {
-              found = true;
-              break;
-            }
-          }
-
-          if (!found) {
-            currentActiveIds.push(payloadsIds[i]);
-          }
-        }
-      }
-
-      const currentPage = activePage || 0;
-      const size = totalPayloadsCount - currentPage * pageSize;
-      const from = size > totalPayloadsCount ? totalPayloadsCount : size;
-
-      const paginatedIds = Array.from(Array(from).keys()).filter(
-        (id) => id >= from - pageSize && id <= totalPayloadsCount - 1,
-      );
-
-      const idsForRequest: number[] = [];
-      for (let i = 0; i < paginatedIds.length; i++) {
-        let found = false;
-        for (let j = 0; j < currentActiveIds.length; j++) {
-          if (paginatedIds[i] === currentActiveIds[j]) {
-            found = true;
-            break;
-          }
-        }
-
-        if (found) {
-          idsForRequest.push(paginatedIds[i]);
-        }
-      }
-
-      if (activePage || activePage === 0) {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.payloadsExplorePagination[address] = {
-              ...draft.payloadsExplorePagination[address],
-              activePage,
-              currentIds: paginatedIds,
-            };
-          }),
-        );
-      }
-
-      if (!!idsForRequest.length || !get().payloadsExplorePagination[address]) {
+      if (!!idsForRequest.length) {
         const payloadsData: Payload[] = await get().govDataService.getPayloads(
           chainId,
           address,
-          !get().payloadsExplorePagination[address]
-            ? paginatedIds
-            : idsForRequest,
+          idsForRequest,
         );
 
         const formattedPayloadsData: Record<string, Payload> = {};
@@ -176,33 +173,11 @@ export const createPayloadsExplorerSlice: StoreSlice<
           }),
         );
       }
-
-      if (!get().payloadsExplorePagination[address]) {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.payloadsExplorePagination[address] = {
-              pageCount:
-                pageSize < totalPayloadsCount
-                  ? Math.ceil(totalPayloadsCount / pageSize)
-                  : 1,
-              activePage: 0,
-              currentIds: paginatedIds,
-            };
-          }),
-        );
-      }
-    } else {
-      if (!get().payloadsExplorePagination[address]) {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.payloadsExplorePagination[address] = {
-              pageCount: 1,
-              activePage: 0,
-              currentIds: [],
-            };
-          }),
-        );
-      }
     }
+  },
+
+  isPayloadExplorerItemDetailsModalOpen: false,
+  setIsPayloadExplorerItemDetailsModalOpen: (value) => {
+    set({ isModalOpen: value, isPayloadExplorerItemDetailsModalOpen: value });
   },
 });

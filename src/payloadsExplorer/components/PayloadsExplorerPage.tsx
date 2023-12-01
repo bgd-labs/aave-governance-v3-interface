@@ -1,10 +1,12 @@
 'use client';
 
+import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
+import { ExecutePayloadModal } from '../../proposals/components/actionModals/ExecutePayloadModal';
 import { useStore } from '../../store';
 import { BackButton3D, Container, Pagination } from '../../ui';
 import { InputWrapper } from '../../ui/components/InputWrapper';
@@ -13,6 +15,7 @@ import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { PayloadExploreItem } from './PayloadExploreItem';
+import { PayloadItemDetailsModal } from './PayloadItemDetailsModal';
 import { PayloadsControllerSelect } from './PayloadsControllerSelect';
 
 export function PayloadsExplorerPage() {
@@ -24,12 +27,19 @@ export function PayloadsExplorerPage() {
     payloadsExploreData,
     payloadsExplorePagination,
     setPayloadsExploreActivePage,
+    isExecutePayloadModalOpen,
+    setExecutePayloadModalOpen,
   } = useStore();
 
   const [chainId, setChainId] = useState<number>(appConfig.govCoreChainId);
   const [controllerAddress, setControllerAddress] = useState<Hex>(
     appConfig.payloadsControllerConfig[chainId].contractAddresses[0],
   );
+  const [selectedPayloadForExecute, setSelectedPayloadForExecute] = useState<
+    InitialPayload | undefined
+  >(undefined);
+  const [selectedPayloadForDetailsModal, setSelectedPayloadForDetailsModal] =
+    useState<InitialPayload | undefined>(undefined);
 
   useEffect(() => {
     setControllerAddress(
@@ -38,8 +48,8 @@ export function PayloadsExplorerPage() {
   }, [chainId]);
 
   useEffect(() => {
-    getPayloadsExploreData(chainId, controllerAddress);
-  }, [chainId, controllerAddress]);
+    getPayloadsExploreData(chainId, controllerAddress, 0);
+  }, [controllerAddress]);
 
   const payloadsDataByChain = payloadsExploreData[chainId];
   if (!payloadsDataByChain) return null;
@@ -111,6 +121,10 @@ export function PayloadsExplorerPage() {
               <PayloadExploreItem
                 key={`${payload.id}_${payload.chainId}`}
                 payload={payload}
+                setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+                setSelectedPayloadForDetailsModal={
+                  setSelectedPayloadForDetailsModal
+                }
               />
             ))}
         </Box>
@@ -124,6 +138,22 @@ export function PayloadsExplorerPage() {
           withoutQuery
         />
       </Container>
+
+      {selectedPayloadForExecute && (
+        <ExecutePayloadModal
+          isOpen={isExecutePayloadModalOpen}
+          setIsOpen={setExecutePayloadModalOpen}
+          proposalId={0}
+          payload={selectedPayloadForExecute}
+          withController
+        />
+      )}
+
+      {selectedPayloadForDetailsModal && (
+        <PayloadItemDetailsModal
+          initialPayload={selectedPayloadForDetailsModal}
+        />
+      )}
     </>
   );
 }

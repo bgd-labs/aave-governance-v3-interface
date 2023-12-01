@@ -24,14 +24,14 @@ import {
   TxType,
 } from '../../../transactions/store/transactionsSlice';
 import { BoxWith3D, Link, SmallButton, Timer } from '../../../ui';
-import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
-import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
+import { formatPayloadData } from '../../utils/formatPayloadData';
 import { PayloadActions } from './PayloadActions';
+import { PayloadCreator } from './PayloadCreator';
 
 interface ProposalPayloadsProps {
   proposalId: number;
@@ -46,10 +46,14 @@ export function PayloadItemStatusInfo({
   title,
   children,
   isSecondary,
+  titleTypography,
+  textTypography,
 }: {
   title?: string;
   children: ReactNode;
   isSecondary?: boolean;
+  titleTypography?: string;
+  textTypography?: string;
 }) {
   return (
     <Box
@@ -60,9 +64,32 @@ export function PayloadItemStatusInfo({
         color: isSecondary ? '$textSecondary' : '$text',
       }}>
       {title && (
-        <Box sx={{ typography: 'descriptorAccent', mr: 6 }}>{title}</Box>
+        <Box sx={{ typography: titleTypography || 'descriptorAccent', mr: 6 }}>
+          {title}
+        </Box>
       )}
-      <Box sx={{ typography: 'descriptor' }}>{children}</Box>
+      <Box sx={{ typography: textTypography || 'descriptor' }}>{children}</Box>
+    </Box>
+  );
+}
+
+export function PayloadError({ payload }: { payload: NewPayload }) {
+  return (
+    <Box>
+      <Box sx={{ wordBreak: 'break-word' }}>
+        Cannot get payload id {payload.id}
+        <br />
+        <br />
+        payloadController:{' '}
+        <Link
+          css={{ display: 'inline-block' }}
+          href={`${chainInfoHelper.getChainParameters(
+            payload.chainId || appConfig.govCoreChainId,
+          ).blockExplorers?.default.url}/address/${payload.payloadsController}`}
+          inNewWindow>
+          {payload.payloadsController}
+        </Link>
+      </Box>
     </Box>
   );
 }
@@ -100,7 +127,6 @@ function PayloadItem({
 }) {
   const theme = useTheme();
   const store = useStore();
-  const now = dayjs().unix();
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
@@ -113,51 +139,26 @@ function PayloadItem({
     }
   }, [isFullView]);
 
-  const isPayloadOnInitialState =
-    payload.queuedAt <= 0 &&
-    !isProposalExecuted &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
-  const isPayloadTimeLocked =
-    payload.queuedAt <= 0 &&
-    isProposalExecuted &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
-  const payloadExecutionTime =
-    payload.queuedAt <= 0
-      ? proposalQueuingTime + payload.delay
-      : payload.queuedAt + payload.delay;
-
-  const isPayloadReadyForExecution =
-    isProposalExecuted &&
-    payload.queuedAt > 0 &&
-    now > payload.queuedAt + payload.delay &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
-  const isExecuted = payload.executedAt > 0;
-
-  let payloadExpiredTime = 0;
-  if (payload?.state && payload.state === PayloadState.Created) {
-    payloadExpiredTime = payload.expirationTime;
-  } else if (payload?.state && payload.state === PayloadState.Queued) {
-    payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
-  }
-
-  let payloadNumber = forCreate
-    ? `id #${payload.id}`
-    : totalPayloadsCount > 1
-      ? `${payloadCount}/${totalPayloadsCount}`
-      : '';
+  const {
+    isPayloadOnInitialState,
+    isPayloadTimeLocked,
+    payloadExecutionTime,
+    isPayloadReadyForExecution,
+    isExecuted,
+    payloadExpiredTime,
+    payloadNumber,
+    isFinalStatus,
+  } = formatPayloadData({
+    payload,
+    payloadCount,
+    totalPayloadsCount,
+    forCreate,
+    isProposalExecuted,
+    proposalQueuingTime,
+  });
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;
   const isArrowVisibleForFirstPayload = totalPayloadsCount > 1 && isFullView;
-  const isFinalStatus =
-    isExecuted ||
-    payload.cancelledAt > 0 ||
-    payload.state === PayloadState.Expired;
 
   const tx =
     store.activeWallet &&
@@ -431,45 +432,11 @@ function PayloadItem({
             )}
 
             {creator && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
-                <Box
-                  sx={{
-                    typography: 'descriptorAccent',
-                    wordBreak: 'break-word',
-                    color: '$textSecondary',
-                  }}>
-                  {texts.proposals.payloadsDetails.creator}:{' '}
-                  <Box
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      typography: 'descriptor',
-                    }}>
-                    <Link
-                      css={{
-                        color: '$textSecondary',
-                        hover: {
-                          opacity: 0.7,
-                        },
-                      }}
-                      inNewWindow
-                      href={`${chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default.url}/address/${creator}`}>
-                      {textCenterEllipsis(creator, 15, 10)}
-                    </Link>
-
-                    <CopyAndExternalIconsSet
-                      iconSize={10}
-                      copyText={creator}
-                      externalLink={`${chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default.url}/address/${creator}`}
-                      sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
-                    />
-                  </Box>
-                </Box>
-              </Box>
+              <PayloadCreator
+                payload={payload}
+                ellipsisFrom={12}
+                sx={{ color: '$textSecondary', a: { color: '$textSecondary' } }}
+              />
             )}
 
             <PayloadActions
@@ -530,24 +497,7 @@ export function ProposalPayloads({
           },
         })}>
         {isFirstPayloadError ? (
-          <Box>
-            <Box sx={{ wordBreak: 'break-word' }}>
-              Cannot get payload id {payloads[0].id}
-              <br />
-              <br />
-              payloadController:{' '}
-              <Link
-                css={{ display: 'inline-block' }}
-                href={`${chainInfoHelper.getChainParameters(
-                  payloads[0].chainId || appConfig.govCoreChainId,
-                ).blockExplorers?.default.url}/address/${
-                  payloads[0].payloadsController
-                }`}
-                inNewWindow>
-                {payloads[0].payloadsController}
-              </Link>
-            </Box>
-          </Box>
+          <PayloadError payload={payloads[0]} />
         ) : (
           <PayloadItem
             proposalId={proposalId}
@@ -568,28 +518,13 @@ export function ProposalPayloads({
         {!!formattedPayloadsForList.length && isFullView && (
           <>
             {formattedPayloadsForList.map((payload, index) => {
-              const isError = false;
+              const isError =
+                createPayloadsErrors[
+                  `${payload.payloadsController}_${proposalId}`
+                ];
+
               if (isError) {
-                return (
-                  <Box key={`${payload.id}_${payload.chainId}`}>
-                    <Box sx={{ wordBreak: 'break-word' }}>
-                      Cannot get payload id {payload.id}
-                      <br />
-                      <br />
-                      payloadController:{' '}
-                      <Link
-                        css={{ display: 'inline-block' }}
-                        href={`${chainInfoHelper.getChainParameters(
-                          payload.chainId || appConfig.govCoreChainId,
-                        ).blockExplorers?.default.url}/address/${
-                          payload.payloadsController
-                        }`}
-                        inNewWindow>
-                        {payload.payloadsController}
-                      </Link>
-                    </Box>
-                  </Box>
-                );
+                return <PayloadError payload={payload} />;
               } else {
                 return (
                   <PayloadItem

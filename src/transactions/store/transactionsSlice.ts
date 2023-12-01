@@ -118,6 +118,7 @@ type ExecutePayloadTx = BaseTx & {
     proposalId: number;
     payloadId: number;
     chainId: number;
+    payloadController?: Hex;
   };
 };
 
@@ -244,7 +245,14 @@ export const createTransactionsSlice: StoreSlice<
           await updateProposalData(data.payload.proposalId);
           break;
         case TxType.executePayload:
-          await updateProposalData(data.payload.proposalId);
+          if (data.payload.payloadController) {
+            await get().getPayloadsExploreData(
+              data.payload.chainId,
+              data.payload.payloadController,
+            );
+          } else {
+            await updateProposalData(data.payload.proposalId);
+          }
           break;
         case TxType.delegate:
           await get().getDelegateData();

@@ -8,6 +8,7 @@ import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
+import { seatbeltStartLink } from '../../utils/formatPayloadData';
 
 interface PayloadActionsProps {
   payload: NewPayload;
@@ -17,6 +18,8 @@ interface PayloadActionsProps {
   report?: string;
   withoutTitle?: boolean;
   textColor?: string;
+  showMoreClick?: () => void;
+  withoutEllipsis?: boolean;
 }
 
 export function PayloadActions({
@@ -27,7 +30,11 @@ export function PayloadActions({
   report,
   withoutTitle,
   textColor,
+  showMoreClick,
+  withoutEllipsis,
 }: PayloadActionsProps) {
+  const isWithShowMore = !!showMoreClick && payload.actionAddresses.length > 2;
+
   return (
     <>
       <Box
@@ -54,9 +61,12 @@ export function PayloadActions({
             display: 'flex',
             flexDirection: 'column',
           }}>
-          {payload.actionAddresses?.map((address, index) => (
+          {(isWithShowMore
+            ? payload.actionAddresses.slice(-2)
+            : payload.actionAddresses
+          )?.map((address, index) => (
             <Box
-              sx={{ display: 'inline-flex', alignItems: 'center', mb: 2 }}
+              sx={{ display: 'inline-flex', alignItems: 'center', mb: 4 }}
               key={index}>
               <Link
                 css={{ display: 'inline-flex', alignItems: 'center' }}
@@ -67,13 +77,17 @@ export function PayloadActions({
                   forCreate ? '#code' : ''
                 }`}>
                 <Box
+                  className="PayloadActions__link"
                   component="li"
                   sx={{
                     typography: 'descriptor',
                     transition: 'all 0.2s ease',
+                    wordBreak: 'break-word',
                     hover: { opacity: 0.7 },
                   }}>
-                  {textCenterEllipsis(address, 6, 6)}
+                  {withoutEllipsis
+                    ? address
+                    : textCenterEllipsis(address, 6, 6)}
                 </Box>
               </Link>
 
@@ -92,9 +106,24 @@ export function PayloadActions({
         </Box>
       </Box>
 
+      {isWithShowMore && (
+        <Box
+          onClick={showMoreClick}
+          sx={{
+            color: '$textSecondary',
+            cursor: 'pointer',
+            typography: 'descriptorAccent',
+            transition: 'all 0.2s ease',
+            mt: 6,
+            hover: { opacity: 0.7 },
+          }}>
+          {texts.proposals.votersListShowAll}
+        </Box>
+      )}
+
       {withLink && !report && !forCreate ? (
         <Link
-          href={`https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads//${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
+          href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
           inNewWindow
           css={{ display: 'flex', alignItems: 'center', mt: 4 }}>
           <SmallButton

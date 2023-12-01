@@ -188,6 +188,7 @@ export interface IProposalsSlice {
   executePayload: (
     proposalId: number,
     payload: InitialPayload,
+    withController?: boolean,
   ) => Promise<void>;
 
   createPayload: (
@@ -1318,7 +1319,7 @@ export const createProposalsSlice: StoreSlice<
     });
   },
 
-  executePayload: async (proposalId, payload) => {
+  executePayload: async (proposalId, payload, withController) => {
     const govDataService = get().govDataService;
 
     await get().executeTx({
@@ -1337,6 +1338,9 @@ export const createProposalsSlice: StoreSlice<
           proposalId,
           payloadId: payload.id,
           chainId: payload.chainId,
+          payloadController: withController
+            ? payload.payloadsController
+            : undefined,
         },
       },
     });
