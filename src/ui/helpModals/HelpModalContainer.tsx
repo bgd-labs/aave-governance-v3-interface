@@ -8,7 +8,7 @@ interface HelpModalContainerProps {
   onMainButtonClick?: () => void;
 }
 
-export const helpModalWidth = 1200;
+export const helpModalWidth = 1210;
 
 export function HelpModalContainer({
   children,
@@ -30,7 +30,7 @@ export function HelpModalContainer({
         [theme.breakpoints.up('md')]: {
           minHeight: '645px',
         },
-        [theme.breakpoints.up('lg')]: { minHeight: '690px' },
+        [theme.breakpoints.up('lg')]: { minHeight: '700px' },
       }}>
       <Box
         sx={{

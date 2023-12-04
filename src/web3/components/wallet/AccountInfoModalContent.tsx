@@ -63,10 +63,10 @@ function InternalLink({
         mb: 14,
         [`@media only screen and (min-width: 470px)`]: {
           mb: 0,
-          mr: forTest ? 6 : 14,
+          mr: 14,
         },
         [theme.breakpoints.up('md')]: {
-          mr: forTest ? 16 : 24,
+          mr: 24,
         },
         div: {
           p: {
@@ -94,24 +94,18 @@ function InternalLink({
           },
         },
       }}>
-      {!forTest && (
-        <IconBox
-          sx={{
+      <IconBox
+        sx={{
+          width: 16,
+          height: 16,
+          mr: 6,
+          '> svg': {
             width: 16,
             height: 16,
-            mr: 6,
-            '> svg': {
-              width: 16,
-              height: 16,
-            },
-          }}>
-          {iconType === 'delegate' ? (
-            <DelegationIcon />
-          ) : (
-            <RepresentationIcon />
-          )}
-        </IconBox>
-      )}
+          },
+        }}>
+        {iconType === 'delegate' ? <DelegationIcon /> : <RepresentationIcon />}
+      </IconBox>
 
       {!forTest ? (
         <Link href={route} css={{ lineHeight: 1 }} onClick={onClick}>
@@ -123,9 +117,8 @@ function InternalLink({
         <Box
           component="p"
           sx={{
-            typography: 'descriptorAccent',
+            typography: 'headline',
             cursor: 'pointer',
-            lineHeight: 1,
             transition: 'all 0.2s ease',
           }}
           onClick={onClick}>
@@ -164,11 +157,12 @@ export function AccountInfoModalContent({
     typeof representedAddresses !== 'undefined' &&
     !!representedAddresses.length;
 
-  const filteredTransactions = allTransactions
-    .filter(
-      (tx) => !!Object.keys(TxType).find((key) => key === tx.type)?.length,
-    )
-    .filter((tx) => tx.type !== TxType.delegate);
+  const filteredTransactions = allTransactions.filter(
+    (tx) => !!Object.keys(TxType).find((key) => key === tx.type)?.length,
+  );
+  // .filter((tx) => tx.type !== TxType.delegate);
+
+  const visibleTxCount = forTest ? 1 : isRepresentedAvailable ? 3 : 4;
 
   return (
     <>
@@ -309,13 +303,13 @@ export function AccountInfoModalContent({
 
             <Box sx={{ width: '100%' }}>
               {filteredTransactions
-                .slice(0, isRepresentedAvailable ? 3 : 4)
+                .slice(0, visibleTxCount)
                 .map((tx, index) => (
                   <TransactionInfoItem key={index} tx={tx} />
                 ))}
             </Box>
 
-            {filteredTransactions.length > 4 && (
+            {filteredTransactions.length > visibleTxCount && (
               <Box
                 component="button"
                 sx={{

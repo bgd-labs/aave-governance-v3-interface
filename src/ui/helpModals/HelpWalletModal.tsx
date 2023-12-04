@@ -3,12 +3,6 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import WalletFirstImage from '/public/images/helpModals/wallet1.svg';
-import WalletFirstImageDark from '/public/images/helpModals/wallet1Dark.svg';
-import WalletSecondImage from '/public/images/helpModals/wallet2.svg';
-import WalletSecondImageDark from '/public/images/helpModals/wallet2Dark.svg';
-import ArrowToRight from '/public/images/icons/arrowRight.svg';
-
 import { useStore } from '../../store';
 import { TransactionsModalContent } from '../../transactions/components/TransactionsModalContent';
 import { AccountInfoModalContent } from '../../web3/components/wallet/AccountInfoModalContent';
@@ -16,7 +10,6 @@ import { wallets } from '../../web3/components/wallet/ConnectWalletModal';
 import { ConnectWalletModalContent } from '../../web3/components/wallet/ConnectWalletModalContent';
 import { BigButton, BoxWith3D } from '../';
 import { BasicModal } from '../components/BasicModal';
-import { IconBox } from '../primitives/IconBox';
 import { selectAllTestTransactions } from '../store/uiSelectors';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -58,6 +51,8 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
   useEffect(() => {
     if (!sm) {
       setIsFirstStepOnMobile(true);
+    } else {
+      setIsFirstStepOnMobile(false);
     }
   }, [sm]);
 
@@ -70,6 +65,41 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
 
   const handleMakeTx = () => {
     addTestTransaction(dayjs().unix());
+  };
+
+  const TextBlock = () => {
+    return (
+      <>
+        <Box
+          component="h2"
+          sx={{
+            mb: 20,
+            typography: 'h1',
+            display: 'block',
+          }}>
+          {texts.faq.wallet.title}
+        </Box>
+        {!activeWallet ? (
+          <>
+            <HelpModalText mb={12}>
+              {texts.faq.wallet.description}
+            </HelpModalText>
+            <Box component="p" sx={{ typography: 'headline' }}>
+              {texts.faq.wallet.realWalletInfo}
+            </Box>
+          </>
+        ) : (
+          <Box
+            component="p"
+            sx={{
+              typography: 'body',
+              display: 'inline-block',
+            }}>
+            {texts.faq.wallet.transactionsViewDescription}
+          </Box>
+        )}
+      </>
+    );
   };
 
   return (
@@ -95,7 +125,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
       withCloseButton>
       <HelpModalContainer
         onMainButtonClick={
-          !!activeWallet
+          !!activeWallet && !isFirstStepOnMobile
             ? () => {
                 setActiveWallet('');
                 setWalletActivating(false);
@@ -152,7 +182,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
           <BigButton
             alwaysWithBorders
             onClick={() => setIsFirstStepOnMobile(false)}
-            css={{ mt: 30 }}>
+            css={{ mt: 24 }}>
             <Box
               sx={{
                 display: 'flex',
@@ -163,15 +193,6 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
               <Box component="p" sx={{ typography: 'body' }}>
                 {texts.faq.other.next}
               </Box>
-              <IconBox
-                sx={{
-                  width: 20,
-                  height: 20,
-                  ml: 10,
-                  '> svg': { width: 20, height: 20 },
-                }}>
-                <ArrowToRight />
-              </IconBox>
             </Box>
           </BigButton>
         </Box>
@@ -184,209 +205,240 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
             display: isFirstStepOnMobile ? 'none' : 'flex',
             [theme.breakpoints.up('sm')]: {
               display: 'flex',
-            },
-            [theme.breakpoints.up('md')]: {
               flexDirection: 'row',
             },
           }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', order: 1 }}>
+          <Box
+            sx={{
+              mr: 18,
+              display: 'flex',
+              flexDirection: 'column-reverse',
+              [theme.breakpoints.up('sm')]: {
+                display: !activeWallet ? 'flex' : 'none',
+                flexDirection: 'column',
+              },
+              [theme.breakpoints.up('md')]: {
+                display: 'flex',
+                flexDirection: 'column',
+                mr: 0,
+              },
+            }}>
             <Box
               sx={{
                 display: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+                position: 'relative',
+                left: 0,
                 [theme.breakpoints.up('sm')]: {
                   display: 'flex',
+                  width: 240,
+                  height: 215,
+                },
+                [theme.breakpoints.up('md')]: {
                   width: 290,
-                  maxHeight: 500,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative',
-                  left: 0,
+                  height: 500,
                 },
               }}>
-              <IconBox
+              <Box
                 sx={{
                   width: '100%',
                   height: '100%',
-                  maxHeight: 500,
-                  '> svg': {
-                    width: '100%',
-                    height: '100%',
-                    maxHeight: 500,
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundImage:
+                    theme.palette.mode === 'dark' && !activeWallet
+                      ? `url(${setRelativePath(
+                          '/images/helpModals/wallet1_mobileDark.svg',
+                        )})`
+                      : theme.palette.mode === 'dark' && activeWallet
+                        ? `url(${setRelativePath(
+                            '/images/helpModals/wallet2Dark.svg',
+                          )})`
+                        : !activeWallet
+                          ? `url(${setRelativePath(
+                              '/images/helpModals/wallet1_mobile.svg',
+                            )})`
+                          : `url(${setRelativePath(
+                              '/images/helpModals/wallet2.svg',
+                            )})`,
+
+                  [theme.breakpoints.up('md')]: {
+                    backgroundImage:
+                      theme.palette.mode === 'dark' && !activeWallet
+                        ? `url(${setRelativePath(
+                            '/images/helpModals/wallet1Dark.svg',
+                          )})`
+                        : theme.palette.mode === 'dark' && activeWallet
+                          ? `url(${setRelativePath(
+                              '/images/helpModals/wallet2Dark.svg',
+                            )})`
+                          : !activeWallet
+                            ? `url(${setRelativePath(
+                                '/images/helpModals/wallet1.svg',
+                              )})`
+                            : `url(${setRelativePath(
+                                '/images/helpModals/wallet2.svg',
+                              )})`,
                   },
-                }}>
-                <>
-                  {theme.palette.mode === 'dark' ? (
-                    !activeWallet ? (
-                      <WalletFirstImageDark />
-                    ) : (
-                      <WalletSecondImageDark />
-                    )
-                  ) : !activeWallet ? (
-                    <WalletFirstImage />
-                  ) : (
-                    <WalletSecondImage />
-                  )}
-                </>
-              </IconBox>
+                }}
+              />
             </Box>
 
             <Box
               sx={{
-                width: 360,
-                mt: 20,
-                [theme.breakpoints.up('md')]: {
-                  mr: 20,
-                  ml: 8,
+                display: 'none',
+                [theme.breakpoints.up('sm')]: {
+                  display: 'block',
+                  maxWidth: 240,
                 },
-                [theme.breakpoints.up('lg')]: {
-                  width: 450,
-                  mr: 30,
-                  ml: 10,
+                [theme.breakpoints.up('md')]: {
+                  display: 'none',
                 },
               }}>
-              <BoxWith3D
-                alwaysWithBorders
-                borderSize={8}
-                contentColor="$mainLight"
-                css={{
-                  p: '40px 15px 20px',
-                  [theme.breakpoints.up('lg')]: { p: '50px 35px 30px' },
-                }}>
-                {!activeWallet ? (
-                  <ConnectWalletModalContent
-                    walletActivating={walletActivating}
-                    wallets={wallets}
-                    onWalletButtonClick={() => {
-                      setWalletActivating(true);
-                      setTimeout(() => {
-                        setActiveWallet(zeroAddress);
-                        setWalletActivating(false);
-                      }, 1000);
-                    }}
-                    withoutHelpText
-                  />
-                ) : (
-                  <>
-                    {allTransactionVisible ? (
-                      <TransactionsModalContent
-                        allTransactions={allTestTransaction}
-                        onBackButtonClick={() =>
-                          setAllTransactionsVisible(false)
-                        }
-                      />
-                    ) : (
-                      <AccountInfoModalContent
-                        activeAddress={activeWallet}
-                        ensName={activeWallet}
-                        chainId={1}
-                        isActive={true}
-                        allTransactions={allTestTransaction}
-                        onDelegateButtonClick={() => {
-                          setActiveWallet('');
-                          setWalletActivating(false);
-                          setIsHelpWalletModalOpen(false);
-                          setIsHelpDelegateModalOpen(true);
-                        }}
-                        onRepresentationsButtonClick={() => {
-                          setActiveWallet('');
-                          setWalletActivating(false);
-                          setIsHelpWalletModalOpen(false);
-                          setIsHelpRepresentationModalOpen(true);
-                        }}
-                        onDisconnectButtonClick={() => {
-                          setActiveWallet('');
-                          setWalletActivating(false);
-                        }}
-                        onAllTransactionButtonClick={() =>
-                          setAllTransactionsVisible(true)
-                        }
-                        forTest
-                      />
-                    )}
-                  </>
-                )}
-              </BoxWith3D>
+              <TextBlock />
             </Box>
           </Box>
 
           <Box
             sx={{
-              width: '100%',
-              mt: 20,
-              textAlign: 'center',
-              order: 3,
+              width: !activeWallet ? 360 : '100%',
+              mt: 22,
               [theme.breakpoints.up('sm')]: {
-                order: 0,
+                width: !activeWallet ? 360 : 657,
+                mr: !activeWallet ? 20 : 0,
+                ml: !activeWallet ? 8 : 12,
               },
-              [theme.breakpoints.up('md')]: {
-                width: 280,
-                order: 3,
-                mt: 0,
-                textAlign: 'left',
+              [theme.breakpoints.up('lg')]: {
+                width: !activeWallet ? 450 : 759,
+                mr: !activeWallet ? 30 : 0,
+                ml: !activeWallet ? 10 : 12,
               },
             }}>
-            <Box
-              component="h2"
-              sx={{
-                mb: 20,
-                display: 'none',
-                [theme.breakpoints.up('sm')]: {
-                  typography: 'h1',
-                  display: 'block',
-                },
+            {!!activeWallet && (
+              <Box
+                sx={{
+                  mb: 22,
+                  textAlign: 'center',
+                  [theme.breakpoints.up('md')]: {
+                    textAlign: 'left',
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    mb: 30,
+                  },
+                }}>
+                <TextBlock />
+              </Box>
+            )}
+
+            <BoxWith3D
+              alwaysWithBorders
+              borderSize={8}
+              contentColor="$mainLight"
+              css={{
+                p: 18,
+                width: '100%',
+                [theme.breakpoints.up('lg')]: { p: '24px 30px' },
               }}>
-              {texts.faq.wallet.title}
-            </Box>
-            {!activeWallet ? (
-              <>
-                <HelpModalText mb={12}>
-                  {texts.faq.wallet.description}
-                </HelpModalText>
-                <Box
-                  component="p"
-                  sx={{
-                    typography: 'body',
-                    lineHeight: '20px !important',
-                    fontWeight: 600,
-                    [theme.breakpoints.up('lg')]: {
-                      typography: 'body',
-                      lineHeight: '24px !important',
-                      fontWeight: 600,
-                    },
-                  }}>
-                  {texts.faq.wallet.realWalletInfo}
-                </Box>
-              </>
-            ) : (
-              <>
-                <Box
-                  component="p"
-                  sx={{
-                    typography: 'body',
-                    lineHeight: '20px !important',
-                    display: 'none',
-                    [theme.breakpoints.up('sm')]: {
-                      typography: 'body',
-                      display: 'inline-block',
-                    },
-                    [theme.breakpoints.up('lg')]: {
-                      typography: 'body',
-                      lineHeight: '24px !important',
-                    },
-                  }}>
-                  {texts.faq.wallet.transactionsViewDescription}
-                </Box>
-                <Box sx={{ mt: 32 }}>
-                  <BigButton
-                    alwaysWithBorders
-                    color="white"
-                    onClick={handleMakeTx}>
-                    {texts.faq.wallet.makeTransaction}
-                  </BigButton>
-                </Box>
-              </>
+              {!activeWallet ? (
+                <ConnectWalletModalContent
+                  walletActivating={walletActivating}
+                  wallets={wallets}
+                  onWalletButtonClick={() => {
+                    setWalletActivating(true);
+                    setTimeout(() => {
+                      setActiveWallet(zeroAddress);
+                      setWalletActivating(false);
+                    }, 1000);
+                  }}
+                  withoutHelpText
+                />
+              ) : (
+                <>
+                  {allTransactionVisible ? (
+                    <TransactionsModalContent
+                      allTransactions={allTestTransaction}
+                      onBackButtonClick={() => setAllTransactionsVisible(false)}
+                      forTest
+                    />
+                  ) : (
+                    <AccountInfoModalContent
+                      activeAddress={activeWallet}
+                      ensName={activeWallet}
+                      chainId={1}
+                      isActive={true}
+                      allTransactions={allTestTransaction}
+                      onDelegateButtonClick={() => {
+                        setActiveWallet('');
+                        setWalletActivating(false);
+                        setIsHelpWalletModalOpen(false);
+                        setIsHelpDelegateModalOpen(true);
+                      }}
+                      onRepresentationsButtonClick={() => {
+                        setActiveWallet('');
+                        setWalletActivating(false);
+                        setIsHelpWalletModalOpen(false);
+                        setIsHelpRepresentationModalOpen(true);
+                      }}
+                      onDisconnectButtonClick={() => {
+                        setActiveWallet('');
+                        setWalletActivating(false);
+                      }}
+                      onAllTransactionButtonClick={() =>
+                        setAllTransactionsVisible(true)
+                      }
+                      forTest
+                    />
+                  )}
+                </>
+              )}
+            </BoxWith3D>
+
+            {!!activeWallet && (
+              <Box
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  mt: 22,
+                  [theme.breakpoints.up('md')]: {
+                    justifyContent: 'flex-start',
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    mt: 30,
+                  },
+                }}>
+                <BigButton
+                  alwaysWithBorders
+                  color="white"
+                  onClick={handleMakeTx}>
+                  {texts.faq.wallet.makeTransaction}
+                </BigButton>
+              </Box>
             )}
           </Box>
+
+          {!activeWallet && (
+            <Box
+              sx={{
+                width: '100%',
+                mt: 18,
+                textAlign: 'center',
+                order: 3,
+                [theme.breakpoints.up('sm')]: {
+                  display: 'none',
+                },
+                [theme.breakpoints.up('md')]: {
+                  display: 'block',
+                  width: 280,
+                  order: 3,
+                  textAlign: 'left',
+                },
+              }}>
+              <TextBlock />
+            </Box>
+          )}
         </Box>
       </HelpModalContainer>
     </BasicModal>

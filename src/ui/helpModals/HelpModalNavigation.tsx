@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import { useEffect } from 'react';
 
-import RightArrow from '/public/images/icons/arrowRight.svg';
+import RightArrow from '/public/images/icons/arrowToRightThin.svg';
 
 import { useStore } from '../../store';
 import { BasicModal, BoxWith3D } from '..';
@@ -106,10 +106,9 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
             sx={{
               typography: 'h1',
               display: 'block',
-              mb: 36,
+              mb: 22,
               textAlign: 'center',
               [theme.breakpoints.up('sm')]: {
-                typography: 'h1',
                 display: 'none',
               },
             }}>
@@ -122,7 +121,7 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
               height: 280,
               alignItems: 'center',
               justifyContent: 'center',
-              mb: 20,
+              mb: 22,
               [theme.breakpoints.up('sm')]: {
                 width: 376,
                 height: 350,
@@ -148,15 +147,14 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
               }}
             />
           </Box>
-          <Box sx={{ maxWidth: 430 }}>
+          <Box sx={{ maxWidth: 410 }}>
             <Box
               component="h2"
               sx={{
-                typography: 'h1',
-                mb: 36,
                 display: 'none',
                 [theme.breakpoints.up('sm')]: {
-                  typography: 'h1',
+                  typography: 'h2',
+                  mb: 36,
                   display: 'block',
                 },
               }}>
@@ -179,24 +177,21 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
                     borderSize={4}
                     withActions
                     wrapperCss={{
-                      mb: 15,
+                      mb: 24,
                     }}
                     css={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       width: '100%',
-                      p: '12px 16px',
+                      p: '12px 14px',
                       cursor: 'pointer',
                       color: '$textSecondary',
                       [theme.breakpoints.up('sm')]: {
                         alignItems: 'flex-start',
-                        p: '16px 28px',
                       },
                     }}>
-                    <Box
-                      component="h3"
-                      sx={{ typography: 'h3', fontWeight: 600 }}>
+                    <Box component="h3" sx={{ typography: 'h3' }}>
                       {item.title}
                     </Box>
                     <IconBox
@@ -207,7 +202,7 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
                         '> svg': {
                           width: 20,
                           height: 20,
-                          path: { stroke: theme.palette.$textSecondary },
+                          path: { fill: theme.palette.$textSecondary },
                         },
                       }}>
                       <RightArrow />

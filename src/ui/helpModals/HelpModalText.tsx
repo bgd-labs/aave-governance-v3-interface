@@ -10,15 +10,10 @@ export function HelpModalText({ children, mb }: HelpModalTextProps) {
   return (
     <Box
       component="p"
-      sx={(theme) => ({
+      sx={{
         typography: 'body',
-        lineHeight: '20px !important',
         mb,
-        [theme.breakpoints.up('lg')]: {
-          typography: 'body',
-          lineHeight: '24px !important',
-        },
-      })}>
+      }}>
       {children}
     </Box>
   );
