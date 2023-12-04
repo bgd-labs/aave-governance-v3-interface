@@ -70,6 +70,10 @@ export function FilterDropdown({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           mobileScrollingWrapper.current.scrollWidth;
+      } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        mobileScrollingWrapper.current.scrollLeft = 55 * selectedStatus;
       }
     }
   }, [mobileScrollingWrapper, selectedStatus]);
