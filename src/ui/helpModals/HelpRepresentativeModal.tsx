@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 import { avalanche, mainnet, polygon } from 'viem/chains';
 
-import RepresentatiivesWalletImage from '/public/images/helpModals/RepresentatiivesWallet.svg';
-import RepresentatiivesWalletImageDark from '/public/images/helpModals/RepresentatiivesWalletDark.svg';
+import RepresentativesWalletImage from '/public/images/helpModals/RepresentatiivesWallet.svg';
+import RepresentativesWalletImageDark from '/public/images/helpModals/RepresentatiivesWalletDark.svg';
 import ArrowToRight from '/public/images/icons/arrowRight.svg';
 
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
@@ -199,9 +199,9 @@ export function HelpRepresentativeModal() {
                 }}>
                 <>
                   {theme.palette.mode === 'dark' ? (
-                    <RepresentatiivesWalletImageDark />
+                    <RepresentativesWalletImageDark />
                   ) : (
-                    <RepresentatiivesWalletImage />
+                    <RepresentativesWalletImage />
                   )}
                 </>
               </IconBox>
@@ -338,7 +338,7 @@ export function HelpRepresentativeModal() {
           <Box
             sx={{
               width: '100%',
-              mt: 20,
+              mt: 24,
               textAlign: 'center',
               order: 3,
               [theme.breakpoints.up('sm')]: {
@@ -354,7 +354,7 @@ export function HelpRepresentativeModal() {
             <Box
               component="h2"
               sx={{
-                mb: 20,
+                mb: 24,
                 display: 'none',
                 [theme.breakpoints.up('sm')]: {
                   typography: 'h1',
@@ -366,16 +366,11 @@ export function HelpRepresentativeModal() {
             <Box
               component="p"
               sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
                 display: 'none',
                 mb: 12,
                 [theme.breakpoints.up('sm')]: {
-                  display: 'inline-block',
-                },
-                [theme.breakpoints.up('lg')]: {
                   typography: 'body',
-                  lineHeight: '24px !important',
+                  display: 'inline-block',
                 },
               }}>
               {texts.faq.representative.descriptionFirst}
@@ -383,15 +378,10 @@ export function HelpRepresentativeModal() {
             <Box
               component="p"
               sx={{
-                typography: 'body',
-                lineHeight: '20px !important',
                 display: 'none',
                 [theme.breakpoints.up('sm')]: {
-                  display: 'inline-block',
-                },
-                [theme.breakpoints.up('lg')]: {
                   typography: 'body',
-                  lineHeight: '24px !important',
+                  display: 'inline-block',
                 },
               }}>
               {texts.faq.representative.descriptionSecond}
@@ -400,7 +390,6 @@ export function HelpRepresentativeModal() {
               component="p"
               sx={{
                 typography: 'body',
-                lineHeight: '20px !important',
                 [theme.breakpoints.up('sm')]: {
                   display: 'none',
                 },
