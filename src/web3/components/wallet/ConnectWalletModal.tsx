@@ -39,12 +39,6 @@ export const wallets: Wallet[] = [
     title: 'Safe wallet',
     isVisible: typeof window !== 'undefined' && window !== window.parent,
   },
-  {
-    walletType: 'Impersonated',
-    icon: `url(${setRelativePath('/images/wallets/impersonated.svg')})`,
-    title: 'Impersonated',
-    isVisible: false,
-  },
 ];
 
 export function ConnectWalletModal({

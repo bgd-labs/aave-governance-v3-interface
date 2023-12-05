@@ -60,7 +60,7 @@ export function ProposalCreateOverviewV2Page() {
                     </Link>
 
                     <Link
-                      href={`/createByParams/?ipfsHash=${
+                      href={`/proposal-create-overview/?ipfsHash=${
                         item.ipfsHash
                       }&votingPortal=${zeroAddress}${payloadsLinks.toString()}`}>
                       <SmallButton>View details</SmallButton>

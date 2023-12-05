@@ -37,6 +37,10 @@ const headerNavItems = [
     link: 'https://docs.aave.com/faq/governance',
     title: texts.header.navTutorial,
   },
+  {
+    link: 'https://app.aave.com/governance/',
+    title: 'Governance v2',
+  },
 ];
 
 export function AppHeader() {
@@ -328,7 +332,7 @@ export function AppHeader() {
 
             <NoSSR>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <WalletWidget />
+                {/*<WalletWidget />*/}
                 <SettingsButton />
 
                 <Box

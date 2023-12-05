@@ -6,7 +6,7 @@ import { Hex } from 'viem';
 import { CreateByParamsPage } from '../src/createByParams/components/CreateByParamsPage';
 import { InitialParams, PayloadParams } from '../src/createByParams/types';
 
-export default function CreateByParams() {
+export default function ProposalCreateOverview() {
   const searchParams = useSearchParams();
 
   if (!searchParams) return null;
