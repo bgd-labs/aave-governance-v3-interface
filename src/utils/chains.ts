@@ -18,11 +18,13 @@ import {
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
+    'https://ethereum.publicnode.com',
     'https://cloudflare-eth.com',
     'https://eth.llamarpc.com',
     'https://rpc.mevblocker.io',
   ],
   [polygon.id]: [
+    'https://polygon-pokt.nodies.app',
     'https://polygon.llamarpc.com',
     'https://polygon-bor.publicnode.com',
     'https://endpoints.omniatech.io/v1/matic/mainnet/public',

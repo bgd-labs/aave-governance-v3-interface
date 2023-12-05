@@ -3,7 +3,7 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import { Hex } from 'viem';
+import { Hex, zeroAddress } from 'viem';
 
 import { CreateProposalModal } from '../../proposals/components/actionModals/CreateProposalModal';
 import { Details } from '../../proposals/components/proposal/Details';
@@ -11,20 +11,11 @@ import { DetailsShareLinks } from '../../proposals/components/proposal/DetailsSh
 import { ProposalPayloads } from '../../proposals/components/proposal/ProposalPayloads';
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
-import {
-  BackButton3D,
-  BigButton,
-  BoxWith3D,
-  Container,
-  Link,
-  NoSSR,
-} from '../../ui';
+import { BackButton3D, BigButton, BoxWith3D, Container, NoSSR } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { ToTopButton } from '../../ui/components/ToTopButton';
 import { getChainName } from '../../ui/utils/getChainName';
 import { texts } from '../../ui/utils/texts';
-import { appConfig } from '../../utils/appConfig';
-import { chainInfoHelper } from '../../utils/configs';
 import { InitialParams } from '../types';
 
 interface CreateByParamsPageProps {
@@ -53,18 +44,24 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     getTotalProposalCount();
   }, []);
 
+  const newProposalId = initialParams.proposalId || totalProposalCount + 1;
+
   useEffect(() => {
     if (initialParams.ipfsHash) {
-      getIpfsData([totalProposalCount + 1], initialParams.ipfsHash);
+      getIpfsData([newProposalId], initialParams.ipfsHash);
     }
     if (totalProposalCount) {
-      getCreatePayloadsData(totalProposalCount + 1, initialParams.payloads);
+      getCreatePayloadsData(newProposalId, initialParams.payloads);
     }
   }, [totalProposalCount, initialParams]);
 
   const newIpfsData = ipfsData[initialParams.ipfsHash || ''];
   const newIpfsDataError = ipfsDataErrors[initialParams.ipfsHash || ''];
-  const payloads = createPayloadsData[totalProposalCount + 1];
+  const payloads = initialParams.payloads.map((payload) => {
+    return createPayloadsData[
+      `${payload.payloadsController}_${payload.payloadId}`
+    ];
+  });
 
   const {
     error,
@@ -77,7 +74,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     tx,
   } = useLastTxLocalStatus({
     type: 'createProposal',
-    payload: { proposalId: totalProposalCount },
+    payload: { proposalId: newProposalId },
   });
 
   if (!initialParams) return null;
@@ -168,112 +165,73 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                 [theme.breakpoints.up('sm')]: {
                   width: 290,
                   mr: 15,
-                  position: 'sticky',
-                  transition: 'all 0.5s ease',
-                  top: 50,
                 },
                 [theme.breakpoints.up('lg')]: {
                   width: 340,
                 },
               }}>
               <NoSSR>
-                {(payloads || []).some((payload) => !payload?.state) && (
-                  <BoxWith3D
-                    wrapperCss={{ mb: 12 }}
-                    borderSize={10}
-                    contentColor="$mainAgainst"
-                    css={{ p: '15px 20px' }}>
-                    {payloads
-                      .filter((payload) => !payload?.state)
-                      .map((payload) => (
-                        <Box
-                          key={payload.id}
-                          component="p"
-                          sx={{
-                            mt: 4,
-                            typography: 'body',
-                            color: '$light',
-                            fontSize: 12,
-                            lineHeight: '15px',
-                            textAlign: 'center',
-                          }}>
-                          Payload id {payload.id} on{' '}
-                          {getChainName(payload.chainId)} broken or not created
-                        </Box>
-                      ))}
-                  </BoxWith3D>
-                )}
+                {(payloads || []).every((payload) => !!payload) &&
+                  payloads.some((payload) => !payload?.state) && (
+                    <BoxWith3D
+                      wrapperCss={{ mb: 12 }}
+                      borderSize={10}
+                      contentColor="$mainAgainst"
+                      css={{ p: '15px 20px' }}>
+                      {payloads
+                        .filter((payload) => !payload?.state)
+                        .map((payload) => (
+                          <Box
+                            key={payload.id}
+                            component="p"
+                            sx={{
+                              mt: 4,
+                              typography: 'body',
+                              color: '$light',
+                              fontSize: 12,
+                              lineHeight: '15px',
+                              textAlign: 'center',
+                            }}>
+                            Payload id {payload.id} on{' '}
+                            {getChainName(payload.chainId)} broken or not
+                            created
+                          </Box>
+                        ))}
+                    </BoxWith3D>
+                  )}
               </NoSSR>
 
               <NoSSR>
-                {!!payloads &&
-                payloads.length &&
-                !Object.keys(createPayloadsErrors).length ? (
+                {!!payloads?.length &&
+                payloads.every((payload) => !!payload) ? (
                   <ProposalPayloads
-                    proposalId={totalProposalCount + 1}
+                    proposalId={newProposalId}
                     isProposalExecuted={false}
                     payloads={payloads}
                     proposalQueuingTime={100}
                     forCreate
                   />
-                ) : !!Object.keys(createPayloadsErrors).length ? (
-                  <>
-                    {initialParams.payloads
-                      .filter(
-                        (value) =>
-                          !!createPayloadsErrors[value.payloadsController],
-                      )
-                      .map((value, index) => {
-                        return (
-                          <Box key={index}>
-                            <BoxWith3D
-                              borderSize={10}
-                              contentColor="$mainLight"
-                              bottomBorderColor="$light"
-                              wrapperCss={{ mb: 12 }}
-                              css={{ p: '15px 20px 15px 20px' }}>
-                              <Box sx={{ wordBreak: 'break-word' }}>
-                                Cannot get payload id {value.payloadId}
-                                <br />
-                                <br />
-                                payloadController:{' '}
-                                <Link
-                                  css={{ display: 'inline-block' }}
-                                  href={`${chainInfoHelper.getChainParameters(
-                                    value.chainId || appConfig.govCoreChainId,
-                                  ).blockExplorers?.default.url}/address/${
-                                    value.payloadsController
-                                  }`}
-                                  inNewWindow>
-                                  {value.payloadsController}
-                                </Link>
-                              </Box>
-                            </BoxWith3D>
-                          </Box>
-                        );
-                      })}
-                  </>
                 ) : (
-                  <>
+                  <BoxWith3D
+                    borderSize={10}
+                    contentColor="$mainLight"
+                    bottomBorderColor="$light"
+                    wrapperCss={{ mb: 12 }}
+                    css={{
+                      p: '15px 20px 15px 20px',
+                    }}>
                     {initialParams.payloads.map((value, index) => {
                       return (
-                        <Box key={index}>
-                          <BoxWith3D
-                            borderSize={10}
-                            contentColor="$mainLight"
-                            bottomBorderColor="$light"
-                            wrapperCss={{ mb: 12 }}
-                            css={{ p: '15px 20px 15px 20px' }}>
-                            <CustomSkeleton
-                              className="ProposalListItem__title--loading"
-                              count={3}
-                              width="100%"
-                            />
-                          </BoxWith3D>
+                        <Box key={index} sx={{ mb: 12 }}>
+                          <CustomSkeleton
+                            className="ProposalListItem__title--loading"
+                            count={3}
+                            width="100%"
+                          />
                         </Box>
                       );
                     })}
-                  </>
+                  </BoxWith3D>
                 )}
               </NoSSR>
             </Box>
@@ -354,6 +312,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
             }}>
             {newIpfsData &&
               !!(payloads || []).length &&
+              initialParams.votingPortal !== zeroAddress &&
               !Object.keys(createPayloadsErrors).length && (
                 <Box
                   sx={{

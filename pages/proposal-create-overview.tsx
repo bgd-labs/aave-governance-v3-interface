@@ -6,12 +6,15 @@ import { Hex } from 'viem';
 import { CreateByParamsPage } from '../src/createByParams/components/CreateByParamsPage';
 import { InitialParams, PayloadParams } from '../src/createByParams/types';
 
-export default function CreateByParams() {
+export default function ProposalCreateOverview() {
   const searchParams = useSearchParams();
 
   if (!searchParams) return null;
 
   // params
+  const proposalId = !!searchParams.get('proposalId')
+    ? (Number(searchParams.get('proposalId')) as number)
+    : undefined;
   const ipfsHash = !!searchParams.get('ipfsHash')
     ? (String(searchParams.get('ipfsHash')) as Hex)
     : undefined;
@@ -33,6 +36,7 @@ export default function CreateByParams() {
     });
 
   const initialParams: InitialParams = {
+    proposalId,
     ipfsHash,
     votingPortal,
     payloads: Object.values(payloads),

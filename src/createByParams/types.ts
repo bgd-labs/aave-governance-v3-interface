@@ -8,6 +8,7 @@ export type PayloadParams = {
 };
 
 export interface InitialParams {
+  proposalId?: number;
   ipfsHash?: Hex;
   votingPortal?: Hex;
   payloads: PayloadParams[];

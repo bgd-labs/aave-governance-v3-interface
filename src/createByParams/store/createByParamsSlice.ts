@@ -1,6 +1,7 @@
 import {
   getBlockNumberByTimestamp,
   Payload,
+  PayloadState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
@@ -21,8 +22,10 @@ export type NewPayload = Payload & {
 };
 
 export interface ICreateByParamsSlice {
-  createPayloadsData: Record<number, NewPayload[]>;
+  createPayloadsData: Record<string, NewPayload>;
   createPayloadsErrors: Record<string, boolean>;
+
+  setCreatePayloadsData: (payloadsData: Record<string, NewPayload>) => void;
   getCreatePayloadsData: (
     proposalId: number,
     initialPayloadsData: PayloadParams[],
@@ -40,6 +43,27 @@ export const createByParamsSlice: StoreSlice<
 > = (set, get) => ({
   createPayloadsData: {},
   createPayloadsErrors: {},
+
+  setCreatePayloadsData: (payloadsData) => {
+    Object.values(payloadsData).forEach((payload) => {
+      set((state) =>
+        produce(state, (draft) => {
+          const oldData =
+            draft.createPayloadsData[
+              `${payload.payloadsController}_${payload.id}`
+            ];
+
+          draft.createPayloadsData[
+            `${payload.payloadsController}_${payload.id}`
+          ] = {
+            ...oldData,
+            ...payload,
+          };
+        }),
+      );
+    });
+  },
+
   getCreatePayloadsData: async (proposalId, initialPayloadsData) => {
     const payloadsChainIds = initialPayloadsData.map(
       (payload) => payload.chainId,
@@ -48,130 +72,184 @@ export const createByParamsSlice: StoreSlice<
       (payload) => payload.payloadsController,
     );
 
-    const formattedPayloadsData: Record<string, Payload> = {};
-    const payloadsData = await Promise.all(
-      payloadsChainIds.map(async (chainId) => {
-        return await Promise.all(
-          payloadsControllers.map(async (controller) => {
-            const payloadsIds = initialPayloadsData
-              .filter(
-                (payload) =>
-                  payload.chainId === chainId &&
-                  payload.payloadsController === controller,
-              )
-              .map((payload) => payload.payloadId);
+    const initialData = initialPayloadsData.map((payload) => {
+      const data =
+        get().createPayloadsData[
+          `${payload.payloadsController}_${payload.payloadId}`
+        ];
 
+      if (data) {
+        return data;
+      } else {
+        return undefined;
+      }
+    });
+
+    const formattedPayloadsData: Record<string, NewPayload> = {};
+    initialData.forEach((payload) => {
+      if (payload) {
+        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+          payload;
+      }
+    });
+
+    if (!initialData.every((payload) => payload && payload?.id >= 0)) {
+      const payloadsData = await Promise.all(
+        payloadsChainIds.map(async (chainId) => {
+          return await Promise.all(
+            payloadsControllers.map(async (controller) => {
+              const payloadsIds = initialPayloadsData
+                .filter(
+                  (payload) =>
+                    payload.chainId === chainId &&
+                    payload.payloadsController === controller,
+                )
+                .map((payload) => payload.payloadId);
+
+              try {
+                return await get().govDataService.getPayloads(
+                  Number(chainId),
+                  controller,
+                  payloadsIds,
+                );
+              } catch {
+                set((state) =>
+                  produce(state, (draft) => {
+                    draft.createPayloadsErrors[`${controller}_${proposalId}`] =
+                      true;
+                  }),
+                );
+                return [];
+              }
+            }),
+          );
+        }),
+      );
+
+      payloadsData
+        .flat()
+        .flat()
+        .forEach((payload) => {
+          formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+            payload;
+        });
+      get().setCreatePayloadsData(formattedPayloadsData);
+    }
+
+    if (
+      initialData.some(
+        (payload) => (payload && !payload?.transactionHash) || !payload,
+      )
+    ) {
+      const updatedPayloadsData: NewPayload[] = await Promise.all(
+        Object.values(formattedPayloadsData).map(async (payload) => {
+          if (
+            !payload.transactionHash &&
+            payload.state < PayloadState.Executed
+          ) {
             try {
-              return await get().govDataService.getPayloads(
-                Number(chainId),
-                controller,
-                payloadsIds,
-              );
-            } catch {
-              set((state) =>
-                produce(state, (draft) => {
-                  draft.createPayloadsErrors[controller] = true;
-                }),
-              );
-              return [];
-            }
-          }),
-        );
-      }),
-    );
+              const { minBlockNumber, maxBlockNumber } =
+                await getBlockNumberByTimestamp({
+                  chainId: payload.chainId,
+                  targetTimestamp: payload.createdAt,
+                  client: get().appClients[payload.chainId].instance,
+                });
+              const events =
+                await get().govDataService.getPayloadsCreatedEvents(
+                  payload.chainId,
+                  payload.payloadsController as Hex,
+                  minBlockNumber,
+                  maxBlockNumber,
+                );
 
-    payloadsData
-      .flat()
-      .flat()
-      .forEach((payload) => {
+              get().setRpcError({
+                isError: false,
+                rpcUrl: get().appClients[payload.chainId].rpcUrl,
+                chainId: payload.chainId,
+              });
+
+              const eventItem = events.filter(
+                (event) =>
+                  event.chainId === payload.chainId &&
+                  event.payloadId === payload.id &&
+                  event.payloadsController === payload.payloadsController,
+              )[0];
+
+              return {
+                transactionHash: eventItem.transactionHash,
+                ...payload,
+              } as NewPayload;
+            } catch {
+              get().setRpcError({
+                isError: true,
+                rpcUrl: get().appClients[payload.chainId].rpcUrl,
+                chainId: payload.chainId,
+              });
+
+              return {
+                transactionHash: undefined,
+                ...payload,
+              } as NewPayload;
+            }
+          } else {
+            return payload;
+          }
+        }),
+      );
+
+      updatedPayloadsData.forEach((payload) => {
         formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
           payload;
       });
+      get().setCreatePayloadsData(formattedPayloadsData);
+    }
 
-    const updatedPayloadsData: NewPayload[] = await Promise.all(
-      Object.values(formattedPayloadsData).map(async (payload) => {
-        try {
-          const { minBlockNumber, maxBlockNumber } =
-            await getBlockNumberByTimestamp({
-              chainId: payload.chainId,
-              targetTimestamp: payload.createdAt,
-              client: get().appClients[payload.chainId].instance,
-            });
-          const events = await get().govDataService.getPayloadsCreatedEvents(
-            payload.chainId,
-            payload.payloadsController as Hex,
-            minBlockNumber,
-            maxBlockNumber,
-          );
+    if (
+      initialData.some(
+        (payload) => (payload && !payload?.seatbeltMD) || !payload,
+      )
+    ) {
+      const payloadsDataWithReports = await Promise.all(
+        Object.values(formattedPayloadsData).map(async (payload) => {
+          if (!payload.seatbeltMD) {
+            const preLink =
+              'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads';
 
-          get().setRpcError({
-            isError: false,
-            rpcUrl: get().appClients[payload.chainId].rpcUrl,
-            chainId: payload.chainId,
-          });
+            try {
+              const response = await fetch(
+                `${preLink}/${payload.chainId}/${payload.payloadsController}/${payload.id}.md`,
+              );
 
-          const eventItem = events.filter(
-            (event) =>
-              event.chainId === payload.chainId &&
-              event.payloadId === payload.id &&
-              event.payloadsController === payload.payloadsController,
-          )[0];
+              if (response.ok) {
+                const reportMD: string = await response.text();
 
-          return {
-            transactionHash: eventItem.transactionHash,
-            ...payload,
-          } as NewPayload;
-        } catch {
-          get().setRpcError({
-            isError: true,
-            rpcUrl: get().appClients[payload.chainId].rpcUrl,
-            chainId: payload.chainId,
-          });
-
-          return {
-            transactionHash: undefined,
-            ...payload,
-          } as NewPayload;
-        }
-      }),
-    );
-
-    const updatedPayloadsWithReports = await Promise.all(
-      updatedPayloadsData.map(async (payload) => {
-        const preLink =
-          'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads';
-
-        try {
-          const response = await fetch(
-            `${preLink}/${payload.chainId}/${payload.payloadsController}/${payload.id}.md`,
-          );
-
-          if (response.ok) {
-            const reportMD: string = await response.text();
-
-            return {
-              seatbeltMD: reportMD,
-              ...payload,
-            } as NewPayload;
+                return {
+                  seatbeltMD: reportMD,
+                  ...payload,
+                } as NewPayload;
+              } else {
+                return {
+                  seatbeltMD: undefined,
+                  ...payload,
+                } as NewPayload;
+              }
+            } catch {
+              return {
+                seatbeltMD: undefined,
+                ...payload,
+              } as NewPayload;
+            }
           } else {
-            return {
-              seatbeltMD: undefined,
-              ...payload,
-            } as NewPayload;
+            return payload;
           }
-        } catch {
-          return {
-            seatbeltMD: undefined,
-            ...payload,
-          } as NewPayload;
-        }
-      }),
-    );
+        }),
+      );
 
-    set((state) =>
-      produce(state, (draft) => {
-        draft.createPayloadsData[proposalId] = updatedPayloadsWithReports;
-      }),
-    );
+      payloadsDataWithReports.forEach((payload) => {
+        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+          payload;
+      });
+      get().setCreatePayloadsData(formattedPayloadsData);
+    }
   },
 });
