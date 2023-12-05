@@ -253,13 +253,6 @@ export function GlobalStyles() {
       '.ProposalList__noData__image': {
         backgroundImage: 'url(/images/noDataList.svg)',
       },
-
-      '.ComingSoonPage': {
-        backgroundImage: 'url(/images/ComingF_Mob_light.svg)',
-        [`@media only screen and (${media.sm})`]: {
-          backgroundImage: 'url(/images/ComingF_Light.svg)',
-        },
-      },
     },
     "[data-theme='dark']": {
       body: {
@@ -429,13 +422,6 @@ export function GlobalStyles() {
 
       '.ProposalList__noData__image': {
         backgroundImage: 'url(/images/noDataListDark.svg)',
-      },
-
-      '.ComingSoonPage': {
-        backgroundImage: 'url(/images/ComingF_Mob_dark.svg)',
-        [`@media only screen and (${media.sm})`]: {
-          backgroundImage: 'url(/images/ComingF_Dark.svg)',
-        },
       },
     },
   };

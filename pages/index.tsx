@@ -1,8 +1,5 @@
-import React from 'react';
-
-import { ComingSoonPage } from '../src/ui/pages/ComingSoonPage';
+import { ProposalPage } from '../src/proposals/components/proposalList/ProposalPage';
 
 export default function Home() {
-  // return <ProposalPage />;
-  return <ComingSoonPage />;
+  return <ProposalPage />;
 }
