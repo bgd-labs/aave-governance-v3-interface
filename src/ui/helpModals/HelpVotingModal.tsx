@@ -1,9 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 
-import ProposalTxStartImage from '/public/images/helpModals/proposalTxStart.svg';
-import ProposalTxStartImageDark from '/public/images/helpModals/proposalTxStartDark.svg';
-
 import { ActiveProposalListItem } from '../../proposals/components/proposalList/ActiveProposalListItem';
 import { useStore } from '../../store';
 import { BigButton } from '../';
