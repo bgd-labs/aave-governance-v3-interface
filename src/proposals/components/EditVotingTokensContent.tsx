@@ -18,6 +18,7 @@ interface EditVotingTokensContentProps {
   setVotingTokens: (value: Balance[]) => void;
   representativeAddress?: string;
   isRepresentativeVoteDisabled?: boolean;
+  forTest?: boolean;
 }
 
 function CheckBox({ isActive }: { isActive: boolean }) {
@@ -51,6 +52,7 @@ export function EditVotingTokensContent({
   localVotingTokens,
   representativeAddress,
   isRepresentativeVoteDisabled,
+  forTest,
 }: EditVotingTokensContentProps) {
   const objectVotingTokens = votingTokens
     .map((token) => {
@@ -124,12 +126,15 @@ export function EditVotingTokensContent({
   return (
     <>
       <Box
-        sx={{
-          minHeight: 500,
+        sx={(theme) => ({
+          minHeight: forTest ? 401 : 500,
+          [theme.breakpoints.up('lg')]: {
+            minHeight: forTest ? 471 : 500,
+          },
           button: {
             color: '$main',
           },
-        }}>
+        })}>
         <Box component="h2" sx={{ typography: 'h1', mb: 10 }}>
           {texts.other.votingInfo}
         </Box>

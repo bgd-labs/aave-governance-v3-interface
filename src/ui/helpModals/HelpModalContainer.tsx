@@ -45,27 +45,27 @@ export function HelpModalContainer({
           },
         }}>
         {children}
-
-        {!!onMainButtonClick && (
-          <Box
-            onClick={onMainButtonClick}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mt: 25,
-              [theme.breakpoints.up('sm')]: {
-                justifyContent: 'flex-end',
-                position: 'absolute',
-                mt: 0,
-                bottom: 0,
-                right: 0,
-              },
-            }}>
-            <HelpModalHomeButton />
-          </Box>
-        )}
       </Box>
+
+      {!!onMainButtonClick && (
+        <Box
+          onClick={onMainButtonClick}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mt: 25,
+            [theme.breakpoints.up('sm')]: {
+              justifyContent: 'flex-end',
+              position: 'absolute',
+              mt: 0,
+              bottom: 0,
+              right: 0,
+            },
+          }}>
+          <HelpModalHomeButton />
+        </Box>
+      )}
     </Box>
   );
 }

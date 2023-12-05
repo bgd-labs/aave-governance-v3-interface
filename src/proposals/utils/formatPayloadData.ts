@@ -46,7 +46,7 @@ export function formatPayloadData({
       : payload.queuedAt + payload.delay;
 
   const isPayloadReadyForExecution =
-    isProposalNotExecuted &&
+    !isProposalNotExecuted &&
     payload.queuedAt > 0 &&
     now > payload.queuedAt + payload.delay &&
     payload.cancelledAt <= 0 &&
