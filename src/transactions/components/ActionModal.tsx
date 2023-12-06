@@ -54,6 +54,7 @@ export function ActionModal({
 
   return (
     <BasicActionModal
+      minHeight={380}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       isTxStart={isTxStart}

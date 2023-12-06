@@ -14,11 +14,13 @@ const ContentWrapper = ({
   maxWidth,
   contentCss,
   withMinHeight,
+  minHeight,
 }: {
   children: ReactNode;
   maxWidth?: number | string;
   contentCss?: SxProps;
   withMinHeight?: boolean;
+  minHeight?: number;
 }) => {
   const theme = useTheme();
 
@@ -67,7 +69,11 @@ const ContentWrapper = ({
             p: '24px 30px',
             minHeight: 'unset',
             '@media only screen and (min-height: 575px)': {
-              minHeight: withMinHeight ? 500 : 'unset',
+              minHeight: withMinHeight
+                ? 500
+                : !!minHeight
+                  ? minHeight
+                  : 'unset',
             },
           },
         }}>
@@ -100,6 +106,7 @@ export interface BasicModalProps {
   modalCss?: SxProps;
   initialFocus?: any;
   withMinHeight?: boolean;
+  minHeight?: number;
 }
 
 export function BasicModal({
@@ -114,6 +121,7 @@ export function BasicModal({
   modalCss,
   initialFocus,
   withMinHeight,
+  minHeight,
 }: BasicModalProps) {
   const theme = useTheme();
 
@@ -174,7 +182,8 @@ export function BasicModal({
             <ContentWrapper
               contentCss={contentCss}
               maxWidth={maxWidth}
-              withMinHeight={withMinHeight}>
+              withMinHeight={withMinHeight}
+              minHeight={minHeight}>
               <Box
                 sx={{
                   margin: 'auto',

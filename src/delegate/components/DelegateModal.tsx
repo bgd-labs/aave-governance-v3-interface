@@ -38,6 +38,7 @@ export function DelegateModal({
 > & { delegateData: DelegateItem[]; formDelegateData: DelegateData[] }) {
   return (
     <BasicActionModal
+      minHeight={400}
       isTxStart={isTxStart}
       setIsTxStart={setIsTxStart}
       setError={setError}
