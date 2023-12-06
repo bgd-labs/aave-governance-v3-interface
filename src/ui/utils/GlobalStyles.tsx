@@ -15,6 +15,10 @@ export function GlobalStyles() {
       },
     },
 
+    html: {
+      scrollBehavior: 'smooth',
+    },
+
     body: {
       fontFamily: FONT,
       minWidth: 365,
