@@ -3,15 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 import { avalanche, mainnet, polygon } from 'viem/chains';
 
-import RepresentativesWalletImage from '/public/images/helpModals/RepresentatiivesWallet.svg';
-import RepresentativesWalletImageDark from '/public/images/helpModals/RepresentatiivesWalletDark.svg';
-import ArrowToRight from '/public/images/icons/arrowRight.svg';
-
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
 import { useStore } from '../../store';
 import { AccountInfoModalContent } from '../../web3/components/wallet/AccountInfoModalContent';
 import { BasicModal, BigButton, BoxWith3D } from '../';
-import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
@@ -68,6 +63,8 @@ export function HelpRepresentativeModal() {
   useEffect(() => {
     if (!sm) {
       setIsFirstStepOnMobile(true);
+    } else {
+      setIsFirstStepOnMobile(false);
     }
   }, [sm]);
 
@@ -94,13 +91,13 @@ export function HelpRepresentativeModal() {
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
-            py: 20,
+            py: 18,
             display: isFirstStepOnMobile ? 'flex' : 'none',
             [theme.breakpoints.up('sm')]: {
               display: 'none',
             },
           }}>
-          <Box component="h2" sx={{ typography: 'h1', mb: 10 }}>
+          <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
             {texts.faq.representative.title}
           </Box>
           <Box
@@ -118,10 +115,10 @@ export function HelpRepresentativeModal() {
                 background:
                   theme.palette.mode === 'dark'
                     ? `url(${setRelativePath(
-                        '/images/helpModals/representativesWallet_mobileDark.svg',
+                        '/images/helpModals/wallet1_mobileDark.svg',
                       )})`
                     : `url(${setRelativePath(
-                        '/images/helpModals/representativesWallet_mobile.svg',
+                        '/images/helpModals/wallet1_mobile.svg',
                       )})`,
                 backgroundSize: 'contain',
                 backgroundPosition: 'center',
@@ -135,26 +132,16 @@ export function HelpRepresentativeModal() {
           <BigButton
             alwaysWithBorders
             onClick={() => setIsFirstStepOnMobile(false)}
-            css={{ mt: 30 }}>
+            css={{ mt: 24 }}>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                svg: { path: { fill: theme.palette.$textWhite } },
               }}>
               <Box component="p" sx={{ typography: 'body' }}>
                 {texts.faq.other.next}
               </Box>
-              <IconBox
-                sx={{
-                  width: 20,
-                  height: 20,
-                  ml: 10,
-                  '> svg': { width: 20, height: 20 },
-                }}>
-                <ArrowToRight />
-              </IconBox>
             </Box>
           </BigButton>
         </Box>
@@ -176,85 +163,96 @@ export function HelpRepresentativeModal() {
             <Box
               sx={{
                 display: 'none',
-                [theme.breakpoints.up('sm')]: {
+                [theme.breakpoints.up('md')]: {
                   display: 'flex',
                   width: 290,
-                  maxHeight: 500,
+                  height: 500,
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
                   left: 0,
                 },
               }}>
-              <IconBox
+              <Box
                 sx={{
                   width: '100%',
                   height: '100%',
-                  maxHeight: 500,
-                  '> svg': {
-                    width: '100%',
-                    height: '100%',
-                    maxHeight: 500,
-                  },
-                }}>
-                <>
-                  {theme.palette.mode === 'dark' ? (
-                    <RepresentativesWalletImageDark />
-                  ) : (
-                    <RepresentativesWalletImage />
-                  )}
-                </>
-              </IconBox>
+                  background:
+                    theme.palette.mode === 'dark'
+                      ? `url(${setRelativePath(
+                          '/images/helpModals/RepresentatiivesWalletDark.svg',
+                        )})`
+                      : `url(${setRelativePath(
+                          '/images/helpModals/RepresentatiivesWallet.svg',
+                        )})`,
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              />
             </Box>
 
             <Box
               sx={{
-                width: 375,
-                mt: 20,
-                [theme.breakpoints.up('sm')]: {
-                  width: 410,
-                },
+                width: '100%',
                 [theme.breakpoints.up('md')]: {
-                  mr: 20,
+                  width: 620,
                   ml: 8,
                 },
                 [theme.breakpoints.up('lg')]: {
-                  width: 460,
-                  mr: 30,
+                  width: 720,
                   ml: 10,
                 },
               }}>
               <Box
-                component="h2"
                 sx={{
-                  typography: 'h1',
-                  mb: 22,
-                  textAlign: 'center',
+                  mb: 18,
                   display: isFirstStepOnMobile ? 'none' : 'block',
                   [theme.breakpoints.up('sm')]: {
-                    display: 'none',
+                    display: 'block',
+                  },
+                  [theme.breakpoints.up('lg')]: {
+                    mb: 24,
                   },
                 }}>
-                {texts.faq.representative.title}
+                <Box
+                  component="h2"
+                  sx={{
+                    typography: 'h1',
+                    mb: 18,
+                    textAlign: 'center',
+                    [theme.breakpoints.up('sm')]: {
+                      typography: 'h1',
+                      textAlign: 'left',
+                    },
+                    [theme.breakpoints.up('lg')]: {
+                      typography: 'h1',
+                      mb: 24,
+                    },
+                  }}>
+                  {texts.faq.representative.title}
+                </Box>
               </Box>
+
               <Box sx={{ position: 'relative' }}>
                 <HelpModalTooltip
                   maxWidth={400}
                   mobileBottomPadding={25}
                   css={{
                     position: 'absolute',
-                    left: -15,
-                    top: 115,
-                    [`@media only screen and (min-width: 470px)`]: {
-                      left: 100,
-                      top: 95,
+                    left: 10,
+                    top: 75,
+                    [theme.breakpoints.up('xsm')]: {
+                      left: 184,
+                      top: 76,
                     },
                     [theme.breakpoints.up('lg')]: {
-                      left: '115px !important',
-                      top: '102px !important',
+                      left: '200px !important',
+                      top: '82px !important',
                     },
+
                     '.HelpModalTooltip__content': {
-                      width: 170,
+                      width: 210,
                       '> div': {
                         p: '15px 5px 10px 5px',
                         [theme.breakpoints.up('sm')]: {
@@ -282,15 +280,17 @@ export function HelpRepresentativeModal() {
                     position: 'absolute',
                     left: -15,
                     top: 230,
-                    [`@media only screen and (min-width: 470px)`]: {
-                      top: 185,
+                    [theme.breakpoints.up('xsm')]: {
+                      top: 168,
+                    },
+                    [theme.breakpoints.up('sm')]: {
+                      top: 176,
                     },
                     [theme.breakpoints.up('lg')]: {
-                      left: '-10px !important',
-                      top: '197px !important',
+                      top: '186px !important',
                     },
                     '.HelpModalTooltip__content': {
-                      width: 390,
+                      width: 380,
                       [theme.breakpoints.up('sm')]: { width: 400 },
                     },
                   }}>
@@ -304,8 +304,9 @@ export function HelpRepresentativeModal() {
                   borderSize={8}
                   contentColor="$mainLight"
                   css={{
-                    p: '40px 15px 20px',
-                    [theme.breakpoints.up('lg')]: { p: '50px 35px 30px' },
+                    p: 18,
+                    width: '100%',
+                    [theme.breakpoints.up('lg')]: { p: '24px 30px' },
                   }}>
                   <AccountInfoModalContent
                     activeAddress={zeroAddress}
@@ -331,70 +332,43 @@ export function HelpRepresentativeModal() {
                     representedAddresses={testRepresentedAddresses}
                   />
                 </BoxWith3D>
-              </Box>
-            </Box>
-          </Box>
 
-          <Box
-            sx={{
-              width: '100%',
-              mt: 24,
-              textAlign: 'center',
-              order: 3,
-              [theme.breakpoints.up('sm')]: {
-                order: 0,
-              },
-              [theme.breakpoints.up('md')]: {
-                width: 280,
-                order: 3,
-                mt: 0,
-                textAlign: 'left',
-              },
-            }}>
-            <Box
-              component="h2"
-              sx={{
-                mb: 24,
-                display: 'none',
-                [theme.breakpoints.up('sm')]: {
-                  typography: 'h1',
-                  display: 'block',
-                },
-              }}>
-              {texts.faq.representative.title}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                display: 'none',
-                mb: 12,
-                [theme.breakpoints.up('sm')]: {
-                  typography: 'body',
-                  display: 'inline-block',
-                },
-              }}>
-              {texts.faq.representative.descriptionFirst}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                display: 'none',
-                [theme.breakpoints.up('sm')]: {
-                  typography: 'body',
-                  display: 'inline-block',
-                },
-              }}>
-              {texts.faq.representative.descriptionSecond}
-            </Box>
-            <Box
-              component="p"
-              sx={{
-                typography: 'body',
-                [theme.breakpoints.up('sm')]: {
-                  display: 'none',
-                },
-              }}>
-              {texts.faq.representative.descriptionSecond}
+                <Box
+                  sx={{
+                    mt: 18,
+                    display: isFirstStepOnMobile ? 'none' : 'block',
+                    [theme.breakpoints.up('sm')]: {
+                      display: 'block',
+                    },
+                    [theme.breakpoints.up('lg')]: {
+                      mt: 24,
+                    },
+                  }}>
+                  <Box
+                    component="p"
+                    sx={{
+                      display: 'none',
+                      [theme.breakpoints.up('sm')]: {
+                        display: 'block',
+                        typography: 'body',
+                        mb: 12,
+                      },
+                    }}>
+                    {texts.faq.representative.descriptionFirst}
+                  </Box>
+                  <Box
+                    component="p"
+                    sx={{
+                      typography: 'body',
+                      textAlign: 'center',
+                      [theme.breakpoints.up('sm')]: {
+                        textAlign: 'left',
+                      },
+                    }}>
+                    {texts.faq.representative.descriptionSecond}
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           </Box>
         </Box>

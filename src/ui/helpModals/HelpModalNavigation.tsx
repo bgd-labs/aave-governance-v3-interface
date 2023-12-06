@@ -153,7 +153,7 @@ export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
               sx={{
                 display: 'none',
                 [theme.breakpoints.up('sm')]: {
-                  typography: 'h2',
+                  typography: 'h1',
                   mb: 36,
                   display: 'block',
                 },

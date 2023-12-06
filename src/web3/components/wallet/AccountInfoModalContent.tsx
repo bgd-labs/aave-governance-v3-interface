@@ -117,6 +117,7 @@ function InternalLink({
         <Box
           component="p"
           sx={{
+            whiteSpace: 'nowrap',
             typography: 'headline',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
