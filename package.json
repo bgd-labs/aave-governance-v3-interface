@@ -41,7 +41,7 @@
     "@headlessui/react": "^1.7.17",
     "@mui/system": "^5.14.20",
     "@safe-global/safe-deployments": "^1.28.0",
-    "alova": "^2.15.1",
+    "alova": "2.13.0",
     "bignumber.js": "^9.1.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
