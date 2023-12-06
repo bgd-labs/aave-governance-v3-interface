@@ -572,7 +572,7 @@ export const createProposalsSlice: StoreSlice<
         );
 
         proposalsData = await get().govDataService.getDetailedProposalsData(
-          fr <= 0 ? (get().totalProposalCount > 9 ? 1 : 0) : fr,
+          fr <= 0 ? (get().totalProposalCount > PAGE_SIZE - 1 ? 1 : 0) : fr,
           to <= 0 ? 0 : to,
           userAddress,
           representativeAddress as Hex,

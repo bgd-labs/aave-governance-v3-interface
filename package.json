@@ -30,18 +30,18 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
   "dependencies": {
-    "@bgd-labs/aave-address-book": "^2.11.0",
-    "@bgd-labs/aave-governance-ui-helpers": "^1.0.0",
-    "@bgd-labs/frontend-web3-utils": "^1.0.1",
+    "@bgd-labs/aave-address-book": "^2.13.0",
+    "@bgd-labs/aave-governance-ui-helpers": "^1.0.1",
+    "@bgd-labs/frontend-web3-utils": "^0.8.6-f5c92efd8e12ebbb7e9e7470063f2fd0cfad203a.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@gelatonetwork/relay-sdk": "^5.5.2",
+    "@gelatonetwork/relay-sdk": "^5.5.3",
     "@headlessui/react": "^1.7.17",
-    "@mui/system": "^5.14.18",
+    "@mui/system": "^5.14.20",
     "@safe-global/safe-deployments": "^1.28.0",
-    "alova": "^2.13.2",
+    "alova": "^2.15.1",
     "bignumber.js": "^9.1.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
@@ -70,9 +70,9 @@
     "react-loading-skeleton": "^3.3.1",
     "react-paginate": "^8.2.0",
     "sharp": "^0.32.6",
-    "viem": "^1.19.4",
-    "wagmi": "^1.4.7",
-    "zustand": "^4.4.6"
+    "viem": "^1.19.11",
+    "wagmi": "^1.4.8",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
@@ -99,10 +99,10 @@
     "html-webpack-plugin": "^5.5.3",
     "husky": "^8.0.3",
     "identity-obj-proxy": "^3.0.0",
-    "lint-staged": "^15.1.0",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.1.0",
     "semver": "^7.5.4",
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   },
   "lint-staged": {
     "!(.prettierignore)*.*": "yarn lint:fix",
