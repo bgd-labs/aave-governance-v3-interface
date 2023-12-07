@@ -185,7 +185,28 @@ export function SettingsButton() {
                 borderSize={10}
                 leftBorderColor="$secondary"
                 bottomBorderColor="$headerGray"
-                css={{ width: 150, p: 10, color: '$textWhite' }}>
+                css={{
+                  width: 170,
+                  p: 10,
+                  color: '$textWhite',
+                  [theme.breakpoints.up('lg')]: { width: 190 },
+                }}>
+                <Link
+                  href={ROUTES.payloadsExplorer}
+                  css={{
+                    color: '$textDisabled',
+                    lineHeight: 1,
+                    hover: {
+                      color: theme.palette.$textWhite,
+                    },
+                    mb: 15,
+                  }}
+                  onClick={close}>
+                  <Box sx={{ typography: 'buttonSmall' }}>
+                    {texts.header.payloadsExplorer}
+                  </Box>
+                </Link>
+
                 <Link
                   href={ROUTES.rpcSwitcher}
                   css={{

@@ -24,6 +24,7 @@ import {
   TxType,
 } from '../../../transactions/store/transactionsSlice';
 import { BoxWith3D, Link, SmallButton, Timer } from '../../../ui';
+import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
@@ -232,6 +233,12 @@ function PayloadItem({
               <Box sx={{ typography: 'body' }}>
                 {texts.proposals.payloadsDetails.payload} {payloadNumber}
               </Box>
+              <CopyAndExternalIconsSet
+                iconSize={12}
+                copyTooltipText={toHex(payload.id)}
+                copyText={toHex(payload.id)}
+                sx={{ '.CopyAndExternalIconsSet__copy': { ml: 4 } }}
+              />
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -279,23 +286,6 @@ function PayloadItem({
           <Box sx={{ pl: 18, mt: 4 }}>
             {forCreate && (
               <>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    mb: 4,
-                  }}>
-                  <Box sx={{ typography: 'descriptorAccent' }}>
-                    Payload id / chain id (Hex):{' '}
-                    <Box
-                      sx={{
-                        display: 'inline',
-                        typography: 'headline',
-                      }}>
-                      {toHex(payload.id)} / {toHex(payload.chainId)}
-                    </Box>
-                  </Box>
-                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
                   <Box sx={{ typography: 'descriptorAccent' }}>
                     {texts.proposals.payloadsDetails.accessLevel}:{' '}

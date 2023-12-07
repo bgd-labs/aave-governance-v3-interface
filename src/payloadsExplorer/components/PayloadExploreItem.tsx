@@ -19,6 +19,7 @@ import {
   TxType,
 } from '../../transactions/store/transactionsSlice';
 import { BoxWith3D, Link, SmallButton } from '../../ui';
+import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { texts } from '../../ui/utils/texts';
 import { PayloadStatus } from './PayloadStatus';
@@ -130,21 +131,22 @@ export function PayloadExploreItem({
               css={{ mr: 6 }}
               withTooltip={true}
             />
-            <Box sx={{ typography: 'h2' }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', typography: 'h2' }}>
               {texts.proposals.payloadsDetails.payload} {payloadNumber}
+              <CopyAndExternalIconsSet
+                copyTooltipText={toHex(payload.id)}
+                iconSize={14}
+                copyText={toHex(payload.id)}
+                sx={{ '.CopyAndExternalIconsSet__copy': { ml: 8 } }}
+              />
             </Box>
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', mb: 4 }}>
-          <Box sx={{ typography: 'headline', mr: 12 }}>
-            Id(Hex): {toHex(payload.id)}
-          </Box>
-
-          <Box sx={{ typography: 'headline' }}>
-            {texts.proposals.payloadsDetails.accessLevel}:{' '}
-            {payload.maximumAccessLevelRequired}
-          </Box>
+        <Box sx={{ typography: 'headline', mb: 4 }}>
+          {texts.proposals.payloadsDetails.accessLevel}:{' '}
+          {payload.maximumAccessLevelRequired}
         </Box>
 
         <PayloadCreator

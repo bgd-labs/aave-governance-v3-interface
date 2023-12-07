@@ -458,7 +458,7 @@ export function AppHeader() {
             right: 0,
             zIndex: 109,
             transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(150px)',
-            width: mobileMenuOpen ? 150 : 0,
+            width: mobileMenuOpen ? 180 : 0,
             height: '100%',
             overflowY: 'auto',
             [theme.breakpoints.up('sm')]: { display: 'none' },
@@ -521,6 +521,22 @@ export function AppHeader() {
                   )}
                 </React.Fragment>
               ))}
+              <Link
+                href={ROUTES.payloadsExplorer}
+                onClick={() => handleCloseMobileMenu()}
+                css={{
+                  color: '$textLight',
+                  mb: 14,
+                  display: 'block',
+                }}>
+                <Box
+                  component="p"
+                  sx={{
+                    typography: 'body',
+                  }}>
+                  {texts.header.payloadsExplorer}
+                </Box>
+              </Link>
               <Link
                 href={ROUTES.rpcSwitcher}
                 onClick={() => handleCloseMobileMenu()}

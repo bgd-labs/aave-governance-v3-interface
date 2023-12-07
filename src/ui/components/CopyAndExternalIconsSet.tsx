@@ -11,6 +11,7 @@ import { Link } from './Link';
 interface CopyAndExternalIconsSetProps {
   iconSize: number;
   copyText?: string;
+  copyTooltipText?: string;
   externalLink?: string;
   sx?: SxProps;
 }
@@ -18,6 +19,7 @@ interface CopyAndExternalIconsSetProps {
 export function CopyAndExternalIconsSet({
   iconSize,
   copyText,
+  copyTooltipText,
   externalLink,
   sx,
 }: CopyAndExternalIconsSetProps) {
@@ -34,7 +36,9 @@ export function CopyAndExternalIconsSet({
       }}>
       {!!copyText && (
         <Box className="CopyAndExternalIconsSet__copy">
-          <CopyToClipboard copyText={copyText}>
+          <CopyToClipboard
+            copyText={copyText}
+            copyTooltipText={copyTooltipText}>
             <IconBox
               sx={{
                 cursor: 'pointer',

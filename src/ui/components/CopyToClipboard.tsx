@@ -7,10 +7,15 @@ import { Tooltip } from './Tooltip';
 
 interface CopyToClipboardProps {
   copyText: string;
+  copyTooltipText?: string;
   children: ReactNode;
 }
 
-export function CopyToClipboard({ copyText, children }: CopyToClipboardProps) {
+export function CopyToClipboard({
+  copyText,
+  copyTooltipText,
+  children,
+}: CopyToClipboardProps) {
   const [copied, setCopied] = useState(false);
 
   return (
@@ -25,7 +30,9 @@ export function CopyToClipboard({ copyText, children }: CopyToClipboardProps) {
           color={copied ? 'dark' : 'light'}
           tooltipContent={
             <Box component="span" sx={{ typography: 'descriptor' }}>
-              {copied ? texts.other.copied : texts.other.copy}
+              {copied
+                ? texts.other.copied
+                : copyTooltipText || texts.other.copy}
             </Box>
           }>
           {children}

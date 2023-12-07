@@ -1,4 +1,5 @@
 import { Box, SxProps } from '@mui/system';
+import { toHex } from 'viem';
 import {
   arbitrum,
   avalanche,
@@ -80,8 +81,9 @@ export function NetworkIcon({
                 px: 4,
                 typography: 'descriptor',
                 whiteSpace: 'nowrap',
+                textAlign: 'center',
               }}>
-              {chain.name}
+              {chain.name}: {chain.id} <br /> ({toHex(chain.id)})
             </Box>
           }>
           <Image

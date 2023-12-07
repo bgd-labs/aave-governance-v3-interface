@@ -282,6 +282,7 @@ export const texts = {
     changeRPC: 'Change RPC',
     appMode: 'App mode',
     theme: 'Theme',
+    payloadsExplorer: 'Payloads explorer',
     appModeDefault: 'Default',
     appModeDev: 'Dev',
     appModeExpert: 'Expert',
