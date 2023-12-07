@@ -103,6 +103,7 @@ export function Loading() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 width: '100%',
+                mb: 4,
               }}>
               <CustomSkeleton width={60} height={21} />
               <CustomSkeleton width={60} height={21} />
@@ -116,6 +117,7 @@ export function Loading() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 width: '100%',
+                mb: 4,
               }}>
               <CustomSkeleton width={60} height={21} />
               <CustomSkeleton width={60} height={21} />

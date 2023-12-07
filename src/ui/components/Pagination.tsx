@@ -246,21 +246,18 @@ export function Pagination({
       <ReactPaginate
         onPageChange={(selectedItem) => {
           onPageChange(selectedItem.selected);
-          if (typeof window !== 'undefined') {
-            window.scrollTo(0, 0);
-            if (!isForIPFS && !withoutQuery) {
-              router.replace(
-                pathname +
-                  '?' +
-                  createQueryString(
-                    'activePage',
-                    (selectedItem.selected + 1).toString(),
-                  ),
-                {
-                  scroll: false,
-                },
-              );
-            }
+          if (!isForIPFS && !withoutQuery) {
+            router.replace(
+              pathname +
+                '?' +
+                createQueryString(
+                  'activePage',
+                  (selectedItem.selected + 1).toString(),
+                ),
+              {
+                scroll: false,
+              },
+            );
           }
         }}
         pageCount={pageCount}

@@ -49,6 +49,10 @@ export const createPayloadsExplorerSlice: StoreSlice<
   payloadsExplorePagination: {},
 
   setPayloadsExploreActivePage: async (value, chainId, address) => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+
     const data = get().payloadsExplorePagination[address];
     const totalPayloadsCount = get().totalPayloadsCountByAddress[address];
 

@@ -292,6 +292,9 @@ export const createProposalsSlice: StoreSlice<
 
   activePage: 0,
   setActivePage: (activePage: number) => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
     set({ activePage: activePage });
   },
 

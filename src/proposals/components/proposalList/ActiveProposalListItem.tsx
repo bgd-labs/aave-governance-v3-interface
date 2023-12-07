@@ -5,7 +5,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
-import { createWalletClient, custom, zeroAddress } from 'viem';
+import { createWalletClient, http, zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
@@ -50,7 +50,10 @@ export function ActiveProposalListItem({
       client: appClients[appConfig.govCoreChainId].instance,
       walletClient: createWalletClient({
         chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
-        transport: custom(window.ethereum),
+        transport: http(
+          chainInfoHelper.getChainParameters(appConfig.govCoreChainId).rpcUrls
+            .default.http[0],
+        ),
       }),
       isActive: true,
       isContractAddress: false,
