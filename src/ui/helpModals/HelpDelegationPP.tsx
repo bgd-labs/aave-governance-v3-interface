@@ -64,9 +64,11 @@ export function HelpDelegationPP() {
               {texts.faq.delegate.propositionPowerSecondWarning}
             </HelpModalText>
 
-            <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
-              {texts.faq.other.gotIt}
-            </BigButton>
+            <Box sx={{ mt: 24, minHeight: 60 }}>
+              <BigButton alwaysWithBorders onClick={handleClick}>
+                {texts.faq.other.gotIt}
+              </BigButton>
+            </Box>
           </Box>
         </HelpModalCaption>
       </HelpModalContainer>

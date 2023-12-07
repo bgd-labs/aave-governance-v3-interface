@@ -241,7 +241,7 @@ export function HelpRepresentativeModal() {
                   css={{
                     position: 'absolute',
                     left: 10,
-                    top: 75,
+                    top: 110,
                     [theme.breakpoints.up('xsm')]: {
                       left: 184,
                       top: 76,
@@ -252,7 +252,7 @@ export function HelpRepresentativeModal() {
                     },
 
                     '.HelpModalTooltip__content': {
-                      width: 210,
+                      width: 240,
                       '> div': {
                         p: '15px 5px 10px 5px',
                         [theme.breakpoints.up('sm')]: {
@@ -278,8 +278,8 @@ export function HelpRepresentativeModal() {
                   mobileBottomPadding={33}
                   css={{
                     position: 'absolute',
-                    left: -15,
-                    top: 230,
+                    left: -5,
+                    top: 229,
                     [theme.breakpoints.up('xsm')]: {
                       top: 168,
                     },

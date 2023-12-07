@@ -29,7 +29,7 @@ export function ProposalListItemWrapper({
     <BoxWith3D
       disabled={md && disabled}
       alwaysWithBorders={isForHelpModal}
-      withActions={!sm || !isForHelpModal}
+      withActions={(!sm && !isForHelpModal) || !isForHelpModal}
       borderSize={10}
       disableActiveState={isVotingActive}
       contentColor="$mainLight"

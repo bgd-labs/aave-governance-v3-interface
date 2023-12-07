@@ -285,8 +285,8 @@ export function HelpVotingModal() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    left: -5,
-                    top: 40,
+                    left: 0,
+                    top: 45,
                     [theme.breakpoints.up('sm')]: {
                       left: 25,
                       top: -20,
@@ -295,7 +295,7 @@ export function HelpVotingModal() {
                       display: 'none',
                     },
                   }}>
-                  <HelpModalTooltip maxWidth={316} mobileBottomPadding={54}>
+                  <HelpModalTooltip maxWidth={316} mobileBottomPadding={60}>
                     <Box component="p" sx={{ typography: 'body' }}>
                       {texts.faq.voting.firstTooltip}
                     </Box>
@@ -304,7 +304,7 @@ export function HelpVotingModal() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    left: -5,
+                    left: 0,
                     bottom: 10,
                     [theme.breakpoints.up('sm')]: {
                       left: 25,
@@ -316,7 +316,7 @@ export function HelpVotingModal() {
                   }}>
                   <HelpModalTooltip
                     maxWidth={250}
-                    mobileBottomPadding={50}
+                    mobileBottomPadding={40}
                     countNumber={sm ? 2 : 3}
                     css={{ mr: -20, [theme.breakpoints.up('lg')]: { mr: 10 } }}>
                     <Box component="p" sx={{ typography: 'body' }}>
@@ -336,8 +336,8 @@ export function HelpVotingModal() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    left: -5,
-                    top: 130,
+                    left: 0,
+                    top: 140,
                     [theme.breakpoints.up('sm')]: {
                       left: 'auto',
                       right: 15,

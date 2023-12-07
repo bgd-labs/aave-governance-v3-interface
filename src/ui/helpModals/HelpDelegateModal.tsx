@@ -403,7 +403,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                   sx={{
                     position: 'absolute',
                     left: -5,
-                    top: 92,
+                    top: 90,
                     display:
                       !isEdit && !isDelegateChangedView && !txSuccess
                         ? 'block'
@@ -411,7 +411,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     [theme.breakpoints.up('sm')]: {
                       display: 'block',
                       left: -5,
-                      top: 94,
+                      top: 92,
                     },
                     [theme.breakpoints.up('md')]: {
                       display: 'none',

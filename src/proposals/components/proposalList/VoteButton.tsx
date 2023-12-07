@@ -113,14 +113,15 @@ export function VoteButton({
                   }}>
                   <Box
                     sx={{
-                      display: 'inline-flex',
+                      display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       width: '100%',
+                      lineHeight: 1,
                     }}>
                     <NetworkIcon
                       chainId={votingChainId}
-                      size={10}
+                      size={11}
                       css={{ mr: 4 }}
                     />
                     {texts.proposals.vote}
