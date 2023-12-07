@@ -12,28 +12,30 @@ export function TopPanelContainer({
   children,
   withoutContainer,
 }: TopPanelContainerProps) {
-  const Children = () => {
-    return (
-      <Box
-        sx={(theme) => ({
-          mb: 18,
-          [theme.breakpoints.up('sm')]: {
-            mb: 24,
-          },
-        })}>
-        {children}
-      </Box>
-    );
-  };
-
   return (
     <>
       {!withoutContainer ? (
         <Container>
-          <Children />
+          <Box
+            sx={(theme) => ({
+              mb: 18,
+              [theme.breakpoints.up('sm')]: {
+                mb: 24,
+              },
+            })}>
+            {children}
+          </Box>
         </Container>
       ) : (
-        <Children />
+        <Box
+          sx={(theme) => ({
+            mb: 18,
+            [theme.breakpoints.up('sm')]: {
+              mb: 24,
+            },
+          })}>
+          {children}
+        </Box>
       )}
     </>
   );
