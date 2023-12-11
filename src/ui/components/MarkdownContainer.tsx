@@ -12,15 +12,10 @@ interface MarkdownContainerProps {
   replaceImgSrc?: string;
 }
 
-const loadLangs = async () => {
+const loadLang = async (langSlug: string) => {
   (typeof global !== 'undefined' ? global : window).Prism = Prism;
-
-  await Promise.all([
-    // @ts-ignore
-    await import('prismjs/components/prism-diff'),
-    // @ts-ignore
-    await import('prismjs/components/prism-solidity'),
-  ]);
+  // @ts-ignore
+  await import(`prismjs/components/prism-${langSlug}`);
 };
 
 export function MarkdownContainer({
@@ -163,13 +158,14 @@ export function MarkdownContainer({
               );
             },
             pre: async ({ node, ...rest }) => {
-              await loadLangs();
+              const langSlug = rest.children.props.className.split('-')[1];
+              await loadLang(langSlug);
 
               return (
                 <Highlight
                   theme={themes.github}
                   code={rest.children.props.children}
-                  language={rest.children.props.className.split('-')[1]}>
+                  language={langSlug}>
                   {({
                     className,
                     style,
