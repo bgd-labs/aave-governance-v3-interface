@@ -32,6 +32,8 @@ export function PayloadsExplorerPage() {
     isExecutePayloadModalOpen,
     setExecutePayloadModalOpen,
     isRendered,
+    startDetailedPayloadsExplorerDataPolling,
+    stopDetailedPayloadsExplorerDataPolling,
   } = useStore();
 
   const [chainId, setChainId] = useState<number>(appConfig.govCoreChainId);
@@ -52,7 +54,24 @@ export function PayloadsExplorerPage() {
 
   useEffect(() => {
     getPayloadsExploreData(chainId, controllerAddress, 0);
+    stopDetailedPayloadsExplorerDataPolling();
+    startDetailedPayloadsExplorerDataPolling(chainId, controllerAddress, 0);
   }, [controllerAddress]);
+
+  useEffect(() => {
+    stopDetailedPayloadsExplorerDataPolling();
+    if (payloadsExplorePagination[controllerAddress]) {
+      startDetailedPayloadsExplorerDataPolling(
+        chainId,
+        controllerAddress,
+        payloadsExplorePagination[controllerAddress].activePage,
+      );
+    }
+  }, [payloadsExplorePagination[controllerAddress]?.activePage]);
+
+  useEffect(() => {
+    return () => stopDetailedPayloadsExplorerDataPolling();
+  }, []);
 
   const payloadsDataByChain = payloadsExploreData[chainId];
   const payloadsData = Object.values(

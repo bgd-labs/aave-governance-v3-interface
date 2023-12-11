@@ -32,9 +32,17 @@ export interface IPayloadsExplorerSlice {
 
   isPayloadExplorerItemDetailsModalOpen: boolean;
   setIsPayloadExplorerItemDetailsModalOpen: (value: boolean) => void;
+
+  detailedPayloadsExplorerDataInterval: number | undefined;
+  startDetailedPayloadsExplorerDataPolling: (
+    chainId: number,
+    address: Hex,
+    activePage?: number,
+  ) => Promise<void>;
+  stopDetailedPayloadsExplorerDataPolling: () => void;
 }
 
-const pageSize = 15;
+const pageSize = 12;
 
 export const createPayloadsExplorerSlice: StoreSlice<
   IPayloadsExplorerSlice,
@@ -183,5 +191,28 @@ export const createPayloadsExplorerSlice: StoreSlice<
   isPayloadExplorerItemDetailsModalOpen: false,
   setIsPayloadExplorerItemDetailsModalOpen: (value) => {
     set({ isModalOpen: value, isPayloadExplorerItemDetailsModalOpen: value });
+  },
+
+  detailedPayloadsExplorerDataInterval: undefined,
+  startDetailedPayloadsExplorerDataPolling: async (
+    chainId,
+    address,
+    activePage,
+  ) => {
+    const currentInterval = get().detailedProposalDataInterval;
+    clearInterval(currentInterval);
+
+    const interval = setInterval(async () => {
+      await get().getPayloadsExploreData(chainId, address, activePage);
+    }, 20000);
+
+    set({ detailedPayloadsExplorerDataInterval: Number(interval) });
+  },
+  stopDetailedPayloadsExplorerDataPolling: () => {
+    const interval = get().detailedPayloadsExplorerDataInterval;
+    if (interval) {
+      clearInterval(interval);
+      set({ detailedPayloadsExplorerDataInterval: undefined });
+    }
   },
 });

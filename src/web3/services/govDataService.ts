@@ -59,7 +59,7 @@ import {
 } from '../utils/helperToGetProofs';
 import { getVoteSignatureParams } from '../utils/signatures';
 
-export const PAGE_SIZE = 15;
+export const PAGE_SIZE = 12;
 
 function initContracts(clients: ClientsRecord, walletClient?: WalletClient) {
   const govCore = govCoreContract({
