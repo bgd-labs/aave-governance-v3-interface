@@ -1238,10 +1238,10 @@
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
 
-"@bgd-labs/frontend-web3-utils@^0.9.1-b21373ed50a2fca16c87a4a2e33e4e928f54541a.0":
-  version "0.9.1-b21373ed50a2fca16c87a4a2e33e4e928f54541a.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-0.9.1-b21373ed50a2fca16c87a4a2e33e4e928f54541a.0.tgz#7f81299dfb93f544fcb7d72a9fc8e3af155463c8"
-  integrity sha512-WrQKy4koDIlUA0a5zevQIftHiSfpFxxCuGeevo9QLiSyMlQiXnbfSDyoYr0xEgVaDeu/p2Z6HUPJpcpUl2ZxeA==
+"@bgd-labs/frontend-web3-utils@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.0.2.tgz#5022c79dbe7aa6855c9333448678f662aa21cb00"
+  integrity sha512-FjETf1MrT+HE8nCB9zibs3gXZP/acBvTJ/l7EztmrSl/UnnyHsSw0yNzwEU0MrBvjg4ieimQbiWs1PXHr9rP/A==
   dependencies:
     dayjs "^1.11.10"
 
