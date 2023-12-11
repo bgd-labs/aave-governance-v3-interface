@@ -1,14 +1,27 @@
 import { Box } from '@mui/system';
 import Markdown from 'markdown-to-jsx';
+import { Highlight, Prism, themes } from 'prism-react-renderer';
 import React from 'react';
 
 import { Image } from '../primitives/Image';
 import { Link } from './Link';
+import { TextWithEmoji } from './TextWithEmoji';
 
 interface MarkdownContainerProps {
   markdown: string;
   replaceImgSrc?: string;
 }
+
+const loadLangs = async () => {
+  (typeof global !== 'undefined' ? global : window).Prism = Prism;
+
+  await Promise.all([
+    // @ts-ignore
+    await import('prismjs/components/prism-diff'),
+    // @ts-ignore
+    await import('prismjs/components/prism-solidity'),
+  ]);
+};
 
 export function MarkdownContainer({
   markdown,
@@ -86,21 +99,28 @@ export function MarkdownContainer({
                     hover: { textDecoration: 'none' },
                   }}
                   inNewWindow>
-                  {rest.children}
+                  <TextWithEmoji>{rest.children}</TextWithEmoji>
                 </Link>
               );
             },
             h1({ node, ...rest }) {
               return (
                 <Box component="h2" sx={{ typography: 'h2', my: 18 }}>
-                  {rest.children}
+                  <TextWithEmoji>{rest.children}</TextWithEmoji>
                 </Box>
               );
             },
             h2({ node, ...rest }) {
               return (
                 <Box component="h3" sx={{ typography: 'headline', my: 18 }}>
-                  {rest.children}
+                  <TextWithEmoji>{rest.children}</TextWithEmoji>
+                </Box>
+              );
+            },
+            h3({ node, ...rest }) {
+              return (
+                <Box component="h4" sx={{ typography: 'headline' }}>
+                  <TextWithEmoji>{rest.children}</TextWithEmoji>
                 </Box>
               );
             },
@@ -112,7 +132,7 @@ export function MarkdownContainer({
                     typography: 'body',
                     mb: 8,
                   }}>
-                  {rest.children}
+                  <TextWithEmoji>{rest.children}</TextWithEmoji>
                 </Box>
               );
             },
@@ -140,6 +160,35 @@ export function MarkdownContainer({
                   }}>
                   {rest.children}
                 </Box>
+              );
+            },
+            pre: async ({ node, ...rest }) => {
+              await loadLangs();
+
+              return (
+                <Highlight
+                  theme={themes.github}
+                  code={rest.children.props.children}
+                  language={rest.children.props.className.split('-')[1]}>
+                  {({
+                    className,
+                    style,
+                    tokens,
+                    getLineProps,
+                    getTokenProps,
+                  }) => (
+                    <pre style={style}>
+                      {tokens.map((line, i) => (
+                        <div key={i} {...getLineProps({ line })}>
+                          <span>{i + 1}</span>
+                          {line.map((token, key) => (
+                            <span key={key} {...getTokenProps({ token })} />
+                          ))}
+                        </div>
+                      ))}
+                    </pre>
+                  )}
+                </Highlight>
               );
             },
           },
