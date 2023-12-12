@@ -13,6 +13,7 @@ import WarningIcon from '/public/images/icons/warningIcon.svg';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../transactions/store/transactionsSlice';
 import {
   BackButton3D,
   BigButton,
@@ -23,6 +24,7 @@ import {
 } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
+import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import {
@@ -75,7 +77,7 @@ export function DelegatePage() {
     executeTxWithLocalStatuses,
     tx,
   } = useLastTxLocalStatus({
-    type: 'delegate',
+    type: TxType.delegate,
     payload: {
       delegateData: stateDelegateData,
       formDelegateData: submittedFormData,
@@ -156,10 +158,9 @@ export function DelegatePage() {
 
   return (
     <>
-      <Container>
+      <TopPanelContainer>
         <Box
           sx={{
-            mb: 12,
             display: 'flex',
             flexDirection: 'column',
             [theme.breakpoints.up('sm')]: {
@@ -220,7 +221,7 @@ export function DelegatePage() {
               </NoSSR>
             )}
         </Box>
-      </Container>
+      </TopPanelContainer>
 
       <Container>
         {activeWallet?.isActive ? (

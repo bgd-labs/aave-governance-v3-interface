@@ -11,9 +11,11 @@ import { Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../transactions/store/transactionsSlice';
 import { BackButton3D, BigButton, Container } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
+import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { texts } from '../../ui/utils/texts';
 import {
   checkIsGetAddressByENSNamePending,
@@ -96,7 +98,7 @@ export function RepresentationsPage() {
     executeTxWithLocalStatuses,
     tx,
   } = useLastTxLocalStatus({
-    type: 'representations',
+    type: TxType.representations,
     payload: {
       initialData: stateInitialData,
       data: submittedFormData,
@@ -132,11 +134,9 @@ export function RepresentationsPage() {
 
   return (
     <>
-      <Container>
-        <Box sx={{ mb: 12 }}>
-          <BackButton3D onClick={router.back} isVisibleOnMobile />
-        </Box>
-      </Container>
+      <TopPanelContainer>
+        <BackButton3D onClick={router.back} isVisibleOnMobile />
+      </TopPanelContainer>
 
       <Container
         sx={{

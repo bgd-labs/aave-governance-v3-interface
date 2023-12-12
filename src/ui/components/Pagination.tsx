@@ -11,12 +11,14 @@ export interface PaginationProps {
   pageCount: number;
   onPageChange: (value: number) => void;
   forcePage?: number;
+  withoutQuery?: boolean;
 }
 
 export function Pagination({
   pageCount,
   onPageChange,
   forcePage,
+  withoutQuery,
 }: PaginationProps) {
   const theme = useTheme();
   const router = useRouter();
@@ -244,21 +246,18 @@ export function Pagination({
       <ReactPaginate
         onPageChange={(selectedItem) => {
           onPageChange(selectedItem.selected);
-          if (typeof window !== 'undefined') {
-            window.scrollTo(0, 0);
-            if (!isForIPFS) {
-              router.replace(
-                pathname +
-                  '?' +
-                  createQueryString(
-                    'activePage',
-                    (selectedItem.selected + 1).toString(),
-                  ),
-                {
-                  scroll: false,
-                },
-              );
-            }
+          if (!isForIPFS && !withoutQuery) {
+            router.replace(
+              pathname +
+                '?' +
+                createQueryString(
+                  'activePage',
+                  (selectedItem.selected + 1).toString(),
+                ),
+              {
+                scroll: false,
+              },
+            );
           }
         }}
         pageCount={pageCount}

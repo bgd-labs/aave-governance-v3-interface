@@ -137,7 +137,6 @@ export function HelpRepresentationModal({
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpRepresentationModalOpen}
       setIsOpen={setIsHelpRepresentationModalOpen}
@@ -397,7 +396,7 @@ export function HelpRepresentationModal({
               <Box
                 component="h2"
                 sx={{
-                  mb: 20,
+                  mb: 24,
                   display: 'none',
                   [theme.breakpoints.up('sm')]: {
                     typography: 'h1',
@@ -406,9 +405,7 @@ export function HelpRepresentationModal({
                 }}>
                 {texts.faq.representations.txPendingTitle}
               </Box>
-              <Box
-                component="p"
-                sx={{ typography: 'body', lineHeight: '24px !important' }}>
+              <Box component="p" sx={{ typography: 'body' }}>
                 {texts.faq.representations.txPendingDescription}
               </Box>
             </>

@@ -1,21 +1,16 @@
 import { useEffect, useState } from 'react';
 
+import { media } from './themeMUI';
+import { useMediaQuery } from './useMediaQuery';
+
 export function useScrollDirection() {
+  const sm = useMediaQuery(media.sm);
+
   const [scrollDirection, setScrollDirection] = useState<'down' | 'up' | null>(
     null,
   );
 
   let lastScrollY = typeof window !== 'undefined' ? window.pageYOffset : 0;
-
-  const throttle = (fn: () => void, wait: number) => {
-    let time = Date.now();
-    return function () {
-      if (time + wait - Date.now() < 0) {
-        fn();
-        time = Date.now();
-      }
-    };
-  };
 
   const updateScrollDirection = () => {
     if (typeof window !== 'undefined') {
@@ -32,15 +27,12 @@ export function useScrollDirection() {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', throttle(updateScrollDirection, 10)); // add event listener
+    if (typeof window !== 'undefined' && !sm) {
+      window.addEventListener('scroll', updateScrollDirection); // add event listener
     }
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener(
-          'scroll',
-          throttle(updateScrollDirection, 10),
-        ); // clean up
+        window.removeEventListener('scroll', updateScrollDirection); // clean up
       }
     };
   }, [scrollDirection]);

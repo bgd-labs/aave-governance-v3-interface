@@ -1,6 +1,3 @@
-import { appConfig } from '../../utils/appConfig';
-import { getChainName } from './getChainName';
-
 export const texts = {
   proposals: {
     proposalListTitle: 'Proposals',
@@ -61,7 +58,7 @@ export const texts = {
       payload: 'Payload',
       payloads: 'Payloads',
       created: 'Created at',
-      executedIn: 'Executed in',
+      executedIn: 'Execution will be available in',
       execute: 'Execute',
       executedAt: 'Executed at',
       execution: 'Ready for execution',
@@ -74,7 +71,7 @@ export const texts = {
       seatbelt: 'Seatbelt',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status',
-      more: (active: boolean) => (active ? 'Hide' : 'Show more'),
+      more: (active: boolean) => (active ? 'Show less' : 'Show more'),
     },
   },
   proposalActions: {
@@ -113,45 +110,32 @@ export const texts = {
     voteSmallButtonTitle: 'Normal vote',
   },
   proposalHistory: {
-    payloadCreated: (count: number, length: number, chainId: number) =>
+    payloadCreated: (count: number, length: number) =>
       `Payload ${length > 1 ? count : ''}${
         length > 1 ? `/${length}` : ''
-      } was created (${getChainName(chainId)})`,
-    proposalCreated: (id: number) =>
-      `Proposal #${id} was created (${getChainName(appConfig.govCoreChainId)})`,
+      } was created`,
+    proposalCreated: (id: number) => `Proposal #${id} was created`,
     proposalActivated: (id: number) =>
-      `Proposal #${id} was activated for voting (${getChainName(
-        appConfig.govCoreChainId,
-      )})`,
-    proposalOpenForVoting: (id: number, chainId: number) =>
-      `Voting started for proposal #${id} (${getChainName(chainId)})`,
+      `Proposal #${id} was activated for voting`,
+    proposalOpenForVoting: (id: number) => `Voting started for proposal #${id}`,
     votingOver: `Voting is over. <b>Proposal Passed</b>`,
     votingFailed: `<b>Proposal failed</b>, because there were not enough votes <b>for</b>.`,
-    proposalVotingClosed: (id: number, chainId: number) =>
-      `Proposal #${id} voting was closed (${getChainName(chainId)})`,
-    votingResultsSent: `Voting results were sent to Core (${getChainName(
-      appConfig.govCoreChainId,
-    )})`,
-    proposalTimeLocked: (id: number) =>
-      `Proposal #${id} was time-locked (${getChainName(
-        appConfig.govCoreChainId,
-      )})`,
-    proposalExecuted: (id: number) =>
-      `Proposal #${id} was executed (${getChainName(
-        appConfig.govCoreChainId,
-      )})`,
-    payloadTimeLocked: (count: number, length: number, chainId: number) =>
+    proposalVotingClosed: (id: number) => `Proposal #${id} voting was closed`,
+    votingResultsSent: `Voting results were sent to Core`,
+    proposalTimeLocked: (id: number) => `Proposal #${id} was time-locked`,
+    proposalExecuted: (id: number) => `Proposal #${id} was executed `,
+    payloadTimeLocked: (count: number, length: number) =>
       `Payload ${length > 1 ? count : ''}${
         length > 1 ? `/${length}` : ''
-      } was time-locked (${getChainName(chainId)})`,
-    payloadExecuted: (count: number, length: number, chainId: number) =>
+      } was time-locked`,
+    payloadExecuted: (count: number, length: number) =>
       `Payload ${length > 1 ? count : ''}${
         length > 1 ? `/${length}` : ''
-      } was executed (${getChainName(chainId)})`,
-    payloadExpired: (count: number, length: number, chainId: number) =>
+      } was executed`,
+    payloadExpired: (count: number, length: number) =>
       `Payload ${length > 1 ? count : ''}${
         length > 1 ? `/${length}` : ''
-      } expired (${getChainName(chainId)})`,
+      } expired`,
     proposalCanceled: (id: number) => `Proposal #${id} was canceled`,
     proposalExpired: (id: number) =>
       `Proposal #${id} expired, because no one performed the action to execute the proposal or payloads`,
@@ -298,6 +282,7 @@ export const texts = {
     changeRPC: 'Change RPC',
     appMode: 'App mode',
     theme: 'Theme',
+    payloadsExplorer: 'Payloads explorer',
     appModeDefault: 'Default',
     appModeDev: 'Dev',
     appModeExpert: 'Expert',
@@ -354,6 +339,7 @@ export const texts = {
           : `this RPC (${!!rpcUrl && rpcUrl})`
       }. Try to use the application later or go to the RPC change screen.`,
     payloadsNetwork: 'Payloads network',
+    voted: 'Voted',
   },
   terms: {
     description:

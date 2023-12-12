@@ -23,6 +23,7 @@ import { checkIsVotingAvailable } from '../../../representations/store/represent
 import { useStore } from '../../../store';
 import { BasicActionModal } from '../../../transactions/components/BasicActionModal';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { BigButton, ToggleButton, Tooltip } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { GelatoSwitcher } from '../../../ui/components/GelatoSwitcher';
@@ -106,7 +107,7 @@ export function VoteModal({
     setFullTxErrorMessage,
     tx,
   } = useLastTxLocalStatus({
-    type: 'vote',
+    type: TxType.vote,
     payload: {
       proposalId,
       support: !support,
@@ -224,6 +225,7 @@ export function VoteModal({
 
   return (
     <BasicActionModal
+      withMinHeight
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       isTxStart={isTxStart}
@@ -235,12 +237,11 @@ export function VoteModal({
       setFullTxErrorMessage={setFullTxErrorMessage}
       tx={tx}
       topBlock={
-        !isVotingModesInfoOpen && (
+        !isVotingModesInfoOpen &&
+        !isEditVotingTokensOpen && (
           <Box
             sx={{
-              zIndex: isEditVotingTokensOpen ? -1 : 1,
-              opacity: isEditVotingTokensOpen ? 0 : 1,
-              visibility: isEditVotingTokensOpen ? 'hidden' : 'visible',
+              zIndex: 1,
             }}>
             <Box
               sx={{
@@ -254,20 +255,26 @@ export function VoteModal({
               sx={{
                 textAlign: 'center',
                 mt: isTxStart ? -62 : 32,
-                mb: 16,
                 position: 'relative',
                 zIndex: 2,
+                mb: 18,
+                [theme.breakpoints.up('lg')]: {
+                  mb: 24,
+                },
               }}>
-              <Box component="h3" sx={{ typography: 'h3', fontWeight: '600' }}>
+              <Box component="h2" sx={{ typography: 'h2' }}>
                 {proposal.data.title}
               </Box>
             </Box>
             <Box
               sx={{
                 display: 'flex',
-                mb: isTxStart ? 0 : 28,
                 justifyContent: 'center',
                 minHeight: 20,
+                mb: isTxStart ? 0 : 18,
+                [theme.breakpoints.up('lg')]: {
+                  mb: isTxStart ? 0 : 24,
+                },
               }}>
               {isTxStart ? (
                 <VotedState support={!support} isBig inProcess={tx.isError} />
@@ -284,7 +291,15 @@ export function VoteModal({
       }>
       {!isEditVotingTokensOpen && !isVotingModesInfoOpen && (
         <>
-          <Box sx={{ width: 296, m: '0 auto 40px' }}>
+          <Box
+            sx={{
+              width: 300,
+              mx: 'auto',
+              mb: 18,
+              [theme.breakpoints.up('lg')]: {
+                mb: 24,
+              },
+            }}>
             <VoteBar
               type="for"
               value={forVotesWithVotingPower}
@@ -314,11 +329,14 @@ export function VoteModal({
               display: 'flex',
               justifyContent: 'center',
               textAlign: 'center',
-              mb: 32,
+              mb: 18,
+              [theme.breakpoints.up('lg')]: {
+                mb: 24,
+              },
             }}>
             <Box
               component="p"
-              sx={{ typography: 'body', mr: 2, display: 'inline-block' }}>
+              sx={{ typography: 'body', mr: 4, display: 'inline-block' }}>
               {texts.proposals.yourVotingPower}
             </Box>
 
@@ -470,7 +488,10 @@ export function VoteModal({
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexDirection: 'column',
-                    mt: 22,
+                    mt: 18,
+                    [theme.breakpoints.up('lg')]: {
+                      mt: 24,
+                    },
                   }}>
                   <Tooltip
                     color="light"
@@ -503,6 +524,7 @@ export function VoteModal({
                       }
                     />
                   </Tooltip>
+
                   <Box
                     onClick={() => setIsVotingModesInfoOpen(true)}
                     sx={(theme) => ({
@@ -511,7 +533,7 @@ export function VoteModal({
                       justifyContent: 'center',
                       textAlign: 'center',
                       cursor: 'pointer',
-                      mt: 6,
+                      mt: 8,
                       hover: {
                         '.VoteModal__gasLessText': {
                           color: theme.palette.$textSecondary,
@@ -547,6 +569,7 @@ export function VoteModal({
           </Box>
         </>
       )}
+
       {!isEditVotingTokensOpen && isVotingModesInfoOpen && (
         <VotingModesContent onBackClick={setIsVotingModesInfoOpen} />
       )}

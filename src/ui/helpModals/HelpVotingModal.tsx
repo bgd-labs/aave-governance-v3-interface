@@ -1,19 +1,10 @@
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 
-import ProposalTxStartImage from '/public/images/helpModals/proposalTxStart.svg';
-import ProposalTxStartImageDark from '/public/images/helpModals/proposalTxStartDark.svg';
-import ProposalTxVotedAgainstImage from '/public/images/helpModals/proposalTxVotedAgainst.svg';
-import ProposalTxVotedAgainstImageDark from '/public/images/helpModals/proposalTxVotedAgainstDark.svg';
-import ProposalTxVotedForImage from '/public/images/helpModals/proposalTxVotedFor.svg';
-import ProposalTxVotedForImageDark from '/public/images/helpModals/proposalTxVotedForDark.svg';
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
-
 import { ActiveProposalListItem } from '../../proposals/components/proposalList/ActiveProposalListItem';
 import { useStore } from '../../store';
 import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
-import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
@@ -68,7 +59,6 @@ export function HelpVotingModal() {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpVotingModalOpen}
       setIsOpen={setIsHelpVotingModalOpen}
@@ -148,17 +138,10 @@ export function HelpVotingModal() {
                   <Box
                     component="p"
                     sx={{
-                      typography: 'body',
-                      lineHeight: '20px !important',
                       display: 'none',
                       [theme.breakpoints.up('sm')]: {
                         typography: 'body',
-                        lineHeight: '20px !important',
                         display: 'block',
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.secondDescription}
@@ -185,20 +168,10 @@ export function HelpVotingModal() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      svg: { path: { fill: theme.palette.$textWhite } },
                     }}>
                     <Box component="p" sx={{ typography: 'body' }}>
                       {texts.faq.other.next}
                     </Box>
-                    <IconBox
-                      sx={{
-                        width: 20,
-                        height: 20,
-                        ml: 10,
-                        '> svg': { width: 20, height: 20 },
-                      }}>
-                      <ArrowToRight />
-                    </IconBox>
                   </Box>
                 </BigButton>
               </Box>
@@ -297,7 +270,6 @@ export function HelpVotingModal() {
                   mb: 24,
                   textAlign: 'center',
                   [theme.breakpoints.up('sm')]: {
-                    typography: 'h1',
                     display: 'none',
                   },
                 }}>
@@ -313,8 +285,8 @@ export function HelpVotingModal() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    left: -5,
-                    top: 40,
+                    left: 0,
+                    top: 45,
                     [theme.breakpoints.up('sm')]: {
                       left: 25,
                       top: -20,
@@ -323,7 +295,7 @@ export function HelpVotingModal() {
                       display: 'none',
                     },
                   }}>
-                  <HelpModalTooltip maxWidth={316} mobileBottomPadding={54}>
+                  <HelpModalTooltip maxWidth={316} mobileBottomPadding={60}>
                     <Box component="p" sx={{ typography: 'body' }}>
                       {texts.faq.voting.firstTooltip}
                     </Box>
@@ -332,7 +304,7 @@ export function HelpVotingModal() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    left: -5,
+                    left: 0,
                     bottom: 10,
                     [theme.breakpoints.up('sm')]: {
                       left: 25,
@@ -344,7 +316,7 @@ export function HelpVotingModal() {
                   }}>
                   <HelpModalTooltip
                     maxWidth={250}
-                    mobileBottomPadding={50}
+                    mobileBottomPadding={40}
                     countNumber={sm ? 2 : 3}
                     css={{ mr: -20, [theme.breakpoints.up('lg')]: { mr: 10 } }}>
                     <Box component="p" sx={{ typography: 'body' }}>
@@ -364,8 +336,8 @@ export function HelpVotingModal() {
                 <Box
                   sx={{
                     position: 'absolute',
-                    left: -5,
-                    top: 130,
+                    left: 0,
+                    top: 140,
                     [theme.breakpoints.up('sm')]: {
                       left: 'auto',
                       right: 15,
@@ -406,17 +378,11 @@ export function HelpVotingModal() {
                 component="p"
                 sx={{
                   typography: 'body',
-                  lineHeight: '20px !important',
                   mt: 40,
                   textAlign: 'center',
                   [theme.breakpoints.up('sm')]: {
                     typography: 'body',
-                    lineHeight: '20px !important',
                     display: 'none',
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    typography: 'body',
-                    lineHeight: '24px !important',
                   },
                 }}>
                 {texts.faq.voting.secondDescription}
@@ -437,17 +403,17 @@ export function HelpVotingModal() {
             withTxOnMobile={!isFirstStepOnTxMobile}
             txStartImage={
               theme.palette.mode === 'dark'
-                ? ProposalTxStartImageDark
-                : ProposalTxStartImage
+                ? 'images/helpModals/proposalTxStartDark.svg'
+                : 'images/helpModals/proposalTxStart.svg'
             }
             txEndImage={
               support
                 ? theme.palette.mode === 'dark'
-                  ? ProposalTxVotedAgainstImageDark
-                  : ProposalTxVotedAgainstImage
+                  ? 'images/helpModals/proposalTxVotedAgainstDark.svg'
+                  : 'images/helpModals/proposalTxVotedAgainst.svg'
                 : theme.palette.mode === 'dark'
-                  ? ProposalTxVotedForImageDark
-                  : ProposalTxVotedForImage
+                  ? 'images/helpModals/proposalTxVotedForDark.svg'
+                  : 'images/helpModals/proposalTxVotedFor.svg'
             }
             txStartImageMobile={
               theme.palette.mode === 'dark'
@@ -498,16 +464,11 @@ export function HelpVotingModal() {
                     component="p"
                     sx={{
                       typography: 'body',
-                      lineHeight: '20px !important',
                       mb: 12,
                       display: isFirstStepOnTxMobile ? 'block' : 'none',
                       [theme.breakpoints.up('sm')]: {
                         typography: 'body',
                         display: 'block',
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.txStartFirstDescription}
@@ -516,16 +477,11 @@ export function HelpVotingModal() {
                     component="p"
                     sx={{
                       typography: 'body',
-                      lineHeight: '20px !important',
                       mb: 12,
                       display: isFirstStepOnTxMobile ? 'block' : 'none',
                       [theme.breakpoints.up('sm')]: {
                         typography: 'body',
                         display: 'block',
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.txStartSecondDescription}
@@ -534,15 +490,10 @@ export function HelpVotingModal() {
                     component="p"
                     sx={{
                       typography: 'body',
-                      lineHeight: '20px !important',
                       display: isFirstStepOnTxMobile ? 'none' : 'block',
                       [theme.breakpoints.up('sm')]: {
                         typography: 'body',
                         display: 'block',
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        typography: 'body',
-                        lineHeight: '24px !important',
                       },
                     }}>
                     {texts.faq.voting.txStartThirdDescription}
@@ -566,20 +517,10 @@ export function HelpVotingModal() {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          svg: { path: { fill: theme.palette.$textWhite } },
                         }}>
                         <Box component="p" sx={{ typography: 'body' }}>
                           {texts.faq.other.next}
                         </Box>
-                        <IconBox
-                          sx={{
-                            width: 20,
-                            height: 20,
-                            ml: 10,
-                            '> svg': { width: 20, height: 20 },
-                          }}>
-                          <ArrowToRight />
-                        </IconBox>
                       </Box>
                     </BigButton>
                   </Box>

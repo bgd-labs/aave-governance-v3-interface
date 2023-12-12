@@ -25,7 +25,6 @@ export function HelpDelegationVP() {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       isOpen={isHelpDelegationVotingPowerModalOpen}
       setIsOpen={setIsHelpDelegationVotingPowerModalOpen}
       maxWidth={helpModalWidth}
@@ -62,9 +61,11 @@ export function HelpDelegationVP() {
               {texts.faq.delegate.votingPowerWarning}
             </HelpModalText>
 
-            <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
-              {texts.faq.other.gotIt}
-            </BigButton>
+            <Box sx={{ mt: 24, minHeight: 60 }}>
+              <BigButton alwaysWithBorders onClick={handleClick}>
+                {texts.faq.other.gotIt}
+              </BigButton>
+            </Box>
           </Box>
         </HelpModalCaption>
       </HelpModalContainer>

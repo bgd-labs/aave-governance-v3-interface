@@ -50,9 +50,8 @@ const Text = ({
           <Box
             component="p"
             sx={{
-              typography: 'h3',
+              typography: 'h2',
               ml: 4,
-              position: 'relative',
             }}>
             by{' '}
             {isEnsName(ens)

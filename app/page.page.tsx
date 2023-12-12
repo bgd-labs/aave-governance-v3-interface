@@ -1,9 +1,17 @@
-import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  CachedProposalDataItemWithId,
+  FinishedProposalForList,
+  getGovCoreConfigs,
+} from '@bgd-labs/aave-governance-ui-helpers';
 import { Metadata } from 'next';
 import React from 'react';
 
+import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
 import { ComingSoonPage } from '../src/ui/pages/ComingSoonPage';
 import { metaTexts } from '../src/ui/utils/metaTexts';
+import { appConfig } from '../src/utils/appConfig';
+import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
+import { initialClients } from '../src/utils/initialClients';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -103,17 +111,6 @@ export default async function Page({
   //     },
   //   } as CachedProposalDataItemWithId;
   // });
-  //
-  // return (
-  //   <ProposalPageSSR
-  //     cachedProposals={data.proposals}
-  //     cachedTotalProposalCount={data.totalProposalCount}
-  //     govCoreConfigs={configs}
-  //     contractsConstants={contractsConstants}
-  //     cachedProposalsData={cachedProposalsData}
-  //     cachedActiveIds={activeIds}
-  //   />
-  // );
 
   return <ComingSoonPage />;
 }

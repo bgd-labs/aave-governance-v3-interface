@@ -14,26 +14,25 @@ import { Hex, toHex } from 'viem';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
-import CopyIcon from '/public/images/icons/copy.svg';
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { SeatBeltReportModal } from '../../../createByParams/components/SeatBeltReportModal';
-import { NewPayload } from '../../../createByParams/store/createByParamsSlice';
+import { SeatBeltReportModal } from '../../../proposalCreateOverview/components/SeatBeltReportModal';
+import { NewPayload } from '../../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { useStore } from '../../../store';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
 import {
-  BoxWith3D,
-  CopyToClipboard,
-  Link,
-  SmallButton,
-  Timer,
-} from '../../../ui';
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
+import { BoxWith3D, Link, SmallButton, Timer } from '../../../ui';
+import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
-import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
+import { formatPayloadData } from '../../utils/formatPayloadData';
+import { PayloadActions } from './PayloadActions';
+import { PayloadCreator } from './PayloadCreator';
 
 interface ProposalPayloadsProps {
   proposalId: number;
@@ -47,9 +46,15 @@ interface ProposalPayloadsProps {
 export function PayloadItemStatusInfo({
   title,
   children,
+  isSecondary,
+  titleTypography,
+  textTypography,
 }: {
   title?: string;
   children: ReactNode;
+  isSecondary?: boolean;
+  titleTypography?: string;
+  textTypography?: string;
 }) {
   return (
     <Box
@@ -57,12 +62,35 @@ export function PayloadItemStatusInfo({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-end',
-        my: 4,
+        color: isSecondary ? '$textSecondary' : '$text',
       }}>
       {title && (
-        <Box sx={{ typography: 'descriptorAccent', mr: 6 }}>{title}</Box>
+        <Box sx={{ typography: titleTypography || 'descriptorAccent', mr: 6 }}>
+          {title}
+        </Box>
       )}
-      <Box sx={{ typography: 'descriptor' }}>{children}</Box>
+      <Box sx={{ typography: textTypography || 'descriptor' }}>{children}</Box>
+    </Box>
+  );
+}
+
+export function PayloadError({ payload }: { payload: NewPayload }) {
+  return (
+    <Box>
+      <Box sx={{ wordBreak: 'break-word' }}>
+        Cannot get payload id {payload.id}
+        <br />
+        <br />
+        payloadController:{' '}
+        <Link
+          css={{ display: 'inline-block' }}
+          href={`${chainInfoHelper.getChainParameters(
+            payload.chainId || appConfig.govCoreChainId,
+          ).blockExplorers?.default.url}/address/${payload.payloadsController}`}
+          inNewWindow>
+          {payload.payloadsController}
+        </Link>
+      </Box>
     </Box>
   );
 }
@@ -100,7 +128,6 @@ function PayloadItem({
 }) {
   const theme = useTheme();
   const store = useStore();
-  const now = dayjs().unix();
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
@@ -113,58 +140,33 @@ function PayloadItem({
     }
   }, [isFullView]);
 
-  const isPayloadOnInitialState =
-    payload.queuedAt <= 0 &&
-    !isProposalExecuted &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
-  const isPayloadTimeLocked =
-    payload.queuedAt <= 0 &&
-    isProposalExecuted &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
-  const payloadExecutionTime =
-    payload.queuedAt <= 0
-      ? proposalQueuingTime + payload.delay
-      : payload.queuedAt + payload.delay;
-
-  const isPayloadReadyForExecution =
-    isProposalExecuted &&
-    payload.queuedAt > 0 &&
-    now > payload.queuedAt + payload.delay &&
-    payload.cancelledAt <= 0 &&
-    payload.state !== PayloadState.Expired;
-
-  const isExecuted = payload.executedAt > 0;
-
-  let payloadExpiredTime = 0;
-  if (payload?.state && payload.state === PayloadState.Created) {
-    payloadExpiredTime = payload.expirationTime;
-  } else if (payload?.state && payload.state === PayloadState.Queued) {
-    payloadExpiredTime = payload.queuedAt + payload.delay + payload.gracePeriod;
-  }
-
-  let payloadNumber = forCreate
-    ? `id #${payload.id}`
-    : totalPayloadsCount > 1
-      ? `${payloadCount}/${totalPayloadsCount}`
-      : '';
+  const {
+    isPayloadOnInitialState,
+    isPayloadTimeLocked,
+    payloadExecutionTime,
+    isPayloadReadyForExecution,
+    isExecuted,
+    payloadExpiredTime,
+    payloadNumber,
+    isFinalStatus,
+  } = formatPayloadData({
+    payload,
+    payloadCount,
+    totalPayloadsCount,
+    forCreate,
+    isProposalExecuted,
+    proposalQueuingTime,
+  });
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;
   const isArrowVisibleForFirstPayload = totalPayloadsCount > 1 && isFullView;
-  const isFinalStatus =
-    isExecuted ||
-    payload.cancelledAt > 0 ||
-    payload.state === PayloadState.Expired;
 
   const tx =
     store.activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
       store.activeWallet.address,
-      'executePayload',
+      TxType.executePayload,
       {
         proposalId,
         payloadId: payload.id,
@@ -196,6 +198,8 @@ function PayloadItem({
             }
           }}
           sx={{
+            px: 6,
+            pb: 4,
             cursor:
               (isArrowVisibleForFirstPayload || inList) && !forCreate
                 ? 'pointer'
@@ -229,21 +233,15 @@ function PayloadItem({
               <Box sx={{ typography: 'body' }}>
                 {texts.proposals.payloadsDetails.payload} {payloadNumber}
               </Box>
+              <CopyAndExternalIconsSet
+                iconSize={12}
+                copyTooltipText={toHex(payload.id)}
+                copyText={toHex(payload.id)}
+                sx={{ '.CopyAndExternalIconsSet__copy': { ml: 4 } }}
+              />
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {!!report && forCreate && (
-                <SmallButton
-                  disabled={tx?.status === TransactionStatus.Success}
-                  loading={tx?.pending}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSeatbeltModalOpen(true);
-                  }}>
-                  {texts.proposals.payloadsDetails.seatbelt}
-                </SmallButton>
-              )}
-
               {isPayloadReadyForExecution && !isExecuted && (
                 <>
                   {store.activeWallet?.isActive ? (
@@ -285,27 +283,9 @@ function PayloadItem({
             </Box>
           </Box>
 
-          <Box>
+          <Box sx={{ pl: 18, mt: 4 }}>
             {forCreate && (
               <>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    mb: 4,
-                    mt: 6,
-                  }}>
-                  <Box sx={{ typography: 'descriptorAccent' }}>
-                    Payload id / chain id (Hex):{' '}
-                    <Box
-                      sx={{
-                        display: 'inline',
-                        typography: 'headline',
-                      }}>
-                      {toHex(payload.id)} / {toHex(payload.chainId)}
-                    </Box>
-                  </Box>
-                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
                   <Box sx={{ typography: 'descriptorAccent' }}>
                     {texts.proposals.payloadsDetails.accessLevel}:{' '}
@@ -427,141 +407,35 @@ function PayloadItem({
               alignItems: 'flex-start',
               justifyContent: 'space-between',
               flexDirection: 'column',
-              mt: 4,
+              pl: 24,
             }}>
-            {creator && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
-                <Box
-                  sx={{
-                    typography: 'descriptorAccent',
-                    wordBreak: 'break-word',
-                  }}>
-                  {texts.proposals.payloadsDetails.creator}:{' '}
-                  <Box sx={{ typography: 'descriptor' }}>
-                    <Link
-                      css={{ display: 'inline-flex', alignItems: 'center' }}
-                      inNewWindow
-                      href={`${chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default.url}/address/${creator}`}>
-                      {textCenterEllipsis(creator, 15, 10)}
-                      <IconBox
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          ml: 2,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                            path: {
-                              '&:first-of-type': {
-                                stroke: theme.palette.$text,
-                              },
-                              '&:last-of-type': {
-                                fill: theme.palette.$text,
-                              },
-                            },
-                          },
-                        }}>
-                        <LinkIcon />
-                      </IconBox>
-                    </Link>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-
             {!isFinalStatus && (
-              <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.expiredIn}>
-                <Box sx={{ typography: 'descriptor' }}>
-                  <Timer timestamp={payloadExpiredTime} />
-                </Box>
-              </PayloadItemStatusInfo>
+              <Box sx={{ mb: 4 }}>
+                <PayloadItemStatusInfo
+                  isSecondary
+                  title={texts.proposals.payloadsDetails.expiredIn}>
+                  <Box sx={{ typography: 'descriptor' }}>
+                    <Timer timestamp={payloadExpiredTime} />
+                  </Box>
+                </PayloadItemStatusInfo>
+              </Box>
             )}
 
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Box sx={{ typography: 'descriptorAccent' }}>
-                {texts.proposals.payloadsDetails.actions(
-                  payload.actionAddresses?.length || 0,
-                )}
-              </Box>
-              <Box
-                component="ul"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  listStyleType: 'disc',
-                  pl: 12,
-                }}>
-                {payload.actionAddresses?.map((address, index) => (
-                  <Box
-                    sx={{ display: 'inline-flex', alignItems: 'center', mt: 3 }}
-                    key={index}>
-                    <Link
-                      css={{ display: 'inline-flex', alignItems: 'center' }}
-                      inNewWindow
-                      href={`${chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default.url}/address/${address}${
-                        forCreate ? '#code' : ''
-                      }`}>
-                      <Box
-                        component="li"
-                        sx={{
-                          typography: 'descriptor',
-                          transition: 'all 0.2s ease',
-                          hover: { opacity: 0.7 },
-                        }}>
-                        {textCenterEllipsis(address, 6, 6)}
-                      </Box>
+            {creator && (
+              <PayloadCreator
+                payload={payload}
+                ellipsisFrom={12}
+                sx={{ color: '$textSecondary', a: { color: '$textSecondary' } }}
+              />
+            )}
 
-                      <IconBox
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          ml: 2,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                            path: {
-                              '&:first-of-type': {
-                                stroke: theme.palette.$text,
-                              },
-                              '&:last-of-type': {
-                                fill: theme.palette.$text,
-                              },
-                            },
-                          },
-                        }}>
-                        <LinkIcon />
-                      </IconBox>
-                    </Link>
-
-                    <CopyToClipboard copyText={address}>
-                      <IconBox
-                        sx={{
-                          cursor: 'pointer',
-                          width: 10,
-                          height: 10,
-                          '> svg': {
-                            width: 10,
-                            height: 10,
-                          },
-                          ml: 3,
-                          path: {
-                            transition: 'all 0.2s ease',
-                            stroke: theme.palette.$textSecondary,
-                          },
-                          hover: { path: { stroke: theme.palette.$main } },
-                        }}>
-                        <CopyIcon />
-                      </IconBox>
-                    </CopyToClipboard>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
+            <PayloadActions
+              payload={payload}
+              forCreate={forCreate}
+              withLink
+              setIsSeatbeltModalOpen={setIsSeatbeltModalOpen}
+              report={report}
+            />
           </Box>
         )}
       </Box>
@@ -595,40 +469,25 @@ export function ProposalPayloads({
       borderSize={10}
       contentColor="$mainLight"
       bottomBorderColor="$light"
-      wrapperCss={{ mb: 12 }}
+      wrapperCss={{ mb: 18, [theme.breakpoints.up('lg')]: { mb: 24 } }}
       css={{
-        p: '20px 0 20px 20px',
-        [theme.breakpoints.up('lg')]: { p: '24px 0 24px 30px' },
+        p: '18px 0 18px 12px',
+        [theme.breakpoints.up('lg')]: {
+          p: '24px 0 24px 24px',
+        },
       }}>
       <Box
         sx={(theme) => ({
-          pr: 20,
+          pr: 12,
           maxHeight: payloads.length > 2 && !forCreate ? 200 : 'unset',
           overflowY: payloads.length > 2 && !forCreate ? 'auto' : undefined,
           [theme.breakpoints.up('lg')]: {
             maxHeight: payloads.length > 2 && !forCreate ? 300 : 'unset',
-            pr: 30,
+            pr: 24,
           },
         })}>
         {isFirstPayloadError ? (
-          <Box>
-            <Box sx={{ wordBreak: 'break-word' }}>
-              Cannot get payload id {payloads[0].id}
-              <br />
-              <br />
-              payloadController:{' '}
-              <Link
-                css={{ display: 'inline-block' }}
-                href={`${chainInfoHelper.getChainParameters(
-                  payloads[0].chainId || appConfig.govCoreChainId,
-                ).blockExplorers?.default.url}/address/${
-                  payloads[0].payloadsController
-                }`}
-                inNewWindow>
-                {payloads[0].payloadsController}
-              </Link>
-            </Box>
-          </Box>
+          <PayloadError payload={payloads[0]} />
         ) : (
           <PayloadItem
             proposalId={proposalId}
@@ -649,28 +508,13 @@ export function ProposalPayloads({
         {!!formattedPayloadsForList.length && isFullView && (
           <>
             {formattedPayloadsForList.map((payload, index) => {
-              const isError = false;
+              const isError =
+                createPayloadsErrors[
+                  `${payload.payloadsController}_${proposalId}`
+                ];
+
               if (isError) {
-                return (
-                  <Box key={`${payload.id}_${payload.chainId}`}>
-                    <Box sx={{ wordBreak: 'break-word' }}>
-                      Cannot get payload id {payload.id}
-                      <br />
-                      <br />
-                      payloadController:{' '}
-                      <Link
-                        css={{ display: 'inline-block' }}
-                        href={`${chainInfoHelper.getChainParameters(
-                          payload.chainId || appConfig.govCoreChainId,
-                        ).blockExplorers?.default.url}/address/${
-                          payload.payloadsController
-                        }`}
-                        inNewWindow>
-                        {payload.payloadsController}
-                      </Link>
-                    </Box>
-                  </Box>
-                );
+                return <PayloadError payload={payload} />;
               } else {
                 return (
                   <PayloadItem
@@ -699,11 +543,14 @@ export function ProposalPayloads({
       {!forCreate && (
         <Box
           sx={{
-            mt: 10,
+            mt: 12,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            pr: 20,
+            pr: 12,
+            [theme.breakpoints.up('lg')]: {
+              pr: 24,
+            },
           }}>
           <Box
             onClick={() => setFullView(!isFullView)}

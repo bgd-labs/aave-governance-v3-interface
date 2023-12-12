@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
 import {
   ActionModalContentWrapper,
@@ -16,20 +17,27 @@ export function ExecutePayloadModal({
   setIsOpen,
   proposalId,
   payload,
+  withController,
 }: ActionModalBasicTypes & {
   payload: InitialPayload;
+  withController?: boolean;
 }) {
   const executePayload = useStore((state) => state.executePayload);
 
   return (
     <ActionModal
-      type="executePayload"
+      type={TxType.executePayload}
       payload={{
         proposalId,
         payloadId: payload.id,
         chainId: payload.chainId,
+        payloadController: withController
+          ? payload.payloadsController
+          : undefined,
       }}
-      callbackFunction={async () => await executePayload(proposalId, payload)}
+      callbackFunction={async () =>
+        await executePayload(proposalId, payload, withController)
+      }
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       actionButtonTitle={texts.other.confirm}

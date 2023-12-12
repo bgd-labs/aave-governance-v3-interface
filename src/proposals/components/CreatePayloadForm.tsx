@@ -7,6 +7,7 @@ import { FieldArray } from 'react-final-form-arrays';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Input } from '../../ui';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { SelectField } from '../../ui/components/SelectField';
@@ -62,7 +63,7 @@ export function CreatePayloadForm() {
     setFullTxErrorMessage,
     tx,
   } = useLastTxLocalStatus({
-    type: 'createPayload',
+    type: TxType.createPayload,
     payload: {
       payloadId: initialPayloadsCount[payloadsController],
       chainId,

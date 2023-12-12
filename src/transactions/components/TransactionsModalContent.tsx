@@ -9,17 +9,17 @@ import { TransactionInfoItem } from './TransactionInfoItem';
 interface TransactionsModalContentProps {
   allTransactions: AllTransactions;
   onBackButtonClick: () => void;
+  forTest?: boolean;
 }
 
 export function TransactionsModalContent({
   allTransactions,
   onBackButtonClick,
+  forTest,
 }: TransactionsModalContentProps) {
   return (
     <Box>
-      <Box
-        component="h3"
-        sx={{ typography: 'h3', textAlign: 'left', fontWeight: '600' }}>
+      <Box component="h2" sx={{ typography: 'h2', textAlign: 'left' }}>
         {texts.transactions.allTransactions}
       </Box>
 
@@ -34,8 +34,14 @@ export function TransactionsModalContent({
       <Box
         sx={(theme) => ({
           overflowY: 'scroll',
-          height: 420,
+          height: forTest ? 191 : 440,
           pr: 20,
+          [theme.breakpoints.up('sm')]: {
+            height: forTest ? 128 : 440,
+          },
+          [theme.breakpoints.up('lg')]: {
+            height: forTest ? 139 : 440,
+          },
         })}>
         {allTransactions.map((tx, index) => (
           <TransactionInfoItem key={index} tx={tx} />

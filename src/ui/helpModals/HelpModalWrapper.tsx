@@ -27,12 +27,8 @@ export function HelpModalWrapper({
       setIsOpen={
         typeof setIsOpen !== 'undefined' ? setIsOpen : setIsHelpModalOpen
       }
-      withoutAnimationWhenOpen
       maxWidth={500}
       onBackButtonClick={onBackButtonClick}
-      contentCss={{
-        p: '55px 10px !important',
-      }}
       withCloseButton>
       <Box
         sx={{
@@ -41,7 +37,7 @@ export function HelpModalWrapper({
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Box sx={{ mb: 20, width: 234, height: 216 }}>{image}</Box>
+        <Box sx={{ mb: 24, width: 234, height: 216 }}>{image}</Box>
         <Box
           sx={{
             width: '80%',

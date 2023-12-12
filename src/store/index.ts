@@ -5,10 +5,6 @@ import { create, StoreApi } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import {
-  createByParamsSlice,
-  ICreateByParamsSlice,
-} from '../createByParams/store/createByParamsSlice';
-import {
   createDelegationSlice,
   IDelegationSlice,
 } from '../delegate/store/delegationSlice';
@@ -16,6 +12,10 @@ import {
   createPayloadsExplorerSlice,
   IPayloadsExplorerSlice,
 } from '../payloadsExplorer/store/payloadsExplorerSlice';
+import {
+  createProposalCreateOverviewSlice,
+  IProposalCreateOverviewSlice,
+} from '../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import {
   createProposalCreateOverviewV2Slice,
   IProposalCreateOverviewV2Slice,
@@ -59,7 +59,7 @@ export type RootState = IProposalsSlice &
   IRepresentationsSlice &
   IEnsSlice &
   IRpcSwitcherSlice &
-  ICreateByParamsSlice &
+  IProposalCreateOverviewSlice &
   IPayloadsExplorerSlice &
   IProposalCreateOverviewV2Slice;
 
@@ -77,7 +77,7 @@ const createRootSlice = (
   ...createRepresentationsSlice(set, get),
   ...createEnsSlice(set, get),
   ...createRpcSwitcherSlice(set, get),
-  ...createByParamsSlice(set, get),
+  ...createProposalCreateOverviewSlice(set, get),
   ...createPayloadsExplorerSlice(set, get),
   ...createProposalCreateOverviewV2Slice(set, get),
 });

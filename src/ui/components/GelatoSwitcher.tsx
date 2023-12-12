@@ -38,9 +38,13 @@ const TextBox = ({
         zIndex: 2,
         left:
           value && !isHovered && !isClicked
-            ? 3
+            ? isOff
+              ? 2
+              : 4
             : value && isHovered && !isClicked
-              ? 1
+              ? isOff
+                ? 0
+                : 2
               : 0,
         bottom:
           value && !isHovered && !isClicked

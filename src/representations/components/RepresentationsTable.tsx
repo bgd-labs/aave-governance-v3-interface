@@ -46,98 +46,87 @@ export function RepresentationsTable({
     : [];
 
   return (
-    <>
-      <Box
-        sx={{
-          px: 12,
-          [theme.breakpoints.up('xsm')]: {
-            px: 18,
-          },
-          [theme.breakpoints.up('md')]: {
-            px: 30,
-          },
-        }}>
-        <Box sx={{ pt: 15 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TableHeaderTitle
-              title={texts.representationsPage.tableHeaderFirstTitle}
-              css={{
-                maxWidth: 250,
-                display: !isEdit ? 'block' : 'none',
-                [theme.breakpoints.up('sm')]: {
-                  display: 'block',
-                  minWidth: 250,
-                },
-                [theme.breakpoints.up('md')]: {
-                  maxWidth: 300,
-                  minWidth: 300,
-                },
-              }}
-            />
-            <TableHeaderTitle
-              css={{
-                display: isEdit ? 'block' : 'none',
-                [theme.breakpoints.up('sm')]: { display: 'none' },
-              }}
-              title={texts.other.edit}
-              center
-            />
-            <TableHeaderTitle
-              css={{
-                display: !isEdit ? 'block' : 'none',
-                [theme.breakpoints.up('sm')]: {
-                  display: 'block',
-                },
-              }}
-              title={texts.representationsPage.tableHeaderRepresented}
-              right
-            />
-          </Box>
-          <Divider sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }} />
+    <Box>
+      <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <TableHeaderTitle
+            title={texts.representationsPage.tableHeaderFirstTitle}
+            css={{
+              maxWidth: 250,
+              display: !isEdit ? 'block' : 'none',
+              [theme.breakpoints.up('sm')]: {
+                display: 'block',
+                minWidth: 250,
+              },
+              [theme.breakpoints.up('md')]: {
+                maxWidth: 300,
+                minWidth: 300,
+              },
+            }}
+          />
+          <TableHeaderTitle
+            css={{
+              display: isEdit ? 'block' : 'none',
+              [theme.breakpoints.up('sm')]: { display: 'none' },
+            }}
+            title={texts.other.edit}
+            center
+          />
+          <TableHeaderTitle
+            css={{
+              display: !isEdit ? 'block' : 'none',
+              [theme.breakpoints.up('sm')]: {
+                display: 'block',
+              },
+            }}
+            title={texts.representationsPage.tableHeaderRepresented}
+            right
+          />
         </Box>
+        <Divider sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }} />
+      </Box>
 
-        {isEdit ? (
-          dataForInputs.length &&
-          dataForInputs.map((item) => {
-            return (
+      {isEdit ? (
+        dataForInputs.length &&
+        dataForInputs.map((item) => {
+          return (
+            <TableItem
+              key={item.inputName}
+              isEdit={isEdit}
+              isViewChanges={isViewChanges}
+              loading={loading}
+              chainId={item.chainId}
+              representativeAddress={item.representative}
+              inputName={item.inputName}
+              forHelp={forHelp}
+            />
+          );
+        })
+      ) : (
+        <>
+          {loading ? (
+            <TableItem loading={loading} />
+          ) : (
+            Object.entries(representationData).map((data) => (
               <TableItem
-                key={item.inputName}
+                key={data[0]}
                 isEdit={isEdit}
                 isViewChanges={isViewChanges}
                 loading={loading}
-                chainId={item.chainId}
-                representativeAddress={item.representative}
-                inputName={item.inputName}
+                chainId={+data[0]}
+                representativeAddress={data[1].representative}
+                formData={formData}
                 forHelp={forHelp}
               />
-            );
-          })
-        ) : (
-          <>
-            {loading ? (
-              <TableItem loading={loading} />
-            ) : (
-              Object.entries(representationData).map((data) => (
-                <TableItem
-                  key={data[0]}
-                  isEdit={isEdit}
-                  isViewChanges={isViewChanges}
-                  loading={loading}
-                  chainId={+data[0]}
-                  representativeAddress={data[1].representative}
-                  formData={formData}
-                  forHelp={forHelp}
-                />
-              ))
-            )}
-          </>
-        )}
-      </Box>
-    </>
+            ))
+          )}
+        </>
+      )}
+    </Box>
   );
 }

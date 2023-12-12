@@ -41,6 +41,7 @@ export function RepresentationsModal({
 }) {
   return (
     <BasicActionModal
+      minHeight={380}
       isTxStart={isTxStart}
       setIsTxStart={setIsTxStart}
       setError={setError}

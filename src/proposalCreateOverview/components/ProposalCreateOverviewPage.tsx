@@ -6,23 +6,30 @@ import React, { useEffect } from 'react';
 import { Hex, zeroAddress } from 'viem';
 
 import { CreateProposalModal } from '../../proposals/components/actionModals/CreateProposalModal';
+import { BlockWrapper } from '../../proposals/components/BlockWrapper';
 import { Details } from '../../proposals/components/proposal/Details';
 import { DetailsShareLinks } from '../../proposals/components/proposal/DetailsShareLinks';
+import { LeftPanelWrapper } from '../../proposals/components/proposal/LeftPanelWrapper';
 import { ProposalPayloads } from '../../proposals/components/proposal/ProposalPayloads';
+import { RightPanelWrapper } from '../../proposals/components/proposal/RightPanelWrapper';
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
-import { BackButton3D, BigButton, BoxWith3D, Container, NoSSR } from '../../ui';
+import { TxType } from '../../transactions/store/transactionsSlice';
+import { BackButton3D, BigButton, Container, NoSSR } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
+import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { ToTopButton } from '../../ui/components/ToTopButton';
 import { getChainName } from '../../ui/utils/getChainName';
 import { texts } from '../../ui/utils/texts';
 import { InitialParams } from '../types';
 
-interface CreateByParamsPageProps {
+interface ProposalCreateOverviewPageProps {
   initialParams: InitialParams;
 }
 
-export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
+export function ProposalCreateOverviewPage({
+  initialParams,
+}: ProposalCreateOverviewPageProps) {
   const router = useRouter();
   const theme = useTheme();
 
@@ -73,7 +80,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     setFullTxErrorMessage,
     tx,
   } = useLastTxLocalStatus({
-    type: 'createProposal',
+    type: TxType.createProposal,
     payload: { proposalId: newProposalId },
   });
 
@@ -96,14 +103,33 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
     <>
       <Container>
         <Box>
-          <Box
-            sx={{ display: 'flex', [theme.breakpoints.up('sm')]: { mb: 12 } }}>
-            <BackButton3D onClick={router.back} />
-          </Box>
+          <TopPanelContainer withoutContainer>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
+              }}>
+              <BackButton3D
+                onClick={router.back}
+                alwaysVisible
+                alwaysWithBorders
+                isVisibleOnMobile
+              />
+              {newIpfsData &&
+                !!(payloads || []).length &&
+                initialParams.votingPortal !== zeroAddress &&
+                !Object.keys(createPayloadsErrors).length && (
+                  <BigButton
+                    disabled={tx.isSuccess}
+                    loading={tx.pending}
+                    onClick={handleCreate}>
+                    {texts.proposalActions.createProposal}
+                  </BigButton>
+                )}
+            </Box>
+          </TopPanelContainer>
 
-          <Box component="h2" sx={{ typography: 'h2', mb: 12 }}>
-            Preview
-          </Box>
           <Box
             sx={{
               position: 'relative',
@@ -111,7 +137,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
               [theme.breakpoints.up('sm')]: { display: 'none' },
             }}>
             <Box sx={{ position: 'relative', zIndex: 2 }}>
-              {!newIpfsData ? (
+              {!newIpfsData && !newIpfsDataError ? (
                 <>
                   <Box
                     sx={{
@@ -133,16 +159,18 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                   </Box>
                 </>
               ) : (
-                <>
-                  <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
-                    {newIpfsData.title}
-                  </Box>
-                  <DetailsShareLinks
-                    ipfs={newIpfsData}
-                    ipfsError={newIpfsDataError}
-                    forCreate
-                  />
-                </>
+                !newIpfsDataError && (
+                  <>
+                    <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
+                      {newIpfsData.title}
+                    </Box>
+                    <DetailsShareLinks
+                      ipfs={newIpfsData}
+                      ipfsError={newIpfsDataError}
+                      forCreate
+                    />
+                  </>
+                )
               )}
             </Box>
           </Box>
@@ -159,25 +187,11 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                 alignItems: 'flex-start',
               },
             }}>
-            <Box
-              sx={{
-                width: '100%',
-                [theme.breakpoints.up('sm')]: {
-                  width: 290,
-                  mr: 15,
-                },
-                [theme.breakpoints.up('lg')]: {
-                  width: 340,
-                },
-              }}>
+            <LeftPanelWrapper>
               <NoSSR>
                 {(payloads || []).every((payload) => !!payload) &&
                   payloads.some((payload) => !payload?.state) && (
-                    <BoxWith3D
-                      wrapperCss={{ mb: 12 }}
-                      borderSize={10}
-                      contentColor="$mainAgainst"
-                      css={{ p: '15px 20px' }}>
+                    <BlockWrapper contentColor="$mainAgainst">
                       {payloads
                         .filter((payload) => !payload?.state)
                         .map((payload) => (
@@ -197,7 +211,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                             created
                           </Box>
                         ))}
-                    </BoxWith3D>
+                    </BlockWrapper>
                   )}
               </NoSSR>
 
@@ -212,14 +226,7 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                     forCreate
                   />
                 ) : (
-                  <BoxWith3D
-                    borderSize={10}
-                    contentColor="$mainLight"
-                    bottomBorderColor="$light"
-                    wrapperCss={{ mb: 12 }}
-                    css={{
-                      p: '15px 20px 15px 20px',
-                    }}>
+                  <BlockWrapper contentColor="$mainLight" toBottom>
                     {initialParams.payloads.map((value, index) => {
                       return (
                         <Box key={index} sx={{ mb: 12 }}>
@@ -231,40 +238,18 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                         </Box>
                       );
                     })}
-                  </BoxWith3D>
+                  </BlockWrapper>
                 )}
               </NoSSR>
-            </Box>
+            </LeftPanelWrapper>
 
-            <BoxWith3D
-              className="ProposalLoading__SSR"
-              borderSize={10}
-              contentColor="$mainLight"
-              wrapperCss={{
-                flex: 1,
-                maxWidth: '100%',
-                [theme.breakpoints.up('sm')]: {
-                  maxWidth: 'calc(100% - 305px)',
-                },
-                [theme.breakpoints.up('lg')]: {
-                  maxWidth: 'calc(100% - 355px)',
-                },
-              }}
-              css={{
-                p: '20px',
-                [theme.breakpoints.up('md')]: {
-                  p: '25px 35px',
-                },
-                [theme.breakpoints.up('lg')]: {
-                  p: '40px 40px 40px 48px',
-                },
-              }}>
+            <RightPanelWrapper onlyChildren={!!newIpfsDataError}>
               <Box
                 sx={{
                   display: 'none',
                   [theme.breakpoints.up('sm')]: { display: 'block' },
                 }}>
-                {!newIpfsData ? (
+                {!newIpfsData && !newIpfsDataError ? (
                   <>
                     <Box
                       sx={{
@@ -286,49 +271,26 @@ export function CreateByParamsPage({ initialParams }: CreateByParamsPageProps) {
                     </Box>
                   </>
                 ) : (
-                  <>
-                    <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
-                      {newIpfsData.title}
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
-                      <DetailsShareLinks
-                        ipfs={newIpfsData}
-                        ipfsError={newIpfsDataError}
-                        forCreate
-                      />
-                    </Box>
-                  </>
+                  !newIpfsDataError && (
+                    <>
+                      <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
+                        {newIpfsData.title}
+                      </Box>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
+                        <DetailsShareLinks
+                          ipfs={newIpfsData}
+                          ipfsError={newIpfsDataError}
+                          forCreate
+                        />
+                      </Box>
+                    </>
+                  )
                 )}
               </Box>
 
               <Details ipfs={newIpfsData} ipfsError={newIpfsDataError} />
-            </BoxWith3D>
-          </Box>
-
-          <Box
-            sx={{
-              position: 'relative',
-              mt: 18,
-            }}>
-            {newIpfsData &&
-              !!(payloads || []).length &&
-              initialParams.votingPortal !== zeroAddress &&
-              !Object.keys(createPayloadsErrors).length && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mt: 24,
-                  }}>
-                  <BigButton
-                    disabled={tx.isSuccess}
-                    loading={tx.pending}
-                    onClick={handleCreate}>
-                    {texts.proposalActions.createProposal}
-                  </BigButton>
-                </Box>
-              )}
+            </RightPanelWrapper>
           </Box>
         </Box>
 

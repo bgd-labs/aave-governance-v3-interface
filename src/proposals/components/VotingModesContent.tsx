@@ -21,13 +21,11 @@ export function VotingModesContent({ onBackClick }: VotingModesContentProps) {
     return (
       <Box
         sx={{
-          typography: 'h3',
-          fontWeight: 600,
+          typography: 'h2',
           mb: 14,
           [theme.breakpoints.up('sm')]: {
-            typography: 'h3',
+            typography: 'h2',
             mb: 16,
-            fontWeight: 600,
           },
         }}>
         {text}
@@ -56,6 +54,7 @@ export function VotingModesContent({ onBackClick }: VotingModesContentProps) {
         sx={{
           mb: 20,
           mt: 13,
+          borderBottomColor: '$secondaryBorder',
           [theme.breakpoints.up('sm')]: { mb: 12, mt: 18 },
         }}
       />
@@ -120,19 +119,16 @@ export function VotingModesContent({ onBackClick }: VotingModesContentProps) {
       <GelatoSwitcher value={false} disabled />
       <Text text={texts.proposals.fallbackVoteDescription} />
 
-      <Box
-        sx={{
-          position: 'relative',
-          mt: 35,
-          [theme.breakpoints.up('sm')]: { mt: 30 },
-        }}>
-        <BackButton3D
-          isSmall
-          isVisibleOnMobile
-          alwaysWithBorders
-          alwaysVisible
-          onClick={() => onBackClick(false)}
-        />
+      <Box sx={{ height: 30 }}>
+        <Box sx={{ position: 'absolute', bottom: 12, left: 12 }}>
+          <BackButton3D
+            isSmall
+            isVisibleOnMobile
+            alwaysWithBorders
+            alwaysVisible
+            onClick={() => onBackClick(false)}
+          />
+        </Box>
       </Box>
     </Box>
   );

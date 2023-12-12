@@ -53,9 +53,7 @@ export function VotingPower({
           typography: 'body',
           color: '$textSecondary',
           mr: 6,
-          position: 'relative',
-          bottom: 1.5,
-          [theme.breakpoints.up('md')]: { mb: 8, bottom: 0, mr: 0 },
+          [theme.breakpoints.up('md')]: { mb: 6, mr: 0 },
         }}>
         {texts.proposals.yourVotingPower}
       </Box>
@@ -84,10 +82,9 @@ export function VotingPower({
             />
           )}
           <FormattedNumber
-            variant="h3"
+            variant="h2"
             css={{
               color: disabled && !isForHelpModal ? '$textDisabled' : '$text',
-              '> p': { fontWeight: 600 },
             }}
             value={votingPower}
             visibleDecimals={2}

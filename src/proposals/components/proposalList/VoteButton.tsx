@@ -7,7 +7,10 @@ import React from 'react';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
 import { useStore } from '../../../store';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
 import { SmallButton } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
@@ -40,7 +43,7 @@ export function VoteButton({
     selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
       activeWallet.address,
-      'vote',
+      TxType.vote,
       {
         proposalId,
         support: !supportObject[proposalId],
@@ -50,7 +53,7 @@ export function VoteButton({
 
   const buttonLoading =
     tx &&
-    tx.type === 'vote' &&
+    tx.type === TxType.vote &&
     tx.payload.proposalId === proposalId &&
     tx.payload.voter === (representative.address || activeAddress) &&
     tx.chainId === votingChainId &&
@@ -110,14 +113,15 @@ export function VoteButton({
                   }}>
                   <Box
                     sx={{
-                      display: 'inline-flex',
+                      display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       width: '100%',
+                      lineHeight: 1,
                     }}>
                     <NetworkIcon
                       chainId={votingChainId}
-                      size={10}
+                      size={11}
                       css={{ mr: 4 }}
                     />
                     {texts.proposals.vote}

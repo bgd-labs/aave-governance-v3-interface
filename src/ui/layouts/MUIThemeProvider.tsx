@@ -24,9 +24,9 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   currentTheme.typography.h1 = {
     fontFamily: FONT,
     fontWeight: '700',
-    letterSpacing: '0.02em',
+    letterSpacing: '0.03em',
     fontSize: 16,
-    lineHeight: '19px',
+    lineHeight: '23px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 20,
       lineHeight: '28px',
@@ -36,19 +36,19 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   currentTheme.typography.h2 = {
     fontFamily: FONT,
     fontWeight: '600',
-    letterSpacing: '0.02em',
+    letterSpacing: '0.03em',
     fontSize: 15,
     lineHeight: '18px',
     [currentTheme.breakpoints.up('lg')]: {
-      fontSize: 20,
-      lineHeight: '26px',
+      fontSize: 18,
+      lineHeight: '23px',
     },
   };
   // @ts-ignore
   currentTheme.typography.h3 = {
     fontFamily: FONT,
-    fontWeight: '300',
-    letterSpacing: '0.02em',
+    fontWeight: '400',
+    letterSpacing: '0.03em',
     fontSize: 14,
     lineHeight: '17px',
     [currentTheme.breakpoints.up('lg')]: {
@@ -60,30 +60,51 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   currentTheme.typography.headline = {
     fontFamily: FONT,
     fontWeight: '600',
-    fontSize: 13,
-    lineHeight: '15px',
+    fontSize: 14,
+    lineHeight: '20px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 15,
-      lineHeight: '18px',
+      lineHeight: '24px',
     },
   };
   // @ts-ignore
   currentTheme.typography.body = {
     fontFamily: FONT,
-    fontWeight: '300',
-    letterSpacing: '0.01em',
-    fontSize: 13,
-    lineHeight: '15px',
+    fontWeight: '400',
+    fontSize: 14,
+    lineHeight: '20px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 15,
-      lineHeight: '18px',
+      lineHeight: '24px',
+    },
+  };
+  // @ts-ignore
+  currentTheme.typography.descriptor = {
+    fontFamily: FONT,
+    fontWeight: '300',
+    fontSize: 11,
+    lineHeight: '13px',
+    [currentTheme.breakpoints.up('lg')]: {
+      fontSize: 12,
+      lineHeight: '14px',
+    },
+  };
+  // @ts-ignore
+  currentTheme.typography.descriptorAccent = {
+    fontFamily: FONT,
+    fontWeight: '700',
+    fontSize: 11,
+    lineHeight: '13px',
+    [currentTheme.breakpoints.up('lg')]: {
+      fontSize: 12,
+      lineHeight: '14px',
     },
   };
   // @ts-ignore
   currentTheme.typography.buttonLarge = {
     fontFamily: FONT,
     fontWeight: '700',
-    letterSpacing: '0.01em',
+    letterSpacing: '0.03em',
     fontSize: 14,
     lineHeight: '17px',
     [currentTheme.breakpoints.up('lg')]: {
@@ -95,9 +116,9 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   currentTheme.typography.buttonMedium = {
     fontFamily: FONT,
     fontWeight: '600',
-    letterSpacing: '0.01em',
-    fontSize: 12,
-    lineHeight: '15px',
+    letterSpacing: '0.03em',
+    fontSize: 14,
+    lineHeight: '17px',
     [currentTheme.breakpoints.up('lg')]: {
       fontSize: 14,
       lineHeight: '17px',
@@ -107,12 +128,12 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
   currentTheme.typography.buttonSmall = {
     fontFamily: FONT,
     fontWeight: '400',
-    letterSpacing: '0.01em',
-    fontSize: 11,
-    lineHeight: '13px',
+    letterSpacing: '0.03em',
+    fontSize: 13,
+    lineHeight: '15px',
     [currentTheme.breakpoints.up('lg')]: {
-      fontSize: 14,
-      lineHeight: '17px',
+      fontSize: 15,
+      lineHeight: '18px',
     },
   };
 

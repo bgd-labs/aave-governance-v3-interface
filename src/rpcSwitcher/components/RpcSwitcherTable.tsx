@@ -41,99 +41,90 @@ export function RpcSwitcherTable({
         };
       })
     : [];
+
   return (
-    <>
-      <Box
-        sx={{
-          px: 12,
-          [theme.breakpoints.up('xsm')]: {
-            px: 18,
-          },
-          [theme.breakpoints.up('md')]: {
-            px: 30,
-          },
-        }}>
-        <Box sx={{ pt: 15 }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TableHeaderTitle
-              title={texts.rpcSwitcherPage.tableHeaderNetwork}
-              css={{
-                maxWidth: 250,
-                display: !isEdit ? 'block' : 'none',
-                [theme.breakpoints.up('sm')]: {
-                  display: 'block',
-                  minWidth: 250,
-                },
-                [theme.breakpoints.up('md')]: {
-                  maxWidth: 300,
-                  minWidth: 300,
-                },
-              }}
-            />
-            <TableHeaderTitle
-              css={{
-                display: isEdit ? 'block' : 'none',
-                [theme.breakpoints.up('sm')]: { display: 'none' },
-              }}
-              title={texts.other.edit}
-              center
-            />
-            <TableHeaderTitle
-              css={{
-                display: !isEdit ? 'block' : 'none',
-                [theme.breakpoints.up('sm')]: {
-                  display: 'block',
-                },
-              }}
-              title={texts.rpcSwitcherPage.tableHeaderSwitcher}
-              right
-            />
-          </Box>
-          <Divider
-            className="Divider"
-            sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }}
+    <Box>
+      <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <TableHeaderTitle
+            title={texts.rpcSwitcherPage.tableHeaderNetwork}
+            css={{
+              maxWidth: 250,
+              display: !isEdit ? 'block' : 'none',
+              [theme.breakpoints.up('sm')]: {
+                display: 'block',
+                minWidth: 250,
+              },
+              [theme.breakpoints.up('md')]: {
+                maxWidth: 300,
+                minWidth: 300,
+              },
+            }}
+          />
+          <TableHeaderTitle
+            css={{
+              display: isEdit ? 'block' : 'none',
+              [theme.breakpoints.up('sm')]: { display: 'none' },
+            }}
+            title={texts.other.edit}
+            center
+          />
+          <TableHeaderTitle
+            css={{
+              display: !isEdit ? 'block' : 'none',
+              [theme.breakpoints.up('sm')]: {
+                display: 'block',
+              },
+            }}
+            title={texts.rpcSwitcherPage.tableHeaderSwitcher}
+            right
           />
         </Box>
-        {isEdit ? (
-          dataForInputs.length &&
-          dataForInputs.map((item) => {
-            return (
+        <Divider
+          className="Divider"
+          sx={{ mt: 20, [theme.breakpoints.up('sm')]: { mt: 0 } }}
+        />
+      </Box>
+
+      {isEdit ? (
+        dataForInputs.length &&
+        dataForInputs.map((item) => {
+          return (
+            <TableItem
+              key={item.inputName}
+              loading={loading}
+              chainId={item.chainId}
+              inputName={item.inputName}
+              isEdit={isEdit}
+              isViewChanges={isViewChanges}
+              rpcUrl={item.rpcUrl}
+            />
+          );
+        })
+      ) : (
+        <>
+          {loading ? (
+            <TableItem loading={loading} />
+          ) : (
+            Object.entries(rpcSwitcherData).map((data) => (
               <TableItem
-                key={item.inputName}
-                loading={loading}
-                chainId={item.chainId}
-                inputName={item.inputName}
+                key={data[0]}
                 isEdit={isEdit}
                 isViewChanges={isViewChanges}
-                rpcUrl={item.rpcUrl}
+                loading={loading}
+                chainId={+data[0]}
+                rpcUrl={data[1].rpcUrl}
+                formData={formData}
               />
-            );
-          })
-        ) : (
-          <>
-            {loading ? (
-              <TableItem loading={loading} />
-            ) : (
-              Object.entries(rpcSwitcherData).map((data) => (
-                <TableItem
-                  key={data[0]}
-                  isEdit={isEdit}
-                  isViewChanges={isViewChanges}
-                  loading={loading}
-                  chainId={+data[0]}
-                  rpcUrl={data[1].rpcUrl}
-                  formData={formData}
-                />
-              ))
-            )}
-          </>
-        )}
-      </Box>
-    </>
+            ))
+          )}
+        </>
+      )}
+    </Box>
   );
 }

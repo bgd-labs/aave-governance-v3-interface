@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
 import {
   ActionModalContentWrapper,
@@ -20,7 +21,7 @@ export function CloseVotingModal({
 
   return (
     <ActionModal
-      type="closeAndSendVote"
+      type={TxType.closeAndSendVote}
       payload={{ proposalId }}
       callbackFunction={async () =>
         await closeAndSendVote(votingChainId, proposalId)

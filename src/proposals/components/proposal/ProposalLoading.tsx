@@ -7,8 +7,11 @@ import React from 'react';
 
 import { BackButton3D, BoxWith3D, Container } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
+import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
+import { BlockWrapper } from '../BlockWrapper';
 import { Details } from './Details';
 import { DetailsShareLinks } from './DetailsShareLinks';
+import { LeftPanelWrapper } from './LeftPanelWrapper';
 
 interface ProposalLoadingProps {
   ipfsData?: ProposalMetadata;
@@ -24,17 +27,122 @@ export function ProposalLoading({
   const theme = useTheme();
   const router = useRouter();
 
-  const Content = () => {
+  const TimelineLoader = () => {
     return (
-      <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 12 }}>
-          <BackButton3D onClick={router.back} />
+      <>
+        <Box
+          sx={{
+            display: 'none',
+            [theme.breakpoints.up('sm')]: { display: 'block' },
+          }}>
+          {ipfsData ? (
+            <Box
+              component="h2"
+              sx={{
+                typography: 'h1',
+                mb: 18,
+                [theme.breakpoints.up('lg')]: {
+                  typography: 'h1',
+                  mb: 24,
+                },
+              }}>
+              {ipfsData.title}
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                typography: 'h1',
+                mb: 18,
+                [theme.breakpoints.up('lg')]: {
+                  typography: 'h1',
+                  mb: 24,
+                },
+              }}>
+              <CustomSkeleton height={22} />
+            </Box>
+          )}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              mb: 18,
+              '.react-loading-skeleton': { width: 70 },
+              [theme.breakpoints.up('lg')]: {
+                '.react-loading-skeleton': { width: 120 },
+              },
+            }}>
+            <Box sx={{ mr: 12 }}>
+              <CustomSkeleton height={20} />
+            </Box>
+            <CustomSkeleton height={20} />
+          </Box>
         </Box>
 
         <Box
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+          <Box sx={{ mb: 24 }}>
+            <Box
+              sx={{
+                display: 'block',
+                [theme.breakpoints.up('sm')]: { display: 'none' },
+              }}>
+              <CustomSkeleton height={153} />
+            </Box>
+            <Box
+              sx={{
+                display: 'none',
+                [theme.breakpoints.up('sm')]: { display: 'block' },
+                [theme.breakpoints.up('lg')]: { display: 'none' },
+              }}>
+              <CustomSkeleton height={153} />
+            </Box>
+            <Box
+              sx={{
+                display: 'none',
+                [theme.breakpoints.up('lg')]: { display: 'block' },
+              }}>
+              <CustomSkeleton height={158} />
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              mb: 18,
+              '.react-loading-skeleton': { width: 70 },
+              [theme.breakpoints.up('lg')]: {
+                '.react-loading-skeleton': { width: 120 },
+              },
+            }}>
+            <Box sx={{ mr: 12 }}>
+              <CustomSkeleton height={20} />
+            </Box>
+            <Box sx={{ mr: 12 }}>
+              <CustomSkeleton height={20} />
+            </Box>
+            <Box sx={{ mr: 12 }}>
+              <CustomSkeleton height={20} />
+            </Box>
+          </Box>
+        </Box>
+      </>
+    );
+  };
+
+  const Content = () => {
+    return (
+      <Box>
+        <TopPanelContainer withoutContainer>
+          <BackButton3D onClick={router.back} />
+        </TopPanelContainer>
+
+        <Box
+          sx={{
             position: 'relative',
-            mb: 12,
+            mb: 18,
             [theme.breakpoints.up('sm')]: { display: 'none' },
           }}>
           <Box sx={{ position: 'relative', zIndex: 2 }}>
@@ -90,33 +198,20 @@ export function ProposalLoading({
               alignItems: 'flex-start',
             },
           }}>
-          <Box
-            sx={{
-              width: '100%',
-              [theme.breakpoints.up('sm')]: {
-                width: 290,
-                mr: 15,
-                position: 'sticky',
-                transition: 'all 0.5s ease',
-                top: 50,
-              },
-              [theme.breakpoints.up('lg')]: {
-                width: 340,
-              },
-            }}>
+          <LeftPanelWrapper>
             <BoxWith3D
               className="ProposalLoading__SSR"
               borderSize={10}
               contentColor="$mainLight"
-              wrapperCss={{ mb: 12 }}
-              css={{
-                p: 20,
-                [theme.breakpoints.up('sm')]: {
-                  p: '20px 18px 18px',
-                },
+              wrapperCss={{
+                mb: 18,
                 [theme.breakpoints.up('lg')]: {
-                  p: '25px 22px 22px',
+                  mb: 24,
                 },
+              }}
+              css={{
+                p: 18,
+                [theme.breakpoints.up('lg')]: { p: '24px 30px' },
               }}>
               <Box
                 sx={{
@@ -154,107 +249,67 @@ export function ProposalLoading({
                 </Box>
               </Box>
             </BoxWith3D>
-          </Box>
+          </LeftPanelWrapper>
 
-          <BoxWith3D
-            className="ProposalLoading__SSR"
-            borderSize={10}
-            contentColor="$mainLight"
-            wrapperCss={{
+          <Box
+            sx={{
               flex: 1,
               maxWidth: '100%',
               [theme.breakpoints.up('sm')]: {
                 maxWidth: 'calc(100% - 305px)',
               },
               [theme.breakpoints.up('lg')]: {
-                maxWidth: 'calc(100% - 355px)',
-              },
-            }}
-            css={{
-              p: '20px',
-              [theme.breakpoints.up('md')]: {
-                p: '25px 35px',
-              },
-              [theme.breakpoints.up('lg')]: {
-                p: '40px 40px 40px 48px',
+                maxWidth: 'calc(100% - 365px)',
               },
             }}>
             <Box
               sx={{
-                display: 'none',
-                [theme.breakpoints.up('sm')]: { display: 'block' },
+                [theme.breakpoints.up('sm')]: { display: 'none' },
               }}>
+              <BlockWrapper toBottom>
+                <TimelineLoader />
+              </BlockWrapper>
+            </Box>
+
+            <BoxWith3D
+              className="ProposalLoading__SSR"
+              borderSize={10}
+              contentColor="$mainLight"
+              wrapperCss={{ width: '100%' }}
+              css={{
+                p: 18,
+                [theme.breakpoints.up('lg')]: { p: '24px 30px' },
+              }}>
+              <Box
+                sx={{
+                  display: 'none',
+                  [theme.breakpoints.up('sm')]: { display: 'block' },
+                }}>
+                <TimelineLoader />
+              </Box>
+
               {ipfsData ? (
-                <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
-                  {ipfsData.title}
-                </Box>
+                <Details ipfs={ipfsData} ipfsError={ipfsDataError} />
               ) : (
-                <Box sx={{ mb: 16 }}>
-                  <CustomSkeleton height={22} />
-                </Box>
-              )}
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  mb: 12,
-                  '.react-loading-skeleton': { width: 70 },
-                  [theme.breakpoints.up('lg')]: {
-                    '.react-loading-skeleton': { width: 120 },
-                  },
-                }}>
-                <Box sx={{ mr: 12 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
-                <CustomSkeleton height={20} />
-              </Box>
-            </Box>
-
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-              }}>
-              <Box sx={{ mb: 20 }}>
-                <CustomSkeleton height={80} />
-              </Box>
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  mb: 12,
-                  '.react-loading-skeleton': { width: 70 },
-                  [theme.breakpoints.up('lg')]: {
-                    '.react-loading-skeleton': { width: 120 },
-                  },
-                }}>
-                <Box sx={{ mr: 12 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
-                <Box sx={{ mr: 12 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
-                <Box sx={{ mr: 12 }}>
-                  <CustomSkeleton height={20} />
-                </Box>
-              </Box>
-            </Box>
-
-            {ipfsData ? (
-              <Details ipfs={ipfsData} ipfsError={ipfsDataError} />
-            ) : (
-              <>
-                <Box sx={{ mb: 16 }}>
-                  <Box sx={{ mb: 8 }}>
-                    <CustomSkeleton width={100} height={16} />
+                <>
+                  <Box
+                    sx={(theme) => ({
+                      mb: 18,
+                      [theme.breakpoints.up('lg')]: {
+                        mb: 24,
+                      },
+                    })}>
+                    <Box sx={{ mb: 8 }}>
+                      <CustomSkeleton width={100} height={16} />
+                    </Box>
+                    <CustomSkeleton height={16} />
                   </Box>
-                  <CustomSkeleton height={16} />
-                </Box>
 
-                <CustomSkeleton count={20} height={19} />
-              </>
-            )}
-          </BoxWith3D>
+                  <CustomSkeleton count={20} height={19} />
+                </>
+              )}
+            </BoxWith3D>
+          </Box>
         </Box>
       </Box>
     );

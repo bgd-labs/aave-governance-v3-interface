@@ -8,7 +8,7 @@ interface HelpModalContainerProps {
   onMainButtonClick?: () => void;
 }
 
-export const helpModalWidth = 1200;
+export const helpModalWidth = 1210;
 
 export function HelpModalContainer({
   children,
@@ -30,7 +30,7 @@ export function HelpModalContainer({
         [theme.breakpoints.up('md')]: {
           minHeight: '645px',
         },
-        [theme.breakpoints.up('lg')]: { minHeight: '690px' },
+        [theme.breakpoints.up('lg')]: { minHeight: '700px' },
       }}>
       <Box
         sx={{
@@ -45,27 +45,27 @@ export function HelpModalContainer({
           },
         }}>
         {children}
-
-        {!!onMainButtonClick && (
-          <Box
-            onClick={onMainButtonClick}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              mt: 25,
-              [theme.breakpoints.up('sm')]: {
-                justifyContent: 'flex-end',
-                position: 'absolute',
-                mt: 0,
-                bottom: 0,
-                right: 0,
-              },
-            }}>
-            <HelpModalHomeButton />
-          </Box>
-        )}
       </Box>
+
+      {!!onMainButtonClick && (
+        <Box
+          onClick={onMainButtonClick}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mt: 25,
+            [theme.breakpoints.up('sm')]: {
+              justifyContent: 'flex-end',
+              position: 'absolute',
+              mt: 0,
+              bottom: 0,
+              right: 0,
+            },
+          }}>
+          <HelpModalHomeButton />
+        </Box>
+      )}
     </Box>
   );
 }

@@ -57,7 +57,7 @@ export function ConnectWalletButton({
 
   const ensNameAbbreviated = ensName
     ? ensName.length > 11
-      ? textCenterEllipsis(ensName, 6, 2)
+      ? textCenterEllipsis(ensName, 5, 3)
       : ensName
     : undefined;
 
@@ -99,9 +99,9 @@ export function ConnectWalletButton({
         <>
           <Box
             sx={{
-              '.react-loading-skeleton': { width: 110, height: 23 },
+              '.react-loading-skeleton': { width: 120, height: 27 },
               [theme.breakpoints.up('lg')]: {
-                '.react-loading-skeleton': { width: 140, height: 33 },
+                '.react-loading-skeleton': { width: 140, height: 31 },
               },
             }}>
             <CustomSkeleton />
@@ -116,8 +116,8 @@ export function ConnectWalletButton({
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                width: 110,
-                height: 24,
+                width: 120,
+                height: 28,
                 backgroundColor: '$light',
                 transition: 'all 0.2s ease',
                 color: '$text',
@@ -138,7 +138,7 @@ export function ConnectWalletButton({
                 },
                 [theme.breakpoints.up('lg')]: {
                   width: 140,
-                  height: 34,
+                  height: 32,
                 },
               }}
               component="button"
@@ -182,21 +182,26 @@ export function ConnectWalletButton({
                 css={{
                   alignItems: 'center',
                   display: 'flex',
-                  mr: 10,
+                  mr: 12,
                   '.ChainNameWithIcon__text': {
                     display: 'none',
-                  },
-                  [theme.breakpoints.up('sm')]: {
-                    '.ChainNameWithIcon__text': {
+                    [theme.breakpoints.up('sm')]: {
                       display: 'block !important',
+                      typography: 'buttonSmall',
+                    },
+                  },
+                  '.NetworkIcon': {
+                    mr: 0,
+                    [theme.breakpoints.up('sm')]: {
+                      mr: 5,
                     },
                   },
                   [theme.breakpoints.up('lg')]: {
-                    mr: 20,
+                    mr: 18,
                   },
                 }}
                 textCss={{ typography: 'buttonSmall', color: '$textLight' }}
-                iconSize={12}
+                iconSize={16}
                 chainId={activeWallet?.chain?.id || appConfig.govCoreChainId}
               />
 
@@ -210,8 +215,8 @@ export function ConnectWalletButton({
                   justifyContent: 'space-between',
                   px: 8,
                   cursor: 'pointer',
-                  minWidth: 110,
-                  height: 25,
+                  minWidth: 120,
+                  height: 28,
                   backgroundColor: lastTransactionError
                     ? '$error'
                     : lastTransactionSuccess
@@ -250,7 +255,7 @@ export function ConnectWalletButton({
                   },
                   [theme.breakpoints.up('lg')]: {
                     minWidth: 140,
-                    height: 34,
+                    height: 32,
                   },
                 }}>
                 {lastTransactionError && (

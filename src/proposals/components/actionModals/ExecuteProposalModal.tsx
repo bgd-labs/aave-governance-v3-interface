@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
 import {
   ActionModalContentWrapper,
@@ -19,7 +20,7 @@ export function ExecuteProposalModal({
 
   return (
     <ActionModal
-      type="executeProposal"
+      type={TxType.executeProposal}
       payload={{ proposalId }}
       callbackFunction={async () => await executeProposal(proposalId)}
       isOpen={isOpen}

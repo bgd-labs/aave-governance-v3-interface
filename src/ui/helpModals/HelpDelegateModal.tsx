@@ -4,14 +4,11 @@ import isEqual from 'lodash/isEqual';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
-import ArrowToRight from '/public/images/icons/arrowToRightW.svg';
-
 import { DelegateTableWrapper } from '../../delegate/components/DelegateTableWrapper';
 import { DelegateData } from '../../delegate/types';
 import { useStore } from '../../store';
 import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
-import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
@@ -162,15 +159,6 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                   <Box component="p" sx={{ typography: 'body' }}>
                     {texts.faq.other.next}
                   </Box>
-                  <IconBox
-                    sx={{
-                      width: 20,
-                      height: 20,
-                      ml: 10,
-                      '> svg': { width: 20, height: 20 },
-                    }}>
-                    <ArrowToRight />
-                  </IconBox>
                 </Box>
               </BigButton>
             </Box>
@@ -215,7 +203,6 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpDelegateModalOpen}
       setIsOpen={setIsHelpDelegateModalOpen}
@@ -363,9 +350,9 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flex: 2,
-                    ml: 20,
+                    ml: 22,
                     [theme.breakpoints.up('lg')]: {
-                      ml: 45,
+                      ml: 15,
                     },
                   }}>
                   <HelpModalTooltip maxWidth={270}>
@@ -389,10 +376,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flex: 2,
-                    mr: 30,
-                    [theme.breakpoints.up('lg')]: {
-                      mr: 50,
-                    },
+                    mr: 22,
                   }}>
                   <HelpModalTooltip maxWidth={270} countNumber={2}>
                     <Box component="p" sx={{ typography: 'body' }}>
@@ -427,7 +411,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     [theme.breakpoints.up('sm')]: {
                       display: 'block',
                       left: -5,
-                      top: 105,
+                      top: 92,
                     },
                     [theme.breakpoints.up('md')]: {
                       display: 'none',
@@ -452,7 +436,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                   sx={{
                     position: 'absolute',
                     left: -5,
-                    bottom: 95,
+                    bottom: 105,
                     display:
                       !isEdit && !isDelegateChangedView && !txSuccess
                         ? 'block'
@@ -460,7 +444,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     [theme.breakpoints.up('sm')]: {
                       display: 'block',
                       left: -5,
-                      bottom: 110,
+                      bottom: 115,
                     },
                     [theme.breakpoints.up('md')]: {
                       display: 'none',
@@ -644,9 +628,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                 }}>
                 {texts.faq.delegate.txPendingTitle}
               </Box>
-              <Box
-                component="p"
-                sx={{ typography: 'body', lineHeight: '24px !important' }}>
+              <Box component="p" sx={{ typography: 'body' }}>
                 {texts.faq.delegate.txPendingDescription}
               </Box>
             </>

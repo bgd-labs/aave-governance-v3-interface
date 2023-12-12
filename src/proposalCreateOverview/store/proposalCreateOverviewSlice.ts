@@ -21,7 +21,7 @@ export type NewPayload = Payload & {
   transactionHash?: string;
 };
 
-export interface ICreateByParamsSlice {
+export interface IProposalCreateOverviewSlice {
   createPayloadsData: Record<string, NewPayload>;
   createPayloadsErrors: Record<string, boolean>;
 
@@ -32,8 +32,8 @@ export interface ICreateByParamsSlice {
   ) => Promise<void>;
 }
 
-export const createByParamsSlice: StoreSlice<
-  ICreateByParamsSlice,
+export const createProposalCreateOverviewSlice: StoreSlice<
+  IProposalCreateOverviewSlice,
   IWeb3Slice &
     TransactionsSlice &
     IProposalsSlice &

@@ -18,6 +18,7 @@ interface EditVotingTokensContentProps {
   setVotingTokens: (value: Balance[]) => void;
   representativeAddress?: string;
   isRepresentativeVoteDisabled?: boolean;
+  forTest?: boolean;
 }
 
 function CheckBox({ isActive }: { isActive: boolean }) {
@@ -51,6 +52,7 @@ export function EditVotingTokensContent({
   localVotingTokens,
   representativeAddress,
   isRepresentativeVoteDisabled,
+  forTest,
 }: EditVotingTokensContentProps) {
   const objectVotingTokens = votingTokens
     .map((token) => {
@@ -125,28 +127,18 @@ export function EditVotingTokensContent({
     <>
       <Box
         sx={(theme) => ({
-          height: 180,
-          [theme.breakpoints.up('lg')]: { height: 227 },
-        })}
-      />
-
-      <Box
-        sx={{
-          p: '65px 50px 60px',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 3,
+          minHeight: forTest ? 401 : 500,
+          [theme.breakpoints.up('lg')]: {
+            minHeight: forTest ? 471 : 500,
+          },
           button: {
             color: '$main',
           },
-        }}>
+        })}>
         <Box component="h2" sx={{ typography: 'h1', mb: 10 }}>
-          {/*{texts.other.edit}*/}
           {texts.other.votingInfo}
         </Box>
+
         <Box
           sx={{
             display: 'flex',
@@ -236,7 +228,6 @@ export function EditVotingTokensContent({
                   value={item.value}
                   variant="body"
                   visibleDecimals={2}
-                  // css={{ mr: 10 }}
                 />
                 <CheckBox isActive={item.isActive} />
               </Box>
@@ -244,7 +235,7 @@ export function EditVotingTokensContent({
           ))}
         </Box>
 
-        <Box sx={{ position: 'absolute', bottom: 40, left: 50 }}>
+        <Box sx={{ position: 'absolute', bottom: 12, left: 12 }}>
           <BackButton3D
             isSmall
             isVisibleOnMobile

@@ -28,7 +28,6 @@ export function HelpVotingBarsModal() {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       isOpen={isHelpVotingBarsModalOpen}
       setIsOpen={setIsHelpVotingBarsModalOpen}
       maxWidth={helpModalWidth}
@@ -71,9 +70,11 @@ export function HelpVotingBarsModal() {
               />
             </HelpModalText>
 
-            <BigButton alwaysWithBorders onClick={handleClick} css={{ mt: 24 }}>
-              {texts.faq.other.gotIt}
-            </BigButton>
+            <Box sx={{ mt: 24, minHeight: 60 }}>
+              <BigButton alwaysWithBorders onClick={handleClick}>
+                {texts.faq.other.gotIt}
+              </BigButton>
+            </Box>
           </Box>
         </HelpModalCaption>
       </HelpModalContainer>

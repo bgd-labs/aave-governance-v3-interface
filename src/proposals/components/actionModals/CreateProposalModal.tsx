@@ -36,6 +36,7 @@ export function CreateProposalModal({
 > & { proposalId: number }) {
   return (
     <BasicActionModal
+      minHeight={380}
       isTxStart={isTxStart}
       setIsTxStart={setIsTxStart}
       setError={setError}

@@ -54,16 +54,16 @@ export function BackButton3D({
           alwaysWithBorders={alwaysWithBorders}
           wrapperCss={wrapperCss}
           css={{
-            minWidth: 75,
-            height: 25,
+            minWidth: 84,
+            height: 28,
             transition: 'all 0.1s ease',
             [theme.breakpoints.up('sm')]: {
-              minWidth: 108,
-              height: 30,
+              minWidth: 112,
+              height: 32,
             },
             [theme.breakpoints.up('lg')]: {
               minWidth: isSmall ? 108 : 130,
-              height: isSmall ? 30 : 32,
+              height: isSmall ? 30 : 36,
             },
           }}>
           <Box

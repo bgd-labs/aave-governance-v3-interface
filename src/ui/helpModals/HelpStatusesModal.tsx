@@ -222,7 +222,6 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
 
   return (
     <BasicModal
-      withoutAnimationWhenOpen
       maxWidth={helpModalWidth}
       isOpen={isHelpStatusesModalOpen}
       setIsOpen={setIsHelpStatusesModalOpen}

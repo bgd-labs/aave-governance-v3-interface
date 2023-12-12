@@ -9,10 +9,10 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Hex } from 'viem';
 
-import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
+import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { IProposalCreateOverviewV2Slice } from '../../proposalCreateOverviewV2/store/proposalCreateOverviewV2Slice';
 import { IProposalsHistorySlice } from '../../proposals/store/proposalsHistorySlice';
 import { IProposalsListCacheSlice } from '../../proposals/store/proposalsListCacheSlice';
@@ -27,6 +27,22 @@ import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
+export enum TxType {
+  createPayload = 'createPayload',
+  createProposal = 'createProposal',
+  activateVoting = 'activateVoting',
+  sendProofs = 'sendProofs',
+  activateVotingOnVotingMachine = 'activateVotingOnVotingMachine',
+  vote = 'vote',
+  closeAndSendVote = 'closeAndSendVote',
+  executeProposal = 'executeProposal',
+  executePayload = 'executePayload',
+  delegate = 'delegate',
+  test = 'test',
+  cancelProposal = 'cancelProposal',
+  representations = 'representations',
+}
+
 type BaseTx = BT & {
   status?: TransactionStatus;
   pending: boolean;
@@ -34,7 +50,7 @@ type BaseTx = BT & {
 };
 
 type CreatePayloadTx = BaseTx & {
-  type: 'createPayload';
+  type: TxType.createPayload;
   payload: {
     chainId: number;
     payloadId: number;
@@ -43,21 +59,21 @@ type CreatePayloadTx = BaseTx & {
 };
 
 type CreateProposalTx = BaseTx & {
-  type: 'createProposal';
+  type: TxType.createProposal;
   payload: {
     proposalId: number;
   };
 };
 
 type ActivateVotingTx = BaseTx & {
-  type: 'activateVoting';
+  type: TxType.activateVoting;
   payload: {
     proposalId: number;
   };
 };
 
 type SendProofsTx = BaseTx & {
-  type: 'sendProofs';
+  type: TxType.sendProofs;
   payload: {
     proposalId: number;
     blockHash: string;
@@ -67,14 +83,14 @@ type SendProofsTx = BaseTx & {
 };
 
 type ActivateVotingOnVotingMachineTx = BaseTx & {
-  type: 'activateVotingOnVotingMachine';
+  type: TxType.activateVotingOnVotingMachine;
   payload: {
     proposalId: number;
   };
 };
 
 type VotingTx = BaseTx & {
-  type: 'vote';
+  type: TxType.vote;
   payload: {
     proposalId: number;
     support: boolean;
@@ -83,30 +99,31 @@ type VotingTx = BaseTx & {
 };
 
 type CloseAndSendVoteTx = BaseTx & {
-  type: 'closeAndSendVote';
+  type: TxType.closeAndSendVote;
   payload: {
     proposalId: number;
   };
 };
 
 type ExecuteProposalTx = BaseTx & {
-  type: 'executeProposal';
+  type: TxType.executeProposal;
   payload: {
     proposalId: number;
   };
 };
 
 type ExecutePayloadTx = BaseTx & {
-  type: 'executePayload';
+  type: TxType.executePayload;
   payload: {
     proposalId: number;
     payloadId: number;
     chainId: number;
+    payloadController?: Hex;
   };
 };
 
 type DelegateTx = BaseTx & {
-  type: 'delegate';
+  type: TxType.delegate;
   payload: {
     delegateData: DelegateItem[];
     formDelegateData: DelegateData[];
@@ -115,18 +132,18 @@ type DelegateTx = BaseTx & {
 };
 
 type TestTx = BaseTx & {
-  type: 'test';
+  type: TxType.test;
 };
 
 type CancelProposalTx = BaseTx & {
-  type: 'cancelProposal';
+  type: TxType.cancelProposal;
   payload: {
     proposalId: number;
   };
 };
 
 type RepresentationsTx = BaseTx & {
-  type: 'representations';
+  type: TxType.representations;
   payload: {
     initialData: RepresentationFormData[];
     data: RepresentationFormData[];
@@ -171,7 +188,7 @@ export const createTransactionsSlice: StoreSlice<
     IRepresentationsSlice &
     IEnsSlice &
     IRpcSwitcherSlice &
-    ICreateByParamsSlice &
+    IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice &
     IProposalCreateOverviewV2Slice
 > = (set, get) => ({
@@ -182,7 +199,7 @@ export const createTransactionsSlice: StoreSlice<
       };
 
       switch (data.type) {
-        case 'createPayload':
+        case TxType.createPayload:
           await get().getDetailedPayloadsData(
             data.payload.chainId,
             data.payload.payloadsController as Hex,
@@ -195,16 +212,16 @@ export const createTransactionsSlice: StoreSlice<
             },
           });
           break;
-        case 'activateVoting':
+        case TxType.activateVoting:
           await updateProposalData(data.payload.proposalId);
           break;
-        case 'sendProofs':
+        case TxType.sendProofs:
           await updateProposalData(data.payload.proposalId);
           break;
-        case 'activateVotingOnVotingMachine':
+        case TxType.activateVotingOnVotingMachine:
           await updateProposalData(data.payload.proposalId);
           break;
-        case 'vote':
+        case TxType.vote:
           const proposalData = getProposalDataById(
             get(),
             data.payload.proposalId,
@@ -221,25 +238,32 @@ export const createTransactionsSlice: StoreSlice<
             );
           }
           break;
-        case 'closeAndSendVote':
+        case TxType.closeAndSendVote:
           await updateProposalData(data.payload.proposalId);
           break;
-        case 'executeProposal':
+        case TxType.executeProposal:
           await updateProposalData(data.payload.proposalId);
           break;
-        case 'executePayload':
-          await updateProposalData(data.payload.proposalId);
+        case TxType.executePayload:
+          if (data.payload.payloadController) {
+            await get().getPayloadsExploreData(
+              data.payload.chainId,
+              data.payload.payloadController,
+            );
+          } else {
+            await updateProposalData(data.payload.proposalId);
+          }
           break;
-        case 'delegate':
+        case TxType.delegate:
           await get().getDelegateData();
           get().setIsDelegateChangedView(false);
           break;
-        case 'representations':
+        case TxType.representations:
           await get().getRepresentationData();
           get().setIsRepresentationsChangedView(false);
           get().resetL1Balances();
           break;
-        case 'cancelProposal':
+        case TxType.cancelProposal:
           await updateProposalData(data.payload.proposalId);
           break;
       }

@@ -1,4 +1,4 @@
-import { Payload } from '@bgd-labs/aave-governance-ui-helpers';
+import { Payload, PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 import { Hex } from 'viem';
@@ -7,29 +7,42 @@ import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
-import { appConfig } from '../../utils/appConfig';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
-type PayloadsData = Record<number, Record<Hex, Payload[]>>;
+type PayloadsData = Record<number, Record<Hex, Record<string, Payload>>>;
 export interface IPayloadsExplorerSlice {
   totalPayloadsCountByAddress: Record<Hex, number>;
-  payloadsExplorePagination: Record<
-    Hex,
-    { currentIteration: number; currentStepSize: number; isEnd?: boolean }
-  >;
-
-  payloadsExploreData: PayloadsData;
-  getPayloadsExploreData: (chainId: number) => Promise<void>;
-
-  getPaginatedPayloadsExploreData: (
+  setPayloadsExploreActivePage: (
+    value: number,
     chainId: number,
     address: Hex,
   ) => Promise<void>;
+  payloadsExplorePagination: Record<
+    Hex,
+    { activePage: number; pageCount: number; currentIds: number[] }
+  >;
+
+  payloadsExploreData: PayloadsData;
+  getPayloadsExploreData: (
+    chainId: number,
+    address: Hex,
+    activePage?: number,
+  ) => Promise<void>;
+
+  isPayloadExplorerItemDetailsModalOpen: boolean;
+  setIsPayloadExplorerItemDetailsModalOpen: (value: boolean) => void;
+
+  detailedPayloadsExplorerDataInterval: number | undefined;
+  startDetailedPayloadsExplorerDataPolling: (
+    chainId: number,
+    address: Hex,
+    activePage?: number,
+  ) => Promise<void>;
+  stopDetailedPayloadsExplorerDataPolling: () => void;
 }
 
-const step = 16;
-const initialSize = 48;
+const pageSize = 12;
 
 export const createPayloadsExplorerSlice: StoreSlice<
   IPayloadsExplorerSlice,
@@ -43,104 +56,163 @@ export const createPayloadsExplorerSlice: StoreSlice<
   totalPayloadsCountByAddress: {},
   payloadsExplorePagination: {},
 
-  getPaginatedPayloadsExploreData: async (chainId, address) => {
+  setPayloadsExploreActivePage: async (value, chainId, address) => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+
     const data = get().payloadsExplorePagination[address];
-    if (data) {
-      const { currentIteration, isEnd } = data;
+    const totalPayloadsCount = get().totalPayloadsCountByAddress[address];
 
-      if (!isEnd) {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.payloadsExplorePagination[address] = {
-              currentIteration: currentIteration + 1,
-              currentStepSize: (currentIteration + 1) * step,
-              isEnd:
-                (currentIteration + 1) * step >=
-                get().totalPayloadsCountByAddress[address],
-            };
-          }),
-        );
-
-        await get().getPayloadsExploreData(chainId);
-      }
+    if (data && totalPayloadsCount > 0 && value <= data.pageCount) {
+      await get().getPayloadsExploreData(chainId, address, value);
+    } else if (!data) {
+      set((state) =>
+        produce(state, (draft) => {
+          draft.payloadsExplorePagination[address] = {
+            pageCount:
+              pageSize < totalPayloadsCount
+                ? Math.ceil(totalPayloadsCount / pageSize)
+                : 0,
+            activePage: value,
+            currentIds: [],
+          };
+        }),
+      );
     }
   },
 
   payloadsExploreData: {},
-  getPayloadsExploreData: async (chainId) => {
-    await Promise.all(
-      appConfig.payloadsControllerConfig[chainId].contractAddresses.map(
-        async (address) => {
-          const size =
-            get().payloadsExplorePagination[address]?.currentStepSize === step
-              ? 0
-              : get().payloadsExplorePagination[address]?.currentStepSize || 0;
-          const initialCount = get().totalPayloadsCountByAddress[address];
+  getPayloadsExploreData: async (chainId, address, activePage) => {
+    const initialCount = get().totalPayloadsCountByAddress[address];
+    const totalPayloadsCount = initialCount
+      ? initialCount
+      : await get().govDataService.getTotalPayloadsCount(
+          address,
+          chainId,
+          get().setRpcError,
+        );
 
-          const totalPayloadsCount = initialCount
-            ? initialCount
-            : await get().govDataService.getTotalPayloadsCount(
-                address,
-                chainId,
-                get().setRpcError,
-              );
-
-          const sliceValue =
-            size > 0
-              ? size < totalPayloadsCount
-                ? size
-                : totalPayloadsCount
-              : initialSize < totalPayloadsCount
-                ? initialSize
-                : totalPayloadsCount;
-
-          set((state) =>
-            produce(state, (draft) => {
-              draft.totalPayloadsCountByAddress[address] = totalPayloadsCount;
-              if (draft.payloadsExplorePagination[address]) {
-                draft.payloadsExplorePagination[address].isEnd =
-                  sliceValue >= totalPayloadsCount;
-              }
-            }),
-          );
-
-          if (totalPayloadsCount >= 1) {
-            const payloadsIds = Array.from(Array(totalPayloadsCount).keys());
-            const paginatedIds = payloadsIds
-              .slice(-sliceValue)
-              .sort((a, b) => b - a);
-
-            const payloadsData: Payload[] =
-              size > 0 && size <= initialSize
-                ? get().payloadsExploreData[chainId][address]
-                : await get().govDataService.getPayloads(
-                    chainId,
-                    address,
-                    paginatedIds,
-                  );
-
-            set((state) =>
-              produce(state, (draft) => {
-                draft.payloadsExploreData[chainId] = {
-                  [address]: payloadsData,
-                };
-              }),
-            );
-
-            if (!get().payloadsExplorePagination[address]) {
-              set((state) =>
-                produce(state, (draft) => {
-                  draft.payloadsExplorePagination[address] = {
-                    currentIteration: 1,
-                    currentStepSize: step,
-                    isEnd: step >= get().totalPayloadsCountByAddress[address],
-                  };
-                }),
-              );
-            }
-          }
-        },
-      ),
+    set((state) =>
+      produce(state, (draft) => {
+        draft.totalPayloadsCountByAddress[address] = totalPayloadsCount;
+      }),
     );
+
+    const payloadsIds = Array.from(Array(totalPayloadsCount).keys());
+    const finishedIdsInStore = !!get().payloadsExploreData[chainId]
+      ? Object.values(get().payloadsExploreData[chainId][address] || {})
+          .filter((payload) => payload.state >= PayloadState.Executed)
+          .map((payload) => payload.id)
+      : [];
+
+    const currentActiveIds: number[] = [];
+    for (let i = 0; i < payloadsIds.length; i++) {
+      let found = false;
+      for (let j = 0; j < finishedIdsInStore.length; j++) {
+        if (payloadsIds[i] === finishedIdsInStore[j]) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        currentActiveIds.push(payloadsIds[i]);
+      }
+    }
+
+    const currentPage = activePage || 0;
+    const size = totalPayloadsCount - currentPage * pageSize;
+    const from = size > totalPayloadsCount ? totalPayloadsCount : size;
+
+    const paginatedIds = Array.from(Array(from).keys()).filter(
+      (id) => id >= from - pageSize && id <= totalPayloadsCount - 1,
+    );
+
+    const idsForRequest: number[] = [];
+    for (let i = 0; i < paginatedIds.length; i++) {
+      let found = false;
+      for (let j = 0; j < currentActiveIds.length; j++) {
+        if (paginatedIds[i] === currentActiveIds[j]) {
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        idsForRequest.push(paginatedIds[i]);
+      }
+    }
+
+    set((state) =>
+      produce(state, (draft) => {
+        draft.payloadsExplorePagination[address] = {
+          pageCount:
+            pageSize < totalPayloadsCount
+              ? Math.ceil(totalPayloadsCount / pageSize)
+              : 1,
+          activePage: activePage || 0,
+          currentIds: paginatedIds,
+        };
+      }),
+    );
+
+    if (totalPayloadsCount >= 1) {
+      if (!!idsForRequest.length) {
+        const payloadsData: Payload[] = await get().govDataService.getPayloads(
+          chainId,
+          address,
+          idsForRequest,
+        );
+
+        const formattedPayloadsData: Record<string, Payload> = {};
+        payloadsData.forEach((payload) => {
+          if (payload) {
+            formattedPayloadsData[
+              `${payload.payloadsController}_${payload.id}`
+            ] = payload;
+          }
+        });
+
+        set((state) =>
+          produce(state, (draft) => {
+            draft.payloadsExploreData[chainId] = {
+              [address]: {
+                ...(draft.payloadsExploreData[chainId]
+                  ? draft.payloadsExploreData[chainId][address]
+                  : {}),
+                ...formattedPayloadsData,
+              },
+            };
+          }),
+        );
+      }
+    }
+  },
+
+  isPayloadExplorerItemDetailsModalOpen: false,
+  setIsPayloadExplorerItemDetailsModalOpen: (value) => {
+    set({ isModalOpen: value, isPayloadExplorerItemDetailsModalOpen: value });
+  },
+
+  detailedPayloadsExplorerDataInterval: undefined,
+  startDetailedPayloadsExplorerDataPolling: async (
+    chainId,
+    address,
+    activePage,
+  ) => {
+    const currentInterval = get().detailedProposalDataInterval;
+    clearInterval(currentInterval);
+
+    const interval = setInterval(async () => {
+      await get().getPayloadsExploreData(chainId, address, activePage);
+    }, 10000);
+
+    set({ detailedPayloadsExplorerDataInterval: Number(interval) });
+  },
+  stopDetailedPayloadsExplorerDataPolling: () => {
+    const interval = get().detailedPayloadsExplorerDataInterval;
+    if (interval) {
+      clearInterval(interval);
+      set({ detailedPayloadsExplorerDataInterval: undefined });
+    }
   },
 });

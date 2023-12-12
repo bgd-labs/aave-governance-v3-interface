@@ -18,7 +18,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   marginRight: 12,
   display: 'inline-flex',
   alignItems: 'center',
-  color: theme.palette.$textDisabled,
+  color: theme.palette.$textSecondary,
   '&:last-of-type': {
     mr: 0,
   },
@@ -81,7 +81,7 @@ export function DetailsShareLinks({
         <StyledLink
           sx={(theme) => ({
             path: {
-              fill: theme.palette.$textDisabled,
+              fill: theme.palette.$textSecondary,
               transition: 'all 0.2s ease',
             },
             '&:hover': {
@@ -113,8 +113,8 @@ export function DetailsShareLinks({
       <StyledLink
         sx={(theme) => ({
           path: {
-            fill: theme.palette.$textDisabled,
-            stroke: theme.palette.$textDisabled,
+            fill: theme.palette.$textSecondary,
+            stroke: theme.palette.$textSecondary,
             transition: 'all 0.2s ease',
           },
           '&:hover': {

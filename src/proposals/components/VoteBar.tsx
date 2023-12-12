@@ -31,12 +31,69 @@ export function VoteBar({
 }: VoteBarProps) {
   const theme = useTheme();
 
+  const NumberWithValue = ({
+    text,
+    number,
+    isNumberBig,
+    startNumber,
+  }: {
+    text: string;
+    number: number | string;
+    isNumberBig?: boolean;
+    startNumber?: number | string;
+  }) => {
+    return (
+      <Box
+        sx={{
+          typography: 'body',
+          lineHeight: '1 !important',
+          color: '$text',
+          display: 'inline-flex',
+        }}>
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'flex-end',
+            height: 19,
+            [theme.breakpoints.up('lg')]: {
+              height: 21,
+            },
+          }}>
+          {text}
+        </Box>
+        <FormattedNumber
+          variant={isNumberBig ? 'h2' : 'headline'}
+          css={{
+            display: 'inline-flex',
+            alignItems: 'flex-end',
+            color: '$text',
+            transition: 'all 0.5s ease',
+            position: 'relative',
+            ml: 6,
+            height: 19,
+            [theme.breakpoints.up('lg')]: {
+              height: 21,
+            },
+            '> p': {
+              fontWeight: 600,
+              lineHeight: '1 !important',
+            },
+          }}
+          value={number}
+          visibleDecimals={2}
+          countUp={withAnim && isNumberBig}
+          startValueForCountUp={startNumber}
+          compact
+        />
+      </Box>
+    );
+  };
+
   return (
     <Box
       sx={{
         width: '100%',
         mb: 4,
-        [theme.breakpoints.up('lg')]: { mb: 5 },
         '&:last-of-type': { mb: 0 },
       }}>
       <Box
@@ -46,82 +103,26 @@ export function VoteBar({
           justifyContent: 'space-between',
           width: '100%',
           height: 19,
-          mb: 3,
           [theme.breakpoints.up('lg')]: {
             height: 21,
           },
         }}>
-        <Box
-          sx={{
-            typography: 'body',
-            color: '$text',
-            display: 'inline-flex',
-            alignItems: withAnim ? 'center' : 'flex-end',
-            [theme.breakpoints.up('sm')]: {
-              alignItems: 'flex-end',
-            },
-          }}>
-          {type === 'for' ? texts.other.toggleFor : texts.other.toggleAgainst}{' '}
-          <FormattedNumber
-            variant={isValueBig ? 'h3' : 'headline'}
-            css={{
-              color: '$text',
-              transition: 'all 0.5s ease',
-              height: 19,
-              position: 'relative',
-              top: isValueBig ? 2 : 3,
-              ml: 4,
-              [theme.breakpoints.up('lg')]: {
-                height: 21,
-                top: 1.5,
-              },
-              '> p': {
-                fontWeight: 600,
-              },
-            }}
-            value={value}
-            visibleDecimals={2}
-            countUp={withAnim && isValueBig}
-            startValueForCountUp={startValueForCountUp}
-            compact
-          />
-        </Box>
+        <NumberWithValue
+          text={
+            type === 'for' ? texts.other.toggleFor : texts.other.toggleAgainst
+          }
+          number={value}
+          isNumberBig={isValueBig}
+          startNumber={startValueForCountUp}
+        />
+
         {!isFinished && (
-          <Box
-            sx={{
-              typography: 'body',
-              color: '$textSecondary',
-              display: 'inline-flex',
-              alignItems: withAnim ? 'center' : 'flex-end',
-              [theme.breakpoints.up('sm')]: {
-                alignItems: 'flex-end',
-              },
-            }}>
-            {texts.other.required}{' '}
-            <FormattedNumber
-              variant={isRequiredValueBig ? 'h3' : 'headline'}
-              css={{
-                color: '$text',
-                transition: 'all 0.5s ease',
-                height: 19,
-                position: 'relative',
-                top: isRequiredValueBig ? 2 : 3,
-                ml: 4,
-                [theme.breakpoints.up('lg')]: {
-                  height: 21,
-                  top: 1.5,
-                },
-                '> p': {
-                  fontWeight: 600,
-                },
-              }}
-              value={requiredValue}
-              visibleDecimals={2}
-              countUp={withAnim && isRequiredValueBig}
-              startValueForCountUp={startRequiredValueForCountUp}
-              compact
-            />
-          </Box>
+          <NumberWithValue
+            text={texts.other.required}
+            number={requiredValue}
+            isNumberBig={isRequiredValueBig}
+            startNumber={startRequiredValueForCountUp}
+          />
         )}
       </Box>
       <VoteLine percent={linePercent} width="100%" color={type} />

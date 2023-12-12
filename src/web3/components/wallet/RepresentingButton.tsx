@@ -175,14 +175,14 @@ export function RepresentingButton() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 24,
-            height: 24,
+            width: 28,
+            height: 28,
             backgroundColor: '$light',
             cursor: 'pointer',
             position: 'relative',
             [theme.breakpoints.up('lg')]: {
-              width: 34,
-              height: 34,
+              width: 32,
+              height: 32,
             },
             hover: {
               backgroundColor:

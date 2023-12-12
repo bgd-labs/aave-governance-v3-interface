@@ -55,14 +55,14 @@ export function TableItem({
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            height: 85,
+            height: 84,
             py: 0,
           },
           [theme.breakpoints.up('md')]: {
-            height: forHelp ? 85 : 110,
+            height: forHelp ? 85 : 108,
           },
           [theme.breakpoints.up('lg')]: {
-            height: forHelp ? 90 : 115,
+            height: forHelp ? 90 : 116,
           },
         }}>
         <Box
@@ -81,7 +81,7 @@ export function TableItem({
             },
           }}>
           {!chainId ? (
-            <Box sx={{ mr: 20 }}>
+            <Box sx={{ mr: 12 }}>
               <CustomSkeleton circle width={35} height={35} />
             </Box>
           ) : (
@@ -101,7 +101,7 @@ export function TableItem({
                 <CustomSkeleton width={30} height={20} />
               </Box>
             ) : (
-              <Box component="h3" sx={{ typography: 'h3', fontWeight: 600 }}>
+              <Box component="h3" sx={{ typography: 'h2' }}>
                 {getChainName(chainId)}
               </Box>
             )}

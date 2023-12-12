@@ -1,5 +1,5 @@
 import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import { useStore } from '../../../store';
 import { BasicModal } from '../../../ui';
@@ -47,12 +47,6 @@ export function ConnectWalletModal({
 }: ConnectWalletModalProps) {
   const { walletActivating, walletConnectionError, setModalOpen } = useStore();
 
-  const [impersonatedFormOpen, setImpersonatedFormOpen] = useState(false);
-
-  useEffect(() => {
-    setImpersonatedFormOpen(false);
-  }, [isOpen]);
-
   useEffect(() => {
     if (!walletActivating && !walletConnectionError) {
       setIsOpen(false);
@@ -65,8 +59,6 @@ export function ConnectWalletModal({
       <ConnectWalletModalContent
         walletActivating={walletActivating}
         wallets={wallets}
-        impersonatedFormOpen={impersonatedFormOpen}
-        setImpersonatedFormOpen={setImpersonatedFormOpen}
         walletConnectionError={walletConnectionError}
       />
     </BasicModal>

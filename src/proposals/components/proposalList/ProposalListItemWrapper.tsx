@@ -29,7 +29,7 @@ export function ProposalListItemWrapper({
     <BoxWith3D
       disabled={md && disabled}
       alwaysWithBorders={isForHelpModal}
-      withActions={!sm || !isForHelpModal}
+      withActions={(!sm && !isForHelpModal) || !isForHelpModal}
       borderSize={10}
       disableActiveState={isVotingActive}
       contentColor="$mainLight"
@@ -40,17 +40,20 @@ export function ProposalListItemWrapper({
             ? '$secondaryFor'
             : '$light'
       }
-      wrapperCss={{ mb: 20 }}
+      wrapperCss={{ mb: 18, [theme.breakpoints.up('sm')]: { mb: 24 } }}
       css={{
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
-        p: 0,
+        p: '18px',
+        [theme.breakpoints.up('sm')]: {
+          p: '18px 24px',
+        },
         [theme.breakpoints.up('lg')]: {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          p: '15px 35px',
+          p: '22px 30px',
           minHeight: isFinished ? 0 : 144,
         },
       }}>

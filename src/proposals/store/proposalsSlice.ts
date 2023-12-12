@@ -21,13 +21,16 @@ import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
-import { ICreateByParamsSlice } from '../../createByParams/store/createByParamsSlice';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
+import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { IProposalCreateOverviewV2Slice } from '../../proposalCreateOverviewV2/store/proposalCreateOverviewV2Slice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
+import {
+  TransactionsSlice,
+  TxType,
+} from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
@@ -185,6 +188,7 @@ export interface IProposalsSlice {
   executePayload: (
     proposalId: number,
     payload: InitialPayload,
+    withController?: boolean,
   ) => Promise<void>;
 
   createPayload: (
@@ -214,7 +218,7 @@ export const createProposalsSlice: StoreSlice<
     IRepresentationsSlice &
     IEnsSlice &
     IRpcSwitcherSlice &
-    ICreateByParamsSlice &
+    IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice &
     IProposalCreateOverviewV2Slice
 > = (set, get) => ({
@@ -288,6 +292,9 @@ export const createProposalsSlice: StoreSlice<
 
   activePage: 0,
   setActivePage: (activePage: number) => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
     set({ activePage: activePage });
   },
 
@@ -568,7 +575,7 @@ export const createProposalsSlice: StoreSlice<
         );
 
         proposalsData = await get().govDataService.getDetailedProposalsData(
-          fr <= 0 ? (get().totalProposalCount > 9 ? 1 : 0) : fr,
+          fr <= 0 ? (get().totalProposalCount > PAGE_SIZE - 1 ? 1 : 0) : fr,
           to <= 0 ? 0 : to,
           userAddress,
           representativeAddress as Hex,
@@ -1091,7 +1098,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.activateVoting(proposalId);
       },
       params: {
-        type: 'activateVoting',
+        type: TxType.activateVoting,
         desiredChainID: appConfig.govCoreChainId,
         payload: {
           proposalId,
@@ -1133,7 +1140,7 @@ export const createProposalsSlice: StoreSlice<
             );
           },
           params: {
-            type: 'sendProofs',
+            type: TxType.sendProofs,
             desiredChainID: votingChainId,
             payload: {
               proposalId,
@@ -1158,7 +1165,7 @@ export const createProposalsSlice: StoreSlice<
         );
       },
       params: {
-        type: 'activateVotingOnVotingMachine',
+        type: TxType.activateVotingOnVotingMachine,
         desiredChainID: votingChainId,
         payload: {
           proposalId,
@@ -1224,7 +1231,7 @@ export const createProposalsSlice: StoreSlice<
                     });
               },
               params: {
-                type: 'vote',
+                type: TxType.vote,
                 desiredChainID: votingChainId,
                 payload: {
                   proposalId,
@@ -1264,7 +1271,7 @@ export const createProposalsSlice: StoreSlice<
                     });
               },
               params: {
-                type: 'vote',
+                type: TxType.vote,
                 desiredChainID: votingChainId,
                 payload: {
                   proposalId,
@@ -1288,7 +1295,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.closeAndSendVote(votingChainId, proposalId);
       },
       params: {
-        type: 'closeAndSendVote',
+        type: TxType.closeAndSendVote,
         desiredChainID: votingChainId,
         payload: {
           proposalId,
@@ -1306,7 +1313,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.executeProposal(proposalId);
       },
       params: {
-        type: 'executeProposal',
+        type: TxType.executeProposal,
         desiredChainID: appConfig.govCoreChainId,
         payload: {
           proposalId,
@@ -1315,7 +1322,7 @@ export const createProposalsSlice: StoreSlice<
     });
   },
 
-  executePayload: async (proposalId, payload) => {
+  executePayload: async (proposalId, payload, withController) => {
     const govDataService = get().govDataService;
 
     await get().executeTx({
@@ -1328,12 +1335,15 @@ export const createProposalsSlice: StoreSlice<
         );
       },
       params: {
-        type: 'executePayload',
+        type: TxType.executePayload,
         desiredChainID: payload.chainId,
         payload: {
           proposalId,
           payloadId: payload.id,
           chainId: payload.chainId,
+          payloadController: withController
+            ? payload.payloadsController
+            : undefined,
         },
       },
     });
@@ -1357,7 +1367,7 @@ export const createProposalsSlice: StoreSlice<
         );
       },
       params: {
-        type: 'createPayload',
+        type: TxType.createPayload,
         desiredChainID: chainId,
         payload: {
           chainId,
@@ -1414,7 +1424,7 @@ export const createProposalsSlice: StoreSlice<
           );
         },
         params: {
-          type: 'createProposal',
+          type: TxType.createProposal,
           desiredChainID: appConfig.govCoreChainId,
           payload: {
             proposalId: proposalsCount,
@@ -1432,7 +1442,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.cancelProposal(proposalId);
       },
       params: {
-        type: 'cancelProposal',
+        type: TxType.cancelProposal,
         desiredChainID: appConfig.govCoreChainId,
         payload: {
           proposalId,

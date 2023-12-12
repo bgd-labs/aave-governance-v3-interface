@@ -1,12 +1,9 @@
 import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, useTheme } from '@mui/system';
-import React, { useState } from 'react';
-
-import BackArrowIcon from '/public/images/icons/backArrow.svg';
+import React from 'react';
 
 import { BasicModal, Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
-import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
 import { chainInfoHelper } from '../../../utils/configs';
 import { formatVoterAddress } from '../../utils/formatVoterAddress';
@@ -30,24 +27,6 @@ const ListItem = styled('div')(({ theme }) => ({
   color: theme.palette.$main,
   '&:last-of-type': {
     marginBottom: 0,
-  },
-}));
-
-const TypeChangeButton = styled('button')(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minWidth: 90,
-  height: 26,
-  borderColor: theme.palette.$main,
-  borderStyle: 'solid',
-  borderWidth: '1px',
-  color: theme.palette.$main,
-  backgroundColor: theme.palette.$mainLight,
-  transition: 'all 0.2s ease',
-  '&:active': {
-    backgroundColor: theme.palette.$disabled,
-    borderColor: theme.palette.$disabled,
   },
 }));
 
@@ -79,34 +58,16 @@ export function VotersModal({
   isFinished,
 }: VotersModalProps) {
   const theme = useTheme();
-  const [type, setType] = useState<'for' | 'against'>('for');
-
-  const isFor = type === 'for';
 
   const votersFor = voters.filter((vote) => vote.support);
   const votersAgainst = voters.filter((vote) => !vote.support);
-
-  const NoData = ({ type }: { type: 'for' | 'against' }) => {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          p: 20,
-        }}>
-        <Box sx={{ typography: 'h3', fontWeight: 600 }}>
-          {texts.proposals.noVotersData(type)}
-        </Box>
-      </Box>
-    );
-  };
 
   const ListItemAddress = ({ vote }: { vote: VotersData }) => {
     return (
       <Link
         inNewWindow
         css={{
+          flex: 1,
           textAlign: 'left',
           transition: 'all 0.2s ease',
           hover: { opacity: '0.5' },
@@ -120,14 +81,69 @@ export function VotersModal({
     );
   };
 
+  const VotersTable = ({ type }: { type: 'for' | 'against' }) => {
+    const isFor = type === 'for';
+
+    return (
+      <Box
+        sx={{
+          display: 'none',
+          [theme.breakpoints.up('sm')]: {
+            display: 'block',
+            width: !(isFor ? votersAgainst : votersFor).length
+              ? '70%'
+              : 'calc(50% - 12px)',
+            margin: !(isFor ? votersAgainst : votersFor).length
+              ? '0 auto'
+              : 'unset',
+          },
+        }}>
+        <BarWrapper>
+          <VoteBar
+            type={type}
+            value={isFor ? forVotes : againstVotes}
+            requiredValue={isFor ? requiredForVotes : requiredAgainstVotes}
+            linePercent={isFor ? forPercent : againstPercent}
+            isFinished={isFinished}
+          />
+        </BarWrapper>
+        <ListItem>
+          <Box component="p" sx={{ typography: 'headline' }}>
+            {texts.proposals.voters}
+          </Box>
+          <Box component="p" sx={{ typography: 'headline' }}>
+            {texts.proposals.votersListVotingPower}
+          </Box>
+        </ListItem>
+        {(type === 'for' ? votersFor : votersAgainst).map((vote, index) => (
+          <ListItem key={index}>
+            <ListItemAddress vote={vote} />
+            <FormattedNumber value={vote.votingPower} visibleDecimals={3} />
+          </ListItem>
+        ))}
+      </Box>
+    );
+  };
+
   return (
     <BasicModal
+      modalCss={{
+        '.BasicModal__content--wrapper': { justifyContent: 'flex-start' },
+      }}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       withCloseButton
-      maxWidth={695}>
-      <Box sx={{ px: 16, [theme.breakpoints.up('sm')]: { px: 0 } }}>
-        <Box component="h2" sx={{ typography: 'h2', mb: 24, fontWeight: 600 }}>
+      withMinHeight
+      maxWidth={690}>
+      <Box sx={{ pt: 20 }}>
+        <Box
+          component="h2"
+          sx={{
+            typography: 'h1',
+            mb: 34,
+            textAlign:
+              !votersFor.length || !votersAgainst.length ? 'center' : 'left',
+          }}>
           {title}
         </Box>
         <Box
@@ -138,7 +154,6 @@ export function VotersModal({
             [theme.breakpoints.up('sm')]: {
               height: 290,
               overflowY: 'auto',
-              pr: 32,
               flexDirection: 'row',
               alignItems: 'flex-start',
               justifyContent: 'space-between',
@@ -146,170 +161,98 @@ export function VotersModal({
           }}>
           <Box sx={{ [theme.breakpoints.up('sm')]: { display: 'none' } }}>
             <BarWrapper>
-              <VoteBar
-                type={type}
-                value={isFor ? forVotes : againstVotes}
-                requiredValue={isFor ? requiredForVotes : requiredAgainstVotes}
-                linePercent={isFor ? forPercent : againstPercent}
-                isFinished={isFinished}
-              />
-              <Box
-                sx={{
-                  display: 'flex',
-                  mt: 20,
-                  justifyContent: isFor ? 'flex-end' : 'flex-start',
-                }}>
-                <TypeChangeButton
-                  type="button"
-                  onClick={() => setType(isFor ? 'against' : 'for')}>
+              {!!votersFor.length && (
+                <VoteBar
+                  type="for"
+                  value={forVotes}
+                  requiredValue={requiredForVotes}
+                  linePercent={forPercent}
+                  isFinished={isFinished}
+                />
+              )}
+              {!!votersAgainst.length && (
+                <VoteBar
+                  type="against"
+                  value={againstVotes}
+                  requiredValue={requiredAgainstVotes}
+                  linePercent={againstPercent}
+                  isFinished={isFinished}
+                />
+              )}
+            </BarWrapper>
+
+            {!!voters.length && (
+              <>
+                <ListItem>
                   <Box
+                    component="p"
                     sx={{
+                      flex: 1,
                       typography: 'headline',
                       display: 'inline-flex',
-                      alignItems: 'center',
-                      svg: {
-                        path: {
-                          fill: theme.palette.$text,
-                        },
-                      },
+                      justifyContent: 'flex-start',
                     }}>
-                    {!isFor && (
-                      <IconBox
-                        sx={{
-                          mr: 5,
-                          width: 17,
-                          height: 10,
-                          '> svg': { width: 17, height: 10 },
-                        }}>
-                        <BackArrowIcon />
-                      </IconBox>
-                    )}
-                    {isFor ? texts.other.toggleAgainst : texts.other.toggleFor}
-                    {isFor && (
-                      <IconBox
-                        sx={{
-                          ml: 5,
-                          width: 17,
-                          height: 10,
-                          '> svg': {
-                            width: 17,
-                            height: 10,
-                          },
-                          transform: 'rotate(180deg)',
-                        }}>
-                        <BackArrowIcon />
-                      </IconBox>
-                    )}
-                  </Box>
-                </TypeChangeButton>
-              </Box>
-            </BarWrapper>
-
-            {!!(isFor ? votersFor : votersAgainst).length ? (
-              <>
-                <ListItem>
-                  <Box component="p" sx={{ typography: 'headline' }}>
                     {texts.proposals.voters}
                   </Box>
-                  <Box component="p" sx={{ typography: 'headline' }}>
+                  <Box
+                    component="p"
+                    sx={{
+                      flex: 1,
+                      typography: 'headline',
+                      display: 'inline-flex',
+                      justifyContent: 'center',
+                    }}>
                     {texts.proposals.votersListVotingPower}
+                  </Box>
+                  <Box
+                    component="p"
+                    sx={{
+                      flex: 1,
+                      typography: 'headline',
+                      display: 'inline-flex',
+                      justifyContent: 'flex-end',
+                    }}>
+                    {texts.other.voted}
                   </Box>
                 </ListItem>
 
-                {(isFor ? votersFor : votersAgainst).map((vote, index) => (
+                {voters.map((vote, index) => (
                   <ListItem key={index}>
                     <ListItemAddress vote={vote} />
-                    <FormattedNumber
-                      value={vote.votingPower}
-                      visibleDecimals={3}
-                    />
+                    <Box
+                      sx={{
+                        flex: 1,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <FormattedNumber
+                        value={vote.votingPower}
+                        visibleDecimals={3}
+                        css={{ display: 'block' }}
+                      />
+                    </Box>
+
+                    <Box
+                      component="p"
+                      sx={{
+                        typography: 'headline',
+                        textAlign: 'right',
+                        flex: 1,
+                        color: vote.support ? '$mainFor' : '$mainAgainst',
+                      }}>
+                      {vote.support
+                        ? texts.other.toggleFor
+                        : texts.other.toggleAgainst}
+                    </Box>
                   </ListItem>
                 ))}
               </>
-            ) : (
-              <NoData type={type} />
             )}
           </Box>
 
-          <Box
-            sx={{
-              display: 'none',
-              [theme.breakpoints.up('sm')]: { display: 'block', width: '46%' },
-            }}>
-            <BarWrapper>
-              <VoteBar
-                type="for"
-                value={forVotes}
-                requiredValue={requiredForVotes}
-                linePercent={forPercent}
-                isFinished={isFinished}
-              />
-            </BarWrapper>
-
-            {!!votersFor.length ? (
-              <>
-                <ListItem>
-                  <Box component="p" sx={{ typography: 'headline' }}>
-                    {texts.proposals.voters}
-                  </Box>
-                  <Box component="p" sx={{ typography: 'headline' }}>
-                    {texts.proposals.votersListVotingPower}
-                  </Box>
-                </ListItem>
-                {votersFor.map((vote, index) => (
-                  <ListItem key={index}>
-                    <ListItemAddress vote={vote} />
-                    <FormattedNumber
-                      value={vote.votingPower}
-                      visibleDecimals={3}
-                    />
-                  </ListItem>
-                ))}
-              </>
-            ) : (
-              <NoData type="for" />
-            )}
-          </Box>
-
-          <Box
-            sx={{
-              display: 'none',
-              [theme.breakpoints.up('sm')]: { display: 'block', width: '46%' },
-            }}>
-            <BarWrapper>
-              <VoteBar
-                type="against"
-                value={againstVotes}
-                requiredValue={requiredAgainstVotes}
-                linePercent={againstPercent}
-                isFinished={isFinished}
-              />
-            </BarWrapper>
-
-            {!!votersAgainst.length ? (
-              <>
-                <ListItem>
-                  <Box component="p" sx={{ typography: 'headline' }}>
-                    {texts.proposals.voters}
-                  </Box>
-                  <Box component="p" sx={{ typography: 'headline' }}>
-                    {texts.proposals.votersListVotingPower}
-                  </Box>
-                </ListItem>
-                {votersAgainst.map((vote, index) => (
-                  <ListItem key={index}>
-                    <ListItemAddress vote={vote} />
-                    <FormattedNumber
-                      value={vote.votingPower}
-                      visibleDecimals={3}
-                    />
-                  </ListItem>
-                ))}
-              </>
-            ) : (
-              <NoData type="against" />
-            )}
-          </Box>
+          {!!votersFor.length && <VotersTable type="for" />}
+          {!!votersAgainst.length && <VotersTable type="against" />}
         </Box>
       </Box>
     </BasicModal>

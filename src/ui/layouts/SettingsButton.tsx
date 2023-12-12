@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react';
-import { Box, useTheme } from '@mui/system';
-import React from 'react';
+import { Box, SxProps, useTheme } from '@mui/system';
+import React, { ReactNode } from 'react';
 
 import SettingsIcon from '/public/images/icons/settings.svg';
 import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
@@ -26,6 +26,41 @@ export function SettingsButton() {
     (error) => error.error,
   );
 
+  const SettingButtonIconWrapper = ({
+    children,
+    sx,
+  }: {
+    children: ReactNode;
+    sx: SxProps;
+  }) => {
+    return (
+      <IconBox
+        sx={{
+          width: 16,
+          height: 16,
+          transition: 'all 0.2s ease',
+          path: {
+            stroke: theme.palette.$textLight,
+          },
+          ...sx,
+          '> svg': {
+            width: 16,
+            height: 16,
+            [theme.breakpoints.up('lg')]: {
+              width: 22,
+              height: 22,
+            },
+          },
+          [theme.breakpoints.up('lg')]: {
+            width: 22,
+            height: 22,
+          },
+        }}>
+        {children}
+      </IconBox>
+    );
+  };
+
   return (
     <>
       <Menu
@@ -42,15 +77,20 @@ export function SettingsButton() {
                 cursor: 'pointer',
                 lineHeight: '0.5',
                 position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
                 px: 10,
+                ml: 2,
+                height: 52,
                 [theme.breakpoints.up('lg')]: {
-                  ml: 10,
+                  ml: 8,
+                  height: 66,
                 },
                 hover: {
                   '.SettingsButton__rpc--error': {
                     opacity: 1,
                   },
-                  '> div': {
+                  'div > div': {
                     '&:first-of-type': {
                       opacity: 0,
                     },
@@ -60,112 +100,76 @@ export function SettingsButton() {
                   },
                 },
               }}>
-              <IconBox
-                sx={{
-                  width: 16,
-                  height: 16,
-                  opacity: open ? 0 : 1,
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  transition: 'all 0.2s ease',
-                  path: {
-                    stroke: theme.palette.$textLight,
-                  },
-                  '> svg': {
-                    width: 16,
-                    height: 16,
-                    [theme.breakpoints.up('lg')]: {
-                      width: 21,
-                      height: 21,
-                    },
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    width: 21,
-                    height: 21,
-                  },
-                }}>
-                <SettingsBordersIcon />
-              </IconBox>
-              <IconBox
-                sx={{
-                  width: 16,
-                  height: 16,
-                  opacity: open ? 1 : 0,
-                  transition: 'all 0.2s ease',
-                  path: {
-                    fill: theme.palette.$textLight,
-                  },
-                  '> svg': {
-                    width: 16,
-                    height: 16,
-                    [theme.breakpoints.up('lg')]: {
-                      width: 21,
-                      height: 21,
-                    },
-                  },
-                  [theme.breakpoints.up('lg')]: {
-                    width: 21,
-                    height: 21,
-                  },
-                }}>
-                <SettingsIcon />
-              </IconBox>
+              <Box sx={{ position: 'relative' }}>
+                <SettingButtonIconWrapper
+                  sx={{
+                    opacity: open ? 0 : 1,
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}>
+                  <SettingsBordersIcon />
+                </SettingButtonIconWrapper>
+                <SettingButtonIconWrapper
+                  sx={{
+                    opacity: open ? 1 : 0,
+                  }}>
+                  <SettingsIcon />
+                </SettingButtonIconWrapper>
 
-              {isRpcHasError && (
-                <>
-                  <IconBox
-                    sx={{
-                      position: 'absolute',
-                      right: 7,
-                      bottom: -3,
-                      width: 10,
-                      height: 8,
-                      '> svg': {
+                {isRpcHasError && (
+                  <>
+                    <IconBox
+                      sx={{
+                        position: 'absolute',
+                        right: -3,
+                        bottom: -3,
                         width: 10,
                         height: 8,
+                        '> svg': {
+                          width: 10,
+                          height: 8,
+                          [theme.breakpoints.up('lg')]: {
+                            width: 12,
+                            height: 10,
+                          },
+                        },
                         [theme.breakpoints.up('lg')]: {
                           width: 12,
                           height: 10,
                         },
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        width: 12,
-                        height: 10,
-                        right: 6,
-                        bottom: -3,
-                      },
-                    }}>
-                    <WarningIcon />
-                  </IconBox>
+                      }}>
+                      <WarningIcon />
+                    </IconBox>
 
-                  <Box
-                    className="SettingsButton__rpc--error"
-                    sx={{
-                      padding: 4,
-                      typography: 'descriptor',
-                      backgroundColor: '$light',
-                      position: 'absolute',
-                      top: -16,
-                      right: 'calc(100% - 6px)',
-                      minWidth: 250,
-                      zIndex: 6,
-                      opacity: 0,
-                      transition: 'all 0.2s ease',
-                      pointerEvents: 'none',
-                      [theme.breakpoints.up('lg')]: {
-                        padding: 8,
-                        top: -18,
-                      },
-                    }}>
-                    {texts.other.rpcError(
-                      filteredAppErrors.length,
-                      textCenterEllipsis(filteredAppErrors[0].rpcUrl, 12, 12),
-                    )}
-                  </Box>
-                </>
-              )}
+                    <Box
+                      className="SettingsButton__rpc--error"
+                      sx={{
+                        padding: 4,
+                        typography: 'descriptor',
+                        backgroundColor: '$light',
+                        position: 'absolute',
+                        top: -16,
+                        right: 'calc(100% - 6px)',
+                        minWidth: 250,
+                        zIndex: 6,
+                        opacity: 0,
+                        transition: 'all 0.2s ease',
+                        pointerEvents: 'none',
+                        [theme.breakpoints.up('lg')]: {
+                          padding: 8,
+                          top: -18,
+                        },
+                      }}>
+                      {texts.other.rpcError(
+                        filteredAppErrors.length,
+                        textCenterEllipsis(filteredAppErrors[0].rpcUrl, 12, 12),
+                      )}
+                    </Box>
+                  </>
+                )}
+              </Box>
             </Menu.Button>
 
             <Menu.Items
@@ -175,13 +179,34 @@ export function SettingsButton() {
                 flexDirection: 'column',
                 position: 'absolute',
                 right: 0,
-                top: '100%',
+                top: 'calc(100% - 1px)',
               }}>
               <BoxWith3D
                 borderSize={10}
                 leftBorderColor="$secondary"
                 bottomBorderColor="$headerGray"
-                css={{ width: 150, p: 10, color: '$textWhite' }}>
+                css={{
+                  width: 170,
+                  p: 10,
+                  color: '$textWhite',
+                  [theme.breakpoints.up('lg')]: { width: 190 },
+                }}>
+                <Link
+                  href={ROUTES.payloadsExplorer}
+                  css={{
+                    color: '$textDisabled',
+                    lineHeight: 1,
+                    hover: {
+                      color: theme.palette.$textWhite,
+                    },
+                    mb: 15,
+                  }}
+                  onClick={close}>
+                  <Box sx={{ typography: 'buttonSmall' }}>
+                    {texts.header.payloadsExplorer}
+                  </Box>
+                </Link>
+
                 <Link
                   href={ROUTES.rpcSwitcher}
                   css={{
@@ -228,11 +253,11 @@ export function SettingsButton() {
                   sx={{ typography: 'headline', color: '$textLight' }}>
                   {texts.header.theme}
                 </Box>
-                <Divider sx={{ my: 10 }} />
+                <Divider sx={{ mt: 8, mb: 14 }} />
                 <ThemeSwitcher />
                 {!isForIPFS && isTermsAndConditionsVisible && (
                   <>
-                    <Divider sx={{ my: 10 }} />
+                    <Divider sx={{ my: 14 }} />
                     <Box
                       component="button"
                       type="button"

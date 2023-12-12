@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import { ReactNode, useRef } from 'react';
 
 import { useStore } from '../../store';
@@ -12,31 +12,12 @@ const Text = ({
   children: ReactNode;
   withMargin?: boolean;
 }) => {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{
         typography: 'body',
         mb: withMargin ? 12 : 0,
-        lineHeight: '20px !important',
         fontWeight: 400,
-        [theme.breakpoints.up('sm')]: {
-          typography: 'body',
-          lineHeight: '22px !important',
-        },
-        [theme.breakpoints.up('md')]: {
-          typography: 'body',
-          lineHeight: '24px !important',
-        },
-        [theme.breakpoints.up('lg')]: {
-          typography: 'body',
-          lineHeight: '24px !important',
-        },
-        [theme.breakpoints.up('xl')]: {
-          typography: 'body',
-          lineHeight: '28px !important',
-        },
       }}>
       {children}
     </Box>

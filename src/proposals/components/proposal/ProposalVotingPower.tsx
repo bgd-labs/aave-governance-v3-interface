@@ -9,7 +9,10 @@ import InfoIcon from '/public/images/icons/info.svg';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
 import { useStore } from '../../../store';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, NoSSR } from '../../../ui';
 import { ChainNameWithIcon } from '../../../ui/components/ChainNameWithIcon';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
@@ -84,7 +87,7 @@ export function ProposalVotingPower({
     selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
       activeWallet.address,
-      'vote',
+      TxType.vote,
       {
         proposalId,
         support: !supportObject[proposalId],
@@ -105,7 +108,6 @@ export function ProposalVotingPower({
           display: 'inline',
           textAlign: 'center',
           color: '$text',
-          lineHeight: '22px',
           '*': {
             display: 'inline',
           },

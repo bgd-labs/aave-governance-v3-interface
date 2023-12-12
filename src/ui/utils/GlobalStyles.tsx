@@ -15,15 +15,19 @@ export function GlobalStyles() {
       },
     },
 
+    html: {
+      scrollBehavior: 'smooth',
+    },
+
     body: {
       fontFamily: FONT,
       minWidth: 365,
-      fontWeight: '300',
-      fontSize: 13,
-      lineHeight: '15px',
+      fontWeight: '400',
+      fontSize: 14,
+      lineHeight: '20px',
       [`@media only screen and (${media.lg})`]: {
         fontSize: 15,
-        lineHeight: '18px',
+        lineHeight: '24px',
       },
     },
 
@@ -207,7 +211,7 @@ export function GlobalStyles() {
       },
 
       '.Divider': {
-        borderBottomColor: '#C6C3D1',
+        borderBottomColor: '#555069',
       },
 
       '.ProposalListItemFinalStatus__text': {
@@ -384,7 +388,7 @@ export function GlobalStyles() {
       },
 
       '.Divider': {
-        borderBottomColor: '#47557C',
+        borderBottomColor: '#475072',
       },
 
       '.ProposalListItemFinalStatus__text': {

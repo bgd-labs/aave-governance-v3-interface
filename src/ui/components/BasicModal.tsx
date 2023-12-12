@@ -6,6 +6,8 @@ import CloseIcon from '/public/images/icons/cross.svg';
 
 import { IconBox } from '../primitives/IconBox';
 import NoSSR from '../primitives/NoSSR';
+import { media } from '../utils/themeMUI';
+import { useMediaQuery } from '../utils/useMediaQuery';
 import { BackButton3D } from './BackButton3D';
 import { BoxWith3D } from './BoxWith3D';
 
@@ -13,15 +15,36 @@ const ContentWrapper = ({
   children,
   maxWidth,
   contentCss,
+  withMinHeight,
+  minHeight,
 }: {
   children: ReactNode;
   maxWidth?: number | string;
   contentCss?: SxProps;
+  withMinHeight?: boolean;
+  minHeight?: number;
 }) => {
   const theme = useTheme();
 
   return (
     <>
+      <Box
+        sx={{
+          backgroundColor: '$mainLight',
+          position: 'relative',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          p: '52px 8px 24px',
+          [theme.breakpoints.up('sm')]: {
+            display: 'none',
+          },
+        }}>
+        {children}
+      </Box>
+
       <BoxWith3D
         borderSize={10}
         contentColor="$mainLight"
@@ -36,40 +59,39 @@ const ContentWrapper = ({
           '> div': { width: '100%', height: '100%', display: 'flex' },
         }}
         css={{
-          position: 'relative',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          p: '45px 12px 15px',
           [theme.breakpoints.up('sm')]: {
+            position: 'relative',
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            width: '100%',
             display: 'block',
             maxHeight: 'calc(100vh - 20px)',
             height: 'unset',
-            maxWidth: maxWidth || 450,
-            p: '50px 30px 30px',
+            maxWidth: maxWidth || 460,
+            p: '24px 30px',
+            minHeight: 'unset',
+            '@media only screen and (min-height: 575px)': {
+              minHeight: withMinHeight
+                ? 500
+                : !!minHeight
+                  ? minHeight
+                  : 'unset',
+            },
           },
         }}>
-        <Box sx={contentCss}>{children}</Box>
+        <Box
+          className="BasicModal__content--wrapper"
+          sx={{
+            width: '100%',
+            minHeight: 'inherit',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+          }}>
+          <Box sx={{ width: '100%', ...contentCss }}>{children}</Box>
+        </Box>
       </BoxWith3D>
-
-      <Box
-        sx={{
-          backgroundColor: '$mainLight',
-          position: 'relative',
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          p: '45px 12px 15px',
-          [theme.breakpoints.up('sm')]: {
-            display: 'none',
-          },
-        }}>
-        {children}
-      </Box>
     </>
   );
 };
@@ -81,11 +103,12 @@ export interface BasicModalProps {
   maxWidth?: number | string;
   withCloseButton?: boolean;
   withoutOverlap?: boolean;
-  withoutAnimationWhenOpen?: boolean;
   onBackButtonClick?: () => void;
   contentCss?: SxProps;
   modalCss?: SxProps;
   initialFocus?: any;
+  withMinHeight?: boolean;
+  minHeight?: number;
 }
 
 export function BasicModal({
@@ -95,13 +118,15 @@ export function BasicModal({
   maxWidth,
   withCloseButton,
   withoutOverlap,
-  withoutAnimationWhenOpen,
   onBackButtonClick,
   contentCss,
   modalCss,
   initialFocus,
+  withMinHeight,
+  minHeight,
 }: BasicModalProps) {
   const theme = useTheme();
+  const sm = useMediaQuery(media.sm);
 
   return (
     <NoSSR>
@@ -136,7 +161,7 @@ export function BasicModal({
           sx={{
             display: 'flex',
             position: 'fixed',
-            top: 80,
+            top: 70,
             left: 0,
             right: 0,
             bottom: 0,
@@ -151,29 +176,22 @@ export function BasicModal({
             sx={{
               width: '100%',
               height: '100%',
-              '@keyframes modalOpen': {
-                '0%': {
-                  opacity: withoutAnimationWhenOpen ? 1 : 0.5,
-                },
-                '100%': {
-                  opacity: 1,
-                },
-              },
-              '@media (hover: hover) and (pointer: fine)': {
-                animation: `modalOpen 0.3s`,
-              },
               [theme.breakpoints.up('sm')]: {
                 m: 12,
-                maxWidth: maxWidth || 450,
+                maxWidth: maxWidth || 460,
                 height: 'unset',
               },
             }}>
-            <ContentWrapper contentCss={contentCss} maxWidth={maxWidth}>
+            <ContentWrapper
+              contentCss={contentCss}
+              maxWidth={maxWidth}
+              withMinHeight={withMinHeight}
+              minHeight={minHeight}>
               <Box
                 sx={{
                   margin: 'auto',
                   width: '100%',
-                  maxWidth: maxWidth || 450,
+                  maxWidth: maxWidth || 460,
                   [theme.breakpoints.up('sm')]: {
                     margin: '0 auto',
                     maxWidth: 'unset',
@@ -184,12 +202,12 @@ export function BasicModal({
 
               {!!onBackButtonClick && (
                 <Box
-                  sx={{ position: 'absolute', top: 10, left: 15, zIndex: 12 }}>
+                  sx={{ position: 'absolute', top: 14, left: 8, zIndex: 12 }}>
                   <Box sx={{ position: 'fixed' }}>
                     <BackButton3D
                       onClick={onBackButtonClick}
                       alwaysWithBorders
-                      isSmall
+                      isSmall={sm}
                       isVisibleOnMobile
                       alwaysVisible
                     />
@@ -207,8 +225,8 @@ export function BasicModal({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    right: 5,
-                    top: 2,
+                    right: 8,
+                    top: 10,
                     border: 'none',
                     background: 'none',
                     lineHeight: 0,

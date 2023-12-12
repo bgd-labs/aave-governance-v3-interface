@@ -1,16 +1,12 @@
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import TxPendingImage from '/public/images/helpModals/txLoading.svg';
-import TxPendingImageDark from '/public/images/helpModals/txLoadingDark.svg';
-
 import { BoxWith3D } from '..';
-import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
 
 interface HelpTxWrapperProps {
-  txStartImage?: any;
-  txEndImage?: any;
+  txStartImage?: string;
+  txEndImage?: string;
   txPending: boolean;
   txSuccess: boolean;
   children: ReactNode;
@@ -70,35 +66,32 @@ export function HelpTxWrapper({
             [theme.breakpoints.up('md')]: {
               display: 'flex',
               width: 290,
-              maxHeight: 470,
+              height: 470,
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
             },
           }}>
-          <IconBox
+          <Box
             sx={{
               width: '100%',
               height: '100%',
-              maxHeight: 470,
-              '> svg': {
-                width: '100%',
-                height: '100%',
-                maxHeight: 470,
-              },
-            }}>
-            {!txPending && !txSuccess ? (
-              txStartImage()
-            ) : txPending && !txSuccess ? (
-              theme.palette.mode === 'dark' ? (
-                <TxPendingImageDark />
-              ) : (
-                <TxPendingImage />
-              )
-            ) : (
-              txEndImage()
-            )}
-          </IconBox>
+              background: `url(${setRelativePath(
+                `/${
+                  !txPending && !txSuccess
+                    ? txStartImage
+                    : txPending && !txSuccess
+                      ? theme.palette.mode === 'dark'
+                        ? 'images/helpModals/txLoadingDark.svg'
+                        : 'images/helpModals/txLoading.svg'
+                      : txEndImage
+                }`,
+              )})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
         </Box>
 
         {txStartImageMobile && txEndImageMobile && (

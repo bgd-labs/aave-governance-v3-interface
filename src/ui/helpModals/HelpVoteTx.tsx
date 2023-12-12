@@ -6,7 +6,7 @@ import {
   ProposalWithLoadings,
   valueToBigNumber,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { Box } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -50,6 +50,8 @@ export function HelpVoteTx({
   setIsVoteButtonClick,
   proposalData,
 }: HelpVoteTxProps) {
+  const theme = useTheme();
+
   const [localVotingTokens, setLocalVotingTokens] = useState<Balance[]>([]);
   const [isGaslessVote, setIsGaslessVote] = useState(true);
   const [isEditVotingTokensOpen, setEditVotingTokens] = useState(false);
@@ -159,12 +161,11 @@ export function HelpVoteTx({
       closeButtonText={texts.faq.tx.tryAgain}
       tx={getTestTx({ txPending, txSuccess })}
       topBlock={
-        !isVotingModesInfoOpen && (
+        !isVotingModesInfoOpen &&
+        !isEditVotingTokensOpen && (
           <Box
             sx={{
-              zIndex: isEditVotingTokensOpen ? -1 : 1,
-              opacity: isEditVotingTokensOpen ? 0 : 1,
-              visibility: isEditVotingTokensOpen ? 'hidden' : 'visible',
+              zIndex: 1,
             }}>
             <Box
               sx={{
@@ -178,9 +179,12 @@ export function HelpVoteTx({
               sx={{
                 textAlign: 'center',
                 mt: isTxStart ? -62 : 32,
-                mb: 16,
                 position: 'relative',
                 zIndex: 2,
+                mb: 18,
+                [theme.breakpoints.up('lg')]: {
+                  mb: 24,
+                },
               }}>
               <Box component="h2" sx={{ typography: 'h2' }}>
                 {proposalData.proposal.data.title}
@@ -189,9 +193,12 @@ export function HelpVoteTx({
             <Box
               sx={{
                 display: 'flex',
-                mb: isTxStart ? 0 : 28,
                 justifyContent: 'center',
                 minHeight: 20,
+                mb: isTxStart ? 0 : 18,
+                [theme.breakpoints.up('lg')]: {
+                  mb: isTxStart ? 0 : 24,
+                },
               }}>
               {isTxStart ? (
                 <VotedState support={!support} isBig />
@@ -209,7 +216,15 @@ export function HelpVoteTx({
       }>
       {!isEditVotingTokensOpen && !isVotingModesInfoOpen && (
         <>
-          <Box sx={{ width: 296, m: '0 auto 40px' }}>
+          <Box
+            sx={{
+              width: 300,
+              mx: 'auto',
+              mb: 18,
+              [theme.breakpoints.up('lg')]: {
+                mb: 24,
+              },
+            }}>
             <VoteBar
               type="for"
               value={forVotesWithVotingPower}
@@ -239,7 +254,10 @@ export function HelpVoteTx({
               display: 'flex',
               justifyContent: 'center',
               textAlign: 'center',
-              mb: 32,
+              mb: 18,
+              [theme.breakpoints.up('lg')]: {
+                mb: 24,
+              },
             }}>
             <Box
               component="p"
@@ -298,122 +316,134 @@ export function HelpVoteTx({
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <BigButton
-              alwaysWithBorders
-              loading={txPending}
-              activeColorType={support ? 'against' : 'for'}
-              disabled={
-                localVotingPower <= 0 ||
-                proposalData.proposal.state > ProposalState.Active
-              }
-              onClick={() => {
-                setTxPending(true);
-                setTimeout(() => {
-                  setTxPending(false);
-                  setTxSuccess(true);
-                }, 3000);
-              }}
-              css={{ '.BigButton__children': { height: '100%' } }}>
-              <Box
-                sx={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '100%',
-                  height: '100%',
-                }}>
-                {isGaslessVote && (
-                  <IconBox
-                    sx={(theme) => ({
-                      width: 8,
-                      height: 12,
-                      mr: 5,
-                      [theme.breakpoints.up('sm')]: {
-                        width: 11,
-                        height: 19,
-                      },
-                      '> img': {
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <BigButton
+                alwaysWithBorders
+                loading={txPending}
+                activeColorType={support ? 'against' : 'for'}
+                disabled={
+                  localVotingPower <= 0 ||
+                  proposalData.proposal.state > ProposalState.Active
+                }
+                onClick={() => {
+                  setTxPending(true);
+                  setTimeout(() => {
+                    setTxPending(false);
+                    setTxSuccess(true);
+                  }, 3000);
+                }}
+                css={{ '.BigButton__children': { height: '100%' } }}>
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}>
+                  {isGaslessVote && (
+                    <IconBox
+                      sx={(theme) => ({
                         width: 8,
                         height: 12,
+                        mr: 5,
                         [theme.breakpoints.up('sm')]: {
                           width: 11,
                           height: 19,
                         },
-                      },
-                    })}>
-                    <Image src={gelatoIcon} alt="gelatoIcon" />
-                  </IconBox>
-                )}
+                        '> img': {
+                          width: 8,
+                          height: 12,
+                          [theme.breakpoints.up('sm')]: {
+                            width: 11,
+                            height: 19,
+                          },
+                        },
+                      })}>
+                      <Image src={gelatoIcon} alt="gelatoIcon" />
+                    </IconBox>
+                  )}
+                  <Box
+                    sx={{
+                      height: '100%',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    {texts.proposals.vote}
+                  </Box>
+                </Box>
+              </BigButton>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  mt: 18,
+                  [theme.breakpoints.up('lg')]: {
+                    mt: 24,
+                  },
+                }}>
+                <GelatoSwitcher
+                  value={isGaslessVote}
+                  setValue={setIsGaslessVote}
+                />
+
                 <Box
-                  sx={{
-                    height: '100%',
+                  onClick={() => setIsVotingModesInfoOpen(true)}
+                  sx={(theme) => ({
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                  }}>
-                  {texts.proposals.vote}
-                </Box>
-              </Box>
-            </BigButton>
-
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                mt: 22,
-              }}>
-              <GelatoSwitcher
-                value={isGaslessVote}
-                setValue={setIsGaslessVote}
-              />
-              <Box
-                onClick={() => setIsVotingModesInfoOpen(true)}
-                sx={(theme) => ({
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  mt: 6,
-                  hover: {
-                    '.VoteModal__gasLessText': {
-                      color: theme.palette.$textSecondary,
-                    },
-                  },
-                })}>
-                <Box
-                  className="VoteModal__gasLessText"
-                  sx={{
-                    typography: 'descriptor',
-                    color: '$text',
-                    transition: 'all 0.2s ease',
-                  }}>
-                  {texts.proposals.gasLess}
-                </Box>
-                <IconBox
-                  sx={(theme) => ({
-                    width: 10,
-                    height: 10,
-                    ml: 4,
-                    '> svg': {
-                      width: 10,
-                      height: 10,
-                      path: { fill: theme.palette.$textSecondary },
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    mt: 6,
+                    hover: {
+                      '.VoteModal__gasLessText': {
+                        color: theme.palette.$textSecondary,
+                      },
                     },
                   })}>
-                  <InfoIcon />
-                </IconBox>
+                  <Box
+                    className="VoteModal__gasLessText"
+                    sx={{
+                      typography: 'descriptor',
+                      color: '$text',
+                      transition: 'all 0.2s ease',
+                    }}>
+                    {texts.proposals.gasLess}
+                  </Box>
+                  <IconBox
+                    sx={(theme) => ({
+                      width: 10,
+                      height: 10,
+                      ml: 4,
+                      '> svg': {
+                        width: 10,
+                        height: 10,
+                        path: { fill: theme.palette.$textSecondary },
+                      },
+                    })}>
+                    <InfoIcon />
+                  </IconBox>
+                </Box>
               </Box>
             </Box>
           </Box>
         </>
       )}
+
       {!isEditVotingTokensOpen && isVotingModesInfoOpen && (
         <VotingModesContent onBackClick={setIsVotingModesInfoOpen} />
       )}
@@ -423,6 +453,7 @@ export function HelpVoteTx({
           localVotingTokens={localVotingTokens}
           setVotingTokens={setLocalVotingTokens}
           setEditVotingTokens={setEditVotingTokens}
+          forTest
         />
       )}
     </ActionModalContent>

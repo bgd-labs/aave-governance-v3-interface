@@ -6,6 +6,7 @@ import ArrowToTop from '/public/images/icons/arrowToTop.svg';
 
 import { IconBox } from '../primitives/IconBox';
 import { getChainName } from '../utils/getChainName';
+import { NetworkIcon } from './NetworkIcon';
 
 interface SelectFieldProps {
   value: any;
@@ -13,6 +14,7 @@ interface SelectFieldProps {
   options: any[];
   placeholder: string;
   withChainName?: boolean;
+  withChainIcon?: boolean;
   withMyself?: boolean;
 }
 
@@ -22,6 +24,7 @@ export function SelectField({
   options,
   placeholder,
   withChainName,
+  withChainIcon,
   withMyself,
 }: SelectFieldProps) {
   const theme = useTheme();
@@ -33,19 +36,18 @@ export function SelectField({
           <Listbox.Button
             as={Box}
             sx={{
+              transition: 'all 0.2s ease',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               width: '100%',
               fontWeight: '400',
+              border: `1px solid ${theme.palette.$main}`,
               fontSize: 11,
               lineHeight: '14px',
               p: '7px 5px',
-              border: `1px solid ${theme.palette.$disabled}`,
-              borderColor: open ? '$main' : '$disabled',
-              color: !(value || value === 0) ? '$disabled' : '$text',
-              transition: 'all 0.2s ease',
-              cursor: 'pointer',
+              color: !(value || value === 0) ? '$textDisabled' : '$text',
               [theme.breakpoints.up('xsm')]: {
                 fontSize: 12,
                 lineHeight: '15px',
@@ -56,19 +58,25 @@ export function SelectField({
                 lineHeight: '16px',
               },
               '&:active, &:focus': {
-                borderColor: '$main',
+                backgroundColor: theme.palette.$light,
               },
               hover: {
-                borderColor: theme.palette.$main,
+                backgroundColor: theme.palette.$light,
               },
             }}>
-            {!!(value || value === 0)
-              ? withChainName
-                ? getChainName(value)
-                : value
-              : withMyself && value === ''
-                ? 'Myself'
-                : placeholder}
+            <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+              {!!(value || value === 0) && withChainIcon && (
+                <NetworkIcon chainId={value} size={14} css={{ mr: 8 }} />
+              )}
+              {!!(value || value === 0)
+                ? withChainName
+                  ? getChainName(value)
+                  : value
+                : withMyself && value === ''
+                  ? 'Myself'
+                  : placeholder}
+            </Box>
+
             <IconBox sx={{ path: { stroke: theme.palette.$main } }}>
               {open ? <ArrowToTop /> : <ArrowToBottom />}
             </IconBox>
@@ -80,10 +88,13 @@ export function SelectField({
               top: 'calc(100% - 1px)',
               border: `1px solid ${theme.palette.$main}`,
               width: '100%',
-              maxHeight: 250,
+              maxHeight: 160,
               overflowY: 'auto',
               zIndex: 2,
               backgroundColor: '$mainLight',
+              [theme.breakpoints.up('md')]: {
+                maxHeight: 250,
+              },
             }}>
             {options.map((option: any) => (
               <Listbox.Option
@@ -100,8 +111,7 @@ export function SelectField({
                   color: '$text',
                   transition: 'all 0.2s ease',
                   cursor: option === value ? 'default' : 'pointer',
-                  backgroundColor:
-                    option === value ? '$disabled' : '$mainLight',
+                  backgroundColor: option === value ? '$light' : '$mainLight',
                   [theme.breakpoints.up('xsm')]: {
                     fontSize: 12,
                     lineHeight: '15px',
@@ -112,7 +122,7 @@ export function SelectField({
                     lineHeight: '16px',
                   },
                   hover: {
-                    backgroundColor: theme.palette.$disabled,
+                    backgroundColor: theme.palette.$light,
                   },
                 }}>
                 {withChainName
