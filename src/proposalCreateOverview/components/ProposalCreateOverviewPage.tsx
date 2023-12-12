@@ -137,7 +137,7 @@ export function ProposalCreateOverviewPage({
               [theme.breakpoints.up('sm')]: { display: 'none' },
             }}>
             <Box sx={{ position: 'relative', zIndex: 2 }}>
-              {!newIpfsData ? (
+              {!newIpfsData && !newIpfsDataError ? (
                 <>
                   <Box
                     sx={{
@@ -159,16 +159,18 @@ export function ProposalCreateOverviewPage({
                   </Box>
                 </>
               ) : (
-                <>
-                  <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
-                    {newIpfsData.title}
-                  </Box>
-                  <DetailsShareLinks
-                    ipfs={newIpfsData}
-                    ipfsError={newIpfsDataError}
-                    forCreate
-                  />
-                </>
+                !newIpfsDataError && (
+                  <>
+                    <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
+                      {newIpfsData.title}
+                    </Box>
+                    <DetailsShareLinks
+                      ipfs={newIpfsData}
+                      ipfsError={newIpfsDataError}
+                      forCreate
+                    />
+                  </>
+                )
               )}
             </Box>
           </Box>
@@ -224,7 +226,7 @@ export function ProposalCreateOverviewPage({
                     forCreate
                   />
                 ) : (
-                  <BlockWrapper contentColor="$mainLight">
+                  <BlockWrapper contentColor="$mainLight" toBottom>
                     {initialParams.payloads.map((value, index) => {
                       return (
                         <Box key={index} sx={{ mb: 12 }}>
@@ -241,13 +243,13 @@ export function ProposalCreateOverviewPage({
               </NoSSR>
             </LeftPanelWrapper>
 
-            <RightPanelWrapper>
+            <RightPanelWrapper onlyChildren={!!newIpfsDataError}>
               <Box
                 sx={{
                   display: 'none',
                   [theme.breakpoints.up('sm')]: { display: 'block' },
                 }}>
-                {!newIpfsData ? (
+                {!newIpfsData && !newIpfsDataError ? (
                   <>
                     <Box
                       sx={{
@@ -269,18 +271,21 @@ export function ProposalCreateOverviewPage({
                     </Box>
                   </>
                 ) : (
-                  <>
-                    <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
-                      {newIpfsData.title}
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
-                      <DetailsShareLinks
-                        ipfs={newIpfsData}
-                        ipfsError={newIpfsDataError}
-                        forCreate
-                      />
-                    </Box>
-                  </>
+                  !newIpfsDataError && (
+                    <>
+                      <Box component="h2" sx={{ typography: 'h1', mb: 16 }}>
+                        {newIpfsData.title}
+                      </Box>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', mb: 44 }}>
+                        <DetailsShareLinks
+                          ipfs={newIpfsData}
+                          ipfsError={newIpfsDataError}
+                          forCreate
+                        />
+                      </Box>
+                    </>
+                  )
                 )}
               </Box>
 

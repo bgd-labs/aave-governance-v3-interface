@@ -36,10 +36,11 @@ export function Details({ ipfs, ipfsError }: DetailsProps) {
   if (!ipfs && ipfsError)
     return (
       <BoxWith3D
+        className="ProposalDetails__error"
         wrapperCss={{ my: 12 }}
         borderSize={10}
         contentColor="$mainAgainst"
-        css={{ p: '15px 20px' }}>
+        css={{ p: '14px 18px' }}>
         <Box
           component="p"
           sx={{
