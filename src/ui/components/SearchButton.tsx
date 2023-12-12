@@ -16,7 +16,7 @@ export const Input = styled('input')(({ theme }) => ({
   color: theme.palette.$text,
   transition: 'all 0.3s ease',
   border: 'none',
-  height: 34,
+  height: 36,
   background: 'transparent',
   paddingRight: 35,
   [theme.breakpoints.up('xsm')]: {
@@ -26,6 +26,7 @@ export const Input = styled('input')(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     fontSize: 13,
     lineHeight: '16px',
+    height: 42,
   },
   '&::placeholder': {
     color: theme.palette.$textDisabled,
@@ -91,7 +92,7 @@ export function SearchButton({
         }}>
         <BoxWith3D
           withActions={isHovered}
-          borderSize={isOpen ? 5 : 10}
+          borderSize={isOpen ? 4 : 10}
           disableActiveState
           disabled={disabled}
           contentColor="$mainLight"
@@ -113,13 +114,10 @@ export function SearchButton({
             alignItems: 'center',
             justifyContent: 'space-between',
             transition: 'width 0.3s ease',
-            height: 34,
-            width: isOpen ? 240 : 34,
-            [theme.breakpoints.up('md')]: {
-              width: isOpen ? 180 : 34,
-            },
+            height: isOpen ? 36 : 32,
+            width: isOpen ? 240 : 32,
             [theme.breakpoints.up('lg')]: {
-              height: 36,
+              height: isOpen ? 42 : 36,
               width: isOpen ? 280 : 36,
             },
           }}>
@@ -149,6 +147,9 @@ export function SearchButton({
             sx={{
               width: isOpen ? 'calc(100% - 34px)' : '0',
               overflow: 'hidden',
+              [theme.breakpoints.up('md')]: {
+                width: isOpen ? 'calc(100% - 36px)' : '0',
+              },
             }}>
             <InputWrapper
               onCrossClick={() => {

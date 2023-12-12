@@ -75,14 +75,19 @@ export function ProposalHistoryItem({
       />
       <Box
         sx={{
+          position: 'relative',
           display: 'flex',
           mb: 32,
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           flexDirection: 'column',
           flex: 1,
+          bottom: 2,
           [theme.breakpoints.up('sm')]: {
             flexDirection: 'row',
+          },
+          [theme.breakpoints.up('lg')]: {
+            bottom: 3.5,
           },
         }}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>

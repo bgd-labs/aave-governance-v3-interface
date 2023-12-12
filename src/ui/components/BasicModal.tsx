@@ -6,6 +6,8 @@ import CloseIcon from '/public/images/icons/cross.svg';
 
 import { IconBox } from '../primitives/IconBox';
 import NoSSR from '../primitives/NoSSR';
+import { media } from '../utils/themeMUI';
+import { useMediaQuery } from '../utils/useMediaQuery';
 import { BackButton3D } from './BackButton3D';
 import { BoxWith3D } from './BoxWith3D';
 
@@ -35,7 +37,7 @@ const ContentWrapper = ({
           width: '100%',
           height: '100%',
           display: 'flex',
-          p: '24px 8px',
+          p: '52px 8px 24px',
           [theme.breakpoints.up('sm')]: {
             display: 'none',
           },
@@ -124,6 +126,7 @@ export function BasicModal({
   minHeight,
 }: BasicModalProps) {
   const theme = useTheme();
+  const sm = useMediaQuery(media.sm);
 
   return (
     <NoSSR>
@@ -199,12 +202,12 @@ export function BasicModal({
 
               {!!onBackButtonClick && (
                 <Box
-                  sx={{ position: 'absolute', top: 10, left: 15, zIndex: 12 }}>
+                  sx={{ position: 'absolute', top: 14, left: 8, zIndex: 12 }}>
                   <Box sx={{ position: 'fixed' }}>
                     <BackButton3D
                       onClick={onBackButtonClick}
                       alwaysWithBorders
-                      isSmall
+                      isSmall={sm}
                       isVisibleOnMobile
                       alwaysVisible
                     />
@@ -222,8 +225,8 @@ export function BasicModal({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    right: 5,
-                    top: 2,
+                    right: 8,
+                    top: 10,
                     border: 'none',
                     background: 'none',
                     lineHeight: 0,

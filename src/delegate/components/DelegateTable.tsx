@@ -59,8 +59,7 @@ export function DelegateTable({
             <TableHeaderTitle
               title="Asset"
               css={{
-                maxWidth: 165,
-                [theme.breakpoints.up('lg')]: { maxWidth: 190 },
+                maxWidth: 200,
               }}
             />
             <TableHeaderTitle

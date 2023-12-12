@@ -59,18 +59,19 @@ export function RepresentingForm({
     address: '',
   });
 
+  const isToTop = !isForTest && !isTransactionsVisible;
+
   return (
     <Box
       sx={{
         display: 'flex',
-        my: 20,
+        mt: 20,
         alignItems: 'center',
         flexDirection: 'column',
         position: 'relative',
         zIndex: 11,
         [theme.breakpoints.up('sm')]: {
-          pb: isTransactionsVisible ? 0 : 40,
-          my: 24,
+          mt: 24,
         },
       }}>
       <Box
@@ -170,14 +171,25 @@ export function RepresentingForm({
                   </Box>
 
                   <IconBox sx={{ path: { stroke: theme.palette.$main } }}>
-                    {open ? <ArrowToTop /> : <ArrowToBottom />}
+                    {isToTop ? (
+                      open ? (
+                        <ArrowToBottom />
+                      ) : (
+                        <ArrowToTop />
+                      )
+                    ) : open ? (
+                      <ArrowToTop />
+                    ) : (
+                      <ArrowToBottom />
+                    )}
                   </IconBox>
                 </Listbox.Button>
                 <Listbox.Options
                   as={Box}
                   sx={{
                     position: 'absolute',
-                    top: 'calc(100% - 1px)',
+                    top: isToTop ? 'auto' : 'calc(100% - 1px)',
+                    bottom: isToTop ? 'calc(100% - 1px)' : 'auto',
                     border: `1px solid ${theme.palette.$main}`,
                     width: '100%',
                     maxHeight: 250,

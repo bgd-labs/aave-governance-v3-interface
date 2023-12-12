@@ -350,9 +350,9 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flex: 2,
-                    ml: 15,
+                    ml: 22,
                     [theme.breakpoints.up('lg')]: {
-                      ml: 0,
+                      ml: 15,
                     },
                   }}>
                   <HelpModalTooltip maxWidth={270}>
@@ -376,7 +376,7 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     flex: 2,
-                    mr: 20,
+                    mr: 22,
                   }}>
                   <HelpModalTooltip maxWidth={270} countNumber={2}>
                     <Box component="p" sx={{ typography: 'body' }}>

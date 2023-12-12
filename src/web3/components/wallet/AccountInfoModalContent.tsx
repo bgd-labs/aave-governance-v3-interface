@@ -267,9 +267,9 @@ export function AccountInfoModalContent({
       {isActive && !!filteredTransactions.length && (
         <Box
           sx={{
-            mt: isRepresentedAvailable ? 0 : 20,
+            mt: 20,
             [theme.breakpoints.up('sm')]: {
-              mt: isRepresentedAvailable ? 0 : 24,
+              mt: 24,
             },
           }}>
           <Box

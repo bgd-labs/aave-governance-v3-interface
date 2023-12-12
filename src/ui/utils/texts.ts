@@ -71,7 +71,7 @@ export const texts = {
       seatbelt: 'Seatbelt',
       actions: (length: number) => (length > 1 ? 'Actions' : 'Action'),
       details: 'Status',
-      more: (active: boolean) => (active ? 'Hide' : 'Show more'),
+      more: (active: boolean) => (active ? 'Show less' : 'Show more'),
     },
   },
   proposalActions: {
