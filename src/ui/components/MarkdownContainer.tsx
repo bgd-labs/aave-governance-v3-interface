@@ -28,7 +28,6 @@ export function MarkdownContainer({
         wordBreak: 'break-word',
         'h1, h2, h3, h4, h5, h6': { my: 18 },
         table: {
-          width: '100%',
           th: {
             p: 12,
             borderBottomColor: '$main',
@@ -185,6 +184,23 @@ export function MarkdownContainer({
                     </pre>
                   )}
                 </Highlight>
+              );
+            },
+            table({ node, ...rest }) {
+              return (
+                <Box sx={{ width: '100%', pb: 12, overflowX: 'auto' }}>
+                  <Box
+                    component="table"
+                    sx={{
+                      width: '100%',
+                      pb: 12,
+                      '*': {
+                        wordBreak: 'keep-all',
+                      },
+                    }}>
+                    {rest.children}
+                  </Box>
+                </Box>
               );
             },
           },

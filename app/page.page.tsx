@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import React from 'react';
 
 import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
+import { ComingSoonPage } from '../src/ui/pages/ComingSoonPage';
 import { metaTexts } from '../src/ui/utils/metaTexts';
 import { appConfig } from '../src/utils/appConfig';
 import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
@@ -36,89 +37,80 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const activePage = !!searchParams['activePage']
-    ? Number(searchParams['activePage']) - 1
-    : 0;
+  // const activePage = !!searchParams['activePage']
+  //   ? Number(searchParams['activePage']) - 1
+  //   : 0;
+  //
+  // const res = await fetch(`${githubStartUrl}/${listViewPath}`);
+  // const data = res.ok
+  //   ? ((await res.json()) as PageServerSideData)
+  //   : ({ totalProposalCount: -1, proposals: [] } as PageServerSideData);
+  // const cachedIds = data.proposals.map((data) => data.id);
+  // const totalIds =
+  //   data.totalProposalCount >= 0
+  //     ? Array.from(Array(data.totalProposalCount).keys()).sort((a, b) => b - a)
+  //     : [];
+  // const startIndex = activePage * 10; // PAGE_SIZE
+  // let endIndex = startIndex + 10; // PAGE_SIZE
+  //
+  // if (endIndex > totalIds.length) {
+  //   endIndex = totalIds.length;
+  // }
+  // const idsByPage = totalIds.slice(startIndex, endIndex);
+  //
+  // const activeIds: number[] = [];
+  // for (let i = 0; i < idsByPage.length; i++) {
+  //   let found = false;
+  //   for (let j = 0; j < cachedIds.length; j++) {
+  //     if (idsByPage[i] === cachedIds[j]) {
+  //       found = true;
+  //       break;
+  //     }
+  //   }
+  //
+  //   if (!found) {
+  //     activeIds.push(idsByPage[i]);
+  //   }
+  // }
+  //
+  // const cachedIdsByPage: number[] = [];
+  // for (let i = 0; i < idsByPage.length; i++) {
+  //   let found = false;
+  //   for (let j = 0; j < activeIds.length; j++) {
+  //     if (idsByPage[i] === activeIds[j]) {
+  //       found = true;
+  //       break;
+  //     }
+  //   }
+  //
+  //   if (!found) {
+  //     cachedIdsByPage.push(idsByPage[i]);
+  //   }
+  // }
+  //
+  // const { configs, contractsConstants } = await getGovCoreConfigs({
+  //   client: initialClients[appConfig.govCoreChainId],
+  //   govCoreContractAddress: appConfig.govCoreConfig.contractAddress,
+  //   govCoreDataHelperContractAddress:
+  //     appConfig.govCoreConfig.dataHelperContractAddress,
+  // });
+  //
+  // const cachedProposalsData = cachedIdsByPage.map((id) => {
+  //   const proposal = data.proposals.filter((proposal) => proposal.id === id)[0];
+  //
+  //   return {
+  //     id: proposal.id,
+  //     proposal: {
+  //       data: {
+  //         id: proposal.id,
+  //         finishedTimestamp: proposal.finishedTimestamp,
+  //         title: proposal.title,
+  //         ipfsHash: proposal.ipfsHash,
+  //       },
+  //       state: proposal.state,
+  //     },
+  //   } as CachedProposalDataItemWithId;
+  // });
 
-  const res = await fetch(`${githubStartUrl}/${listViewPath}`);
-  const data = res.ok
-    ? ((await res.json()) as PageServerSideData)
-    : ({ totalProposalCount: -1, proposals: [] } as PageServerSideData);
-  const cachedIds = data.proposals.map((data) => data.id);
-  const totalIds =
-    data.totalProposalCount >= 0
-      ? Array.from(Array(data.totalProposalCount).keys()).sort((a, b) => b - a)
-      : [];
-  const startIndex = activePage * 10; // PAGE_SIZE
-  let endIndex = startIndex + 10; // PAGE_SIZE
-
-  if (endIndex > totalIds.length) {
-    endIndex = totalIds.length;
-  }
-  const idsByPage = totalIds.slice(startIndex, endIndex);
-
-  const activeIds: number[] = [];
-  for (let i = 0; i < idsByPage.length; i++) {
-    let found = false;
-    for (let j = 0; j < cachedIds.length; j++) {
-      if (idsByPage[i] === cachedIds[j]) {
-        found = true;
-        break;
-      }
-    }
-
-    if (!found) {
-      activeIds.push(idsByPage[i]);
-    }
-  }
-
-  const cachedIdsByPage: number[] = [];
-  for (let i = 0; i < idsByPage.length; i++) {
-    let found = false;
-    for (let j = 0; j < activeIds.length; j++) {
-      if (idsByPage[i] === activeIds[j]) {
-        found = true;
-        break;
-      }
-    }
-
-    if (!found) {
-      cachedIdsByPage.push(idsByPage[i]);
-    }
-  }
-
-  const { configs, contractsConstants } = await getGovCoreConfigs({
-    client: initialClients[appConfig.govCoreChainId],
-    govCoreContractAddress: appConfig.govCoreConfig.contractAddress,
-    govCoreDataHelperContractAddress:
-      appConfig.govCoreConfig.dataHelperContractAddress,
-  });
-
-  const cachedProposalsData = cachedIdsByPage.map((id) => {
-    const proposal = data.proposals.filter((proposal) => proposal.id === id)[0];
-
-    return {
-      id: proposal.id,
-      proposal: {
-        data: {
-          id: proposal.id,
-          finishedTimestamp: proposal.finishedTimestamp,
-          title: proposal.title,
-          ipfsHash: proposal.ipfsHash,
-        },
-        state: proposal.state,
-      },
-    } as CachedProposalDataItemWithId;
-  });
-
-  return (
-    <ProposalPageSSR
-      cachedProposals={data.proposals}
-      cachedTotalProposalCount={data.totalProposalCount}
-      govCoreConfigs={configs}
-      contractsConstants={contractsConstants}
-      cachedProposalsData={cachedProposalsData}
-      cachedActiveIds={activeIds}
-    />
-  );
+  return <ComingSoonPage />;
 }
