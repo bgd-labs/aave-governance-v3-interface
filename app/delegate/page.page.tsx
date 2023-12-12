@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import React from 'react';
 
 import { DelegatePage } from '../../src/delegate/components/DelegatePage';
+import { ComingSoonPage } from '../../src/ui/pages/ComingSoonPage';
 import { metaTexts } from '../../src/ui/utils/metaTexts';
 
 export const metadata: Metadata = {
@@ -15,5 +16,6 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <DelegatePage />;
+  // return <DelegatePage />;
+  return <ComingSoonPage />;
 }

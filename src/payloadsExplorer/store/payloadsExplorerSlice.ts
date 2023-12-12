@@ -204,7 +204,7 @@ export const createPayloadsExplorerSlice: StoreSlice<
 
     const interval = setInterval(async () => {
       await get().getPayloadsExploreData(chainId, address, activePage);
-    }, 20000);
+    }, 10000);
 
     set({ detailedPayloadsExplorerDataInterval: Number(interval) });
   },
