@@ -59,7 +59,7 @@ export const createProposalCreateOverviewV2Slice: StoreSlice<
       });
 
     const data = await getEventsBySteps(
-      Number(currentBlock.number) - 864000 / 15, // 10 days in seconds / average eth block time (15)
+      Number(currentBlock.number) - Math.ceil(2000000 / 15),
       Number(currentBlock.number),
       799,
       events,
