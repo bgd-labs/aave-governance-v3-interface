@@ -45,6 +45,7 @@ export function ProposalCreateOverviewPage({
     isCreateProposalModalOpen,
     setIsCreateProposalModalOpen,
     createProposal,
+    setIpfsDataErrors,
   } = useStore();
 
   useEffect(() => {
@@ -289,7 +290,16 @@ export function ProposalCreateOverviewPage({
                 )}
               </Box>
 
-              <Details ipfs={newIpfsData} ipfsError={newIpfsDataError} />
+              <Details
+                ipfs={newIpfsData}
+                ipfsError={newIpfsDataError}
+                onClick={() => {
+                  if (initialParams.ipfsHash) {
+                    setIpfsDataErrors(initialParams.ipfsHash, '');
+                    getIpfsData([newProposalId], initialParams.ipfsHash);
+                  }
+                }}
+              />
             </RightPanelWrapper>
           </Box>
         </Box>

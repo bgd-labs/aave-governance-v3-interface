@@ -18,6 +18,7 @@ export enum LocalStorageKeys {
   TermsAccept = 'termsAccept',
   AppMode = 'appMode',
   TutorialStartButtonClicked = 'tutorialStartButtonClicked',
+  PayloadsExplorerView = 'payloadsExplorerView',
 }
 
 // for ENS
@@ -118,4 +119,12 @@ export const setLocalStorageTutorialStartButtonClicked = (value: string) => {
     LocalStorageKeys.TutorialStartButtonClicked,
     value,
   );
+};
+
+export const getLocalStoragePayloadsExplorerView = () => {
+  return localStorage?.getItem(LocalStorageKeys.PayloadsExplorerView);
+};
+
+export const setLocalStoragePayloadsExplorerView = (value: string) => {
+  return localStorage?.setItem(LocalStorageKeys.PayloadsExplorerView, value);
 };
