@@ -72,6 +72,7 @@
     "react-final-form-arrays": "^3.1.4",
     "react-loading-skeleton": "^3.3.1",
     "react-paginate": "^8.2.0",
+    "react-snowfall": "^1.2.1",
     "sharp": "^0.32.6",
     "viem": "^1.19.11",
     "wagmi": "^1.4.8",
