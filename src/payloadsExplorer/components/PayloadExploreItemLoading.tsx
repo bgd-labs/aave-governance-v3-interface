@@ -3,30 +3,45 @@ import React from 'react';
 
 import { BoxWith3D } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
+import { media } from '../../ui/utils/themeMUI';
+import { useMediaQuery } from '../../ui/utils/useMediaQuery';
 
-export function PayloadExploreItemLoading() {
+export function PayloadExploreItemLoading({
+  isColumns,
+}: {
+  isColumns: boolean;
+}) {
   const theme = useTheme();
+  const xsm = useMediaQuery(media.xs);
+
+  const isColumn = isColumns && xsm;
 
   return (
     <BoxWith3D
       className="ProposalLoading__SSR"
       contentColor="$mainLight"
-      wrapperCss={{ mb: 18, [theme.breakpoints.up('sm')]: { mb: 24 } }}
+      wrapperCss={{
+        mb: isColumn ? 0 : 18,
+        [theme.breakpoints.up('sm')]: { mb: isColumns ? 0 : 24 },
+        '> div, .BoxWith3D__content': {
+          height: isColumn ? '100%' : 'auto',
+        },
+      }}
       css={{
         display: 'flex',
         flexDirection: 'column',
-        p: '18px',
+        p: isColumn ? '12px 8px' : '18px',
         '*': {
           lineHeight: '1 !important',
         },
         [theme.breakpoints.up('sm')]: {
-          flexDirection: 'row',
+          flexDirection: isColumn ? 'column' : 'row',
           alignItems: 'flex-start',
           justifyContent: 'space-between',
           p: '18px 24px',
         },
         [theme.breakpoints.up('lg')]: {
-          p: '22px 30px',
+          p: isColumn ? '14px 12px' : '22px 30px',
         },
       }}>
       <Box sx={{ flex: 1 }}>
@@ -52,16 +67,13 @@ export function PayloadExploreItemLoading() {
         </Box>
 
         <Box sx={{ display: 'flex', mb: 4 }}>
-          <Box sx={{ typography: 'headline', mr: 12 }}>
-            <CustomSkeleton width={80} height={24} />
-          </Box>
-          <CustomSkeleton width={80} height={24} />
+          <CustomSkeleton width={80} height={isColumn ? 14 : 24} />
         </Box>
 
         <Box sx={{ mb: 4 }}>
-          <CustomSkeleton width={190} height={24} />
+          <CustomSkeleton width={190} height={isColumn ? 14 : 24} />
         </Box>
-        <CustomSkeleton width={190} height={24} />
+        <CustomSkeleton width={190} height={isColumn ? 14 : 24} />
       </Box>
 
       <Box
@@ -82,18 +94,26 @@ export function PayloadExploreItemLoading() {
               hover: { opacity: 0.7 },
             },
           }}>
-          <Box sx={{ typography: 'h2', mb: 12 }}>
-            <CustomSkeleton width={60} height={23} />
+          <Box
+            sx={{
+              typography: 'h2',
+              mb: 4,
+              [theme.breakpoints.up('sm')]: {
+                mb: isColumn ? 4 : 12,
+                mt: isColumn ? 16 : 0,
+              },
+            }}>
+            <CustomSkeleton width={60} height={isColumn ? 14 : 23} />
           </Box>
           <Box>
             <Box sx={{ mb: 4 }}>
-              <CustomSkeleton width={120} height={24} />
+              <CustomSkeleton width={120} height={isColumn ? 14 : 24} />
             </Box>
             <Box sx={{ mb: 4 }}>
-              <CustomSkeleton width={120} height={24} />
+              <CustomSkeleton width={120} height={isColumn ? 14 : 24} />
             </Box>
             <Box sx={{ mb: 4 }}>
-              <CustomSkeleton width={120} height={24} />
+              <CustomSkeleton width={120} height={isColumn ? 14 : 24} />
             </Box>
           </Box>
         </Box>
@@ -102,12 +122,25 @@ export function PayloadExploreItemLoading() {
       <Box
         sx={{
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'space-between',
-          flex: 1,
+          [theme.breakpoints.up('xsm')]: {
+            flexDirection: isColumn ? 'column-reverse' : 'row-reverse',
+            alignItems: isColumn ? 'flex-start' : 'center',
+            justifyContent: isColumn ? 'space-between' : 'space-between',
+          },
           [theme.breakpoints.up('sm')]: {
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            justifyContent: 'flex-end',
+            flexDirection: isColumn ? 'row-reverse' : 'column',
+            alignItems: isColumn ? 'center' : 'flex-end',
+            justifyContent: isColumn ? 'space-between' : 'flex-end',
+            mt: isColumn ? 16 : 0,
+            width: isColumn ? '100%' : 'auto',
+          },
+          [theme.breakpoints.up('md')]: {
+            flex: 1,
+          },
+          [theme.breakpoints.up('lg')]: {
+            mt: isColumn ? 18 : 0,
           },
         }}>
         <Box
@@ -118,12 +151,17 @@ export function PayloadExploreItemLoading() {
             typography: 'headline',
             width: 95,
             order: 1,
+            [theme.breakpoints.up('xsm')]: {
+              order: 0,
+              mt: isColumn ? 12 : 0,
+            },
             [theme.breakpoints.up('sm')]: {
               order: 0,
-              mb: 12,
+              mt: 0,
+              mb: isColumn ? 0 : 12,
             },
             [theme.breakpoints.up('lg')]: {
-              width: 102,
+              minWidth: 102,
             },
           }}>
           <Box
