@@ -37,7 +37,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Web3HelperProvider />
 
       <Snowfall
-        snowflakeCount={50}
+        snowflakeCount={30}
         style={{
           position: 'fixed',
           width: '100vw',
