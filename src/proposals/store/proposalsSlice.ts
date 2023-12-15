@@ -450,7 +450,8 @@ export const createProposalsSlice: StoreSlice<
   setIpfsDataErrors: (ipfsHash, text) => {
     set((state) =>
       produce(state, (draft) => {
-        draft.ipfsDataErrors[ipfsHash] = text || texts.other.fetchFromIpfsError;
+        draft.ipfsDataErrors[ipfsHash] =
+          text === '' ? '' : text || texts.other.fetchFromIpfsError;
       }),
     );
   },

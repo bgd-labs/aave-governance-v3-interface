@@ -2,7 +2,7 @@ import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { BoxWith3D } from '../../../ui';
+import { BoxWith3D, SmallButton } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { MarkdownContainer } from '../../../ui/components/MarkdownContainer';
 import { texts } from '../../../ui/utils/texts';
@@ -10,9 +10,10 @@ import { texts } from '../../../ui/utils/texts';
 interface DetailsProps {
   ipfs?: ProposalMetadata;
   ipfsError?: string;
+  onClick?: () => void;
 }
 
-export function Details({ ipfs, ipfsError }: DetailsProps) {
+export function Details({ ipfs, ipfsError, onClick }: DetailsProps) {
   if (!ipfs && !ipfsError)
     return (
       <>
@@ -35,22 +36,36 @@ export function Details({ ipfs, ipfsError }: DetailsProps) {
 
   if (!ipfs && ipfsError)
     return (
-      <BoxWith3D
-        className="ProposalDetails__error"
-        wrapperCss={{ my: 12 }}
-        borderSize={10}
-        contentColor="$mainAgainst"
-        css={{ p: '14px 18px' }}>
-        <Box
-          component="p"
-          sx={{
-            typography: 'descriptor',
-            color: '$light',
-            textAlign: 'center',
-          }}>
-          {ipfsError}
-        </Box>
-      </BoxWith3D>
+      <Box>
+        <BoxWith3D
+          className="ProposalDetails__error"
+          wrapperCss={{ my: 12 }}
+          borderSize={10}
+          contentColor="$mainAgainst"
+          css={{ p: '14px 18px' }}>
+          <Box
+            component="p"
+            sx={{
+              typography: 'descriptor',
+              color: '$light',
+              textAlign: 'center',
+            }}>
+            {ipfsError}
+          </Box>
+        </BoxWith3D>
+
+        {!!onClick && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              width: '100%',
+              mt: 18,
+            }}>
+            <SmallButton onClick={onClick}>Re-request</SmallButton>
+          </Box>
+        )}
+      </Box>
     );
 
   return (

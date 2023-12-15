@@ -22,12 +22,15 @@ import { BoxWith3D, Link, SmallButton } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { texts } from '../../ui/utils/texts';
+import { media } from '../../ui/utils/themeMUI';
+import { useMediaQuery } from '../../ui/utils/useMediaQuery';
 import { PayloadStatus } from './PayloadStatus';
 
 export function PayloadExploreItem({
   payload,
   setSelectedPayloadForExecute,
   setSelectedPayloadForDetailsModal,
+  isColumns,
 }: {
   payload: Payload;
   setSelectedPayloadForExecute: ({
@@ -40,9 +43,11 @@ export function PayloadExploreItem({
     payloadsController,
     id,
   }: InitialPayload) => void;
+  isColumns: boolean;
 }) {
   const theme = useTheme();
   const store = useStore();
+  const xsm = useMediaQuery(media.xs);
 
   const {
     isPayloadOnInitialState,
@@ -97,19 +102,25 @@ export function PayloadExploreItem({
   return (
     <BoxWith3D
       contentColor="$mainLight"
-      wrapperCss={{ mb: 18, [theme.breakpoints.up('sm')]: { mb: 24 } }}
+      wrapperCss={{
+        mb: isColumns ? 0 : 18,
+        [theme.breakpoints.up('sm')]: { mb: isColumns ? 0 : 24 },
+        '> div, .BoxWith3D__content': {
+          height: isColumns ? '100%' : 'auto',
+        },
+      }}
       css={{
         display: 'flex',
         flexDirection: 'column',
-        p: '18px',
+        p: isColumns ? '12px 8px' : '18px',
         [theme.breakpoints.up('sm')]: {
-          flexDirection: 'row',
+          flexDirection: isColumns ? 'column' : 'row',
           alignItems: 'flex-start',
           justifyContent: 'space-between',
           p: '18px 24px',
         },
         [theme.breakpoints.up('lg')]: {
-          p: '22px 30px',
+          p: isColumns ? '14px 12px' : '22px 30px',
         },
       }}>
       <Box sx={{ flex: 1 }}>
@@ -144,15 +155,20 @@ export function PayloadExploreItem({
           </Box>
         </Box>
 
-        <Box sx={{ typography: 'headline', mb: 4 }}>
+        <Box
+          sx={{
+            typography: isColumns && xsm ? 'descriptorAccent' : 'headline',
+            mb: 4,
+          }}>
           {texts.proposals.payloadsDetails.accessLevel}:{' '}
           {payload.maximumAccessLevelRequired}
         </Box>
 
         <PayloadCreator
           payload={payload}
-          mainTypography="headline"
-          addressTypography="body"
+          mainTypography={isColumns && xsm ? 'descriptorAccent' : 'headline'}
+          addressTypography={isColumns && xsm ? 'descriptor' : 'body'}
+          ellipsisFrom={isColumns && xsm ? 4 : undefined}
         />
         <PayloadStatus
           payload={payload}
@@ -162,8 +178,8 @@ export function PayloadExploreItem({
           isExecuted={isExecuted}
           payloadExecutionTime={payloadExecutionTime}
           payloadExpiredTime={payloadExpiredTime}
-          titleTypography="headline"
-          textTypography="body"
+          titleTypography={isColumns && xsm ? 'descriptorAccent' : 'headline'}
+          textTypography={isColumns && xsm ? 'descriptor' : 'body'}
         />
       </Box>
 
@@ -185,7 +201,14 @@ export function PayloadExploreItem({
               hover: { opacity: 0.7 },
             },
           }}>
-          <Box sx={{ typography: 'h2', mb: 12 }}>
+          <Box
+            sx={{
+              typography: isColumns && xsm ? 'headline' : 'h2',
+              [theme.breakpoints.up('sm')]: {
+                mb: isColumns ? 0 : 12,
+                mt: isColumns ? 16 : 0,
+              },
+            }}>
             {texts.proposals.payloadsDetails.actions(
               payload.actionAddresses?.length || 0,
             )}
@@ -203,12 +226,25 @@ export function PayloadExploreItem({
       <Box
         sx={{
           display: 'flex',
+          alignItems: 'center',
           justifyContent: 'space-between',
-          flex: 1,
+          [theme.breakpoints.up('xsm')]: {
+            flexDirection: isColumns ? 'column-reverse' : 'row-reverse',
+            alignItems: isColumns ? 'flex-start' : 'center',
+            justifyContent: isColumns ? 'space-between' : 'space-between',
+          },
           [theme.breakpoints.up('sm')]: {
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-            justifyContent: 'flex-end',
+            flexDirection: isColumns ? 'row-reverse' : 'column',
+            alignItems: isColumns ? 'center' : 'flex-end',
+            justifyContent: isColumns ? 'space-between' : 'flex-end',
+            mt: isColumns ? 18 : 0,
+            width: isColumns ? '100%' : 'auto',
+          },
+          [theme.breakpoints.up('md')]: {
+            flex: 1,
+          },
+          [theme.breakpoints.up('lg')]: {
+            mt: isColumns ? 24 : 0,
           },
         }}>
         <Box
@@ -222,9 +258,14 @@ export function PayloadExploreItem({
             p: '4px 8px',
             minWidth: 95,
             order: 1,
+            [theme.breakpoints.up('xsm')]: {
+              order: 0,
+              mt: isColumns ? 12 : 0,
+            },
             [theme.breakpoints.up('sm')]: {
               order: 0,
-              mb: 12,
+              mt: 0,
+              mb: isColumns ? 0 : 12,
             },
             [theme.breakpoints.up('lg')]: {
               minWidth: 102,
