@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import React, { useEffect } from 'react';
+import Snowfall from 'react-snowfall';
 
 import { RepresentationInfoModal } from '../../representations/components/RepresentationInfoModal';
 import { useStore } from '../../store';
@@ -34,6 +35,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Web3HelperProvider />
+
+      <Snowfall
+        snowflakeCount={30}
+        style={{
+          position: 'fixed',
+          width: '100vw',
+          height: '100vh',
+        }}
+      />
 
       <MainLayout>{children}</MainLayout>
 
