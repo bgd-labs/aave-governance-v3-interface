@@ -243,12 +243,11 @@ export function HelpRepresentativeModal() {
                     left: 10,
                     top: 110,
                     [theme.breakpoints.up('xsm')]: {
-                      left: 184,
+                      left: -5,
                       top: 76,
                     },
                     [theme.breakpoints.up('lg')]: {
-                      left: '200px !important',
-                      top: '82px !important',
+                      top: 82,
                     },
 
                     '.HelpModalTooltip__content': {
@@ -260,10 +259,7 @@ export function HelpRepresentativeModal() {
                         },
                       },
                       [theme.breakpoints.up('sm')]: {
-                        width: 283,
-                      },
-                      [theme.breakpoints.up('lg')]: {
-                        width: 310,
+                        width: 380,
                       },
                     },
                   }}>
