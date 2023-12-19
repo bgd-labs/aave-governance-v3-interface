@@ -14,7 +14,7 @@ export function createEmotionCache() {
 }
 
 export const media = {
-  xs: '(min-width: 420px)',
+  xs: '(min-width: 465px)',
   sm: '(min-width: 768px)',
   md: '(min-width: 1024px)',
   lg: '(min-width: 1400px)',
