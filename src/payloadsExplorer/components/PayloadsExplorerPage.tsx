@@ -18,7 +18,7 @@ import { SelectField } from '../../ui/components/SelectField';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
-import { appConfig } from '../../utils/appConfig';
+import { appConfig, appUsedNetworks } from '../../utils/appConfig';
 import {
   getLocalStoragePayloadsExplorerView,
   setLocalStoragePayloadsExplorerView,
@@ -178,7 +178,7 @@ export function PayloadsExplorerPage() {
                     onChange={(event) => {
                       setChainId(event);
                     }}
-                    options={appConfig.payloadsControllerChainIds}
+                    options={appUsedNetworks}
                   />
                 </InputWrapper>
               ) : (

@@ -4,6 +4,7 @@ import {
   payloadsControllerChainIds,
   votingMachineChainIds,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { bsc } from 'viem/chains';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 export const isTermsAndConditionsVisible =
@@ -19,6 +20,8 @@ export const isTestnet = coreName === 'goerli' || coreName === 'sepolia';
 export const appUsedNetworks: number[] = [
   ...votingMachineChainIds[coreName],
   ...payloadsControllerChainIds[coreName],
-].filter((value, index, self) => self.indexOf(value) === index);
+]
+  .filter((value, index, self) => self.indexOf(value) === index)
+  .filter((value) => value !== bsc.id);
 
 export const appConfig = appConfigInit(coreName);

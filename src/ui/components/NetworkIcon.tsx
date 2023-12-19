@@ -7,6 +7,7 @@ import {
   base,
   bsc,
   bscTestnet,
+  gnosis,
   goerli,
   mainnet,
   metis,
@@ -56,6 +57,8 @@ const getIconNetworkName = (chainId: number) => {
       return 'metis';
     case optimism.id:
       return 'optimism';
+    case gnosis.id:
+      return 'gnosis';
     default:
       return 'ethereum';
   }
