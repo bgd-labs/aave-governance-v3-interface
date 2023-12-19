@@ -77,7 +77,9 @@ export const createRpcSwitcherSlice: StoreSlice<
       !!Object.keys(JSON.parse(rpcUrlsFromStorage)).length &&
       Object.keys(JSON.parse(rpcUrlsFromStorage)).every((chainId) =>
         appUsedNetworks.includes(Number(chainId)),
-      )
+      ) &&
+      appUsedNetworks.length ===
+        Object.keys(JSON.parse(rpcUrlsFromStorage)).length
     ) {
       const parsedRpcUrlsFromStorage = JSON.parse(rpcUrlsFromStorage) as Record<
         number,
