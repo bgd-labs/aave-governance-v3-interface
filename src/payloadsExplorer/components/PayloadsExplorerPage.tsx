@@ -2,8 +2,8 @@
 
 import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { useRouter } from 'next/navigation';
-import React, { ReactNode, useEffect, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
 import ColumnsIcon from '/public/images/icons/columnsIcon.svg';
@@ -18,7 +18,7 @@ import { SelectField } from '../../ui/components/SelectField';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
-import { appConfig, appUsedNetworks } from '../../utils/appConfig';
+import { appConfig, appUsedNetworks, isForIPFS } from '../../utils/appConfig';
 import {
   getLocalStoragePayloadsExplorerView,
   setLocalStoragePayloadsExplorerView,
@@ -77,6 +77,19 @@ function PayloadsExploreViewSwitcherButton({
 export function PayloadsExplorerPage() {
   const theme = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      // @ts-ignore
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   const {
     getPayloadsExploreData,
@@ -91,7 +104,9 @@ export function PayloadsExplorerPage() {
   } = useStore();
 
   const [isColumns, setIsColumns] = useState(false);
-  const [chainId, setChainId] = useState<number>(appConfig.govCoreChainId);
+  const [chainId, setChainId] = useState<number>(
+    Number(searchParams?.get('chainId') || appConfig.govCoreChainId),
+  );
   const [controllerAddress, setControllerAddress] = useState<Hex>(
     appConfig.payloadsControllerConfig[chainId].contractAddresses[0],
   );
@@ -106,9 +121,23 @@ export function PayloadsExplorerPage() {
   }, []);
 
   useEffect(() => {
+    if (searchParams && !!searchParams.get('chainId')) {
+      setChainId(Number(searchParams.get('chainId')));
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     setControllerAddress(
       appConfig.payloadsControllerConfig[chainId].contractAddresses[0],
     );
+    if (!isForIPFS) {
+      router.replace(
+        pathname + '?' + createQueryString('chainId', chainId.toString() || ''),
+        {
+          scroll: false,
+        },
+      );
+    }
   }, [chainId]);
 
   useEffect(() => {
