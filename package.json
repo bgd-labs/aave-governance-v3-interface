@@ -30,8 +30,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --watch"
   },
   "dependencies": {
-    "@bgd-labs/aave-address-book": "^2.13.0",
-    "@bgd-labs/aave-governance-ui-helpers": "^1.0.8",
+    "@bgd-labs/aave-address-book": "^2.13.3",
+    "@bgd-labs/aave-governance-ui-helpers": "^1.0.9-bc22386883b43cd126ea9ddc85053e93dd73f21e.0",
     "@bgd-labs/frontend-web3-utils": "^1.0.3",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
