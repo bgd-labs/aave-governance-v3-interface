@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.1.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.0.2...v1.1.0) (2023-12-26)
+
+
+### Features
+
+* added two variants of payloads explorer screen view ([#35](https://github.com/bgd-labs/aave-governance-v3-interface/issues/35)) ([8ce3b3c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/8ce3b3c936e593e60c56c6023efe8b8b184ee6e0))
+* release updates ([#33](https://github.com/bgd-labs/aave-governance-v3-interface/issues/33)) ([242a285](https://github.com/bgd-labs/aave-governance-v3-interface/commit/242a285a7b73b5ce954944a09947454051ab6df0))
+
+
+### Bug Fixes
+
+* added support of gnosis chain payloads ([44b95e6](https://github.com/bgd-labs/aave-governance-v3-interface/commit/44b95e60ee35b054cbc1f6cfbb752acba2ade749))
+* added winter styles ([#37](https://github.com/bgd-labs/aave-governance-v3-interface/issues/37)) ([89efd53](https://github.com/bgd-labs/aave-governance-v3-interface/commit/89efd53abec6805ea53ae3284777b50c110310f4))
+* cached proposal list item status styles ([3a6eb34](https://github.com/bgd-labs/aave-governance-v3-interface/commit/3a6eb34fc1b2f2916555c5a8d91ae29d72250646))
+* chain id switcher in the payload explorer screen ([9c36b46](https://github.com/bgd-labs/aave-governance-v3-interface/commit/9c36b468c817854d2cd3a32b7a53e5e89497164a))
+* create proposal event time for proposal create overview screen ([57f5dfd](https://github.com/bgd-labs/aave-governance-v3-interface/commit/57f5dfd168e03621716fc1f29876957bd93d3ebb))
+* ipfs deploy ([1db658d](https://github.com/bgd-labs/aave-governance-v3-interface/commit/1db658d716c750f80a235955b2320d3530acc4b7))
+* payloads explorer chain id select ([cab5617](https://github.com/bgd-labs/aave-governance-v3-interface/commit/cab5617a07a56027a46a00699173b11da802e83b))
+* payloads format data ([cde45c4](https://github.com/bgd-labs/aave-governance-v3-interface/commit/cde45c444e1b036988dd5007d7675a23551b21e8))
+* update packages ([#36](https://github.com/bgd-labs/aave-governance-v3-interface/issues/36)) ([5684838](https://github.com/bgd-labs/aave-governance-v3-interface/commit/568483807f7250bd98bd2ed7945b427850c7b74e))
+
 ## [1.0.2](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.0.1...v1.0.2) (2023-11-21)
 
 
