@@ -23,11 +23,14 @@ export function ProposalListItemFinalStatus({
   const color =
     status === ProposalState.Defeated
       ? '$mainAgainst'
-      : status === ProposalState.Executed
+      : status === ProposalState.Executed || status === ProposalState.Succeed
         ? '$mainFor'
         : '$disabled';
 
-  const icon = status === ProposalState.Executed ? SuccessIcon : ErrorIcon;
+  const icon =
+    status === ProposalState.Executed || status === ProposalState.Succeed
+      ? SuccessIcon
+      : ErrorIcon;
 
   return (
     <Box
