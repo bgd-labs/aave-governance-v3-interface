@@ -24,19 +24,16 @@ export function formatPayloadData({
   withoutProposalData?: boolean;
 }) {
   const now = dayjs().unix();
-  const isProposalNotExecuted = withoutProposalData
-    ? true
-    : !isProposalExecuted;
 
   const isPayloadOnInitialState =
     payload.queuedAt <= 0 &&
-    isProposalNotExecuted &&
+    (withoutProposalData ? true : !isProposalExecuted) &&
     payload.cancelledAt <= 0 &&
     payload.state !== PayloadState.Expired;
 
   const isPayloadTimeLocked =
     payload.queuedAt <= 0 &&
-    isProposalNotExecuted &&
+    (withoutProposalData ? true : isProposalExecuted) &&
     payload.cancelledAt <= 0 &&
     payload.state !== PayloadState.Expired;
 
@@ -46,7 +43,7 @@ export function formatPayloadData({
       : payload.queuedAt + payload.delay;
 
   const isPayloadReadyForExecution =
-    !isProposalNotExecuted &&
+    (withoutProposalData ? true : isProposalExecuted) &&
     payload.queuedAt > 0 &&
     now > payload.queuedAt + payload.delay &&
     payload.cancelledAt <= 0 &&
