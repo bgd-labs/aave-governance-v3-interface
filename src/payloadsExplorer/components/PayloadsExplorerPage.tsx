@@ -28,6 +28,14 @@ import { PayloadExploreItemLoading } from './PayloadExploreItemLoading';
 import { PayloadItemDetailsModal } from './PayloadItemDetailsModal';
 import { PayloadsControllerSelect } from './PayloadsControllerSelect';
 
+function checkChainId(chainId?: string | number) {
+  const chainIdFromQuery = Number(chainId || appConfig.govCoreChainId);
+
+  return appUsedNetworks.some((id) => chainIdFromQuery === id)
+    ? chainIdFromQuery
+    : appConfig.govCoreChainId;
+}
+
 function PayloadsExploreViewSwitcherButton({
   onClick,
   isActive,
@@ -105,7 +113,7 @@ export function PayloadsExplorerPage() {
 
   const [isColumns, setIsColumns] = useState(false);
   const [chainId, setChainId] = useState<number>(
-    Number(searchParams?.get('chainId') || appConfig.govCoreChainId),
+    checkChainId(Number(searchParams?.get('chainId'))),
   );
   const [controllerAddress, setControllerAddress] = useState<Hex>(
     appConfig.payloadsControllerConfig[chainId].contractAddresses[0],
@@ -122,7 +130,7 @@ export function PayloadsExplorerPage() {
 
   useEffect(() => {
     if (searchParams && !!searchParams.get('chainId')) {
-      setChainId(Number(searchParams.get('chainId')));
+      setChainId(checkChainId(Number(searchParams?.get('chainId'))));
     }
   }, [searchParams]);
 
