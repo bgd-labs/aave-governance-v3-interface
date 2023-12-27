@@ -16,11 +16,11 @@ export const revalidate = 0;
 export const fetchCache = 'force-no-store';
 
 export const metadata: Metadata = {
-  title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
+  title: `${metaTexts.ipfsTitle}`,
   description: metaTexts.proposalListMetaDescription,
   openGraph: {
     images: ['/metaLogo.jpg'],
-    title: `${metaTexts.main}${metaTexts.proposalListMetaTitle}`,
+    title: `${metaTexts.ipfsTitle}`,
     description: metaTexts.proposalListMetaDescription,
   },
 };

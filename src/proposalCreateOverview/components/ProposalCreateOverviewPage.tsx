@@ -58,7 +58,7 @@ export function ProposalCreateOverviewPage({
     if (initialParams.ipfsHash) {
       getIpfsData([newProposalId], initialParams.ipfsHash);
     }
-    if (totalProposalCount) {
+    if (totalProposalCount || totalProposalCount === 0) {
       getCreatePayloadsData(newProposalId, initialParams.payloads);
     }
   }, [totalProposalCount, initialParams]);

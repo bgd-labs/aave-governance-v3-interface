@@ -17,6 +17,10 @@ import {
   IProposalCreateOverviewSlice,
 } from '../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import {
+  createProposalCreateOverviewV2Slice,
+  IProposalCreateOverviewV2Slice,
+} from '../proposalCreateOverviewV2/store/proposalCreateOverviewV2Slice';
+import {
   createProposalsHistorySlice,
   IProposalsHistorySlice,
 } from '../proposals/store/proposalsHistorySlice';
@@ -56,7 +60,8 @@ export type RootState = IProposalsSlice &
   IEnsSlice &
   IRpcSwitcherSlice &
   IProposalCreateOverviewSlice &
-  IPayloadsExplorerSlice;
+  IPayloadsExplorerSlice &
+  IProposalCreateOverviewV2Slice;
 
 const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -74,6 +79,7 @@ const createRootSlice = (
   ...createRpcSwitcherSlice(set, get),
   ...createProposalCreateOverviewSlice(set, get),
   ...createPayloadsExplorerSlice(set, get),
+  ...createProposalCreateOverviewV2Slice(set, get),
 });
 
 export const useStore = create(devtools(createRootSlice, { serialize: true }));
