@@ -28,20 +28,10 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 ## How to access the Aave Governance v3 UI?
 
 ### Run locally
-
-First run:
-
 ```sh
 yarn && yarn dev
 // or
 yarn && yarn build && yarn start
-```
-
-After the first run:
-```sh
-yarn dev
-// or
-yarn build && yarn start
 ```
 
 ### Deploy your own Vercel instance
