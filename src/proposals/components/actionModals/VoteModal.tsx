@@ -51,10 +51,10 @@ export function VoteModal({
     supportObject,
     setSupportObject,
     activeWallet,
-    checkIsGelatoAvailable,
+    checkIsGelatoAvailableWithApiKey,
     representative,
     clearSupportObject,
-    isGelatoAvailable,
+    isGelatoAvailableChains,
     isGaslessVote,
     setIsGaslessVote,
     checkIsGaslessVote,
@@ -77,13 +77,15 @@ export function VoteModal({
         proposalData.proposal.state === ProposalState.Expired;
 
       if (!isFinished) {
-        checkIsGelatoAvailable(proposalData.proposal.data.votingChainId);
+        checkIsGelatoAvailableWithApiKey(
+          proposalData.proposal.data.votingChainId,
+        );
+        checkIsGaslessVote(proposalData.proposal.data.votingChainId);
       }
     }
   }, [proposalData?.loading]);
 
   useEffect(() => {
-    checkIsGaslessVote();
     clearSupportObject(proposalId);
     if (!Object.keys(supportObject).find((key) => +key === proposalId)) {
       setSupportObject(proposalId, false);
@@ -222,6 +224,9 @@ export function VoteModal({
     store,
     proposalData.proposal.data.votingChainId,
   );
+
+  const isGelatoAvailable =
+    isGelatoAvailableChains[proposalData.proposal.data.votingChainId];
 
   return (
     <BasicActionModal

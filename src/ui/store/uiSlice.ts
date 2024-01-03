@@ -35,7 +35,7 @@ export type IsGaslessVote = 'on' | 'off';
 
 export interface IUISlice {
   isGaslessVote: boolean;
-  checkIsGaslessVote: () => void;
+  checkIsGaslessVote: (chainId: number) => void;
   setIsGaslessVote: (value: boolean) => void;
 
   isRendered: boolean;
@@ -206,10 +206,10 @@ export const createUISlice: StoreSlice<
   IWalletSlice & TransactionsSlice
 > = (set, get) => ({
   isGaslessVote: true,
-  checkIsGaslessVote: () => {
+  checkIsGaslessVote: (chainId) => {
     if (
       getLocalStorageGaslessVote() === 'on' &&
-      get().isGelatoAvailable &&
+      get().isGelatoAvailableChains[chainId] &&
       !get().activeWallet?.isContractAddress
     ) {
       set({ isGaslessVote: true });

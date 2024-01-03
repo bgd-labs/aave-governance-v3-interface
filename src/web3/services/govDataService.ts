@@ -49,7 +49,7 @@ import {
 } from 'viem';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { appConfig, isTestnet } from '../../utils/appConfig';
+import { appConfig, gelatoApiKeys } from '../../utils/appConfig';
 import {
   formatToProofRLP,
   getExtendedBlock,
@@ -846,9 +846,7 @@ export class GovDataService {
             votingAssetsWithSlot,
           });
 
-      const gelatoApiKey = isTestnet
-        ? appConfig.gelatoApiKeys.testnet
-        : appConfig.gelatoApiKeys.mainnet;
+      const gelatoApiKey = gelatoApiKeys[votingChainId];
 
       const data =
         !!voterAddress && !!proofOfRepresentation

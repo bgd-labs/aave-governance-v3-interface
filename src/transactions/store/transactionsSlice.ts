@@ -7,6 +7,7 @@ import {
   TransactionStatus,
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
+import { produce } from 'immer';
 import { Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
@@ -24,6 +25,7 @@ import {
 } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
+import { gelatoApiKeys } from '../../utils/appConfig';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
@@ -166,7 +168,10 @@ export type TransactionUnion =
   | CancelProposalTx
   | RepresentationsTx;
 
-export type TransactionsSlice = ITransactionsSlice<TransactionUnion>;
+export type TransactionsSlice = ITransactionsSlice<TransactionUnion> & {
+  isGelatoAvailableChains: Record<number, boolean>;
+  checkIsGelatoAvailableWithApiKey: (chainId: number) => Promise<void>;
+};
 
 export type TxWithStatus = TransactionUnion & {
   status?: TransactionStatus;
@@ -271,4 +276,24 @@ export const createTransactionsSlice: StoreSlice<
     // for initial don't set default clients because of rpc switcher flow
     defaultClients: {},
   })(set, get),
+
+  isGelatoAvailableChains: {},
+  checkIsGelatoAvailableWithApiKey: async (chainId) => {
+    if (typeof get().isGelatoAvailableChains[chainId] === 'undefined') {
+      if (!!gelatoApiKeys[chainId]) {
+        await get().checkIsGelatoAvailable(chainId);
+        set((state) =>
+          produce(state, (draft) => {
+            draft.isGelatoAvailableChains[chainId] = get().isGelatoAvailable;
+          }),
+        );
+      } else {
+        set((state) =>
+          produce(state, (draft) => {
+            draft.isGelatoAvailableChains[chainId] = false;
+          }),
+        );
+      }
+    }
+  },
 });

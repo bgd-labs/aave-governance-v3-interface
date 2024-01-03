@@ -1281,10 +1281,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.13.3.tgz#a115c2677aeadd0398caa096436395fe07f4cf48"
   integrity sha512-9WQekYTCjeAuqjRouLHvYdE9R86Hp4m5v9QJhr9zGpsl8OE/YxpmI6QEz6o0gHMB3D6DhqwAZ3nakCouz7Cb+w==
 
-"@bgd-labs/aave-governance-ui-helpers@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.9.tgz#68e06aa9857dbcfaa2ebca51bccb616b8d6196e3"
-  integrity sha512-yU25lQyWHwXafXfvllpHxnP4zA5xF3urxTpQ2pskxmsEPFSbVuaRI6KpT/mrYZHzCwjSsS2ST8bpxs4f0L1oJA==
+"@bgd-labs/aave-governance-ui-helpers@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.10.tgz#3047067487385faa547cc59713af4f72798cf7d5"
+  integrity sha512-qp60bruzMbWEJ2SoQAwbrADs4Mvt8ymACbcpriO+bwGAkVZBgj8ALwMp74kwivKd04AMPnvbPMW/MtiA/lf+Dg==
   dependencies:
     bs58 "^5.0.0"
     dayjs "^1.11.10"
