@@ -20,6 +20,7 @@ import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { chainInfoHelper } from '../../../utils/configs';
+import { CurrentPowers } from './CurrentPowers';
 import { RepresentingForm } from './RepresentingForm';
 
 interface AccountInfoModalContentProps {
@@ -263,6 +264,8 @@ export function AccountInfoModalContent({
           isTransactionsVisible={isActive && !!filteredTransactions.length}
         />
       )}
+
+      {!forTest && <CurrentPowers />}
 
       {isActive && !!filteredTransactions.length && (
         <Box

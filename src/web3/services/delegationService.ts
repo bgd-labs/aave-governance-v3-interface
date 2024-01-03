@@ -8,7 +8,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { WalletClient } from '@wagmi/core';
-import { encodeFunctionData, Hex, hexToSignature } from 'viem';
+import { encodeFunctionData, Hex, hexToSignature, zeroAddress } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
@@ -53,6 +53,93 @@ export class DelegationService {
 
   connectSigner(walletClient: WalletClient) {
     this.walletClient = walletClient;
+  }
+
+  async getUserPowers(userAddress: Hex, underlyingAssets: Hex[]) {
+    const blockNumber = await this.clients[appConfig.govCoreChainId].getBlock();
+
+    const contracts = underlyingAssets.map((asset) => {
+      return {
+        contract: aaveTokenV3Contract({
+          contractAddress: asset,
+          client: this.clients[appConfig.govCoreChainId],
+        }),
+        underlyingAsset: asset,
+      };
+    });
+
+    return await Promise.all(
+      contracts.map(async (contract) => {
+        const userBalance = await contract.contract.read.balanceOf([
+          userAddress,
+        ]);
+        const delegatee = await contract.contract.read.getDelegates([
+          userAddress,
+        ]);
+
+        const isPropositionPowerDelegated =
+          delegatee[GovernancePowerType.PROPOSITION] === userAddress ||
+          delegatee[GovernancePowerType.PROPOSITION] === zeroAddress
+            ? false
+            : !!delegatee[GovernancePowerType.PROPOSITION];
+        const isVotingPowerDelegated =
+          delegatee[GovernancePowerType.VOTING] === userAddress ||
+          delegatee[GovernancePowerType.VOTING] === zeroAddress
+            ? false
+            : !!delegatee[GovernancePowerType.VOTING];
+
+        const getPower = (totalPower: bigint, type: GovernancePowerType) => {
+          let formattedUserBalance = userBalance;
+          if (
+            type === GovernancePowerType.PROPOSITION &&
+            isPropositionPowerDelegated
+          ) {
+            formattedUserBalance = BigInt(0);
+          } else if (
+            type === GovernancePowerType.VOTING &&
+            isVotingPowerDelegated
+          ) {
+            formattedUserBalance = BigInt(0);
+          } else if (isPropositionPowerDelegated && isVotingPowerDelegated) {
+            formattedUserBalance = BigInt(0);
+          }
+
+          return {
+            userBalance: normalizeBN(
+              formattedUserBalance.toString(),
+              18,
+            ).toString(),
+            totalPowerBasic: totalPower.toString(),
+            totalPower: normalizeBN(totalPower.toString(), 18).toString(),
+            delegatedPowerBasic: String(totalPower - formattedUserBalance),
+            delegatedPower: normalizeBN(
+              String(totalPower - formattedUserBalance),
+              18,
+            ).toString(),
+
+            isWithDelegatedPower: formattedUserBalance !== totalPower,
+          };
+        };
+
+        const totalPowers = await contract.contract.read.getPowersCurrent([
+          userAddress,
+        ]);
+
+        const proposition = getPower(
+          totalPowers[1],
+          GovernancePowerType.PROPOSITION,
+        );
+        const voting = getPower(totalPowers[0], GovernancePowerType.VOTING);
+
+        return {
+          timestamp: blockNumber.timestamp,
+          tokenName: getTokenName(contract.underlyingAsset),
+          underlyingAsset: contract.underlyingAsset,
+          proposition,
+          voting,
+        };
+      }),
+    );
   }
 
   async getDelegates(underlyingAsset: Hex, delegator: Hex) {
@@ -107,6 +194,7 @@ export class DelegationService {
     const blockNumber = (
       await this.clients[appConfig.govCoreChainId].getBlock({ blockHash })
     ).number;
+
     const contracts = underlyingAssets.map((asset) => {
       return {
         contract: aaveTokenV3Contract({
