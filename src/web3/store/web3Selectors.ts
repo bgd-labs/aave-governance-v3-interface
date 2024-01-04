@@ -9,3 +9,11 @@ export const selectCurrentPowers = (store: RootState) => {
     return;
   }
 };
+
+export const selectCurrentPowersForActiveWallet = (store: RootState) => {
+  if (store.activeWallet?.address) {
+    return store.currentPowers[store.activeWallet?.address];
+  } else {
+    return;
+  }
+};

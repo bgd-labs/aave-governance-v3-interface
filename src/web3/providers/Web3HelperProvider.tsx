@@ -14,7 +14,7 @@ function Child() {
     getRepresentationData,
     initEns,
     initClients,
-    gutCurrentPowers,
+    getCurrentPowers,
     representative,
   } = useStore();
 
@@ -35,9 +35,9 @@ function Child() {
 
   useEffect(() => {
     if (!!representative.address) {
-      gutCurrentPowers(representative.address);
+      getCurrentPowers(representative.address);
     } else if (activeWallet?.address) {
-      gutCurrentPowers(activeWallet?.address);
+      getCurrentPowers(activeWallet?.address);
     }
   }, [activeWallet?.address, representative.address]);
 

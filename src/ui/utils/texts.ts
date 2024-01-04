@@ -272,6 +272,7 @@ export const texts = {
     impersonatedButtonTitle: 'Connect',
     representing: 'Representing',
     representative: 'You are representing',
+    currentPower: 'Current power',
   },
   header: {
     navSnapshots: 'Snapshots',
