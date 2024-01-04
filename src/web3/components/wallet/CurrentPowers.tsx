@@ -1,3 +1,4 @@
+import { Popover } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
@@ -55,6 +56,8 @@ export function CurrentPowers() {
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
+          position: 'relative',
+          zIndex: 3,
         }}>
         <Box
           sx={{
@@ -72,48 +75,80 @@ export function CurrentPowers() {
             }}>
             {texts.walletConnect.currentPower}
           </Box>
+
           {currentPowersAll?.timestamp && (
-            <Box
-              sx={{
-                ml: 4,
-                transition: 'all 0.2s ease',
-                lineHeight: 1,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minHeight: 23,
-                '> *': {
-                  lineHeight: 0,
-                },
-                hover: { opacity: 0.6 },
-              }}
-              component="button"
-              type="button"
-              onClick={() => {
-                setAccountInfoModalOpen(false);
-                setPowersInfoModalOpen(true);
-                setLocalStoragePowersInfoClicked('true');
-              }}>
-              <IconBox
+            <Popover as={Box} sx={{ position: 'relative' }}>
+              <Popover.Button
+                as={Box}
                 sx={{
-                  position: 'relative',
-                  top: 1,
-                  width: 14,
-                  height: 14,
-                  '> svg': {
+                  ml: 4,
+                  transition: 'all 0.2s ease',
+                  lineHeight: 1,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: 23,
+                  cursor: 'pointer',
+                  '> *': {
+                    lineHeight: 0,
+                  },
+                  hover: { opacity: 0.6 },
+                }}
+                onClick={() => {
+                  setLocalStoragePowersInfoClicked('true');
+                }}>
+                <IconBox
+                  sx={{
+                    position: 'relative',
+                    top: 2,
                     width: 14,
                     height: 14,
-                    path: {
-                      fill:
-                        getLocalStoragePowersInfoClicked() === 'true'
-                          ? theme.palette.$text
-                          : theme.palette.$error,
+                    '> svg': {
+                      width: 14,
+                      height: 14,
+                      path: {
+                        fill:
+                          getLocalStoragePowersInfoClicked() === 'true'
+                            ? theme.palette.$text
+                            : theme.palette.$error,
+                      },
                     },
-                  },
+                  }}>
+                  <InfoIcon />
+                </IconBox>
+              </Popover.Button>
+
+              <Popover.Panel
+                as={Box}
+                sx={{
+                  position: 'absolute',
+                  zIndex: 3,
+                  top: '100%',
+                  left: -100,
+                  width: 250,
+                  backgroundColor: '$light',
+                  p: 8,
                 }}>
-                <InfoIcon />
-              </IconBox>
-            </Box>
+                <Box sx={{ typography: 'descriptor' }}>
+                  {texts.walletConnect.currentPowerDescription}
+                </Box>
+
+                <Box
+                  onClick={() => {
+                    setAccountInfoModalOpen(false);
+                    setPowersInfoModalOpen(true);
+                  }}
+                  sx={{
+                    typography: 'descriptorAccent',
+                    mt: 6,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    hover: { opacity: '0.7' },
+                  }}>
+                  Details
+                </Box>
+              </Popover.Panel>
+            </Popover>
           )}
         </Box>
 
@@ -135,7 +170,7 @@ export function CurrentPowers() {
                 on{' '}
                 {dayjs
                   .unix(currentPowersAll.timestamp)
-                  .format(' hh:mm DD.MM.YYYY')}
+                  .format('HH:mm DD.MM.YYYY')}
               </Box>
               <Box
                 component="button"

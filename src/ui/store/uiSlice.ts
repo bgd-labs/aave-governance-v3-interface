@@ -91,8 +91,6 @@ export interface IUISlice {
 
   powersInfoModalOpen: boolean;
   setPowersInfoModalOpen: (value: boolean) => void;
-  isFromCurrentPowers: boolean;
-  setIsFromCurrentPowers: (value: boolean) => void;
 
   isCreatePayloadModalOpen: boolean;
   setIsCreatePayloadModalOpen: (value: boolean) => void;
@@ -430,10 +428,6 @@ export const createUISlice: StoreSlice<
   powersInfoModalOpen: false,
   setPowersInfoModalOpen: (value) => {
     set({ isModalOpen: value, powersInfoModalOpen: value });
-  },
-  isFromCurrentPowers: false,
-  setIsFromCurrentPowers: (value) => {
-    set({ isFromCurrentPowers: value });
   },
 
   isActivateVotingModalOpen: false,

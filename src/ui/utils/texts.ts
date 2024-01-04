@@ -273,6 +273,8 @@ export const texts = {
     representing: 'Representing',
     representative: 'You are representing',
     currentPower: 'Current power',
+    currentPowerDescription:
+      'Voting and proposition power are per proposal. So the current power represents how much you would have if a proposal will be activated just now.',
   },
   header: {
     navSnapshots: 'Snapshots',

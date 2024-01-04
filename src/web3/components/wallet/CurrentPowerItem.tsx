@@ -66,7 +66,7 @@ export function CurrentPowerItem({
           alignItems: 'flex-end',
           mb: 6,
         }}>
-        Your {isVotingType ? 'Voting' : 'Proposition'} power:{' '}
+        Power from balance:{' '}
         <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 3 }}>
           {!!representativeAddress && isVotingType && (
             <RepresentationIcon
