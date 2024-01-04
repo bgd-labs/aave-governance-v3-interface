@@ -132,21 +132,6 @@ export function CurrentPowers() {
                 <Box sx={{ typography: 'descriptor' }}>
                   {texts.walletConnect.currentPowerDescription}
                 </Box>
-
-                <Box
-                  onClick={() => {
-                    setAccountInfoModalOpen(false);
-                    setPowersInfoModalOpen(true);
-                  }}
-                  sx={{
-                    typography: 'descriptorAccent',
-                    mt: 6,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    hover: { opacity: '0.7' },
-                  }}>
-                  Details
-                </Box>
               </Popover.Panel>
             </Popover>
           )}
@@ -251,27 +236,47 @@ export function CurrentPowers() {
         }}
       />
 
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          width: '100%',
-          flexDirection: 'column',
-          [theme.breakpoints.up('sm')]: { flexDirection: 'row' },
-        }}>
-        <CurrentPowerItem
-          type={GovernancePowerType.VOTING}
-          representativeAddress={representative.address}
-          totalValue={currentPowersAll?.totalVotingPower}
-          yourValue={currentPowersAll?.yourVotingPower}
-          delegatedValue={currentPowersAll?.delegatedVotingPower}
-        />
-        <CurrentPowerItem
-          type={GovernancePowerType.PROPOSITION}
-          totalValue={currentPowersActiveWallet?.totalPropositionPower}
-          yourValue={currentPowersActiveWallet?.yourPropositionPower}
-          delegatedValue={currentPowersActiveWallet?.delegatedPropositionPower}
-        />
+      <Box sx={{ width: '100%' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            width: '100%',
+            flexDirection: 'column',
+            [theme.breakpoints.up('sm')]: { flexDirection: 'row' },
+          }}>
+          <CurrentPowerItem
+            type={GovernancePowerType.VOTING}
+            representativeAddress={representative.address}
+            totalValue={currentPowersAll?.totalVotingPower}
+            yourValue={currentPowersAll?.yourVotingPower}
+            delegatedValue={currentPowersAll?.delegatedVotingPower}
+          />
+          <CurrentPowerItem
+            type={GovernancePowerType.PROPOSITION}
+            totalValue={currentPowersActiveWallet?.totalPropositionPower}
+            yourValue={currentPowersActiveWallet?.yourPropositionPower}
+            delegatedValue={
+              currentPowersActiveWallet?.delegatedPropositionPower
+            }
+          />
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <Box
+            onClick={() => {
+              setAccountInfoModalOpen(false);
+              setPowersInfoModalOpen(true);
+            }}
+            sx={{
+              typography: 'descriptorAccent',
+              mt: 12,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              hover: { opacity: '0.7' },
+            }}>
+            Details
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

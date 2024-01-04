@@ -204,9 +204,9 @@ export const texts = {
     txSuccess: 'Represented',
     txTitle: 'Representations',
     yourWillRepresent: 'You will be represented',
-    yourRepresented: 'You represented',
-    yourCancelRepresented: 'You cancel represented',
-    yourCanceledRepresented: 'You canceled represented',
+    yourRepresented: 'You are represented',
+    yourCancelRepresented: 'You are cancel represented',
+    yourCanceledRepresented: 'You are canceled represented',
     notRepresented: 'Not represented',
     representationInfo:
       'This is the voting power of the address you are representing. Remember that the representative role is by network, so if not able to vote on other proposals, try to change who you are representing',
@@ -274,7 +274,7 @@ export const texts = {
     representative: 'You are representing',
     currentPower: 'Current power',
     currentPowerDescription:
-      'Voting and proposition power are per proposal. So the current power represents how much you would have if a proposal will be activated just now.',
+      'Current voting power represents how much you would have available for voting if a proposal will be activated just now, and proposition for if you would want to create one.',
   },
   header: {
     navSnapshots: 'Snapshots',

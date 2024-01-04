@@ -92,7 +92,7 @@ export function CurrentPowerItem({
           display: 'flex',
           alignItems: 'flex-end',
         }}>
-        Delegated {isVotingType ? 'Voting' : 'Proposition'} power:{' '}
+        Delegation received:{' '}
         <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 3 }}>
           {!!representativeAddress && isVotingType && (
             <RepresentationIcon

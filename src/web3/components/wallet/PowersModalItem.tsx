@@ -80,7 +80,7 @@ export function PowersModalItem({
             flex: 1,
             typography: 'headline',
           }}>
-          Yours
+          From balance
         </Box>
         <Box
           sx={{
@@ -89,8 +89,9 @@ export function PowersModalItem({
             justifyContent: 'flex-end',
             flex: 1,
             typography: 'headline',
+            textAlign: 'right',
           }}>
-          Delegated
+          Delegation received
         </Box>
       </Box>
 
