@@ -3,12 +3,17 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { zeroAddress } from 'viem';
 
+import InfoIcon from '/public/images/icons/info.svg';
 import ReloadIcon from '/public/images/icons/reload.svg';
 
 import { useStore } from '../../../store';
 import { Divider, Spinner } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
+import {
+  getLocalStoragePowersInfoClicked,
+  setLocalStoragePowersInfoClicked,
+} from '../../../utils/localStorage';
 import { GovernancePowerType } from '../../services/delegationService';
 import {
   selectCurrentPowers,
@@ -18,7 +23,12 @@ import { CurrentPowerItem } from './CurrentPowerItem';
 
 export function CurrentPowers() {
   const store = useStore();
-  const { representative, activeWallet } = store;
+  const {
+    representative,
+    activeWallet,
+    setPowersInfoModalOpen,
+    setAccountInfoModalOpen,
+  } = store;
   const theme = useTheme();
 
   const currentPowersAll = selectCurrentPowers(store);
@@ -62,7 +72,49 @@ export function CurrentPowers() {
             }}>
             {texts.walletConnect.currentPower}
           </Box>
-          {/* info icon and modal */}
+          {currentPowersAll?.timestamp && (
+            <Box
+              sx={{
+                ml: 4,
+                transition: 'all 0.2s ease',
+                lineHeight: 1,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: 23,
+                '> *': {
+                  lineHeight: 0,
+                },
+                hover: { opacity: 0.6 },
+              }}
+              component="button"
+              type="button"
+              onClick={() => {
+                setAccountInfoModalOpen(false);
+                setPowersInfoModalOpen(true);
+                setLocalStoragePowersInfoClicked('true');
+              }}>
+              <IconBox
+                sx={{
+                  position: 'relative',
+                  top: 1,
+                  width: 14,
+                  height: 14,
+                  '> svg': {
+                    width: 14,
+                    height: 14,
+                    path: {
+                      fill:
+                        getLocalStoragePowersInfoClicked() === 'true'
+                          ? theme.palette.$text
+                          : theme.palette.$error,
+                    },
+                  },
+                }}>
+                <InfoIcon />
+              </IconBox>
+            </Box>
+          )}
         </Box>
 
         <Box

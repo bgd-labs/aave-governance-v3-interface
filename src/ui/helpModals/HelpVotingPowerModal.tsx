@@ -16,11 +16,19 @@ export function HelpVotingPowerModal() {
     isHelpVotingPowerModalOpen,
     setIsHelpVotingPowerModalOpen,
     setIsHelpVotingModalOpen,
+    isFromCurrentPowers,
+    setPowersInfoModalOpen,
+    setIsFromCurrentPowers,
   } = useStore();
 
   const handleClick = () => {
     setIsHelpVotingPowerModalOpen(false);
-    setIsHelpVotingModalOpen(true);
+    if (isFromCurrentPowers) {
+      setPowersInfoModalOpen(true);
+      setIsFromCurrentPowers(false);
+    } else {
+      setIsHelpVotingModalOpen(true);
+    }
   };
 
   return (

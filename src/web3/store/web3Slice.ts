@@ -27,7 +27,7 @@ type PowerByAsset = {
   isWithDelegatedPower: boolean;
 };
 
-type PowersByAssets = Record<
+export type PowersByAssets = Record<
   Hex,
   {
     tokenName: string;

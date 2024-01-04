@@ -48,14 +48,15 @@ export function TransactionsModalContent({
         ))}
       </Box>
 
-      <BackButton3D
-        isSmall
-        alwaysWithBorders
-        isVisibleOnMobile
-        alwaysVisible
-        onClick={onBackButtonClick}
-        wrapperCss={{ mt: 40 }}
-      />
+      <Box sx={{ mt: 40 }}>
+        <BackButton3D
+          isSmall
+          alwaysWithBorders
+          isVisibleOnMobile
+          alwaysVisible
+          onClick={onBackButtonClick}
+        />
+      </Box>
     </Box>
   );
 }

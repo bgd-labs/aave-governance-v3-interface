@@ -89,6 +89,11 @@ export interface IUISlice {
   allTransactionModalOpen: boolean;
   setAllTransactionModalOpen: (value: boolean) => void;
 
+  powersInfoModalOpen: boolean;
+  setPowersInfoModalOpen: (value: boolean) => void;
+  isFromCurrentPowers: boolean;
+  setIsFromCurrentPowers: (value: boolean) => void;
+
   isCreatePayloadModalOpen: boolean;
   setIsCreatePayloadModalOpen: (value: boolean) => void;
 
@@ -420,6 +425,15 @@ export const createUISlice: StoreSlice<
   allTransactionModalOpen: false,
   setAllTransactionModalOpen: (value) => {
     set({ isModalOpen: value, allTransactionModalOpen: value });
+  },
+
+  powersInfoModalOpen: false,
+  setPowersInfoModalOpen: (value) => {
+    set({ isModalOpen: value, powersInfoModalOpen: value });
+  },
+  isFromCurrentPowers: false,
+  setIsFromCurrentPowers: (value) => {
+    set({ isFromCurrentPowers: value });
   },
 
   isActivateVotingModalOpen: false,
