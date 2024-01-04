@@ -11,16 +11,27 @@ export type Wallet = {
   title: string;
   onClick?: () => void;
   isVisible?: boolean;
+  setOpenImpersonatedForm?: (value: boolean) => void;
 };
 
-export function WalletItem({ walletType, title, icon, onClick }: Wallet) {
+export function WalletItem({
+  walletType,
+  title,
+  icon,
+  onClick,
+  setOpenImpersonatedForm,
+}: Wallet) {
   const connectWallet = useStore((state) => state.connectWallet);
 
-  const handleWalletClick = async () => {
-    await connectWallet(walletType);
-  };
-
   const iconSize = 28;
+
+  const handleWalletClick = async () => {
+    if (walletType === 'Impersonated' && setOpenImpersonatedForm) {
+      setOpenImpersonatedForm(true);
+    } else {
+      await connectWallet(walletType);
+    }
+  };
 
   return (
     <Box
