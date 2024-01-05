@@ -20,8 +20,6 @@ export function ImpersonatedForm({ closeClick }: ImpersonatedFormProps) {
     impersonatedAddress: string;
   }) => {
     setImpersonated(impersonatedAddress);
-    console.log(impersonated);
-    console.log(impersonatedAddress);
     await connectWallet('Impersonated', appConfig.govCoreChainId);
   };
 

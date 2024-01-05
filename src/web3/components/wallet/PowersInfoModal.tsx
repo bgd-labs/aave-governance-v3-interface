@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 
 import { useStore } from '../../../store';
-import { BackButton3D, BasicModal, Divider } from '../../../ui';
+import { BackButton3D, BasicModal } from '../../../ui';
 import { GovernancePowerType } from '../../services/delegationService';
 import {
   selectCurrentPowers,

@@ -36,6 +36,9 @@ export function CurrentPowers() {
   const currentPowersActiveWallet = selectCurrentPowersForActiveWallet(store);
 
   const [startAnim, setStartAnim] = useState(false);
+  const [isInfoClicked, setClicked] = useState(
+    getLocalStoragePowersInfoClicked() === 'true',
+  );
 
   return (
     <Box
@@ -79,6 +82,10 @@ export function CurrentPowers() {
           {currentPowersAll?.timestamp && (
             <Popover as={Box} sx={{ position: 'relative' }}>
               <Popover.Button
+                onClick={() => {
+                  setLocalStoragePowersInfoClicked('true');
+                  setClicked(true);
+                }}
                 as={Box}
                 sx={{
                   ml: 4,
@@ -93,9 +100,6 @@ export function CurrentPowers() {
                     lineHeight: 0,
                   },
                   hover: { opacity: 0.6 },
-                }}
-                onClick={() => {
-                  setLocalStoragePowersInfoClicked('true');
                 }}>
                 <IconBox
                   sx={{
@@ -107,10 +111,9 @@ export function CurrentPowers() {
                       width: 14,
                       height: 14,
                       path: {
-                        fill:
-                          getLocalStoragePowersInfoClicked() === 'true'
-                            ? theme.palette.$text
-                            : theme.palette.$error,
+                        fill: isInfoClicked
+                          ? theme.palette.$text
+                          : theme.palette.$error,
                       },
                     },
                   }}>
