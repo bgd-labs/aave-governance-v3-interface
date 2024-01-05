@@ -93,6 +93,9 @@ export function PayloadsExplorerPage() {
       // @ts-ignore
       const params = new URLSearchParams(searchParams);
       params.set(name, value);
+      params.delete('payloadId');
+      params.delete('payloadChainId');
+      params.delete('payloadsControllerAddress');
 
       return params.toString();
     },
@@ -109,6 +112,7 @@ export function PayloadsExplorerPage() {
     isRendered,
     startDetailedPayloadsExplorerDataPolling,
     stopDetailedPayloadsExplorerDataPolling,
+    setIsPayloadExplorerItemDetailsModalOpen,
   } = useStore();
 
   const [isColumns, setIsColumns] = useState(false);
@@ -129,10 +133,41 @@ export function PayloadsExplorerPage() {
   }, []);
 
   useEffect(() => {
-    if (searchParams && !!searchParams.get('chainId')) {
-      setChainId(checkChainId(Number(searchParams?.get('chainId'))));
+    if (
+      searchParams &&
+      (!!searchParams.get('payloadChainId') || !!searchParams.get('chainId'))
+    ) {
+      setChainId(
+        checkChainId(
+          Number(
+            searchParams?.get('payloadChainId') || searchParams?.get('chainId'),
+          ),
+        ),
+      );
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (
+      searchParams &&
+      !!searchParams.get('payloadId') &&
+      !!searchParams.get('payloadChainId') &&
+      !!searchParams.get('payloadsControllerAddress')
+    ) {
+      const payloadId = Number(searchParams.get('payloadId'));
+      const payloadChainId = Number(searchParams.get('payloadChainId'));
+      const payloadsControllerAddress = String(
+        searchParams.get('payloadsControllerAddress'),
+      ) as Hex;
+
+      setSelectedPayloadForDetailsModal({
+        chainId: payloadChainId,
+        payloadsController: payloadsControllerAddress,
+        id: payloadId,
+      });
+      setIsPayloadExplorerItemDetailsModalOpen(true);
+    }
+  }, [searchParams?.get('payloadId')]);
 
   useEffect(() => {
     setControllerAddress(
@@ -379,6 +414,7 @@ export function PayloadsExplorerPage() {
       {selectedPayloadForDetailsModal && (
         <PayloadItemDetailsModal
           initialPayload={selectedPayloadForDetailsModal}
+          setSelectedPayloadForExecute={setSelectedPayloadForExecute}
         />
       )}
     </>
