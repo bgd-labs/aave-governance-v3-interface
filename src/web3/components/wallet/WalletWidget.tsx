@@ -8,6 +8,7 @@ import { selectENSAvatar } from '../../store/ensSelectors';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
+import { PowersInfoModal } from './PowersInfoModal';
 
 export function WalletWidget() {
   const store = useStore();
@@ -24,6 +25,8 @@ export function WalletWidget() {
     representationData,
     ensData,
     fetchEnsNameByAddress,
+    powersInfoModalOpen,
+    setPowersInfoModalOpen,
   } = store;
 
   const activeAddress = activeWallet?.address || '';
@@ -96,6 +99,10 @@ export function WalletWidget() {
       <TransactionsModal
         isOpen={allTransactionModalOpen}
         setIsOpen={setAllTransactionModalOpen}
+      />
+      <PowersInfoModal
+        isOpen={powersInfoModalOpen}
+        setIsOpen={setPowersInfoModalOpen}
       />
     </>
   );

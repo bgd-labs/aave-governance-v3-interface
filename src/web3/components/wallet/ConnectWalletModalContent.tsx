@@ -4,6 +4,7 @@ import React from 'react';
 import { BoxWith3D } from '../../../ui';
 import { RocketLoader } from '../../../ui/components/RocketLoader';
 import { texts } from '../../../ui/utils/texts';
+import { ImpersonatedForm } from './ImpersonatedForm';
 import { Wallet, WalletItem } from './WalletItem';
 
 interface ConnectWalletModalContentProps {
@@ -12,6 +13,8 @@ interface ConnectWalletModalContentProps {
   onWalletButtonClick?: () => void;
   walletConnectionError?: string;
   withoutHelpText?: boolean;
+  impersonatedFormOpen?: boolean;
+  setImpersonatedFormOpen?: (value: boolean) => void;
 }
 
 export function ConnectWalletModalContent({
@@ -20,6 +23,8 @@ export function ConnectWalletModalContent({
   onWalletButtonClick,
   walletConnectionError,
   withoutHelpText,
+  impersonatedFormOpen,
+  setImpersonatedFormOpen,
 }: ConnectWalletModalContentProps) {
   return (
     <Box
@@ -72,18 +77,25 @@ export function ConnectWalletModalContent({
             </Box>
           ) : (
             <>
-              {wallets.map((wallet) => (
-                <React.Fragment key={wallet.walletType}>
-                  {wallet.isVisible && (
-                    <WalletItem
-                      walletType={wallet.walletType}
-                      icon={wallet.icon}
-                      title={wallet.title}
-                      onClick={onWalletButtonClick}
-                    />
-                  )}
-                </React.Fragment>
-              ))}
+              {impersonatedFormOpen && !!setImpersonatedFormOpen ? (
+                <ImpersonatedForm closeClick={setImpersonatedFormOpen} />
+              ) : (
+                <>
+                  {wallets.map((wallet) => (
+                    <React.Fragment key={wallet.walletType}>
+                      {wallet.isVisible && (
+                        <WalletItem
+                          walletType={wallet.walletType}
+                          icon={wallet.icon}
+                          title={wallet.title}
+                          setOpenImpersonatedForm={setImpersonatedFormOpen}
+                          onClick={onWalletButtonClick}
+                        />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </>
+              )}
             </>
           )}
 

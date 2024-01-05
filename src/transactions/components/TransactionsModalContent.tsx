@@ -33,14 +33,14 @@ export function TransactionsModalContent({
 
       <Box
         sx={(theme) => ({
-          overflowY: 'scroll',
-          height: forTest ? 191 : 440,
-          pr: 20,
+          height: forTest ? 191 : '100%',
           [theme.breakpoints.up('sm')]: {
-            height: forTest ? 128 : 440,
+            overflowY: 'scroll',
+            pr: 20,
+            height: forTest ? 128 : 510,
           },
           [theme.breakpoints.up('lg')]: {
-            height: forTest ? 139 : 440,
+            height: forTest ? 139 : 580,
           },
         })}>
         {allTransactions.map((tx, index) => (
@@ -48,14 +48,15 @@ export function TransactionsModalContent({
         ))}
       </Box>
 
-      <BackButton3D
-        isSmall
-        alwaysWithBorders
-        isVisibleOnMobile
-        alwaysVisible
-        onClick={onBackButtonClick}
-        wrapperCss={{ mt: 40 }}
-      />
+      <Box sx={{ mt: 40 }}>
+        <BackButton3D
+          isSmall
+          alwaysWithBorders
+          isVisibleOnMobile
+          alwaysVisible
+          onClick={onBackButtonClick}
+        />
+      </Box>
     </Box>
   );
 }

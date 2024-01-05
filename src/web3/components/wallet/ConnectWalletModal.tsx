@@ -1,5 +1,5 @@
 import { getBrowserWalletLabelAndIcon } from '@bgd-labs/frontend-web3-utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store';
 import { BasicModal } from '../../../ui';
@@ -39,13 +39,26 @@ export const wallets: Wallet[] = [
     title: 'Safe wallet',
     isVisible: typeof window !== 'undefined' && window !== window.parent,
   },
+  {
+    walletType: 'Impersonated',
+    icon: `url(${setRelativePath('/images/wallets/impersonated.svg')})`,
+    title: 'Impersonated',
+    isVisible: false,
+  },
 ];
 
 export function ConnectWalletModal({
   isOpen,
   setIsOpen,
 }: ConnectWalletModalProps) {
-  const { walletActivating, walletConnectionError, setModalOpen } = useStore();
+  const { walletActivating, walletConnectionError, setModalOpen, appMode } =
+    useStore();
+
+  const [impersonatedFormOpen, setImpersonatedFormOpen] = useState(false);
+
+  useEffect(() => {
+    setImpersonatedFormOpen(false);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!walletActivating && !walletConnectionError) {
@@ -58,8 +71,19 @@ export function ConnectWalletModal({
     <BasicModal isOpen={isOpen} setIsOpen={setIsOpen} withCloseButton>
       <ConnectWalletModalContent
         walletActivating={walletActivating}
-        wallets={wallets}
+        wallets={wallets.map((wallet) => {
+          if (wallet.walletType === 'Impersonated') {
+            return {
+              ...wallet,
+              isVisible: appMode === 'expert',
+            };
+          } else {
+            return wallet;
+          }
+        })}
         walletConnectionError={walletConnectionError}
+        impersonatedFormOpen={impersonatedFormOpen}
+        setImpersonatedFormOpen={setImpersonatedFormOpen}
       />
     </BasicModal>
   );

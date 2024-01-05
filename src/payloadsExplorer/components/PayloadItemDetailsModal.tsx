@@ -1,6 +1,10 @@
 import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  selectLastTxByTypeAndPayload,
+  TransactionStatus,
+} from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toHex } from 'viem';
 
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
@@ -10,28 +14,50 @@ import {
   seatbeltStartLink,
 } from '../../proposals/utils/formatPayloadData';
 import { useStore } from '../../store';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../transactions/store/transactionsSlice';
 import { BasicModal, Link, SmallButton } from '../../ui';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { texts } from '../../ui/utils/texts';
+import { selectPayloadExploreById } from '../store/payloadsExplorerSelectors';
 import { PayloadStatus } from './PayloadStatus';
 
 interface PayloadItemDetailsModalProps {
   initialPayload: InitialPayload;
+  setSelectedPayloadForExecute: ({
+    chainId,
+    payloadsController,
+    id,
+  }: InitialPayload) => void;
 }
 
 export function PayloadItemDetailsModal({
   initialPayload,
+  setSelectedPayloadForExecute,
 }: PayloadItemDetailsModalProps) {
+  const store = useStore();
   const {
     isPayloadExplorerItemDetailsModalOpen,
     setIsPayloadExplorerItemDetailsModalOpen,
-    payloadsExploreData,
-  } = useStore();
+    getPayloadsExploreDataById,
+  } = store;
 
-  const payload =
-    payloadsExploreData[initialPayload.chainId][
-      initialPayload.payloadsController
-    ][`${initialPayload.payloadsController}_${initialPayload.id}`];
+  useEffect(() => {
+    getPayloadsExploreDataById(
+      initialPayload.chainId,
+      initialPayload.payloadsController,
+      initialPayload.id,
+    );
+  }, []);
+
+  const payload = selectPayloadExploreById(
+    store,
+    initialPayload.chainId,
+    initialPayload.payloadsController,
+    initialPayload.id,
+  );
 
   if (!payload) return null;
 
@@ -49,6 +75,20 @@ export function PayloadItemDetailsModal({
     forCreate: true,
     withoutProposalData: true,
   });
+
+  const tx =
+    store.activeWallet &&
+    selectLastTxByTypeAndPayload<TransactionUnion>(
+      store,
+      store.activeWallet.address,
+      TxType.executePayload,
+      {
+        proposalId: 0,
+        payloadId: payload.id,
+        chainId: payload.chainId,
+        payloadController: payload.payloadsController,
+      },
+    );
 
   return (
     <BasicModal
@@ -110,12 +150,42 @@ export function PayloadItemDetailsModal({
           textTypography="body"
         />
 
-        <Link
-          href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
-          inNewWindow
-          css={{ display: 'block', mt: 4 }}>
-          <SmallButton>{texts.proposals.payloadsDetails.seatbelt}</SmallButton>
-        </Link>
+        <Box>
+          <Link
+            href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
+            inNewWindow
+            css={{ display: 'block', mt: 4 }}>
+            <SmallButton>
+              {texts.proposals.payloadsDetails.seatbelt}
+            </SmallButton>
+          </Link>
+        </Box>
+
+        <Box>
+          {isPayloadReadyForExecution &&
+            !isFinalStatus &&
+            store.activeWallet?.isActive && (
+              <Box sx={{ mt: 4 }}>
+                <SmallButton
+                  disabled={tx?.status === TransactionStatus.Success}
+                  loading={tx?.pending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!!setSelectedPayloadForExecute) {
+                      setSelectedPayloadForExecute({
+                        chainId: payload?.chainId,
+                        payloadsController: payload?.payloadsController,
+                        id: payload?.id,
+                      });
+                    }
+                    store.setIsPayloadExplorerItemDetailsModalOpen(false);
+                    store.setExecutePayloadModalOpen(true);
+                  }}>
+                  {texts.proposals.payloadsDetails.execute}
+                </SmallButton>
+              </Box>
+            )}
+        </Box>
 
         <Box sx={{ mt: 30 }}>
           <Box sx={{ typography: 'headline', mb: 4 }}>

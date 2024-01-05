@@ -23,11 +23,25 @@ export interface IPayloadsExplorerSlice {
     { activePage: number; pageCount: number; currentIds: number[] }
   >;
 
+  setPaginationDetails: (
+    chainId: number,
+    address: Hex,
+    activePage?: number,
+  ) => Promise<{
+    totalPayloadsCount: number;
+    idsForRequest: number[];
+  }>;
+
   payloadsExploreData: PayloadsData;
   getPayloadsExploreData: (
     chainId: number,
     address: Hex,
     activePage?: number,
+  ) => Promise<void>;
+  getPayloadsExploreDataById: (
+    chainId: number,
+    address: Hex,
+    payloadId: number,
   ) => Promise<void>;
 
   isPayloadExplorerItemDetailsModalOpen: boolean;
@@ -82,8 +96,7 @@ export const createPayloadsExplorerSlice: StoreSlice<
     }
   },
 
-  payloadsExploreData: {},
-  getPayloadsExploreData: async (chainId, address, activePage) => {
+  setPaginationDetails: async (chainId, address, activePage) => {
     const initialCount = get().totalPayloadsCountByAddress[address];
     const totalPayloadsCount = initialCount
       ? initialCount
@@ -155,6 +168,17 @@ export const createPayloadsExplorerSlice: StoreSlice<
       }),
     );
 
+    return {
+      totalPayloadsCount,
+      idsForRequest,
+    };
+  },
+
+  payloadsExploreData: {},
+  getPayloadsExploreData: async (chainId, address, activePage) => {
+    const { totalPayloadsCount, idsForRequest } =
+      await get().setPaginationDetails(chainId, address, activePage);
+
     if (totalPayloadsCount >= 1) {
       if (!!idsForRequest.length) {
         const payloadsData: Payload[] = await get().govDataService.getPayloads(
@@ -186,6 +210,36 @@ export const createPayloadsExplorerSlice: StoreSlice<
         );
       }
     }
+  },
+  getPayloadsExploreDataById: async (chainId, address, payloadId) => {
+    await get().setPaginationDetails(chainId, address);
+
+    const payloadsData: Payload[] = await get().govDataService.getPayloads(
+      chainId,
+      address,
+      [payloadId],
+    );
+
+    const formattedPayloadsData: Record<string, Payload> = {};
+    payloadsData.forEach((payload) => {
+      if (payload) {
+        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+          payload;
+      }
+    });
+
+    set((state) =>
+      produce(state, (draft) => {
+        draft.payloadsExploreData[chainId] = {
+          [address]: {
+            ...(draft.payloadsExploreData[chainId]
+              ? draft.payloadsExploreData[chainId][address]
+              : {}),
+            ...formattedPayloadsData,
+          },
+        };
+      }),
+    );
   },
 
   isPayloadExplorerItemDetailsModalOpen: false,
