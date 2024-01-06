@@ -80,10 +80,23 @@ export function VoteModal({
         checkIsGelatoAvailableWithApiKey(
           proposalData.proposal.data.votingChainId,
         );
-        checkIsGaslessVote(proposalData.proposal.data.votingChainId);
       }
     }
   }, [proposalData?.loading]);
+
+  useEffect(() => {
+    if (proposalData) {
+      const isFinished =
+        proposalData.proposal.state === ProposalState.Executed ||
+        proposalData.proposal.state === ProposalState.Defeated ||
+        proposalData.proposal.state === ProposalState.Canceled ||
+        proposalData.proposal.state === ProposalState.Expired;
+
+      if (!isFinished) {
+        checkIsGaslessVote(proposalData.proposal.data.votingChainId);
+      }
+    }
+  }, [proposalData?.loading, isGelatoAvailableChains]);
 
   useEffect(() => {
     clearSupportObject(proposalId);
