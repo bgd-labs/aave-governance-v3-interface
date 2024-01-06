@@ -201,6 +201,15 @@ export function ProposalPage({
 
   const now = dayjs().unix();
 
+  const openToVoteTimestamp =
+    proposal.data.votingMachineData.startTime > 0
+      ? proposal.data.votingMachineData.startTime
+      : now >
+          proposal.data.creationTime + proposal.config.coolDownBeforeVotingStart
+        ? now + 60
+        : proposal.data.creationTime +
+          proposal.config.coolDownBeforeVotingStart;
+
   const votingClosedTimestamp =
     proposal.data.votingMachineData.votingClosedAndSentTimestamp > 0
       ? proposal.data.votingMachineData.votingClosedAndSentTimestamp
@@ -213,9 +222,7 @@ export function ProposalPage({
         : proposal.data.votingMachineData.endTime > 0 &&
             now > proposal.data.votingMachineData.endTime
           ? now + 60
-          : now +
-            proposal.config.coolDownBeforeVotingStart +
-            proposal.timings.cooldownPeriod;
+          : openToVoteTimestamp + proposal.data.votingDuration;
 
   const payloadsExecutedTimestamp =
     lastPayloadExecutedAt > 0
@@ -249,9 +256,8 @@ export function ProposalPage({
                     lastPayloadExecutedAt <= 0
                   ? proposal.data.votingMachineData.endTime +
                     proposal.timings.executionPayloadTime
-                  : now +
-                    proposal.config.coolDownBeforeVotingStart +
-                    proposal.timings.cooldownPeriod +
+                  : openToVoteTimestamp +
+                    proposal.data.votingDuration +
                     proposal.timings.executionPayloadTime;
 
   const Timeline = () => {
@@ -273,16 +279,7 @@ export function ProposalPage({
           }
           votingStartTime={proposal.data.votingMachineData.startTime}
           createdTimestamp={proposal.data.creationTime}
-          openToVoteTimestamp={
-            proposal.data.votingMachineData.startTime > 0
-              ? proposal.data.votingMachineData.startTime
-              : now >
-                  proposal.data.creationTime +
-                    proposal.config.coolDownBeforeVotingStart
-                ? now + 60
-                : proposal.data.creationTime +
-                  proposal.config.coolDownBeforeVotingStart
-          }
+          openToVoteTimestamp={openToVoteTimestamp}
           votingClosedTimestamp={votingClosedTimestamp}
           payloadsExecutedTimestamp={payloadsExecutedTimestamp}
           finishedTimestamp={payloadsExecutedTimestamp}
