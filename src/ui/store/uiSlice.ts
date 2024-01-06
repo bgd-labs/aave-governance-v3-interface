@@ -211,11 +211,16 @@ export const createUISlice: StoreSlice<
   isGaslessVote: true,
   checkIsGaslessVote: (chainId) => {
     if (
-      getLocalStorageGaslessVote() === 'on' &&
       get().isGelatoAvailableChains[chainId] &&
       !get().activeWallet?.isContractAddress
     ) {
-      set({ isGaslessVote: true });
+      if (getLocalStorageGaslessVote() === 'on') {
+        set({ isGaslessVote: true });
+      } else if (getLocalStorageGaslessVote() === 'off') {
+        set({ isGaslessVote: false });
+      } else {
+        set({ isGaslessVote: true });
+      }
     } else {
       set({ isGaslessVote: false });
     }
