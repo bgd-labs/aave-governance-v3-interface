@@ -342,7 +342,7 @@ export function ProposalPage({
           <LeftPanelWrapper>
             <NoSSR>
               {proposal.data.payloads.some((payload) => !payload?.state) && (
-                <BlockWrapper contentColor="$mainAgainst">
+                <BlockWrapper toBottom contentColor="$mainAgainst">
                   {proposal.data.payloads
                     .filter((payload) => !payload?.state)
                     .map((payload) => (
@@ -350,7 +350,6 @@ export function ProposalPage({
                         key={payload.id}
                         component="p"
                         sx={{
-                          mt: 8,
                           typography: 'descriptor',
                           color: '$light',
                           textAlign: 'center',

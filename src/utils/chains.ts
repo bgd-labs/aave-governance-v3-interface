@@ -25,18 +25,21 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://rpc.mevblocker.io',
   ],
   [polygon.id]: [
+    'https://polygon.blockpi.network/v1/rpc/public',
     'https://polygon-pokt.nodies.app',
     'https://polygon.llamarpc.com',
     'https://polygon-bor.publicnode.com',
     'https://endpoints.omniatech.io/v1/matic/mainnet/public',
   ],
   [avalanche.id]: [
+    'https://api.avax.network/ext/bc/C/rpc',
     'https://avalanche.drpc.org',
     'https://avax.meowrpc.com',
     'https://avalanche.blockpi.network/v1/rpc/public',
   ],
   [bsc.id]: ['https://binance.llamarpc.com', 'https://bsc.meowrpc.com'],
   [base.id]: [
+    'https://base.blockpi.network/v1/rpc/public',
     'https://base.llamarpc.com',
     'https://base-mainnet.public.blastapi.io',
     'https://base.meowrpc.com',
@@ -51,8 +54,8 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://metis.api.onfinality.io/public',
   ],
   [optimism.id]: [
-    'https://optimism.llamarpc.com',
     'https://optimism.blockpi.network/v1/rpc/public',
+    'https://optimism.llamarpc.com',
     'https://optimism.publicnode.com',
   ],
   [gnosis.id]: [

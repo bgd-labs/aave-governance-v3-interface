@@ -556,7 +556,7 @@ export const createProposalsSlice: StoreSlice<
       }),
     );
 
-    if (!get().representativeLoading) {
+    if (!get().representativeLoading && !!get().configs[0].votingDuration) {
       const isProposalNotInCache = !ids.filter(
         (proposalId) =>
           proposalId ===
@@ -576,6 +576,7 @@ export const createProposalsSlice: StoreSlice<
         );
 
         proposalsData = await get().govDataService.getDetailedProposalsData(
+          get().configs,
           fr <= 0 ? (get().totalProposalCount > PAGE_SIZE - 1 ? 1 : 0) : fr,
           to <= 0 ? 0 : to,
           userAddress,
@@ -585,6 +586,7 @@ export const createProposalsSlice: StoreSlice<
         );
       } else if ((from || from === 0 || from === -1) && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
+          get().configs,
           from < 0 ? 0 : from,
           0,
           userAddress,
@@ -594,6 +596,7 @@ export const createProposalsSlice: StoreSlice<
         );
       } else if (from && from > 0 && to && to > 0 && isProposalNotInCache) {
         proposalsData = await get().govDataService.getDetailedProposalsData(
+          get().configs,
           from,
           to,
           userAddress,
@@ -604,6 +607,7 @@ export const createProposalsSlice: StoreSlice<
       } else if (!isProposalNotInCache) {
         const proposals = ids.map((id) => get().detailedProposalsData[id]);
         proposalsData = await get().govDataService.getOnlyVotingMachineData(
+          get().configs,
           proposals,
           userAddress,
           representativeAddress as Hex,

@@ -30,6 +30,7 @@ import {
   updateVotingMachineData,
   VMProposalStructOutput,
   VotersData,
+  VotingConfig,
   votingMachineContract,
   votingMachineDataHelperContract,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -396,6 +397,7 @@ export class GovDataService {
   }
 
   async getDetailedProposalsData(
+    configs: VotingConfig[],
     from: number,
     to?: number,
     userAddress?: Hex,
@@ -431,6 +433,7 @@ export class GovDataService {
     );
 
     return getDetailedProposalsData(
+      configs,
       govCoreDataHelperData,
       votingMachineDataHelperData as VMProposalStructOutput[],
       proposalsIds,
@@ -438,6 +441,7 @@ export class GovDataService {
   }
 
   async getOnlyVotingMachineData(
+    configs: VotingConfig[],
     proposals: ProposalData[],
     userAddress?: Hex,
     representative?: Hex,
@@ -463,6 +467,7 @@ export class GovDataService {
     );
 
     return updateVotingMachineData(
+      configs,
       proposals,
       votingMachineDataHelperData as VMProposalStructOutput[],
       proposalsIds,

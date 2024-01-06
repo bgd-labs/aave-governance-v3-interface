@@ -174,7 +174,7 @@ const TimelineItem = ({
             top: 'calc(100% + 12px)',
             color: finished ? '$text' : '$textSecondary',
             [theme.breakpoints.up('lg')]: {
-              minWidth: 100,
+              minWidth: 95,
             },
           },
         }}>
@@ -625,6 +625,7 @@ export function ProposalTimeline({
         sx={{
           overflowX: 'auto',
           px: 40,
+          pl: 60,
           width: '100%',
           '@media only screen and (min-width: 960px)': { overflowX: 'hidden' },
         }}>

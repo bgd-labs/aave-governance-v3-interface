@@ -267,15 +267,18 @@ export function CurrentPowers() {
         <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Box
             onClick={() => {
-              setAccountInfoModalOpen(false);
-              setPowersInfoModalOpen(true);
+              if (!!currentPowersAll) {
+                setAccountInfoModalOpen(false);
+                setPowersInfoModalOpen(true);
+              }
             }}
             sx={{
               typography: 'descriptorAccent',
               mt: 12,
-              cursor: 'pointer',
+              cursor: !currentPowersAll ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s ease',
-              hover: { opacity: '0.7' },
+              opacity: !currentPowersAll ? '0.4' : 1,
+              hover: { opacity: !currentPowersAll ? '0.4' : '0.7' },
             }}>
             Details
           </Box>
