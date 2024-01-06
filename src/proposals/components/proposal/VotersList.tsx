@@ -213,8 +213,8 @@ export function VotersList({
               {voters
                 .sort((a, b) => b.votingPower - a.votingPower)
                 .slice(0, votersVisibleCount)
-                .map((vote, index) => (
-                  <VotersListItem vote={vote} key={index} />
+                .map((vote) => (
+                  <VotersListItem vote={vote} key={vote.transactionHash} />
                 ))}
             </Box>
           </VotersListItemsWrapper>

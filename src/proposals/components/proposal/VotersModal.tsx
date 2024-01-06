@@ -216,8 +216,8 @@ export function VotersModal({
                   </Box>
                 </ListItem>
 
-                {voters.map((vote, index) => (
-                  <ListItem key={index}>
+                {voters.map((vote) => (
+                  <ListItem key={vote.transactionHash}>
                     <ListItemAddress vote={vote} />
                     <Box
                       sx={{
