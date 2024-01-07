@@ -17,15 +17,7 @@ import {
 } from 'viem/chains';
 
 export const fallBackConfig = {
-  rank: {
-    interval: 100_000,
-    sampleCount: 2,
-    timeout: 1000,
-    weights: {
-      latency: 0.2,
-      stability: 0.8,
-    },
-  },
+  rank: false,
   retryDelay: 100,
   retryCount: 5,
 };
@@ -33,10 +25,9 @@ export const fallBackConfig = {
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
-    'https://eth.llamarpc.com',
-    'https://cloudflare-eth.com',
+    'https://blissful-purple-sky.quiknode.pro',
     'https://rpc.mevblocker.io',
-    'https://blissful-purple-sky.quiknode.pro/9b017a577737f118a5b3ea41790e2dec4aabf393',
+    'https://rpc.ankr.com/eth',
   ],
   [polygon.id]: [
     'https://polygon.blockpi.network/v1/rpc/public',
