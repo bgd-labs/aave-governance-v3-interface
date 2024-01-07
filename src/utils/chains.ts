@@ -40,7 +40,6 @@ export const initialRpcUrls: Record<number, string[]> = {
   ],
   [polygon.id]: [
     'https://polygon.blockpi.network/v1/rpc/public',
-    'https://polygon-pokt.nodies.app',
     'https://polygon.llamarpc.com',
     'https://polygon-bor.publicnode.com',
     'https://endpoints.omniatech.io/v1/matic/mainnet/public',
