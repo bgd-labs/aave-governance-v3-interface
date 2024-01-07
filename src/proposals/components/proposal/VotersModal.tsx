@@ -152,7 +152,7 @@ export function VotersModal({
             width: '100%',
             flexDirection: 'column',
             [theme.breakpoints.up('sm')]: {
-              height: 290,
+              height: 320,
               overflowY: 'auto',
               flexDirection: 'row',
               alignItems: 'flex-start',

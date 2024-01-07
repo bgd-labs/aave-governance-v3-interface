@@ -405,39 +405,54 @@ export class GovDataService {
     pageSize?: number,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<BasicProposal[]> {
-    const govCoreDataHelperData =
-      await this.govCoreDataHelper.read.getProposalsData([
-        this.govCore.address,
-        BigInt(from),
-        BigInt(to || 0),
-        BigInt(pageSize || PAGE_SIZE),
-      ]);
+    try {
+      const govCoreDataHelperData =
+        await this.govCoreDataHelper.read.getProposalsData([
+          this.govCore.address,
+          BigInt(from),
+          BigInt(to || 0),
+          BigInt(pageSize || PAGE_SIZE),
+        ]);
 
-    const initialProposals = govCoreDataHelperData.map((proposal) => {
-      return {
-        id: proposal.id,
-        votingChainId: Number(proposal.votingChainId),
-        snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
-      };
-    });
+      const initialProposals = govCoreDataHelperData.map((proposal) => {
+        return {
+          id: proposal.id,
+          votingChainId: Number(proposal.votingChainId),
+          snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
+        };
+      });
 
-    const votingMachineDataHelperData = await this.getVotingData(
-      initialProposals,
-      userAddress,
-      representative,
-      setRpcError,
-    );
+      const votingMachineDataHelperData = await this.getVotingData(
+        initialProposals,
+        userAddress,
+        representative,
+        setRpcError,
+      );
 
-    const proposalsIds = govCoreDataHelperData.map((proposal) =>
-      Number(proposal.id),
-    );
+      const proposalsIds = govCoreDataHelperData.map((proposal) =>
+        Number(proposal.id),
+      );
 
-    return getDetailedProposalsData(
-      configs,
-      govCoreDataHelperData,
-      votingMachineDataHelperData as VMProposalStructOutput[],
-      proposalsIds,
-    );
+      return getDetailedProposalsData(
+        configs,
+        govCoreDataHelperData,
+        votingMachineDataHelperData as VMProposalStructOutput[],
+        proposalsIds,
+      );
+    } catch {
+      const rpcUrl =
+        this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+
+      if (!!setRpcError) {
+        setRpcError({
+          isError: false,
+          rpcUrl,
+          chainId: appConfig.govCoreChainId,
+        });
+      }
+
+      return [];
+    }
   }
 
   async getOnlyVotingMachineData(

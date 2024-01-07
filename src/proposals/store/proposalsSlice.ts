@@ -132,7 +132,7 @@ export interface IProposalsSlice {
     underlyingAssets: string[],
   ) => Promise<void>;
 
-  voters: VotersData[];
+  voters: Record<Hex, VotersData>;
   setVoters: (voters: VotersData[]) => void;
   getVoters: (
     proposalId: number,
@@ -907,8 +907,16 @@ export const createProposalsSlice: StoreSlice<
     );
   },
 
-  voters: [],
-  setVoters: (voters) => set({ voters }),
+  voters: {},
+  setVoters: (voters) => {
+    set((state) =>
+      produce(state, (draft) => {
+        voters.forEach((votersData) => {
+          draft.voters[votersData.transactionHash] = votersData;
+        });
+      }),
+    );
+  },
   getVoters: async (
     proposalId,
     votingChainId,
@@ -934,106 +942,56 @@ export const createProposalsSlice: StoreSlice<
       endBlockNumber,
       lastBlockNumber,
     );
-    const currentVotersData = get().voters;
 
-    const newVotersData: VotersData[] = [];
-    for (let i = 0; i < votersData.length; i++) {
-      let found = false;
-      for (let j = 0; j < currentVotersData.length; j++) {
-        if (
-          votersData[i].transactionHash === currentVotersData[j].transactionHash
-        ) {
-          found = true;
-          break;
-        }
-      }
+    set((state) =>
+      produce(state, (draft) => {
+        votersData.forEach((vote) => {
+          draft.voters[vote.transactionHash] = {
+            ...vote,
+            ensName: ENSDataExists(get(), vote.address, ENSProperty.NAME)
+              ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
+              : vote.ensName,
+          };
+        });
+      }),
+    );
 
-      if (!found) {
-        const vote = votersData[i];
-
-        if (vote.ensName) {
-          newVotersData.push(vote);
-        } else {
-          if (ENSDataExists(get(), vote.address, ENSProperty.NAME)) {
-            newVotersData.push({
-              ...vote,
-              ensName:
-                get().ensData[vote.address.toLocaleLowerCase() as Hex].name,
-            });
+    const topVotersByProposalIdWithENS = await Promise.all(
+      selectVotersByProposalId(get(), proposalId)
+        .voters.sort((a, b) => b.votingPower - a.votingPower)
+        .slice(0, 5)
+        .map(async (vote) => {
+          if (vote.ensName) {
+            return vote;
           } else {
-            newVotersData.push(vote);
-          }
-        }
-      }
-    }
-
-    if (newVotersData.length > 0) {
-      set((state) =>
-        produce(state, (draft) => {
-          draft.voters = [...draft.voters, ...newVotersData];
-        }),
-      );
-
-      const topVotersByProposalIdWithENS = await Promise.all(
-        selectVotersByProposalId(get(), proposalId)
-          .voters.sort((a, b) => b.votingPower - a.votingPower)
-          .slice(0, 5)
-          .map(async (vote) => {
-            if (vote.ensName) {
-              return vote;
+            await get().fetchEnsNameByAddress(vote.address);
+            const ensName =
+              get().ensData[vote.address.toLocaleLowerCase() as Hex]?.name;
+            if (ensName) {
+              return {
+                ...vote,
+                ensName,
+              };
             } else {
-              await get().fetchEnsNameByAddress(vote.address);
-              const ensName =
-                get().ensData[vote.address.toLocaleLowerCase() as Hex].name;
-              if (ensName) {
-                return {
-                  ...vote,
-                  ensName,
-                };
-              } else {
-                return vote;
-              }
+              return vote;
             }
-          }),
-      );
-
-      const newVotersDataWithENS: VotersData[] = [];
-      for (let i = 0; i < topVotersByProposalIdWithENS.length; i++) {
-        let found = false;
-        let indexKey: number | undefined = undefined;
-        for (let j = 0; j < get().voters.length; j++) {
-          if (
-            topVotersByProposalIdWithENS[i].transactionHash ===
-              get().voters[j].transactionHash &&
-            topVotersByProposalIdWithENS[i].ensName === get().voters[j].ensName
-          ) {
-            found = true;
-            break;
-          } else {
-            indexKey = j;
           }
-        }
+        }),
+    );
 
-        if (!found) {
-          set((state) =>
-            produce(state, (draft) => {
-              if (typeof indexKey !== 'undefined') {
-                draft.voters.splice(indexKey, 1);
-              }
-            }),
-          );
-          newVotersDataWithENS.push(topVotersByProposalIdWithENS[i]);
-        }
-      }
+    set((state) =>
+      produce(state, (draft) => {
+        topVotersByProposalIdWithENS.forEach((vote) => {
+          draft.voters[vote.transactionHash] = {
+            ...vote,
+            ensName: ENSDataExists(get(), vote.address, ENSProperty.NAME)
+              ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
+              : vote.ensName,
+          };
+        });
+      }),
+    );
 
-      if (newVotersDataWithENS.length > 0) {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.voters = [...draft.voters, ...newVotersDataWithENS];
-          }),
-        );
-      }
-    }
     set((state) =>
       produce(state, (draft) => {
         draft.getVotersLoading[proposalId] = {
