@@ -16,13 +16,27 @@ import {
   sepolia,
 } from 'viem/chains';
 
+export const fallBackConfig = {
+  rank: {
+    interval: 100_000,
+    sampleCount: 2,
+    timeout: 1000,
+    weights: {
+      latency: 0.2,
+      stability: 0.8,
+    },
+  },
+  retryDelay: 100,
+  retryCount: 5,
+};
+
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
     'https://eth.llamarpc.com',
-    'https://ethereum.publicnode.com',
     'https://cloudflare-eth.com',
     'https://rpc.mevblocker.io',
+    'https://blissful-purple-sky.quiknode.pro/9b017a577737f118a5b3ea41790e2dec4aabf393',
   ],
   [polygon.id]: [
     'https://polygon.blockpi.network/v1/rpc/public',

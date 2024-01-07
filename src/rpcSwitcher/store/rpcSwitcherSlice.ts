@@ -10,7 +10,7 @@ import { Chain, createPublicClient, fallback, http } from 'viem';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';
-import { initialRpcUrls, setChain } from '../../utils/chains';
+import { fallBackConfig, initialRpcUrls, setChain } from '../../utils/chains';
 import { chainInfoHelper } from '../../utils/configs';
 import {
   getLocalStorageRpcUrls,
@@ -105,11 +105,16 @@ export const createRpcSwitcherSlice: StoreSlice<
                       chain,
                       parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
                     ) as Draft<Chain>,
-                    transport: fallback([
-                      http(parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl),
-                      ...initialRpcUrls[chainIdNumber].map((url) => http(url)),
-                    ]),
-                  }) as Draft<PublicClient>,
+                    transport: fallback(
+                      [
+                        http(parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl),
+                        ...initialRpcUrls[chainIdNumber].map((url) =>
+                          http(url),
+                        ),
+                      ],
+                      fallBackConfig,
+                    ),
+                  }),
                 };
               }
             });
@@ -153,13 +158,20 @@ export const createRpcSwitcherSlice: StoreSlice<
       set((state) =>
         produce(state, (draft) => {
           draft.appClients[chainId].rpcUrl = rpcUrl;
+          // @ts-ignore
           draft.appClients[chainId].instance = createPublicClient({
             batch: {
               multicall: true,
             },
             chain: chainInfoHelper.getChainParameters(chainId),
-            transport: http(rpcUrl),
-          }) as Draft<PublicClient>;
+            transport: fallback(
+              [
+                http(rpcUrl),
+                ...initialRpcUrls[chainId].map((url) => http(url)),
+              ],
+              fallBackConfig,
+            ),
+          });
         }),
       );
     });
@@ -259,8 +271,11 @@ export const createRpcSwitcherSlice: StoreSlice<
         multicall: true,
       },
       chain: chainInfoHelper.getChainParameters(chainId),
-      transport: http(rpcUrl),
-    }) as PublicClient;
+      transport: fallback(
+        [http(rpcUrl), ...initialRpcUrls[chainId].map((url) => http(url))],
+        fallBackConfig,
+      ),
+    });
 
     const contractAddresses =
       appConfig.payloadsControllerConfig[chainId].contractAddresses;

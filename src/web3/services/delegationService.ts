@@ -56,7 +56,9 @@ export class DelegationService {
   }
 
   async getUserPowers(userAddress: Hex, underlyingAssets: Hex[]) {
-    const blockNumber = await this.clients[appConfig.govCoreChainId].getBlock();
+    const blockNumber = await this.clients[appConfig.govCoreChainId].getBlock({
+      blockTag: 'safe',
+    });
 
     const contracts = underlyingAssets.map((asset) => {
       return {
@@ -121,9 +123,10 @@ export class DelegationService {
           };
         };
 
-        const totalPowers = await contract.contract.read.getPowersCurrent([
-          userAddress,
-        ]);
+        const totalPowers = await contract.contract.read.getPowersCurrent(
+          [userAddress],
+          { blockNumber: blockNumber.number },
+        );
 
         const proposition = getPower(
           totalPowers[1],
