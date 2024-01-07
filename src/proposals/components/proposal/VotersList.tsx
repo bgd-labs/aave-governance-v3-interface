@@ -5,6 +5,7 @@ import React, { ReactNode } from 'react';
 import { Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
+import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
 import { formatVoterAddress } from '../../utils/formatVoterAddress';
 
@@ -116,8 +117,8 @@ export function VotersListItem({ vote }: { vote: VotersData }) {
           transition: 'all 0.2s ease',
           hover: { opacity: '0.5' },
         }}
-        href={`${chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
-          ?.default.url}/address/${vote.address}`}>
+        href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
+          .blockExplorers?.default.url}/address/${vote.address}`}>
         <Box component="p" sx={{ typography: 'descriptor' }}>
           {formatVoterAddress(vote)}
         </Box>
@@ -213,8 +214,8 @@ export function VotersList({
               {voters
                 .sort((a, b) => b.votingPower - a.votingPower)
                 .slice(0, votersVisibleCount)
-                .map((vote, index) => (
-                  <VotersListItem vote={vote} key={index} />
+                .map((vote) => (
+                  <VotersListItem vote={vote} key={vote.transactionHash} />
                 ))}
             </Box>
           </VotersListItemsWrapper>

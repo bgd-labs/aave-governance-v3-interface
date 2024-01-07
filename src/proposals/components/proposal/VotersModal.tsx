@@ -152,7 +152,7 @@ export function VotersModal({
             width: '100%',
             flexDirection: 'column',
             [theme.breakpoints.up('sm')]: {
-              height: 290,
+              height: 320,
               overflowY: 'auto',
               flexDirection: 'row',
               alignItems: 'flex-start',
@@ -216,8 +216,8 @@ export function VotersModal({
                   </Box>
                 </ListItem>
 
-                {voters.map((vote, index) => (
-                  <ListItem key={index}>
+                {voters.map((vote) => (
+                  <ListItem key={vote.transactionHash}>
                     <ListItemAddress vote={vote} />
                     <Box
                       sx={{

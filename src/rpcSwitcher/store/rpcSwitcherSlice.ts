@@ -6,11 +6,11 @@ import {
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { PublicClient } from '@wagmi/core';
 import { Draft, produce } from 'immer';
-import { Chain, createPublicClient, http } from 'viem';
+import { Chain, createPublicClient, fallback, http } from 'viem';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';
-import { setChain } from '../../utils/chains';
+import { initialRpcUrls, setChain } from '../../utils/chains';
 import { chainInfoHelper } from '../../utils/configs';
 import {
   getLocalStorageRpcUrls,
@@ -105,9 +105,10 @@ export const createRpcSwitcherSlice: StoreSlice<
                       chain,
                       parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
                     ) as Draft<Chain>,
-                    transport: http(
-                      parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                    ),
+                    transport: fallback([
+                      http(parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl),
+                      ...initialRpcUrls[chainIdNumber].map((url) => http(url)),
+                    ]),
                   }) as Draft<PublicClient>,
                 };
               }

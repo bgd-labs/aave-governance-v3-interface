@@ -277,7 +277,7 @@ export const selectConfigByAccessLevel = (
 
 export const selectVotersByProposalId = (store: RootState, id: number) => {
   const data = store.voters;
-  const voters = data.filter((voter) => voter.proposalId === id);
+  const voters = Object.values(data).filter((voter) => voter.proposalId === id);
   const lastBlockNumber = Math.max.apply(
     0,
     voters.map((vote) => vote.blockNumber),
@@ -345,30 +345,6 @@ export const setProposalDetailsVoters = (
   voters: VotersData[],
 ) => {
   if (!!voters.length) {
-    if (!store.voters.length) {
-      store.setVoters(
-        [...store.voters, ...voters].filter(
-          (value, index, self) =>
-            self
-              .map((voter) => voter.transactionHash)
-              .indexOf(value.transactionHash) === index,
-        ),
-      );
-    } else {
-      const newVoters = [...store.voters, ...voters].filter(
-        (value, index, self) =>
-          self
-            .map((voter) => voter.transactionHash)
-            .indexOf(value.transactionHash) === index,
-      );
-      if (
-        !!newVoters.filter(
-          ({ transactionHash: hash1 }) =>
-            !store.voters.some(({ transactionHash: hash2 }) => hash2 === hash1),
-        ).length
-      ) {
-        store.setVoters(newVoters);
-      }
-    }
+    store.setVoters(voters);
   }
 };
