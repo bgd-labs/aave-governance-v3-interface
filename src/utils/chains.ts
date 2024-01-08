@@ -1,4 +1,5 @@
-import { Chain } from 'viem';
+import { Draft } from 'immer';
+import { Chain, createPublicClient, fallback, http } from 'viem';
 import {
   arbitrum,
   avalanche,
@@ -16,18 +17,12 @@ import {
   sepolia,
 } from 'viem/chains';
 
-export const fallBackConfig = {
-  rank: false,
-  retryDelay: 100,
-  retryCount: 5,
-};
-
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
     'https://blissful-purple-sky.quiknode.pro',
-    'https://rpc.mevblocker.io',
     'https://rpc.ankr.com/eth',
+    'https://eth.nodeconnect.org',
   ],
   [polygon.id]: [
     'https://polygon.blockpi.network/v1/rpc/public',
@@ -86,6 +81,30 @@ export const initialRpcUrls: Record<number, string[]> = {
   [bscTestnet.id]: ['https://data-seed-prebsc-1-s1.bnbchain.org:8545'],
 };
 
+export const fallBackConfig = {
+  rank: false,
+  retryDelay: 100,
+  retryCount: 5,
+};
+
+export const createViemClient = (
+  chain: Chain,
+  rpcUrl: string,
+  withoutFallback?: boolean,
+) =>
+  createPublicClient({
+    batch: {
+      multicall: true,
+    },
+    chain: setChain(chain, rpcUrl) as Draft<Chain>,
+    transport: withoutFallback
+      ? http(rpcUrl)
+      : fallback(
+          [http(rpcUrl), ...initialRpcUrls[chain.id].map((url) => http(url))],
+          fallBackConfig,
+        ),
+  });
+
 export function setChain(chain: Chain, url?: string) {
   return {
     ...chain,
@@ -93,7 +112,7 @@ export function setChain(chain: Chain, url?: string) {
       ...chain.rpcUrls,
       default: {
         ...chain.rpcUrls.default,
-        http: [url || initialRpcUrls[chain.id][0]],
+        http: [url || initialRpcUrls[chain.id][0], ...initialRpcUrls[chain.id]],
       },
     },
   };

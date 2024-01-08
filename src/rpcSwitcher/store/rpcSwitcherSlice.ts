@@ -6,17 +6,19 @@ import {
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { PublicClient } from '@wagmi/core';
 import { Draft, produce } from 'immer';
-import { Chain, createPublicClient, fallback, http } from 'viem';
+import { Chain, zeroAddress, zeroHash } from 'viem';
+import { mainnet } from 'viem/chains';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { appConfig } from '../../utils/appConfig';
-import { fallBackConfig, initialRpcUrls, setChain } from '../../utils/chains';
+import { createViemClient } from '../../utils/chains';
 import { chainInfoHelper } from '../../utils/configs';
 import {
   getLocalStorageRpcUrls,
   setLocalStorageRpcUrls,
 } from '../../utils/localStorage';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
+import { getProof } from '../../web3/utils/helperToGetProofs';
 import { selectAppClients } from './rpcSwitcherSelectors';
 
 export type AppClient = {
@@ -97,24 +99,10 @@ export const createRpcSwitcherSlice: StoreSlice<
               if (chain) {
                 draft.appClients[chainIdNumber] = {
                   rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                  instance: createPublicClient({
-                    batch: {
-                      multicall: true,
-                    },
-                    chain: setChain(
-                      chain,
-                      parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                    ) as Draft<Chain>,
-                    transport: fallback(
-                      [
-                        http(parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl),
-                        ...initialRpcUrls[chainIdNumber].map((url) =>
-                          http(url),
-                        ),
-                      ],
-                      fallBackConfig,
-                    ),
-                  }),
+                  instance: createViemClient(
+                    chain,
+                    parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                  ),
                 };
               }
             });
@@ -158,20 +146,10 @@ export const createRpcSwitcherSlice: StoreSlice<
       set((state) =>
         produce(state, (draft) => {
           draft.appClients[chainId].rpcUrl = rpcUrl;
-          // @ts-ignore
-          draft.appClients[chainId].instance = createPublicClient({
-            batch: {
-              multicall: true,
-            },
-            chain: chainInfoHelper.getChainParameters(chainId),
-            transport: fallback(
-              [
-                http(rpcUrl),
-                ...initialRpcUrls[chainId].map((url) => http(url)),
-              ],
-              fallBackConfig,
-            ),
-          });
+          draft.appClients[chainId].instance = createViemClient(
+            chainInfoHelper.getChainParameters(chainId),
+            rpcUrl,
+          );
         }),
       );
     });
@@ -266,16 +244,11 @@ export const createRpcSwitcherSlice: StoreSlice<
     ) {
       return;
     }
-    const client = createPublicClient({
-      batch: {
-        multicall: true,
-      },
-      chain: chainInfoHelper.getChainParameters(chainId),
-      transport: fallback(
-        [http(rpcUrl), ...initialRpcUrls[chainId].map((url) => http(url))],
-        fallBackConfig,
-      ),
-    });
+    const client = createViemClient(
+      chainInfoHelper.getChainParameters(chainId),
+      rpcUrl,
+      true,
+    );
 
     const contractAddresses =
       appConfig.payloadsControllerConfig[chainId].contractAddresses;
@@ -300,8 +273,23 @@ export const createRpcSwitcherSlice: StoreSlice<
           endBlock: Number(currentBlock.number),
           chainId,
         });
-
         get().setRpcFormError({ isError: false, rpcUrl, chainId });
+
+        // check get proofs if initial request success and chainId it's mainnet
+        if (mainnet.id === chainId) {
+          try {
+            await getProof(
+              client,
+              zeroAddress,
+              [zeroHash],
+              Number(currentBlock.number),
+            );
+
+            get().setRpcFormError({ isError: false, rpcUrl, chainId });
+          } catch {
+            get().setRpcFormError({ isError: true, rpcUrl, chainId });
+          }
+        }
       } catch {
         get().setRpcFormError({ isError: true, rpcUrl, chainId });
       }

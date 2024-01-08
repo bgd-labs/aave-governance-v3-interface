@@ -556,7 +556,11 @@ export const createProposalsSlice: StoreSlice<
       }),
     );
 
-    if (!get().representativeLoading && !!get().configs[0].votingDuration) {
+    if (
+      !get().representativeLoading &&
+      !!get().configs[0] &&
+      !!get().configs[0].votingDuration
+    ) {
       const isProposalNotInCache = !ids.filter(
         (proposalId) =>
           proposalId ===
