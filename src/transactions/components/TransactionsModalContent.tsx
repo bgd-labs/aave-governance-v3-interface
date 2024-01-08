@@ -33,6 +33,8 @@ export function TransactionsModalContent({
 
       <Box
         sx={(theme) => ({
+          overflowY: forTest ? 'scroll' : 'unset',
+          pr: forTest ? 20 : 0,
           height: forTest ? 191 : '100%',
           [theme.breakpoints.up('sm')]: {
             overflowY: 'scroll',
