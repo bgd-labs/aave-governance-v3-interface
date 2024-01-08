@@ -224,41 +224,45 @@ export function ProposalPage({
           ? now + 60
           : openToVoteTimestamp + proposal.data.votingDuration;
 
-  const payloadsExecutedTimestamp =
-    lastPayloadExecutedAt > 0
-      ? lastPayloadExecutedAt
-      : lastPayloadQueuedAt > 0 &&
-          lastPayloadExecutedAt === 0 &&
-          lastPayloadQueuedAt + proposal.timings.executionPayloadTime < now
-        ? now + 60
-        : lastPayloadQueuedAt > 0 &&
-            lastPayloadExecutedAt === 0 &&
-            lastPayloadQueuedAt + proposal.timings.executionPayloadTime > now
-          ? lastPayloadQueuedAt + proposal.timings.executionPayloadTime
-          : proposal.data.queuingTime > 0 && lastPayloadQueuedAt === 0
-            ? proposal.data.queuingTime + proposal.timings.executionPayloadTime
+  let payloadsExecutedTimestamp = lastPayloadExecutedAt;
+
+  // if at least one payload not executed yet
+  if (!payloadsExecutedTimestamp) {
+    // if all payloads queued already
+    if (lastPayloadQueuedAt > 0) {
+      // if all payloads are ready for execution, then, for timeline work correctly,
+      // we add 1 minute to now as estimated execution time
+      if (lastPayloadQueuedAt + proposal.timings.executionPayloadTime < now) {
+        payloadsExecutedTimestamp = now + 60;
+      } else {
+        // if all payload queued, but at least one not ready for execution
+        payloadsExecutedTimestamp =
+          lastPayloadQueuedAt + proposal.timings.executionPayloadTime;
+      }
+    } else {
+      payloadsExecutedTimestamp =
+        proposal.data.queuingTime > 0
+          ? proposal.data.queuingTime + proposal.timings.executionPayloadTime
+          : proposal.data.votingMachineData.votingClosedAndSentTimestamp > 0 &&
+              proposal.data.votingMachineData.votingClosedAndSentTimestamp +
+                proposal.timings.executionPayloadTime <
+                now
+            ? now + 60
             : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
                   0 &&
-                lastPayloadExecutedAt <= 0 &&
                 proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                  proposal.timings.executionPayloadTime <
+                  proposal.timings.executionPayloadTime >
                   now
-              ? now + 60
-              : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
-                    0 &&
-                  lastPayloadExecutedAt <= 0 &&
-                  proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                    proposal.timings.executionPayloadTime >
-                    now
-                ? proposal.data.votingMachineData.votingClosedAndSentTimestamp +
+              ? proposal.data.votingMachineData.votingClosedAndSentTimestamp +
+                proposal.timings.executionPayloadTime
+              : proposal.data.votingMachineData.endTime > 0
+                ? proposal.data.votingMachineData.endTime +
                   proposal.timings.executionPayloadTime
-                : proposal.data.votingMachineData.endTime > 0 &&
-                    lastPayloadExecutedAt <= 0
-                  ? proposal.data.votingMachineData.endTime +
-                    proposal.timings.executionPayloadTime
-                  : openToVoteTimestamp +
-                    proposal.data.votingDuration +
-                    proposal.timings.executionPayloadTime;
+                : openToVoteTimestamp +
+                  proposal.data.votingDuration +
+                  proposal.timings.executionPayloadTime;
+    }
+  }
 
   const Timeline = () => {
     if (!store.isRendered) {
