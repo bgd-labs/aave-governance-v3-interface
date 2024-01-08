@@ -63,6 +63,7 @@ export function VoteModal({
   const [localVotingTokens, setLocalVotingTokens] = useState<Balance[]>([]);
   const [isEditVotingTokensOpen, setEditVotingTokens] = useState(false);
   const [isVotingModesInfoOpen, setIsVotingModesInfoOpen] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
 
   const proposalData = useStore((store) =>
     getProposalDataById(store, proposalId),
@@ -106,10 +107,16 @@ export function VoteModal({
     setEditVotingTokens(false);
     setIsVotingModesInfoOpen(false);
     setLocalVotingTokens([]);
+    setIsSwitching(true);
+    setTimeout(() => setIsSwitching(false), 500);
   }, [isOpen]);
 
   const support = supportObject[proposalId];
-  const setSupport = (value: boolean) => setSupportObject(proposalId, value);
+  const setSupport = (value: boolean) => {
+    setSupportObject(proposalId, value);
+    setIsSwitching(true);
+    setTimeout(() => setIsSwitching(false), 500);
+  };
 
   const {
     error,
@@ -191,7 +198,9 @@ export function VoteModal({
       : againstVotesWithVotingPower + requiredDiff;
 
   const requiredAgainstVotesAfterVote =
-    forVotesWithVotingPower === 0 ? 0 : forVotesWithVotingPower;
+    forVotes === 0 || forVotes - requiredDiff <= 0
+      ? 0
+      : forVotes - requiredDiff;
 
   const forPercentAfterVote = new BigNumber(forVotesWithVotingPower)
     .dividedBy(requiredForVotesAfterVote)
@@ -326,8 +335,12 @@ export function VoteModal({
               isValueBig={!support}
               isRequiredValueBig={support}
               withAnim={!loading}
-              startValueForCountUp={forVotes}
-              startRequiredValueForCountUp={requiredForVotes}
+              startValueForCountUp={
+                isSwitching ? forVotes : forVotesWithVotingPower
+              }
+              startRequiredValueForCountUp={
+                isSwitching ? requiredForVotes : requiredForVotesAfterVote
+              }
             />
             <VoteBar
               type="against"
@@ -337,8 +350,15 @@ export function VoteModal({
               isRequiredValueBig={!support}
               isValueBig={support}
               withAnim={!loading}
-              startValueForCountUp={againstVotes}
-              startRequiredValueForCountUp={requiredAgainstVotes}
+              startValueForCountUp={
+                isSwitching ? againstVotes : againstVotesWithVotingPower
+              }
+              startRequiredValueForCountUp={
+                isSwitching
+                  ? requiredAgainstVotes
+                  : requiredAgainstVotesAfterVote
+              }
+              isRequiredAgainstVisible={support}
             />
           </Box>
 

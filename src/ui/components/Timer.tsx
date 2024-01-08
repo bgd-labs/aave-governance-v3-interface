@@ -54,19 +54,19 @@ export function Timer({
   return (
     <>
       {d !== 0 && (
-        <span>
+        <span className="Timer__value">
           {d}
           {texts.other.day}{' '}
         </span>
       )}
       {h !== 0 && (
-        <span>
+        <span className="Timer__value">
           {h}
           {texts.other.hours}{' '}
         </span>
       )}
       {m !== 0 && (
-        <span>
+        <span className="Timer__value">
           {m}
           {texts.other.minutes}{' '}
         </span>
@@ -74,6 +74,7 @@ export function Timer({
       {h < 1 && d < 1 && (
         <Box
           component="span"
+          className="Timer__value"
           sx={(theme) => ({
             display: 'inline-flex',
             alignItems: 'flex-start',

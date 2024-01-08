@@ -36,7 +36,6 @@ enum TimelineItemTypeType {
   created = 'created',
   openToVote = 'openToVote',
   votingClosed = 'votingClosed',
-  payloadsExecuted = 'payloadsExecuted',
   finished = 'Finished',
 }
 
@@ -356,7 +355,6 @@ interface ProposalTimelineProps {
   createdTimestamp: number;
   openToVoteTimestamp: number;
   votingClosedTimestamp: number;
-  payloadsExecutedTimestamp: number;
   expiredTimestamp: number;
   finishedTimestamp: number;
   isFinished: boolean;
@@ -372,7 +370,6 @@ export function ProposalTimeline({
   createdTimestamp,
   openToVoteTimestamp,
   votingClosedTimestamp,
-  payloadsExecutedTimestamp,
   finishedTimestamp,
   isFinished,
   state,
@@ -474,7 +471,7 @@ export function ProposalTimeline({
     },
     {
       title: texts.proposals.timelinePointVotingClosed,
-      position: getPosition(votingClosedTimestamp, payloadsExecutedTimestamp),
+      position: getPosition(votingClosedTimestamp, finishedTimestamp),
       finished:
         now >= votingClosedTimestamp || !!canceledTimestamp || isExpired,
       timestampForEstimatedState:
@@ -493,37 +490,17 @@ export function ProposalTimeline({
       rocketVisible: now >= votingClosedTimestamp && !isFinished,
     },
     {
-      title: texts.proposals.timelinePointPayloadsExecuted,
-      position:
-        isFinished || !!canceledTimestamp
-          ? withoutDetails
-            ? 100
-            : 90
-          : getPosition(payloadsExecutedTimestamp, finishedTimestamp),
+      // title: texts.proposals.timelinePointPayloadsExecuted,
+      title: texts.proposals.timelinePointFinished,
       finished: isFinished || !!canceledTimestamp,
       timestampForEstimatedState:
         now >= openToVoteTimestamp &&
         now >= votingClosedTimestamp &&
         !(isFinished || !!canceledTimestamp)
-          ? payloadsExecutedTimestamp - now > 61
-            ? payloadsExecutedTimestamp
+          ? finishedTimestamp - now > 61
+            ? finishedTimestamp
             : undefined
           : undefined,
-      timestamp: canceledTimestamp
-        ? canceledTimestamp
-        : payloadsExecutedTimestamp,
-      type: TimelineItemTypeType.payloadsExecuted,
-      visibility: isExpired
-        ? false
-        : canceledTimestamp
-          ? false
-          : failedTimestamp
-            ? !failedTimestamp
-            : true,
-    },
-    {
-      title: texts.proposals.timelinePointFinished,
-      finished: isFinished || !!canceledTimestamp,
       timestamp: isExpired
         ? expiredTimestamp
         : canceledTimestamp
@@ -558,7 +535,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '44%',
+              left: '35%',
             }}>
             <CanceledItemWrapper
               sx={{
@@ -572,37 +549,19 @@ export function ProposalTimeline({
           </TimelineLineWrapper>
         );
       } else if (
-        canceledTimestamp <= payloadsExecutedTimestamp &&
+        canceledTimestamp <= finishedTimestamp &&
         canceledTimestamp > votingClosedTimestamp
       ) {
         return (
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '66%',
+              left: '55%',
             }}>
             <CanceledItemWrapper
               sx={{
                 width: `${getPercent(
                   votingClosedTimestamp,
-                  payloadsExecutedTimestamp,
-                )}%`,
-              }}>
-              {children}
-            </CanceledItemWrapper>
-          </TimelineLineWrapper>
-        );
-      } else if (canceledTimestamp > payloadsExecutedTimestamp) {
-        return (
-          <TimelineLineWrapper
-            sx={{
-              width: `calc(100% / ${timelines.length - 1})`,
-              left: '80%',
-            }}>
-            <CanceledItemWrapper
-              sx={{
-                width: `${getPercent(
-                  payloadsExecutedTimestamp,
                   finishedTimestamp,
                 )}%`,
               }}>
@@ -666,6 +625,10 @@ export function ProposalTimeline({
                           ? -12
                           : 0,
                     },
+                  '.Timer__value': {
+                    background: 'none',
+                    border: 'none',
+                  },
                 },
               }}
               key={timeline.type}>
@@ -816,7 +779,7 @@ export function ProposalTimeline({
                           transition: 'all 0.3s ease',
                           left:
                             (timeline.position || 0) < 10
-                              ? 1
+                              ? 0
                               : (timeline.position || 0) < 20 &&
                                   (timeline.position || 0) > 10
                                 ? 15
@@ -836,7 +799,7 @@ export function ProposalTimeline({
                             height: 29,
                             left:
                               (timeline.position || 0) < 10
-                                ? 8
+                                ? 2
                                 : (timeline.position || 0) < 20 &&
                                     (timeline.position || 0) > 10
                                   ? 15

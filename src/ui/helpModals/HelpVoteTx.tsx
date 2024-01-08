@@ -56,6 +56,7 @@ export function HelpVoteTx({
   const [isGaslessVote, setIsGaslessVote] = useState(true);
   const [isEditVotingTokensOpen, setEditVotingTokens] = useState(false);
   const [isVotingModesInfoOpen, setIsVotingModesInfoOpen] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
 
   const [error, setError] = useState('');
   const [isTxStart, setIsTxStart] = useState(false);
@@ -71,6 +72,8 @@ export function HelpVoteTx({
     setIsTxStart(false);
     setEditVotingTokens(false);
     setIsTxStart(false);
+    setIsSwitching(true);
+    setTimeout(() => setIsSwitching(false), 500);
   }, []);
 
   const {
@@ -124,9 +127,10 @@ export function HelpVoteTx({
     againstVotesWithVotingPower + requiredDiff < minQuorumVotes
       ? minQuorumVotes
       : againstVotesWithVotingPower + requiredDiff;
-
   const requiredAgainstVotesAfterVote =
-    forVotesWithVotingPower === 0 ? 0 : forVotesWithVotingPower;
+    forVotes === 0 || forVotes - requiredDiff <= 0
+      ? 0
+      : forVotes - requiredDiff;
 
   const forPercentAfterVote = new BigNumber(forVotesWithVotingPower)
     .dividedBy(requiredForVotesAfterVote)
@@ -173,7 +177,14 @@ export function HelpVoteTx({
                 position: 'relative',
                 zIndex: isTxStart ? -1 : 1,
               }}>
-              <ToggleButton value={support} onToggle={setSupport} />
+              <ToggleButton
+                value={support}
+                onToggle={(value: boolean) => {
+                  setSupport(value);
+                  setIsSwitching(true);
+                  setTimeout(() => setIsSwitching(false), 500);
+                }}
+              />
             </Box>
             <Box
               sx={{
@@ -233,8 +244,12 @@ export function HelpVoteTx({
               isValueBig={!support}
               isRequiredValueBig={support}
               withAnim={!txPending}
-              startValueForCountUp={forVotes}
-              startRequiredValueForCountUp={requiredForVotes}
+              startValueForCountUp={
+                isSwitching ? forVotes : forVotesWithVotingPower
+              }
+              startRequiredValueForCountUp={
+                isSwitching ? requiredForVotes : requiredForVotesAfterVote
+              }
             />
             <VoteBar
               type="against"
@@ -244,8 +259,15 @@ export function HelpVoteTx({
               isRequiredValueBig={!support}
               isValueBig={support}
               withAnim={!txPending}
-              startValueForCountUp={againstVotes}
-              startRequiredValueForCountUp={requiredAgainstVotes}
+              startValueForCountUp={
+                isSwitching ? againstVotes : againstVotesWithVotingPower
+              }
+              startRequiredValueForCountUp={
+                isSwitching
+                  ? requiredAgainstVotes
+                  : requiredAgainstVotesAfterVote
+              }
+              isRequiredAgainstVisible={support}
             />
           </Box>
 

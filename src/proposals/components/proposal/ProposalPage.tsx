@@ -281,7 +281,6 @@ export function ProposalPage({
           createdTimestamp={proposal.data.creationTime}
           openToVoteTimestamp={openToVoteTimestamp}
           votingClosedTimestamp={votingClosedTimestamp}
-          payloadsExecutedTimestamp={payloadsExecutedTimestamp}
           finishedTimestamp={payloadsExecutedTimestamp}
           failedTimestamp={
             proposal.state === ProposalState.Defeated
@@ -351,8 +350,8 @@ export function ProposalPage({
                           color: '$light',
                           textAlign: 'center',
                         }}>
-                        Payload id {payload.id} on{' '}
-                        {getChainName(payload.chainId)} broken
+                        Cannot get data for Payload id{payload.id} on{' '}
+                        {getChainName(payload.chainId)}
                       </Box>
                     ))}
                 </BlockWrapper>
