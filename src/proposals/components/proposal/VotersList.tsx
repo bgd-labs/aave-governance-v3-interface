@@ -1,7 +1,9 @@
 import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
+import { Hex, zeroAddress } from 'viem';
 
+import { useStore } from '../../../store';
 import { Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
@@ -100,7 +102,13 @@ export function VotersListItemsWrapper({
   );
 }
 
-export function VotersListItem({ vote }: { vote: VotersData }) {
+export function VotersListItem({
+  vote,
+  activeAddress,
+}: {
+  vote: VotersData;
+  activeAddress: Hex;
+}) {
   return (
     <Box
       sx={{
@@ -119,7 +127,15 @@ export function VotersListItem({ vote }: { vote: VotersData }) {
         }}
         href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
           .blockExplorers?.default.url}/address/${vote.address}`}>
-        <Box component="p" sx={{ typography: 'descriptor' }}>
+        <Box
+          component="p"
+          sx={{
+            typography:
+              vote.address.toLowerCase() ===
+              (activeAddress || zeroAddress)?.toLowerCase()
+                ? 'descriptorAccent'
+                : 'descriptor',
+          }}>
           {formatVoterAddress(vote)}
         </Box>
       </Link>
@@ -189,6 +205,8 @@ export function VotersList({
   isVotingFinished,
   isStarted,
 }: VotersListProps) {
+  const { activeWallet, representative } = useStore();
+
   if (!isStarted) return null;
 
   return (
@@ -215,7 +233,15 @@ export function VotersList({
                 .sort((a, b) => b.votingPower - a.votingPower)
                 .slice(0, votersVisibleCount)
                 .map((vote) => (
-                  <VotersListItem vote={vote} key={vote.transactionHash} />
+                  <VotersListItem
+                    vote={vote}
+                    key={vote.transactionHash}
+                    activeAddress={
+                      representative.address ||
+                      activeWallet?.address ||
+                      zeroAddress
+                    }
+                  />
                 ))}
             </Box>
           </VotersListItemsWrapper>

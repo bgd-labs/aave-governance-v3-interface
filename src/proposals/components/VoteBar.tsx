@@ -15,6 +15,7 @@ interface VoteBarProps {
   withAnim?: boolean;
   startValueForCountUp?: number | string;
   startRequiredValueForCountUp?: number | string;
+  isRequiredAgainstVisible?: boolean;
 }
 
 export function VoteBar({
@@ -28,6 +29,7 @@ export function VoteBar({
   withAnim,
   startValueForCountUp,
   startRequiredValueForCountUp,
+  isRequiredAgainstVisible,
 }: VoteBarProps) {
   const theme = useTheme();
 
@@ -116,7 +118,7 @@ export function VoteBar({
           startNumber={startValueForCountUp}
         />
 
-        {!isFinished && (
+        {!isFinished && (type !== 'against' || isRequiredAgainstVisible) && (
           <NumberWithValue
             text={texts.other.required}
             number={requiredValue}

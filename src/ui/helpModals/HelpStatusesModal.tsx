@@ -304,7 +304,6 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
               openToVoteTimestamp={statusInfo.openToVoteTimestamp}
               votingStartTime={statusInfo.openToVoteTimestamp}
               votingClosedTimestamp={statusInfo.votingClosedTimestamp}
-              payloadsExecutedTimestamp={statusInfo.finishedTimestamp}
               finishedTimestamp={statusInfo.finishedTimestamp}
               failedTimestamp={
                 statusInfo.state === ProposalStateWithName.Defeated

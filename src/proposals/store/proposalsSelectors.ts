@@ -111,7 +111,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
     );
 
     // minimal delay from all payloads in proposal for payloads execution estimated status timestamp
-    const executionPayloadTime = Math.min.apply(
+    const executionDelay = Math.min.apply(
       null,
       proposalData.payloads.map((payload) => payload?.delay || 0),
     );
@@ -124,7 +124,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
       timings: {
         cooldownPeriod: store.contractsConstants.cooldownPeriod,
         expirationTime: store.contractsConstants.expirationTime,
-        executionPayloadTime,
+        executionDelay,
       },
     };
 
@@ -134,8 +134,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
       differential: proposalDataWithoutState.config.differential,
       precisionDivider: proposalDataWithoutState.precisionDivider,
       cooldownPeriod: proposalDataWithoutState.timings.cooldownPeriod,
-      executionPayloadTime:
-        proposalDataWithoutState.timings.executionPayloadTime,
+      executionDelay: proposalDataWithoutState.timings.executionDelay,
     });
 
     return {

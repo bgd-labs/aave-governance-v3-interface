@@ -1,6 +1,5 @@
 import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
-import { useEffect } from 'react';
 
 import { useStore } from '../../store';
 import { Timer } from '../../ui';
@@ -11,7 +10,7 @@ interface ProposalEstimatedStatusProps {
   timestamp: number;
   isSecondary?: boolean;
   css?: SxProps;
-
+  isForModal?: boolean;
   isForHelpModal?: boolean;
 }
 
@@ -21,20 +20,10 @@ export function ProposalEstimatedStatus({
   timestamp,
   isSecondary,
   css,
+  isForModal,
   isForHelpModal,
 }: ProposalEstimatedStatusProps) {
-  const { activeWallet, getDetailedProposalsData, getL1Balances } = useStore();
-
-  useEffect(() => {
-    if (
-      activeWallet?.isActive &&
-      estimatedStatus &&
-      estimatedStatus < ProposalEstimatedState.ProposalExecuted &&
-      !isForHelpModal
-    ) {
-      getL1Balances([proposalId]);
-    }
-  }, [estimatedStatus]);
+  const { getDetailedProposalsData } = useStore();
 
   const statusTextStringArray = estimatedStatus.split(' ');
   statusTextStringArray.splice(-1);
@@ -54,7 +43,9 @@ export function ProposalEstimatedStatus({
           mr: 4,
           color:
             estimatedStatus === ProposalEstimatedState.Defeated
-              ? '$mainAgainst'
+              ? isForModal
+                ? '$mainAgainst'
+                : '$text'
               : estimatedStatus === ProposalEstimatedState.Succeed
                 ? '$mainFor'
                 : estimatedStatus === ProposalEstimatedState.Expired
@@ -66,7 +57,7 @@ export function ProposalEstimatedStatus({
         <Box component="span" sx={{ typography: 'body', color: '$text' }}>
           {statusText}
         </Box>{' '}
-        {status}
+        {isForModal ? status : status === 'fail' ? 'end' : status}
       </Box>
 
       <Box component="p" sx={{ typography: 'body', color: '$textSecondary' }}>

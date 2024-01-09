@@ -125,7 +125,12 @@ export function PayloadActions({
         <Link
           href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
           inNewWindow
-          css={{ display: 'flex', alignItems: 'center', mt: 4 }}>
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            mt: 4,
+            outline: 'none !important',
+          }}>
           <SmallButton
             onClick={(e) => {
               e.stopPropagation();

@@ -24,7 +24,6 @@ import { Hex } from 'viem';
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
 import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
-import { IProposalCreateOverviewV2Slice } from '../../proposalCreateOverviewV2/store/proposalCreateOverviewV2Slice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import {
@@ -219,8 +218,7 @@ export const createProposalsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
-    IPayloadsExplorerSlice &
-    IProposalCreateOverviewV2Slice
+    IPayloadsExplorerSlice
 > = (set, get) => ({
   isInitialLoading: true,
 
@@ -321,7 +319,7 @@ export const createProposalsSlice: StoreSlice<
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData(activeIds);
       if (!!activeIds.length) {
-        await Promise.all([
+        await Promise.allSettled([
           await get().getIpfsData(activeIds),
           await get().getL1Balances(activeIds),
         ]);
@@ -332,7 +330,7 @@ export const createProposalsSlice: StoreSlice<
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData(activeIds);
-      await Promise.all([
+      await Promise.allSettled([
         await get().getIpfsData(activeIds),
         await get().getL1Balances(activeIds),
       ]);
@@ -376,7 +374,7 @@ export const createProposalsSlice: StoreSlice<
   },
   getProposalDataWithIpfsById: async (id) => {
     await get().getDetailedProposalsData([id]);
-    await Promise.all([
+    await Promise.allSettled([
       await get().getIpfsData([id]),
       await get().getL1Balances([id]),
     ]);
@@ -556,7 +554,11 @@ export const createProposalsSlice: StoreSlice<
       }),
     );
 
-    if (!get().representativeLoading && !!get().configs[0].votingDuration) {
+    if (
+      !get().representativeLoading &&
+      !!get().configs[0] &&
+      !!get().configs[0].votingDuration
+    ) {
       const isProposalNotInCache = !ids.filter(
         (proposalId) =>
           proposalId ===
@@ -807,7 +809,7 @@ export const createProposalsSlice: StoreSlice<
             proposalData.accessLevel,
           );
 
-          const executionPayloadTime = Math.max.apply(
+          const executionDelay = Math.max.apply(
             null,
             proposalData.payloads.map((payload) => payload.delay),
           );
@@ -818,7 +820,7 @@ export const createProposalsSlice: StoreSlice<
             differential: proposalConfig.differential,
             precisionDivider: get().contractsConstants.precisionDivider,
             cooldownPeriod: get().contractsConstants.cooldownPeriod,
-            executionPayloadTime,
+            executionDelay,
           });
 
           if (

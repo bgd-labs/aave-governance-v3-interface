@@ -10,7 +10,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Hex, toHex } from 'viem';
+import { Hex } from 'viem';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
@@ -235,9 +235,8 @@ function PayloadItem({
               </Box>
               <CopyAndExternalIconsSet
                 iconSize={12}
-                copyTooltipText={toHex(payload.id)}
-                copyText={toHex(payload.id)}
-                sx={{ '.CopyAndExternalIconsSet__copy': { ml: 4 } }}
+                externalLink={`https://vote.onaave.com/payloads-explorer/?payloadId=${payload.id}&payloadChainId=${payload.chainId}&payloadsControllerAddress=${payload.payloadsController}`}
+                sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
               />
             </Box>
 

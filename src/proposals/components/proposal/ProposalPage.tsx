@@ -92,7 +92,7 @@ export function ProposalPage({
       differential: proposal.config.differential,
       precisionDivider: proposal.precisionDivider,
       cooldownPeriod: proposal.timings.cooldownPeriod,
-      executionPayloadTime: proposal.timings.executionPayloadTime,
+      executionDelay: proposal.timings.executionDelay,
     });
 
     const startBlock =
@@ -177,7 +177,7 @@ export function ProposalPage({
     differential: proposal.config.differential,
     precisionDivider: proposal.precisionDivider,
     cooldownPeriod: proposal.timings.cooldownPeriod,
-    executionPayloadTime: proposal.timings.executionPayloadTime,
+    executionDelay: proposal.timings.executionDelay,
   });
 
   const {
@@ -229,36 +229,36 @@ export function ProposalPage({
       ? lastPayloadExecutedAt
       : lastPayloadQueuedAt > 0 &&
           lastPayloadExecutedAt === 0 &&
-          lastPayloadQueuedAt + proposal.timings.executionPayloadTime < now
+          lastPayloadQueuedAt + proposal.timings.executionDelay < now
         ? now + 60
         : lastPayloadQueuedAt > 0 &&
             lastPayloadExecutedAt === 0 &&
-            lastPayloadQueuedAt + proposal.timings.executionPayloadTime > now
-          ? lastPayloadQueuedAt + proposal.timings.executionPayloadTime
+            lastPayloadQueuedAt + proposal.timings.executionDelay > now
+          ? lastPayloadQueuedAt + proposal.timings.executionDelay
           : proposal.data.queuingTime > 0 && lastPayloadQueuedAt === 0
-            ? proposal.data.queuingTime + proposal.timings.executionPayloadTime
+            ? proposal.data.queuingTime + proposal.timings.executionDelay
             : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
                   0 &&
                 lastPayloadExecutedAt <= 0 &&
                 proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                  proposal.timings.executionPayloadTime <
+                  proposal.timings.executionDelay <
                   now
               ? now + 60
               : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
                     0 &&
                   lastPayloadExecutedAt <= 0 &&
                   proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                    proposal.timings.executionPayloadTime >
+                    proposal.timings.executionDelay >
                     now
                 ? proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                  proposal.timings.executionPayloadTime
+                  proposal.timings.executionDelay
                 : proposal.data.votingMachineData.endTime > 0 &&
                     lastPayloadExecutedAt <= 0
                   ? proposal.data.votingMachineData.endTime +
-                    proposal.timings.executionPayloadTime
+                    proposal.timings.executionDelay
                   : openToVoteTimestamp +
                     proposal.data.votingDuration +
-                    proposal.timings.executionPayloadTime;
+                    proposal.timings.executionDelay;
 
   const Timeline = () => {
     if (!store.isRendered) {
@@ -281,7 +281,6 @@ export function ProposalPage({
           createdTimestamp={proposal.data.creationTime}
           openToVoteTimestamp={openToVoteTimestamp}
           votingClosedTimestamp={votingClosedTimestamp}
-          payloadsExecutedTimestamp={payloadsExecutedTimestamp}
           finishedTimestamp={payloadsExecutedTimestamp}
           failedTimestamp={
             proposal.state === ProposalState.Defeated
@@ -351,8 +350,8 @@ export function ProposalPage({
                           color: '$light',
                           textAlign: 'center',
                         }}>
-                        Payload id {payload.id} on{' '}
-                        {getChainName(payload.chainId)} broken
+                        Cannot get data for Payload id{payload.id} on{' '}
+                        {getChainName(payload.chainId)}
                       </Box>
                     ))}
                 </BlockWrapper>

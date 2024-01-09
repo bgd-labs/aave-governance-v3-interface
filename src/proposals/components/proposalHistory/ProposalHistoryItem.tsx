@@ -36,7 +36,7 @@ export function ProposalHistoryItem({
       differential: proposalData.proposal.config.differential,
       precisionDivider: proposalData.proposal.precisionDivider,
       cooldownPeriod: proposalData.proposal.timings.cooldownPeriod,
-      executionPayloadTime: proposalData.proposal.timings.executionPayloadTime,
+      executionDelay: proposalData.proposal.timings.executionDelay,
     },
   );
 
