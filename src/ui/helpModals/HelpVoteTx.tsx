@@ -221,6 +221,7 @@ export function HelpVoteTx({
                   estimatedStatus={estimatedState}
                   timestamp={timestampForEstimatedState}
                   isForHelpModal
+                  isForModal
                 />
               )}
             </Box>

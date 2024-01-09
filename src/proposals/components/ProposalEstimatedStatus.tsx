@@ -11,7 +11,7 @@ interface ProposalEstimatedStatusProps {
   timestamp: number;
   isSecondary?: boolean;
   css?: SxProps;
-
+  isForModal?: boolean;
   isForHelpModal?: boolean;
 }
 
@@ -21,6 +21,7 @@ export function ProposalEstimatedStatus({
   timestamp,
   isSecondary,
   css,
+  isForModal,
   isForHelpModal,
 }: ProposalEstimatedStatusProps) {
   const { activeWallet, getDetailedProposalsData, getL1Balances } = useStore();
@@ -54,7 +55,9 @@ export function ProposalEstimatedStatus({
           mr: 4,
           color:
             estimatedStatus === ProposalEstimatedState.Defeated
-              ? '$mainAgainst'
+              ? isForModal
+                ? '$mainAgainst'
+                : '$text'
               : estimatedStatus === ProposalEstimatedState.Succeed
                 ? '$mainFor'
                 : estimatedStatus === ProposalEstimatedState.Expired
@@ -66,7 +69,7 @@ export function ProposalEstimatedStatus({
         <Box component="span" sx={{ typography: 'body', color: '$text' }}>
           {statusText}
         </Box>{' '}
-        {status}
+        {isForModal ? status : status === 'fail' ? 'end' : status}
       </Box>
 
       <Box component="p" sx={{ typography: 'body', color: '$textSecondary' }}>

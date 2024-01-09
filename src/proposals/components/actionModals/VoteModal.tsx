@@ -312,6 +312,7 @@ export function VoteModal({
                   proposalId={proposalId}
                   estimatedStatus={estimatedState}
                   timestamp={timestampForEstimatedState}
+                  isForModal
                 />
               )}
             </Box>
