@@ -319,7 +319,7 @@ export const createProposalsSlice: StoreSlice<
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData(activeIds);
       if (!!activeIds.length) {
-        await Promise.all([
+        await Promise.allSettled([
           await get().getIpfsData(activeIds),
           await get().getL1Balances(activeIds),
         ]);
@@ -330,7 +330,7 @@ export const createProposalsSlice: StoreSlice<
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData(activeIds);
-      await Promise.all([
+      await Promise.allSettled([
         await get().getIpfsData(activeIds),
         await get().getL1Balances(activeIds),
       ]);
@@ -374,7 +374,7 @@ export const createProposalsSlice: StoreSlice<
   },
   getProposalDataWithIpfsById: async (id) => {
     await get().getDetailedProposalsData([id]);
-    await Promise.all([
+    await Promise.allSettled([
       await get().getIpfsData([id]),
       await get().getL1Balances([id]),
     ]);

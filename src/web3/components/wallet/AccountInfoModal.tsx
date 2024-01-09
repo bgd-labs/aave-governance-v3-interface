@@ -1,5 +1,5 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
 import { useStore } from '../../../store';
@@ -28,7 +28,13 @@ export function AccountInfoModal({
   representedAddresses,
 }: AccountInfoModalProps) {
   const store = useStore();
-  const { activeWallet, disconnectActiveWallet, setModalOpen } = store;
+  const {
+    activeWallet,
+    disconnectActiveWallet,
+    setModalOpen,
+    representative,
+    getCurrentPowers,
+  } = store;
 
   const allTransactions = activeWallet
     ? selectAllTransactionsByWallet<TransactionUnion>(
@@ -42,6 +48,16 @@ export function AccountInfoModal({
     setIsOpen(false);
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      if (!!representative.address) {
+        getCurrentPowers(representative.address);
+      } else if (activeWallet?.address) {
+        getCurrentPowers(activeWallet?.address);
+      }
+    }
+  }, [activeWallet?.address, representative.address, isOpen]);
 
   return (
     <BasicModal

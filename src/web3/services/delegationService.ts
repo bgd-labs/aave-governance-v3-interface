@@ -6,8 +6,10 @@ import {
   metaDelegateHelperContract,
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IAaveTokenV3';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { WalletClient } from '@wagmi/core';
+import dayjs from 'dayjs';
 import { encodeFunctionData, Hex, hexToSignature, zeroAddress } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
@@ -56,10 +58,6 @@ export class DelegationService {
   }
 
   async getUserPowers(userAddress: Hex, underlyingAssets: Hex[]) {
-    const blockNumber = await this.clients[appConfig.govCoreChainId].getBlock({
-      blockTag: 'safe',
-    });
-
     const contracts = underlyingAssets.map((asset) => {
       return {
         contract: aaveTokenV3Contract({
@@ -72,26 +70,25 @@ export class DelegationService {
 
     return await Promise.all(
       contracts.map(async (contract) => {
-        const userBalance = await contract.contract.read.balanceOf([
-          userAddress,
-        ]);
-        const delegatee = await contract.contract.read.getDelegates([
-          userAddress,
+        const data = await Promise.all([
+          await contract.contract.read.balanceOf([userAddress]),
+          await contract.contract.read.getPowersCurrent([userAddress]),
+          await contract.contract.read.getDelegates([userAddress]),
         ]);
 
         const isPropositionPowerDelegated =
-          delegatee[GovernancePowerType.PROPOSITION] === userAddress ||
-          delegatee[GovernancePowerType.PROPOSITION] === zeroAddress
+          data[2][GovernancePowerType.PROPOSITION] === userAddress ||
+          data[2][GovernancePowerType.PROPOSITION] === zeroAddress
             ? false
-            : !!delegatee[GovernancePowerType.PROPOSITION];
+            : !!data[2][GovernancePowerType.PROPOSITION];
         const isVotingPowerDelegated =
-          delegatee[GovernancePowerType.VOTING] === userAddress ||
-          delegatee[GovernancePowerType.VOTING] === zeroAddress
+          data[2][GovernancePowerType.VOTING] === userAddress ||
+          data[2][GovernancePowerType.VOTING] === zeroAddress
             ? false
-            : !!delegatee[GovernancePowerType.VOTING];
+            : !!data[2][GovernancePowerType.VOTING];
 
         const getPower = (totalPower: bigint, type: GovernancePowerType) => {
-          let formattedUserBalance = userBalance;
+          let formattedUserBalance = data[0];
           if (
             type === GovernancePowerType.PROPOSITION &&
             isPropositionPowerDelegated
@@ -118,24 +115,18 @@ export class DelegationService {
               String(totalPower - formattedUserBalance),
               18,
             ).toString(),
-
             isWithDelegatedPower: formattedUserBalance !== totalPower,
           };
         };
 
-        const totalPowers = await contract.contract.read.getPowersCurrent(
-          [userAddress],
-          { blockNumber: blockNumber.number },
-        );
-
         const proposition = getPower(
-          totalPowers[1],
+          data[1][1],
           GovernancePowerType.PROPOSITION,
         );
-        const voting = getPower(totalPowers[0], GovernancePowerType.VOTING);
+        const voting = getPower(data[1][0], GovernancePowerType.VOTING);
 
         return {
-          timestamp: blockNumber.timestamp,
+          timestamp: dayjs().unix(),
           tokenName: getTokenName(contract.underlyingAsset),
           underlyingAsset: contract.underlyingAsset,
           proposition,
@@ -194,43 +185,61 @@ export class DelegationService {
     userAddress: Hex,
     underlyingAssets: Hex[],
   ) {
-    const blockNumber = (
-      await this.clients[appConfig.govCoreChainId].getBlock({ blockHash })
-    ).number;
-
-    const contracts = underlyingAssets.map((asset) => {
-      return {
-        contract: aaveTokenV3Contract({
-          contractAddress: asset,
-          client: this.clients[appConfig.govCoreChainId],
-        }),
-        underlyingAsset: asset,
-      };
+    const client = this.clients[appConfig.govCoreChainId];
+    const blockNumber = await client.getBlock({
+      blockHash,
     });
 
-    return Promise.all(
-      contracts.map(async (contract) => {
-        const userBalance = await contract.contract.read.balanceOf([
-          userAddress,
-        ]);
-        const totalPower = await contract.contract.read.getPowerCurrent(
-          [userAddress, GovernancePowerType.VOTING],
-          {
-            blockNumber: blockNumber,
-          },
-        );
+    const userBalances = await client.multicall({
+      contracts: [
+        ...underlyingAssets.map((asset) => {
+          const wagmiContract = {
+            address: asset,
+            abi: IAaveTokenV3_ABI,
+          } as const;
 
-        return {
-          blockHash,
-          tokenName: getTokenName(contract.underlyingAsset),
-          underlyingAsset: contract.underlyingAsset,
-          basicValue: totalPower.toString(),
-          value: normalizeBN(totalPower.toString(), 18).toString(),
-          userBalance: userBalance.toString(),
-          isWithDelegatedPower: userBalance < totalPower,
-        };
-      }),
-    );
+          return {
+            ...wagmiContract,
+            functionName: 'balanceOf',
+            args: [userAddress],
+          };
+        }),
+      ],
+      blockNumber: blockNumber.number,
+    });
+
+    const votingPowers = await client.multicall({
+      contracts: [
+        ...underlyingAssets.map((asset) => {
+          const wagmiContract = {
+            address: asset,
+            abi: IAaveTokenV3_ABI,
+          } as const;
+
+          return {
+            ...wagmiContract,
+            functionName: 'getPowerCurrent',
+            args: [userAddress, GovernancePowerType.VOTING],
+          };
+        }),
+      ],
+      blockNumber: blockNumber.number,
+    });
+
+    return underlyingAssets.map((asset, index) => {
+      const userBalance = userBalances[index].result;
+      const votingPower = votingPowers[index].result;
+
+      return {
+        blockHash,
+        tokenName: getTokenName(asset),
+        underlyingAsset: asset,
+        basicValue: String(votingPower),
+        value: normalizeBN(String(votingPower), 18).toString(),
+        userBalance: normalizeBN(String(userBalance), 18).toString(),
+        isWithDelegatedPower: userBalance !== votingPower,
+      };
+    });
   }
 
   async delegateMetaSig(

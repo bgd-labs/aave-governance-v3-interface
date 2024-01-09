@@ -95,14 +95,14 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
     const now = dayjs().unix();
     const activeAddress = get().activeWallet?.address;
 
-    const requestAndSetData = async () => {
+    const requestAndSetData = async (adr: Hex) => {
       const votingStrategy =
         await get().govDataService.getVotingStrategyContract();
       const underlyingAssets =
         (await votingStrategy.read.getVotingAssetList()) as Draft<Hex[]>;
 
       const powers = await get().delegationService.getUserPowers(
-        address,
+        adr,
         underlyingAssets,
       );
 
@@ -147,7 +147,7 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
 
       set((state) =>
         produce(state, (draft) => {
-          draft.currentPowers[address] = {
+          draft.currentPowers[adr] = {
             timestamp: Number(powers[0].timestamp),
             totalPropositionPower,
             totalVotingPower,
@@ -168,13 +168,16 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
             get().currentPowers[address].timestamp + 3600000 < now ||
             request
           ) {
-            await requestAndSetData();
+            await requestAndSetData(address);
           }
         } else {
-          await requestAndSetData();
+          await requestAndSetData(address);
         }
-      } else {
-        await requestAndSetData();
+      } else if (activeAddress) {
+        await Promise.allSettled([
+          await requestAndSetData(activeAddress),
+          await requestAndSetData(address),
+        ]);
       }
     }
   },

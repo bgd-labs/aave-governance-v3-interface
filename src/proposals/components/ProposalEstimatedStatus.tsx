@@ -1,6 +1,5 @@
 import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
-import { useEffect } from 'react';
 
 import { useStore } from '../../store';
 import { Timer } from '../../ui';
@@ -24,18 +23,7 @@ export function ProposalEstimatedStatus({
   isForModal,
   isForHelpModal,
 }: ProposalEstimatedStatusProps) {
-  const { activeWallet, getDetailedProposalsData, getL1Balances } = useStore();
-
-  useEffect(() => {
-    if (
-      activeWallet?.isActive &&
-      estimatedStatus &&
-      estimatedStatus < ProposalEstimatedState.ProposalExecuted &&
-      !isForHelpModal
-    ) {
-      getL1Balances([proposalId]);
-    }
-  }, [estimatedStatus]);
+  const { getDetailedProposalsData } = useStore();
 
   const statusTextStringArray = estimatedStatus.split(' ');
   statusTextStringArray.splice(-1);
