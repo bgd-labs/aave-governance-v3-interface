@@ -1,10 +1,15 @@
 import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
+import { zeroAddress } from 'viem';
 
+import { useStore } from '../../../store';
 import { BasicModal, Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
+import { media } from '../../../ui/utils/themeMUI';
+import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
+import { appConfig } from '../../../utils/appConfig';
 import { chainInfoHelper } from '../../../utils/configs';
 import { formatVoterAddress } from '../../utils/formatVoterAddress';
 import { VoteBar } from '../VoteBar';
@@ -57,12 +62,15 @@ export function VotersModal({
   requiredAgainstVotes,
   isFinished,
 }: VotersModalProps) {
+  const { activeWallet, representative } = useStore();
   const theme = useTheme();
 
   const votersFor = voters.filter((vote) => vote.support);
   const votersAgainst = voters.filter((vote) => !vote.support);
 
   const ListItemAddress = ({ vote }: { vote: VotersData }) => {
+    const sm = useMediaQuery(media.sm);
+
     return (
       <Link
         inNewWindow
@@ -72,10 +80,22 @@ export function VotersModal({
           transition: 'all 0.2s ease',
           hover: { opacity: '0.5' },
         }}
-        href={`${chainInfoHelper.getChainParameters(vote.chainId).blockExplorers
-          ?.default.url}/address/${vote.address}`}>
-        <Box component="p" sx={{ typography: 'body' }}>
-          {formatVoterAddress(vote)}
+        href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
+          .blockExplorers?.default.url}/address/${vote.address}`}>
+        <Box
+          component="p"
+          sx={{
+            typography:
+              vote.address.toLowerCase() ===
+              (
+                representative.address ||
+                activeWallet?.address ||
+                zeroAddress
+              ).toLowerCase()
+                ? 'headline'
+                : 'body',
+          }}>
+          {formatVoterAddress(vote, sm)}
         </Box>
       </Link>
     );

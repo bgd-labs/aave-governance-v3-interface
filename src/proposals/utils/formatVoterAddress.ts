@@ -2,10 +2,10 @@ import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 
-export function formatVoterAddress(vote: VotersData) {
+export function formatVoterAddress(vote: VotersData, isBig?: boolean) {
   return vote.ensName
-    ? vote.ensName.length > 10
-      ? textCenterEllipsis(vote.ensName, 5, 5)
+    ? vote.ensName.length > (isBig ? 18 : 10)
+      ? textCenterEllipsis(vote.ensName, isBig ? 12 : 5, isBig ? 6 : 5)
       : vote.ensName
-    : textCenterEllipsis(vote.address, 5, 4);
+    : textCenterEllipsis(vote.address, isBig ? 8 : 5, isBig ? 8 : 5);
 }
