@@ -162,7 +162,7 @@ export const createProposalsHistorySlice: StoreSlice<
       differential: proposal.config.differential,
       precisionDivider: proposal.precisionDivider,
       cooldownPeriod: proposal.timings.cooldownPeriod,
-      executionPayloadTime: proposal.timings.executionPayloadTime,
+      executionDelay: proposal.timings.executionDelay,
     });
 
     // PAYLOADS_CREATED

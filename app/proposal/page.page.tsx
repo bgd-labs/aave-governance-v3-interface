@@ -121,7 +121,7 @@ export default async function ProposalPage({
     (config) => config.accessLevel === cachedDetailsData?.proposal.accessLevel,
   )[0];
 
-  const executionPayloadTime = Math.max.apply(
+  const executionDelay = Math.max.apply(
     null,
     cachedDetailsData?.payloads.map((payload) => payload.delay) || [0],
   );
@@ -146,7 +146,7 @@ export default async function ProposalPage({
       timings: {
         cooldownPeriod: contractsConstants.cooldownPeriod,
         expirationTime: contractsConstants.expirationTime,
-        executionPayloadTime,
+        executionDelay,
       },
     };
 
@@ -156,8 +156,7 @@ export default async function ProposalPage({
       differential: proposalDataWithoutState.config.differential,
       precisionDivider: proposalDataWithoutState.precisionDivider,
       cooldownPeriod: proposalDataWithoutState.timings.cooldownPeriod,
-      executionPayloadTime:
-        proposalDataWithoutState.timings.executionPayloadTime,
+      executionDelay: proposalDataWithoutState.timings.executionDelay,
     });
 
     proposalDataSSR = {

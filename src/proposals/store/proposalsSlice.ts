@@ -809,7 +809,7 @@ export const createProposalsSlice: StoreSlice<
             proposalData.accessLevel,
           );
 
-          const executionPayloadTime = Math.max.apply(
+          const executionDelay = Math.max.apply(
             null,
             proposalData.payloads.map((payload) => payload.delay),
           );
@@ -820,7 +820,7 @@ export const createProposalsSlice: StoreSlice<
             differential: proposalConfig.differential,
             precisionDivider: get().contractsConstants.precisionDivider,
             cooldownPeriod: get().contractsConstants.cooldownPeriod,
-            executionPayloadTime,
+            executionDelay,
           });
 
           if (

@@ -125,7 +125,7 @@ export function getProposalData() {
       timings: {
         cooldownPeriod: 600,
         expirationTime: 2592000,
-        executionPayloadTime: 600,
+        executionDelay: 600,
       },
       state: 1,
     },

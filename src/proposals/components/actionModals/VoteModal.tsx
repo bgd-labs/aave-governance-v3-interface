@@ -198,9 +198,11 @@ export function VoteModal({
       : againstVotesWithVotingPower + requiredDiff;
 
   const requiredAgainstVotesAfterVote =
-    forVotes === 0 || forVotes - requiredDiff <= 0
+    forVotesWithVotingPower === 0 ||
+    forVotesWithVotingPower - requiredDiff <= 0 ||
+    forVotesWithVotingPower < minQuorumVotes
       ? 0
-      : forVotes - requiredDiff;
+      : forVotesWithVotingPower - requiredDiff;
 
   const forPercentAfterVote = new BigNumber(forVotesWithVotingPower)
     .dividedBy(requiredForVotesAfterVote)
