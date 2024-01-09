@@ -841,48 +841,40 @@ export const createProposalsSlice: StoreSlice<
         }
       });
 
-      set((state) =>
-        produce(state, (draft) => {
-          newBlockHashes.forEach((hash) => {
-            draft.blockHashBalanceLoadings[`${hash.hash}_${userAddress}`] =
-              true;
-          });
-        }),
-      );
-
-      const balances = await Promise.all(
-        newBlockHashes.map((item) => {
-          return get().delegationService.getDelegatedVotingPowerByBlockHash(
-            item.hash as Hex,
-            userAddress,
-            item.underlyingAssets as Hex[],
-          );
-        }),
-      );
-
-      set((state) =>
-        produce(state, (draft) => {
-          balances.forEach((balance, index) => {
-            draft.blockHashBalance[
-              `${newBlockHashes[index].hash}_${userAddress}`
-            ] = balance;
-          });
-        }),
-      );
-
-      setTimeout(
-        () =>
+      newBlockHashes.map(async (item) => {
+        if (!get().blockHashBalanceLoadings[`${item.hash}_${userAddress}`]) {
           set((state) =>
             produce(state, (draft) => {
-              balances.forEach((balance, index) => {
-                draft.blockHashBalanceLoadings[
-                  `${newBlockHashes[index].hash}_${userAddress}`
-                ] = false;
-              });
+              draft.blockHashBalanceLoadings[`${item.hash}_${userAddress}`] =
+                true;
             }),
-          ),
-        1,
-      );
+          );
+
+          const balance =
+            await get().delegationService.getDelegatedVotingPowerByBlockHash(
+              item.hash as Hex,
+              userAddress,
+              item.underlyingAssets as Hex[],
+            );
+
+          set((state) =>
+            produce(state, (draft) => {
+              draft.blockHashBalance[`${item.hash}_${userAddress}`] = balance;
+            }),
+          );
+        }
+
+        setTimeout(
+          () =>
+            set((state) =>
+              produce(state, (draft) => {
+                draft.blockHashBalanceLoadings[`${item.hash}_${userAddress}`] =
+                  false;
+              }),
+            ),
+          1,
+        );
+      });
     }
   },
 
