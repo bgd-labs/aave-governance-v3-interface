@@ -1,6 +1,8 @@
 import { Box } from '@mui/system';
 import React from 'react';
+import { zeroAddress } from 'viem';
 
+import { useStore } from '../../../store';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import {
   votersCountForViewAll,
@@ -24,6 +26,8 @@ export function VotersListLoading({
   isStarted,
   setIsVotersModalOpen,
 }: VotersLoadingProps) {
+  const { activeWallet, representative } = useStore();
+
   if (!isStarted) return null;
   if (!voters?.length) return null;
 
@@ -36,7 +40,13 @@ export function VotersListLoading({
             .sort((a, b) => b.votingPower - a.votingPower)
             .slice(0, votersVisibleCount)
             .map((vote) => (
-              <VotersListItem vote={vote} key={vote.transactionHash} />
+              <VotersListItem
+                activeAddress={
+                  representative.address || activeWallet?.address || zeroAddress
+                }
+                vote={vote}
+                key={vote.transactionHash}
+              />
             ))}
         </Box>
         <Box
