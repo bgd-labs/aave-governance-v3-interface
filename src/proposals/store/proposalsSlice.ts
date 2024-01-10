@@ -662,16 +662,6 @@ export const createProposalsSlice: StoreSlice<
       const allPayloadsLength = Object.values(
         get().detailedPayloadsData,
       ).length;
-      console.log(Object.values(get().detailedPayloadsData));
-      console.log('allPayloadsLength', allPayloadsLength);
-      console.log(
-        proposalsData.map((value) => value.initialPayloads).flat().length,
-      );
-      console.log('allPayloadsLength', allPayloadsLength);
-      console.log(
-        allPayloadsLength <
-          proposalsData.map((value) => value.initialPayloads).flat().length,
-      );
 
       if (
         (!!payloadsChainIds.length && !isUpdateOnlyVotingPower) ||
