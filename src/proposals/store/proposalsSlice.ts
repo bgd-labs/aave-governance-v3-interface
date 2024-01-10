@@ -18,6 +18,7 @@ import {
   VotingConfig,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
@@ -565,16 +566,32 @@ export const createProposalsSlice: StoreSlice<
           get().cachedProposalsIds.find((id) => proposalId === id),
       ).length;
 
+      const timeToUpdate = dayjs().unix() + 3 * 1000 * 50; // now + 3 minutes;
+
+      const filteredIds = ids.filter((id) => {
+        return !get().detailedProposalsData[id]
+          ? true
+          : (get().detailedProposalsData[id]?.lastUpdatedTimestamp || 0) >
+              timeToUpdate;
+      });
+
+      const idsForUpdateVotingInfo = ids.filter((id) => {
+        return !get().detailedProposalsData[id]
+          ? false
+          : (get().detailedProposalsData[id]?.lastUpdatedTimestamp || 0) <
+              timeToUpdate;
+      });
+
       let proposalsData: BasicProposal[] = [];
-      if (!!ids.length && isProposalNotInCache) {
+      if (!!filteredIds.length && isProposalNotInCache) {
         const fr = Math.max.apply(
           null,
-          ids.map((id) => id),
+          filteredIds.map((id) => id),
         );
 
         const to = Math.min.apply(
           null,
-          ids.map((id) => id),
+          filteredIds.map((id) => id),
         );
 
         proposalsData = await get().govDataService.getDetailedProposalsData(
@@ -606,7 +623,7 @@ export const createProposalsSlice: StoreSlice<
           PAGE_SIZE,
           get().setRpcError,
         );
-      } else if (!isProposalNotInCache) {
+      } else if (!isProposalNotInCache || !!idsForUpdateVotingInfo.length) {
         const proposals = ids.map((id) => get().detailedProposalsData[id]);
         proposalsData = await get().govDataService.getOnlyVotingMachineData(
           get().configs,
