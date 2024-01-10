@@ -1281,10 +1281,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.13.3.tgz#a115c2677aeadd0398caa096436395fe07f4cf48"
   integrity sha512-9WQekYTCjeAuqjRouLHvYdE9R86Hp4m5v9QJhr9zGpsl8OE/YxpmI6QEz6o0gHMB3D6DhqwAZ3nakCouz7Cb+w==
 
-"@bgd-labs/aave-governance-ui-helpers@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.16.tgz#55f04a9705241cb2ca31d8ae553911ec8f3f2b7d"
-  integrity sha512-XMwClvuDHTvk8ckZyDQfQiKfnRU1i95Y8OIp94kmOFHkfDhFzhYu/9mhtdz+D99tTdt8Ld/zaFtSQs40i561Jg==
+"@bgd-labs/aave-governance-ui-helpers@^1.0.17":
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.17.tgz#46d8ab10f312aa68933c7b19fdd718d4af2aea41"
+  integrity sha512-LLK8Iw/h0otWgm7CsJxetersoN2681ta8S19X68Bw5yEsWDWeVp4DYYJsBYKfm4QJVK5xgeN1mb/EGVL8uhnvQ==
   dependencies:
     bs58 "^5.0.0"
     dayjs "^1.11.10"
@@ -7058,11 +7058,6 @@ react-emoji-render@^2.0.1:
     prop-types "^15.5.8"
     string-replace-to-array "^1.0.1"
 
-react-fast-compare@^3.2.0:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
-  integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
-
 react-final-form-arrays@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/react-final-form-arrays/-/react-final-form-arrays-3.1.4.tgz#2744941d8fd200fc648481022e515588f60bbac3"
@@ -7098,13 +7093,6 @@ react-paginate@^8.2.0:
   integrity sha512-sJCz1PW+9PNIjUSn919nlcRVuleN2YPoFBOvL+6TPgrH/3lwphqiSOgdrLafLdyLDxsgK+oSgviqacF4hxsDIw==
   dependencies:
     prop-types "^15"
-
-react-snowfall@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-snowfall/-/react-snowfall-1.2.1.tgz#68cab6a1d05aa7c3211bce96a3a97977ca7dc57f"
-  integrity sha512-d2UR3nDq3F0DJGaTfJ0QNbBo76UZHtT9wHFj+ePxAl4FgSxWBhxB/Bjn06f5iDBwhgwiZ7CZmv3lwfNvjo6a+w==
-  dependencies:
-    react-fast-compare "^3.2.0"
 
 react@18.2.0:
   version "18.2.0"

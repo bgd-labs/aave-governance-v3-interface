@@ -107,12 +107,19 @@ export interface IProposalsSlice {
   setDetailedProposalsDataLoadings: (id: number) => void;
   detailedProposalsDataLoading: boolean;
   setDetailedProposalsData: (id: number, data: ProposalData) => void;
-  getDetailedProposalsData: (
-    ids: number[],
-    from?: number,
-    to?: number,
-    pageSize?: number,
-  ) => void;
+  getDetailedProposalsData: ({
+    ids,
+    from,
+    to,
+    pageSize,
+    fullData,
+  }: {
+    ids: number[];
+    from?: number;
+    to?: number;
+    pageSize?: number;
+    fullData?: boolean;
+  }) => Promise<void>;
   detailedProposalDataInterval: number | undefined;
   startDetailedProposalDataPolling: (ids?: number[]) => Promise<void>;
   stopDetailedProposalDataPolling: () => void;
@@ -318,7 +325,7 @@ export const createProposalsSlice: StoreSlice<
       }
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
-      await get().getDetailedProposalsData(activeIds);
+      await get().getDetailedProposalsData({ ids: activeIds });
       if (!!activeIds.length) {
         await Promise.allSettled([
           await get().getIpfsData(activeIds),
@@ -330,7 +337,7 @@ export const createProposalsSlice: StoreSlice<
     } else {
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
-      await get().getDetailedProposalsData(activeIds);
+      await get().getDetailedProposalsData({ ids: activeIds });
       await Promise.allSettled([
         await get().getIpfsData(activeIds),
         await get().getL1Balances(activeIds),
@@ -341,7 +348,7 @@ export const createProposalsSlice: StoreSlice<
   getPaginatedProposalsDataWithoutIpfs: async () => {
     const paginatedIds = selectPaginatedIds(get());
     const { activeIds } = selectProposalIds(get(), paginatedIds);
-    await get().getDetailedProposalsData(activeIds);
+    await get().getDetailedProposalsData({ ids: activeIds });
     await get().getL1Balances(activeIds);
     get().updatePaginatedProposalsData();
   },
@@ -374,7 +381,7 @@ export const createProposalsSlice: StoreSlice<
     );
   },
   getProposalDataWithIpfsById: async (id) => {
-    await get().getDetailedProposalsData([id]);
+    await get().getDetailedProposalsData({ ids: [id] });
     await Promise.allSettled([
       await get().getIpfsData([id]),
       await get().getL1Balances([id]),
@@ -540,7 +547,7 @@ export const createProposalsSlice: StoreSlice<
     }
   },
 
-  getDetailedProposalsData: async (ids, from, to, pageSize) => {
+  getDetailedProposalsData: async ({ ids, from, to, pageSize, fullData }) => {
     const userAddress = get().activeWallet?.address;
     const representativeAddress = get().representative.address;
 
@@ -568,19 +575,23 @@ export const createProposalsSlice: StoreSlice<
 
       const timeToUpdate = dayjs().unix() + 3 * 1000 * 50; // now + 3 minutes;
 
-      const filteredIds = ids.filter((id) => {
-        return !get().detailedProposalsData[id]
-          ? true
-          : (get().detailedProposalsData[id]?.lastUpdatedTimestamp || 0) >
-              timeToUpdate;
-      });
+      const filteredIds = fullData
+        ? ids
+        : ids.filter((id) => {
+            return !get().detailedProposalsData[id]
+              ? true
+              : (get().detailedProposalsData[id]?.lastUpdatedTimestamp || 0) >
+                  timeToUpdate;
+          });
 
-      const idsForUpdateVotingInfo = ids.filter((id) => {
-        return !get().detailedProposalsData[id]
-          ? false
-          : (get().detailedProposalsData[id]?.lastUpdatedTimestamp || 0) <
-              timeToUpdate;
-      });
+      const isUpdateOnlyVotingPower = fullData
+        ? !![].length
+        : !!ids.filter((id) => {
+            return !get().detailedProposalsData[id]
+              ? false
+              : (get().detailedProposalsData[id]?.lastUpdatedTimestamp || 0) <
+                  timeToUpdate;
+          }).length;
 
       let proposalsData: BasicProposal[] = [];
       if (!!filteredIds.length && isProposalNotInCache) {
@@ -623,7 +634,7 @@ export const createProposalsSlice: StoreSlice<
           PAGE_SIZE,
           get().setRpcError,
         );
-      } else if (!isProposalNotInCache || !!idsForUpdateVotingInfo.length) {
+      } else if (!isProposalNotInCache || isUpdateOnlyVotingPower) {
         const proposals = ids.map((id) => get().detailedProposalsData[id]);
         proposalsData = await get().govDataService.getOnlyVotingMachineData(
           get().configs,
@@ -648,32 +659,52 @@ export const createProposalsSlice: StoreSlice<
         .flat()
         .filter((value, index, self) => self.indexOf(value) === index);
 
-      await Promise.all(
-        payloadsChainIds.map(async (chainId) => {
-          await Promise.all(
-            payloadsControllers.map(async (controller) => {
-              const payloadsIds = proposalsData
-                .map((proposal) =>
-                  proposal.initialPayloads.filter(
-                    (payload) =>
-                      payload.chainId === chainId &&
-                      payload.payloadsController === controller,
-                  ),
-                )
-                .flat()
-                .map((payload) => payload.id);
-
-              if (isProposalNotInCache) {
-                await get().getDetailedPayloadsData(
-                  chainId,
-                  controller,
-                  payloadsIds,
-                );
-              }
-            }),
-          );
-        }),
+      const allPayloadsLength = Object.values(
+        get().detailedPayloadsData,
+      ).length;
+      console.log(Object.values(get().detailedPayloadsData));
+      console.log('allPayloadsLength', allPayloadsLength);
+      console.log(
+        proposalsData.map((value) => value.initialPayloads).flat().length,
       );
+      console.log('allPayloadsLength', allPayloadsLength);
+      console.log(
+        allPayloadsLength <
+          proposalsData.map((value) => value.initialPayloads).flat().length,
+      );
+
+      if (
+        (!!payloadsChainIds.length && !isUpdateOnlyVotingPower) ||
+        allPayloadsLength <
+          proposalsData.map((value) => value.initialPayloads).flat().length
+      ) {
+        await Promise.allSettled(
+          payloadsChainIds.map(async (chainId) => {
+            await Promise.allSettled(
+              payloadsControllers.map(async (controller) => {
+                const payloadsIds = proposalsData
+                  .map((proposal) =>
+                    proposal.initialPayloads.filter(
+                      (payload) =>
+                        payload.chainId === chainId &&
+                        payload.payloadsController === controller,
+                    ),
+                  )
+                  .flat()
+                  .map((payload) => payload.id);
+
+                if (isProposalNotInCache) {
+                  await get().getDetailedPayloadsData(
+                    chainId,
+                    controller,
+                    payloadsIds,
+                  );
+                }
+              }),
+            );
+          }),
+        );
+      }
 
       const proposalPayloadsData = proposalsData.map((proposal) => {
         const payloads = proposal.initialPayloads.map((payload) => {
@@ -743,8 +774,11 @@ export const createProposalsSlice: StoreSlice<
       const activeProposalsIds = !!ids?.length ? ids : activeIds;
 
       if (!!activeProposalsIds.length) {
-        await get().getDetailedProposalsData(activeProposalsIds);
-        await Promise.all([
+        await get().getDetailedProposalsData({
+          ids: activeProposalsIds,
+          fullData: true,
+        });
+        await Promise.allSettled([
           await get().getIpfsData(activeProposalsIds),
           await get().getL1Balances(activeProposalsIds),
         ]);
@@ -776,11 +810,11 @@ export const createProposalsSlice: StoreSlice<
       const currentProposalCount = get().totalProposalCount;
 
       if (totalProposalCountFromContract > currentProposalCount) {
-        get().getDetailedProposalsData(
-          [],
-          currentProposalCount,
-          currentProposalCount - 1,
-        );
+        await get().getDetailedProposalsData({
+          ids: [],
+          from: currentProposalCount,
+          to: currentProposalCount - 1,
+        });
         get().setTotalProposalCount(totalProposalCountFromContract);
       }
     }, 15000);

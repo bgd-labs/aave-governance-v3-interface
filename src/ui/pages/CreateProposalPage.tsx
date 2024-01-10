@@ -35,12 +35,12 @@ export function CreateProposalPage() {
   }, []);
 
   useEffect(() => {
-    getDetailedProposalsData(
-      [],
-      0,
-      undefined,
-      totalProposalCount >= 0 ? totalProposalCount : 1,
-    );
+    getDetailedProposalsData({
+      ids: [],
+      from: 0,
+      pageSize: totalProposalCount >= 0 ? totalProposalCount : 1,
+      fullData: true,
+    });
   }, [totalProposalCount]);
 
   return (

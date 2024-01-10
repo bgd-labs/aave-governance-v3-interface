@@ -65,7 +65,8 @@ export function ProposalEstimatedStatus({
         <Timer
           timestamp={timestamp}
           callbackFuncWhenTimerFinished={() =>
-            !isForHelpModal && getDetailedProposalsData([proposalId])
+            !isForHelpModal &&
+            getDetailedProposalsData({ ids: [proposalId], fullData: true })
           }
         />
       </Box>

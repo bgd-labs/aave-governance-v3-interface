@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
 import WarningIcon from '/public/images/icons/warningIcon.svg';
-import Logo from '/public/images/winter_logo.svg';
+import Logo from '/public/images/logo.svg';
 
 import { selectIsRpcAppHasErrors } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
 import { useStore } from '../../store';
@@ -211,35 +211,18 @@ export function AppHeader() {
                 }}>
                 <IconBox
                   sx={{
-                    // width: 59,
-                    // height: 26,
-                    // [theme.breakpoints.up('lg')]: {
-                    //   width: 80,
-                    //   height: 35,
-                    // },
-                    // '> svg': {
-                    //   width: 59,
-                    //   height: 26,
-                    //   [theme.breakpoints.up('lg')]: {
-                    //     width: 80,
-                    //     height: 35,
-                    //   },
-                    // },
-                    width: 65,
-                    height: 34,
-                    position: 'relative',
-                    bottom: 3,
+                    width: 59,
+                    height: 26,
                     [theme.breakpoints.up('lg')]: {
                       width: 80,
-                      height: 44,
-                      bottom: 4,
+                      height: 35,
                     },
                     '> svg': {
-                      width: 65,
-                      height: 34,
+                      width: 59,
+                      height: 26,
                       [theme.breakpoints.up('lg')]: {
                         width: 80,
-                        height: 44,
+                        height: 35,
                       },
                     },
                   }}>

@@ -198,7 +198,10 @@ export const createTransactionsSlice: StoreSlice<
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
       const updateProposalData = async (proposalId: number) => {
-        get().getDetailedProposalsData([proposalId]);
+        await get().getDetailedProposalsData({
+          ids: [proposalId],
+          fullData: true,
+        });
       };
 
       switch (data.type) {
