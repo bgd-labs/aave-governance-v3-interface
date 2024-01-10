@@ -1281,19 +1281,19 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.13.3.tgz#a115c2677aeadd0398caa096436395fe07f4cf48"
   integrity sha512-9WQekYTCjeAuqjRouLHvYdE9R86Hp4m5v9QJhr9zGpsl8OE/YxpmI6QEz6o0gHMB3D6DhqwAZ3nakCouz7Cb+w==
 
-"@bgd-labs/aave-governance-ui-helpers@^1.0.15":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.15.tgz#84fa85d0c927fc5a82aa2874a1c39390ed2363ed"
-  integrity sha512-q+vRX2R73cgdlet0/gKvXEgrkPuNDg9DSYo6blBi88s9iW4Z3i8HbJUS2wJXqeuBfTu26Pbhb5kmYOVJOykhHQ==
+"@bgd-labs/aave-governance-ui-helpers@^1.0.16":
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.16.tgz#55f04a9705241cb2ca31d8ae553911ec8f3f2b7d"
+  integrity sha512-XMwClvuDHTvk8ckZyDQfQiKfnRU1i95Y8OIp94kmOFHkfDhFzhYu/9mhtdz+D99tTdt8Ld/zaFtSQs40i561Jg==
   dependencies:
     bs58 "^5.0.0"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
 
-"@bgd-labs/frontend-web3-utils@^1.0.4-19dbd66bffa6f9723784771409aaa219bbe57b98.0":
-  version "1.0.4-19dbd66bffa6f9723784771409aaa219bbe57b98.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.0.4-19dbd66bffa6f9723784771409aaa219bbe57b98.0.tgz#c60e1700b0481a54fdbafb8d3f3667faedd10d84"
-  integrity sha512-kar/pfdVrlMWzgfCrBBze/iqtPLCpM2k/vMI+VcK91RQzAh0EO+mNhKpqP/rFnlwNX9T3c/PtEWLLq1AX5JPAA==
+"@bgd-labs/frontend-web3-utils@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.0.4.tgz#a550bf984d6579b30dbf6da7837db332c0d09302"
+  integrity sha512-Daxvdr5rIxezcZqG9U0vLsNw9vX8H8AIUhkI15bW+rg/m9gLtSyLy8MxjYD1xscHmVXd2eWfC0nemClyGk92lA==
   dependencies:
     dayjs "^1.11.10"
 

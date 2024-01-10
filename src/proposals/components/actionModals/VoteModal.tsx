@@ -201,7 +201,7 @@ export function VoteModal({
     forVotesWithVotingPower === 0 ||
     forVotesWithVotingPower - requiredDiff <= 0 ||
     forVotesWithVotingPower < minQuorumVotes
-      ? 0
+      ? minQuorumVotes
       : forVotesWithVotingPower - requiredDiff;
 
   const forPercentAfterVote = new BigNumber(forVotesWithVotingPower)
