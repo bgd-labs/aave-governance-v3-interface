@@ -1,12 +1,12 @@
-import { PublicClient } from '@wagmi/core';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 
 import { appUsedNetworks } from './appConfig';
 import { CHAINS, createViemClient } from './chains';
 
-export const initialClients: Record<number, PublicClient> = {};
+export const initialClients: ClientsRecord = {};
 appUsedNetworks.forEach((chain) => {
   initialClients[chain] = createViemClient(
     CHAINS[chain],
-    CHAINS[chain].rpcUrls.public.http[0],
+    CHAINS[chain].rpcUrls.default.http[0],
   );
 });

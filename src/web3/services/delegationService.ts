@@ -2,15 +2,22 @@
 
 import {
   aaveTokenV3Contract,
-  aTokenWithDelegationContract,
   metaDelegateHelperContract,
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IAaveTokenV3';
+import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IATokenWithDelegation';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { WalletClient } from '@wagmi/core';
+import { signTypedData, writeContract } from '@wagmi/core';
 import dayjs from 'dayjs';
-import { encodeFunctionData, Hex, hexToSignature, zeroAddress } from 'viem';
+import {
+  encodeFunctionData,
+  getContract,
+  Hex,
+  hexToSignature,
+  zeroAddress,
+} from 'viem';
+import { Config } from 'wagmi';
 
 import { appConfig } from '../../utils/appConfig';
 import { getTokenName } from '../../utils/getTokenName';
@@ -46,15 +53,15 @@ export type BatchMetaDelegateParams = {
 };
 
 export class DelegationService {
-  private walletClient: WalletClient | undefined = undefined;
+  private wagmiConfig: Config | undefined = undefined;
   private clients: ClientsRecord;
 
   constructor(clients: ClientsRecord) {
     this.clients = clients;
   }
 
-  connectSigner(walletClient: WalletClient) {
-    this.walletClient = walletClient;
+  connectSigner(wagmiConfig: Config) {
+    this.wagmiConfig = wagmiConfig;
   }
 
   async getUserPowers(userAddress: Hex, underlyingAssets: Hex[]) {
@@ -249,7 +256,7 @@ export class DelegationService {
     activeAddress: Hex,
     increaseNonce?: boolean,
   ): Promise<BatchMetaDelegateParams | undefined> {
-    if (this.walletClient) {
+    if (this.wagmiConfig) {
       const deadline = BigInt(Math.floor(Date.now() / 1000 + 3600));
       const isAAAVE =
         underlyingAsset.toLowerCase() ===
@@ -262,8 +269,9 @@ export class DelegationService {
         contractAddress: underlyingAsset,
         client: this.clients[appConfig.govCoreChainId],
       });
-      const aAssetContract = aTokenWithDelegationContract({
-        contractAddress: underlyingAsset,
+      const aAssetContract = getContract({
+        address: underlyingAsset,
+        abi: IATokenWithDelegation_ABI,
         client: this.clients[appConfig.govCoreChainId],
       });
 
@@ -316,7 +324,7 @@ export class DelegationService {
       };
 
       const sig = hexToSignature(
-        await this.walletClient.signTypedData({
+        await signTypedData(this.wagmiConfig, {
           domain: {
             name: name,
             version: '2',
@@ -358,17 +366,21 @@ export class DelegationService {
     const delegateHelperContract = metaDelegateHelperContract({
       contractAddress: appConfig.additional.delegationHelper,
       client: this.clients[appConfig.govCoreChainId],
-      walletClient: this.walletClient,
     });
 
-    // TODO: maybe don't need to increase gas limit for mainnets
-    const gasLimit = await delegateHelperContract.estimateGas.batchMetaDelegate(
-      [sigs],
-    );
+    if (this.wagmiConfig) {
+      const gasLimit =
+        await delegateHelperContract.estimateGas.batchMetaDelegate([sigs], {});
 
-    return delegateHelperContract.write.batchMetaDelegate([sigs], {
-      gas: gasLimit + BigInt(100000),
-    });
+      return writeContract(this.wagmiConfig, {
+        abi: delegateHelperContract.abi,
+        address: delegateHelperContract.address,
+        functionName: 'batchMetaDelegate',
+        args: [sigs],
+        gas: gasLimit + BigInt(100000),
+        chainId: appConfig.govCoreChainId,
+      });
+    }
   }
 
   // need only for gnosis safe wallet
@@ -377,45 +389,41 @@ export class DelegationService {
     delegateToAddress: Hex,
     type: GovernancePowerTypeApp,
   ) {
-    const tokenContract = aaveTokenV3Contract({
-      contractAddress: underlyingAsset,
-      client: this.clients[appConfig.govCoreChainId],
-      walletClient: this.walletClient,
-    });
-
-    if (type === GovernancePowerTypeApp.All) {
-      return tokenContract.write.delegate([delegateToAddress], {
-        // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-        value: BigInt(0) as any,
-      });
-    } else {
-      return tokenContract.write.delegateByType([delegateToAddress, type], {
-        // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-        value: BigInt(0) as any,
-      });
+    if (this.wagmiConfig) {
+      if (type === GovernancePowerTypeApp.All) {
+        return writeContract(this.wagmiConfig, {
+          abi: IAaveTokenV3_ABI,
+          address: underlyingAsset,
+          functionName: 'delegate',
+          args: [delegateToAddress],
+          chainId: appConfig.govCoreChainId,
+          // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+          // value: BigInt(0) as any,
+        });
+      } else {
+        return writeContract(this.wagmiConfig, {
+          abi: IAaveTokenV3_ABI,
+          address: underlyingAsset,
+          functionName: 'delegateByType',
+          args: [delegateToAddress, type],
+          chainId: appConfig.govCoreChainId,
+          // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
+          // value: BigInt(0) as any,
+        });
+      }
     }
   }
 
-  getDelegateTxParams(
-    underlyingAsset: Hex,
-    delegateToAddress: Hex,
-    type: GovernancePowerTypeApp,
-  ) {
-    const tokenContract = aaveTokenV3Contract({
-      contractAddress: underlyingAsset,
-      client: this.clients[appConfig.govCoreChainId],
-      walletClient: this.walletClient,
-    });
-
+  getDelegateTxParams(delegateToAddress: Hex, type: GovernancePowerTypeApp) {
     if (type === GovernancePowerTypeApp.All) {
       return encodeFunctionData({
-        abi: tokenContract.abi,
+        abi: IAaveTokenV3_ABI,
         functionName: 'delegate',
         args: [delegateToAddress],
       });
     } else {
       return encodeFunctionData({
-        abi: tokenContract.abi,
+        abi: IAaveTokenV3_ABI,
         functionName: 'delegateByType',
         args: [delegateToAddress, type],
       });

@@ -2,7 +2,11 @@ import {
   erc20Contract,
   normalizeBN,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { safeSdkOptions, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import {
+  safeSdkOptions,
+  StoreSlice,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils';
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
@@ -232,12 +236,11 @@ export const createDelegationSlice: StoreSlice<
         });
       }
     } else if (activeAddress && isWalletAddressContract) {
-      if (get().activeWallet?.walletType === 'Safe') {
+      if (get().activeWallet?.walletType === WalletType.Safe) {
         const safeSdk = new Sdk(safeSdkOptions);
 
         const txsData = data.map((item) => {
           const txData = delegationService.getDelegateTxParams(
-            item.underlyingAsset,
             item.delegatee,
             item.delegationType,
           );

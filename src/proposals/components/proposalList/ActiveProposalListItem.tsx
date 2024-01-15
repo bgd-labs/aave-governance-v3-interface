@@ -3,6 +3,7 @@ import {
   ProposalState,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
 import { createWalletClient, http, zeroAddress } from 'viem';
@@ -44,10 +45,11 @@ export function ActiveProposalListItem({
 
   if (isForHelpModal) {
     activeWallet = {
-      walletType: 'Injected',
+      walletType: WalletType.Injected,
       address: zeroAddress,
       chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
-      client: appClients[appConfig.govCoreChainId].instance,
+      chainId: appConfig.govCoreChainId,
+      publicClient: appClients[appConfig.govCoreChainId].instance,
       walletClient: createWalletClient({
         chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
         transport: http(

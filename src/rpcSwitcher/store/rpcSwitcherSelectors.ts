@@ -1,4 +1,4 @@
-import { PublicClient } from '@wagmi/core';
+import { PublicClient } from 'viem';
 
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 

@@ -4,9 +4,8 @@ import {
   payloadsControllerContract as payloadsControllerContractInit,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import { PublicClient } from '@wagmi/core';
 import { Draft, produce } from 'immer';
-import { Chain, zeroAddress, zeroHash } from 'viem';
+import { Chain, PublicClient, zeroAddress, zeroHash } from 'viem';
 import { mainnet } from 'viem/chains';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';

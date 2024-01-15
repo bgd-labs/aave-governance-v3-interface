@@ -1,3 +1,4 @@
+import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
@@ -20,7 +21,7 @@ export function ImpersonatedForm({ closeClick }: ImpersonatedFormProps) {
     impersonatedAddress: string;
   }) => {
     setImpersonated(impersonatedAddress);
-    await connectWallet('Impersonated', appConfig.govCoreChainId);
+    await connectWallet(WalletType.Impersonated, appConfig.govCoreChainId);
   };
 
   return (
