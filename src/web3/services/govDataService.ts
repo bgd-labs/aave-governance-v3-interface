@@ -540,8 +540,6 @@ export class GovDataService {
         functionName: 'updateRepresentativesForChain',
         args: [data],
         chainId: appConfig.govCoreChainId,
-        // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-        // value: BigInt(0) as any,
       });
     }
     return undefined;
@@ -850,8 +848,6 @@ export class GovDataService {
               proofs,
             ],
             chainId: votingChainId,
-            // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-            // value: BigInt(0) as any,
           })
         : writeContract(this.wagmiConfig, {
             abi: votingMachine.abi,
@@ -859,8 +855,6 @@ export class GovDataService {
             functionName: 'submitVote',
             args: [BigInt(proposalId), support, proofs],
             chainId: votingChainId,
-            // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-            // value: BigInt(0) as any,
           });
     }
     return undefined;
@@ -995,8 +989,6 @@ export class GovDataService {
         functionName: 'executePayload',
         chainId,
         args: [payloadId],
-        // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-        // value: BigInt(0) as any,
       });
     }
     return undefined;

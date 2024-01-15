@@ -402,8 +402,6 @@ export class DelegationService {
           functionName: 'delegate',
           args: [delegateToAddress],
           chainId: appConfig.govCoreChainId,
-          // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-          // value: BigInt(0) as any,
         });
       } else {
         return writeContract(this.wagmiConfig, {
@@ -412,8 +410,6 @@ export class DelegationService {
           functionName: 'delegateByType',
           args: [delegateToAddress, type],
           chainId: appConfig.govCoreChainId,
-          // // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-          // value: BigInt(0) as any,
         });
       }
     }
