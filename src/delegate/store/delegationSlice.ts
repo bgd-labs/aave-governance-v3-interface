@@ -205,24 +205,15 @@ export const createDelegationSlice: StoreSlice<
     const data = await get().prepareDataForDelegation(formDelegateData);
 
     if (activeAddress && !isWalletAddressContract) {
-      const sigs: BatchMetaDelegateParams[] = [];
-      for (let i = 0; i < data.length; i++) {
-        const item = data[i];
-        const sig = (await delegationService.delegateMetaSig(
-          item.underlyingAsset,
-          item.delegatee,
-          item.delegationType,
-          item.delegator,
-          item.increaseNonce,
-        )) as BatchMetaDelegateParams;
-        sigs.push(sig);
-      }
-
-      if (!!sigs.length) {
+      if (data.length === 1) {
         await get().executeTx({
           body: () => {
             get().setModalOpen(true);
-            return delegationService.batchMetaDelegate(sigs);
+            return delegationService.delegate(
+              data[0].underlyingAsset,
+              data[0].delegatee,
+              data[0].delegationType,
+            );
           },
           params: {
             type: TxType.delegate,
@@ -234,6 +225,40 @@ export const createDelegationSlice: StoreSlice<
             },
           },
         });
+      } else {
+        const sigs: BatchMetaDelegateParams[] = [];
+        for (let i = 0; i < data.length; i++) {
+          const item = data[i];
+          const sig = (await delegationService.delegateMetaSig(
+            item.underlyingAsset,
+            item.delegatee,
+            item.delegationType,
+            item.delegator,
+            item.increaseNonce,
+          )) as BatchMetaDelegateParams;
+          sigs.push(sig);
+        }
+
+        if (!!sigs.length) {
+          await get().executeTx({
+            body: () => {
+              get().setModalOpen(true);
+              return delegationService.batchMetaDelegate(
+                sigs,
+                get().activeWallet?.address || zeroAddress,
+              );
+            },
+            params: {
+              type: TxType.delegate,
+              desiredChainID: appConfig.govCoreChainId,
+              payload: {
+                delegateData: stateDelegateData,
+                formDelegateData,
+                timestamp,
+              },
+            },
+          });
+        }
       }
     } else if (activeAddress && isWalletAddressContract) {
       if (get().activeWallet?.walletType === WalletType.Safe) {

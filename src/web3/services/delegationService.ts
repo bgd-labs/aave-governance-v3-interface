@@ -362,7 +362,10 @@ export class DelegationService {
     }
   }
 
-  async batchMetaDelegate(sigs: BatchMetaDelegateParams[]) {
+  async batchMetaDelegate(
+    sigs: BatchMetaDelegateParams[],
+    accountAddress: Hex,
+  ) {
     const delegateHelperContract = metaDelegateHelperContract({
       contractAddress: appConfig.additional.delegationHelper,
       client: this.clients[appConfig.govCoreChainId],
@@ -370,7 +373,9 @@ export class DelegationService {
 
     if (this.wagmiConfig) {
       const gasLimit =
-        await delegateHelperContract.estimateGas.batchMetaDelegate([sigs], {});
+        await delegateHelperContract.estimateGas.batchMetaDelegate([sigs], {
+          account: accountAddress,
+        });
 
       return writeContract(this.wagmiConfig, {
         abi: delegateHelperContract.abi,

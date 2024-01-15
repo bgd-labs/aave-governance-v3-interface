@@ -37,6 +37,7 @@ export default function WagmiProvider() {
         },
       },
       getImpersonatedAccount: getImpersonatedAddress,
+      ssr: process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS !== 'true',
     });
   }, []);
 
