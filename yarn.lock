@@ -1306,19 +1306,19 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.15.2.tgz#9742da4118c5e02181a6d4e2606825c2b5c4473c"
   integrity sha512-OrKzdc2y5QIKqviQD/AI3cugGNOuYsGF/mJ5Uo2E77mmCxF/lcNnupfOthednVEfkCvUadDeOAR2wst0Fj3/Jw==
 
-"@bgd-labs/aave-governance-ui-helpers@1.0.18-ce9e87a0bf7bd980f86ce06055116b77a8296922.0":
-  version "1.0.18-ce9e87a0bf7bd980f86ce06055116b77a8296922.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.0.18-ce9e87a0bf7bd980f86ce06055116b77a8296922.0.tgz#b6bfbb56e444475f1c11bea13a51bdd8f34da624"
-  integrity sha512-9QDPgaSRcYtQ9xBU7bPuZ1A7QEwJy3+POLpT1RxsACa1/sm09TeoNEl/mejjJSIopwMicXrCaSw4lIUWF3+JRQ==
+"@bgd-labs/aave-governance-ui-helpers@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-1.1.1.tgz#3887716512c076fa55b39890523626b55cda5061"
+  integrity sha512-Y0m0SiFyCaOOczhtRNEg6HmTLcOv5snbx9QUuXgKxjPM9tza4EBobJi+nvyN4upxoSvPy6rdM1v/Q0W6Wt5mQg==
   dependencies:
     bs58 "^5.0.0"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
 
-"@bgd-labs/frontend-web3-utils@1.0.5-ef7ebd1437417ab4c817a8475d599b4ed56ca276.0":
-  version "1.0.5-ef7ebd1437417ab4c817a8475d599b4ed56ca276.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.0.5-ef7ebd1437417ab4c817a8475d599b4ed56ca276.0.tgz#bab30969a28d9df7211687a479eb02d313174b64"
-  integrity sha512-8vHb0RWk5y11+/zOnvMrHQZfZ1p00GJVw8JcaxlfqEJ2DO9ugYdltkJhRXOtcYTkOgTrHv2K9V2q1g2LqD9TXA==
+"@bgd-labs/frontend-web3-utils@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.1.0.tgz#0584c3ed6462f04db36ea3f305bb7dce051081a0"
+  integrity sha512-9meRh7mFwMXFgjCYIr1UHBM1phWzK01q7XggnRUyE1PNBuAvASGd0P3bhrXz+KVYP5ifF8LYl2mYPf3GGJbw2g==
   dependencies:
     "@tanstack/react-query" "^5.17.12"
     dayjs "^1.11.10"
@@ -2561,10 +2561,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.13.tgz#f64277c341150c979e42b00e4ac289290c9df469"
   integrity sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==
 
-"@types/node@^20.11.3":
-  version "20.11.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.3.tgz#ac29fba7aeadc74046b02e50758156f4850f1296"
-  integrity sha512-nrlmbvGPNGaj84IJZXMPhQuCMEVTT/hXZMJJG/aIqVL9fKxqk814sGGtJA4GI6hpJSLQjpi6cn0Qx9eOf9SDVg==
+"@types/node@^20.11.4":
+  version "20.11.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.4.tgz#c724a5d6723182af758b91b994209336f4439cb7"
+  integrity sha512-6I0fMH8Aoy2lOejL3s4LhyIYX34DPwY8bl5xlNjBvUEk8OHrcuzsFt+Ied4LvJihbtXPM+8zUqdydfIti86v9g==
   dependencies:
     undici-types "~5.26.4"
 
@@ -8492,10 +8492,10 @@ viem@^1.1.4:
     isows "1.0.3"
     ws "8.13.0"
 
-viem@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-2.1.0.tgz#70e3b64e9dcb6539e556a463a9bf9b5d581648ee"
-  integrity sha512-C3qOgbuJh3yl4xBtyqLV0jPR+ctRbL/i9dGb4rV47Z7ojWxGBoB9XtOOM9xVGxdhUYtiEXSk0NIZRz/y+JAh4Q==
+viem@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.1.1.tgz#8ab73c84d66369e80b9090626a0a8010d681e2d4"
+  integrity sha512-gJiwYceD7Dsjioglr+85GQS3u5Gp9XGG8oJqGsauBaEPFlkmbRx7cxD2Q5RZXFToVvEbarOWtITZtGHBsGv4MQ==
   dependencies:
     "@adraffy/ens-normalize" "1.10.0"
     "@noble/curves" "1.2.0"
