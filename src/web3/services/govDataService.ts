@@ -1,10 +1,17 @@
 'use client';
 
 import {
-  baseVotingStrategyContract,
+  IDataWarehouse_ABI,
+  IGovernanceCore_ABI,
+  IGovernanceDataHelper_ABI,
+  IPayloadsControllerCore_ABI,
+  IPayloadsControllerDataHelper_ABI,
+  IVotingMachineDataHelper_ABI,
+  IVotingMachineWithProofs_ABI,
+} from '@bgd-labs/aave-address-book';
+import {
   BasicProposal,
   blockLimit,
-  dataWarehouseContract,
   getBlocksForEvents,
   getDetailedProposalsData,
   getGovCoreConfigs,
@@ -17,30 +24,26 @@ import {
   getProposalQueued,
   getProposalVotingClosed,
   getVoters,
-  govCoreContract,
-  govCoreDataHelperContract,
   InitialProposal,
   Payload,
   PayloadAction,
   PayloadForCreation,
-  payloadsControllerContract as initPayloadControllerContract,
-  payloadsControllerDataHelperContract,
   PayloadState,
   ProposalData,
   updateVotingMachineData,
   VMProposalStructOutput,
   VotersData,
   VotingConfig,
-  votingMachineContract,
-  votingMachineDataHelperContract,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
-import { WalletClient } from '@wagmi/core';
+import { writeContract } from '@wagmi/core';
 import {
   bytesToHex,
   encodeFunctionData,
+  getContract,
   Hex,
   pad,
   stringToBytes,
@@ -48,6 +51,8 @@ import {
   zeroAddress,
   zeroHash,
 } from 'viem';
+import { getBlock, getBlockNumber, readContract } from 'viem/actions';
+import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { appConfig, gelatoApiKeys } from '../../utils/appConfig';
@@ -62,79 +67,78 @@ import { getVoteSignatureParams } from '../utils/signatures';
 
 export const PAGE_SIZE = 12;
 
-function initContracts(clients: ClientsRecord, walletClient?: WalletClient) {
-  const govCore = govCoreContract({
-    contractAddress: appConfig.govCoreConfig.contractAddress,
+function initContracts(clients: ClientsRecord) {
+  const govCore = getContract({
+    address: appConfig.govCoreConfig.contractAddress,
+    abi: IGovernanceCore_ABI,
     client: clients[appConfig.govCoreChainId],
-    walletClient,
   });
-  const govCoreDataHelper = govCoreDataHelperContract({
-    contractAddress: appConfig.govCoreConfig.dataHelperContractAddress,
+
+  const govCoreDataHelper = getContract({
+    address: appConfig.govCoreConfig.dataHelperContractAddress,
+    abi: IGovernanceDataHelper_ABI,
     client: clients[appConfig.govCoreChainId],
-    walletClient,
   });
 
   const votingMachines = {
-    [appConfig.votingMachineChainIds[0]]: votingMachineContract({
-      contractAddress:
+    [appConfig.votingMachineChainIds[0]]: getContract({
+      abi: IVotingMachineWithProofs_ABI,
+      address:
         appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
           .contractAddress,
       client: clients[appConfig.votingMachineChainIds[0]],
-      walletClient,
     }),
   };
   if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
       const votingMachineConfig = appConfig.votingMachineConfig[chainId];
-      votingMachines[chainId] = votingMachineContract({
-        contractAddress: votingMachineConfig.contractAddress,
+      votingMachines[chainId] = getContract({
+        abi: IVotingMachineWithProofs_ABI,
+        address: votingMachineConfig.contractAddress,
         client: clients[chainId],
-        walletClient,
       });
     });
   }
 
   const votingMachineDataHelpers = {
-    [appConfig.votingMachineChainIds[0]]: votingMachineDataHelperContract({
-      contractAddress:
+    [appConfig.votingMachineChainIds[0]]: getContract({
+      abi: IVotingMachineDataHelper_ABI,
+      address:
         appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
           .dataHelperContractAddress,
       client: clients[appConfig.votingMachineChainIds[0]],
-      walletClient,
     }),
   };
   if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
       const votingMachineConfig = appConfig.votingMachineConfig[chainId];
-      votingMachineDataHelpers[chainId] = votingMachineDataHelperContract({
-        contractAddress: votingMachineConfig.dataHelperContractAddress,
+      votingMachineDataHelpers[chainId] = getContract({
+        abi: IVotingMachineDataHelper_ABI,
+        address: votingMachineConfig.dataHelperContractAddress,
         client: clients[chainId],
-        walletClient,
       });
     });
   }
 
   const payloadsControllerDataHelpers = {
-    [appConfig.payloadsControllerChainIds[0]]:
-      payloadsControllerDataHelperContract({
-        contractAddress:
-          appConfig.payloadsControllerConfig[
-            appConfig.payloadsControllerChainIds[0]
-          ].dataHelperContractAddress,
-        client: clients[appConfig.payloadsControllerChainIds[0]],
-        walletClient,
-      }),
+    [appConfig.payloadsControllerChainIds[0]]: getContract({
+      abi: IPayloadsControllerDataHelper_ABI,
+      address:
+        appConfig.payloadsControllerConfig[
+          appConfig.payloadsControllerChainIds[0]
+        ].dataHelperContractAddress,
+      client: clients[appConfig.payloadsControllerChainIds[0]],
+    }),
   };
   if (appConfig.payloadsControllerChainIds.length > 1) {
     appConfig.payloadsControllerChainIds.forEach((chainId) => {
       const payloadsControllerConfig =
         appConfig.payloadsControllerConfig[chainId];
-      payloadsControllerDataHelpers[chainId] =
-        payloadsControllerDataHelperContract({
-          contractAddress: payloadsControllerConfig.dataHelperContractAddress,
-          client: clients[chainId],
-          walletClient,
-        });
+      payloadsControllerDataHelpers[chainId] = getContract({
+        abi: IPayloadsControllerDataHelper_ABI,
+        address: payloadsControllerConfig.dataHelperContractAddress,
+        client: clients[chainId],
+      });
     });
   }
 
@@ -155,7 +159,7 @@ export class GovDataService {
   private votingMachineDataHelpers;
   private payloadsControllerDataHelpers;
 
-  private walletClient: WalletClient | undefined = undefined;
+  private wagmiConfig: Config | undefined = undefined;
   private clients: ClientsRecord;
 
   constructor(clients: ClientsRecord) {
@@ -175,36 +179,15 @@ export class GovDataService {
     ).payloadsControllerDataHelpers;
   }
 
-  connectSigner(walletClient: WalletClient) {
-    this.walletClient = walletClient;
-    // contracts
-    // core
-    this.govCore = initContracts(this.clients, this.walletClient).govCore;
-    this.govCoreDataHelper = initContracts(
-      this.clients,
-      this.walletClient,
-    ).govCoreDataHelper;
-    // voting
-    this.votingMachines = initContracts(
-      this.clients,
-      this.walletClient,
-    ).votingMachines;
-    this.votingMachineDataHelpers = initContracts(
-      this.clients,
-      this.walletClient,
-    ).votingMachineDataHelpers;
-    // payloads controllers
-    this.payloadsControllerDataHelpers = initContracts(
-      this.clients,
-      this.walletClient,
-    ).payloadsControllerDataHelpers;
+  connectSigner(wagmiConfig: Config) {
+    this.wagmiConfig = wagmiConfig;
   }
 
   async getGovCoreConfigs(
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const rpcUrl =
-      this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+      this.clients[appConfig.govCoreChainId].chain?.rpcUrls.default.http[0];
 
     const govCoreConfigs = await getGovCoreConfigs({
       client: this.clients[appConfig.govCoreChainId],
@@ -214,7 +197,8 @@ export class GovDataService {
 
     if (
       !!setRpcError &&
-      govCoreConfigs.contractsConstants.expirationTime > 1000
+      govCoreConfigs.contractsConstants.expirationTime > 1000 &&
+      rpcUrl
     ) {
       setRpcError({
         isError: false,
@@ -223,7 +207,8 @@ export class GovDataService {
       });
     } else if (
       !!setRpcError &&
-      govCoreConfigs.contractsConstants.expirationTime <= 1000
+      govCoreConfigs.contractsConstants.expirationTime <= 1000 &&
+      rpcUrl
     ) {
       setRpcError({
         isError: true,
@@ -240,11 +225,11 @@ export class GovDataService {
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<number> {
     const rpcUrl =
-      this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+      this.clients[appConfig.govCoreChainId].chain?.rpcUrls.default.http[0];
 
     try {
       const proposalsCount = await this.govCore.read.getProposalsCount();
-      if (!!setRpcError) {
+      if (!!setRpcError && rpcUrl) {
         setRpcError({
           isError: false,
           rpcUrl,
@@ -253,7 +238,7 @@ export class GovDataService {
       }
       return Number(proposalsCount);
     } catch {
-      if (!!setRpcError) {
+      if (!!setRpcError && rpcUrl) {
         setRpcError({
           isError: true,
           rpcUrl,
@@ -273,16 +258,14 @@ export class GovDataService {
     chainId: number,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<number> {
-    const rpcUrl = this.clients[chainId]?.chain.rpcUrls.default.http[0];
+    const rpcUrl = this.clients[chainId]?.chain?.rpcUrls.default.http[0];
 
     try {
-      const payloadsControllerContract = initPayloadControllerContract({
-        client: this.clients[chainId],
-        contractAddress: payloadsController,
+      const payloadsCount = await readContract(this.clients[chainId], {
+        abi: IPayloadsControllerCore_ABI,
+        address: payloadsController,
+        functionName: 'getPayloadsCount',
       });
-
-      const payloadsCount =
-        await payloadsControllerContract.read.getPayloadsCount();
 
       if (!!setRpcError && rpcUrl) {
         setRpcError({
@@ -361,10 +344,10 @@ export class GovDataService {
             };
           });
 
-        const rpcUrl = this.clients[chainId].chain.rpcUrls.default.http[0];
+        const rpcUrl = this.clients[chainId].chain?.rpcUrls.default.http[0];
 
         try {
-          if (!!setRpcError) {
+          if (!!setRpcError && rpcUrl) {
             setRpcError({ isError: false, rpcUrl, chainId });
           }
           if (representative && userAddress) {
@@ -386,7 +369,7 @@ export class GovDataService {
             ])) || []
           );
         } catch {
-          if (!!setRpcError) {
+          if (!!setRpcError && rpcUrl) {
             setRpcError({ isError: true, rpcUrl, chainId });
           }
           return;
@@ -442,9 +425,9 @@ export class GovDataService {
       );
     } catch {
       const rpcUrl =
-        this.clients[appConfig.govCoreChainId].chain.rpcUrls.default.http[0];
+        this.clients[appConfig.govCoreChainId].chain?.rpcUrls.default.http[0];
 
-      if (!!setRpcError) {
+      if (!!setRpcError && rpcUrl) {
         setRpcError({
           isError: false,
           rpcUrl,
@@ -497,7 +480,7 @@ export class GovDataService {
     lastBlockNumber: number | undefined,
   ): Promise<VotersData[]> {
     const currentBlock =
-      (await this.clients[votingChainId].getBlockNumber()) || 0;
+      (await getBlockNumber(this.clients[votingChainId])) || 0;
 
     const { startBlock, endBlock } = getBlocksForEvents(
       Number(currentBlock),
@@ -528,9 +511,10 @@ export class GovDataService {
   async getVotingStrategyContract() {
     const votingStrategyAddress = await this.govCore.read.getPowerStrategy();
 
-    return baseVotingStrategyContract({
+    return getContract({
+      abi: IBaseVotingStrategy_ABI,
+      address: votingStrategyAddress,
       client: this.clients[appConfig.govCoreChainId],
-      contractAddress: votingStrategyAddress,
     });
   }
 
@@ -553,16 +537,31 @@ export class GovDataService {
   }: {
     data: { representative: Hex; chainId: bigint }[];
   }) {
-    return this.govCore.write.updateRepresentativesForChain([data], {
-      // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-      value: BigInt(0) as any,
-    });
+    if (this.wagmiConfig) {
+      return await writeContract(this.wagmiConfig, {
+        abi: this.govCore.abi,
+        address: this.govCore.address,
+        functionName: 'updateRepresentativesForChain',
+        args: [data],
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+    return undefined;
   }
   // end representations
 
   // tx's
-  activateVoting(proposalId: number) {
-    return this.govCore.write.activateVoting([BigInt(proposalId)]);
+  async activateVoting(proposalId: number) {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.govCore.abi,
+        address: this.govCore.address,
+        functionName: 'activateVoting',
+        args: [BigInt(proposalId)],
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+    return undefined;
   }
 
   async sendProofs(
@@ -573,7 +572,7 @@ export class GovDataService {
     baseBalanceSlotRaw: number,
     withSlot?: boolean,
   ) {
-    if (this.walletClient) {
+    if (this.wagmiConfig) {
       const blockData = await getExtendedBlock(
         this.clients[appConfig.govCoreChainId],
         blockNumber,
@@ -587,12 +586,10 @@ export class GovDataService {
       const exchangeRateSlot = pad('0x51', { size: 32 });
       const delegatedStateSlot = pad('0x40', { size: 32 });
 
-      const connectedDataWarehouse = dataWarehouseContract({
-        contractAddress:
-          appConfig.votingMachineConfig[chainId].dataWarehouseAddress,
-        client: this.clients[chainId],
-        walletClient: this.walletClient,
-      });
+      const dataWarehouse = {
+        abi: IDataWarehouse_ABI,
+        address: appConfig.votingMachineConfig[chainId].dataWarehouseAddress,
+      };
 
       const AAVEAddress =
         asset.toLowerCase() === appConfig.additional.aaveAddress.toLowerCase()
@@ -625,12 +622,18 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.write.processStorageRoot([
-          AAVEAddress,
-          blockData.hash as Hex,
-          blockHeaderRLP,
-          accountStateProofRLP,
-        ]);
+        return writeContract(this.wagmiConfig, {
+          abi: dataWarehouse.abi,
+          address: dataWarehouse.address,
+          functionName: 'processStorageRoot',
+          args: [
+            AAVEAddress,
+            blockData.hash as Hex,
+            blockHeaderRLP,
+            accountStateProofRLP,
+          ],
+          chainId,
+        });
       }
 
       if (aAAVEAddress) {
@@ -645,12 +648,18 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.write.processStorageRoot([
-          aAAVEAddress,
-          blockData.hash as Hex,
-          blockHeaderRLP,
-          accountStateProofRLP,
-        ]);
+        return writeContract(this.wagmiConfig, {
+          abi: dataWarehouse.abi,
+          address: dataWarehouse.address,
+          functionName: 'processStorageRoot',
+          args: [
+            aAAVEAddress,
+            blockData.hash as Hex,
+            blockHeaderRLP,
+            accountStateProofRLP,
+          ],
+          chainId,
+        });
       }
 
       if (STKAAVEAddress && !withSlot) {
@@ -665,12 +674,18 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.write.processStorageRoot([
-          STKAAVEAddress,
-          blockData.hash as Hex,
-          blockHeaderRLP,
-          accountStateProofRLP,
-        ]);
+        return writeContract(this.wagmiConfig, {
+          abi: dataWarehouse.abi,
+          address: dataWarehouse.address,
+          functionName: 'processStorageRoot',
+          args: [
+            STKAAVEAddress,
+            blockData.hash as Hex,
+            blockHeaderRLP,
+            accountStateProofRLP,
+          ],
+          chainId,
+        });
       }
 
       if (STKAAVEAddress && withSlot) {
@@ -683,12 +698,18 @@ export class GovDataService {
 
         const slotProofRLP = formatToProofRLP(slotProof.storageProof[0].proof);
 
-        return connectedDataWarehouse.write.processStorageSlot([
-          STKAAVEAddress,
-          blockData.hash as Hex,
-          exchangeRateSlot,
-          slotProofRLP,
-        ]);
+        return writeContract(this.wagmiConfig, {
+          abi: dataWarehouse.abi,
+          address: dataWarehouse.address,
+          functionName: 'processStorageSlot',
+          args: [
+            STKAAVEAddress,
+            blockData.hash as Hex,
+            exchangeRateSlot,
+            slotProofRLP,
+          ],
+          chainId,
+        });
       }
 
       if (RepresentationsAddress) {
@@ -707,25 +728,43 @@ export class GovDataService {
           rawAccountProofData.accountProof,
         );
 
-        return connectedDataWarehouse.write.processStorageRoot([
-          RepresentationsAddress,
-          blockData.hash as Hex,
-          blockHeaderRLP,
-          accountStateProofRLP,
-        ]);
+        return writeContract(this.wagmiConfig, {
+          abi: dataWarehouse.abi,
+          address: dataWarehouse.address,
+          functionName: 'processStorageRoot',
+          args: [
+            RepresentationsAddress,
+            blockData.hash as Hex,
+            blockHeaderRLP,
+            accountStateProofRLP,
+          ],
+          chainId,
+        });
       }
     }
+    return undefined;
   }
 
-  activateVotingOnVotingMachine(votingChainId: number, proposalId: number) {
-    let connectedVotingMachine = this.votingMachines[votingChainId];
-    return connectedVotingMachine.write.startProposalVote([BigInt(proposalId)]);
+  async activateVotingOnVotingMachine(
+    votingChainId: number,
+    proposalId: number,
+  ) {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.votingMachines[votingChainId].abi,
+        address: this.votingMachines[votingChainId].address,
+        functionName: 'startProposalVote',
+        args: [BigInt(proposalId)],
+        chainId: votingChainId,
+      });
+    }
+    return undefined;
   }
 
   // proofs for vote
   async getCoreBlockNumber(blockHash: Hex) {
     return Number(
-      (await this.clients[appConfig.govCoreChainId].getBlock({ blockHash }))
+      (await getBlock(this.clients[appConfig.govCoreChainId], { blockHash }))
         .number,
     );
   }
@@ -798,28 +837,31 @@ export class GovDataService {
     voterAddress?: Hex;
     proofOfRepresentation?: Hex;
   }) {
-    let connectedVotingMachine = this.votingMachines[votingChainId];
-    return !!voterAddress && !!proofOfRepresentation
-      ? connectedVotingMachine.write.submitVoteAsRepresentative(
-          [
-            BigInt(proposalId),
-            support,
-            voterAddress,
-            proofOfRepresentation,
-            proofs,
-          ],
-          {
-            // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-            value: BigInt(0) as any,
-          },
-        )
-      : connectedVotingMachine.write.submitVote(
-          [BigInt(proposalId), support, proofs],
-          {
-            // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-            value: BigInt(0) as any,
-          },
-        );
+    let votingMachine = this.votingMachines[votingChainId];
+    if (this.wagmiConfig) {
+      return !!voterAddress && !!proofOfRepresentation
+        ? writeContract(this.wagmiConfig, {
+            abi: votingMachine.abi,
+            address: votingMachine.address,
+            functionName: 'submitVoteAsRepresentative',
+            args: [
+              BigInt(proposalId),
+              support,
+              voterAddress,
+              proofOfRepresentation,
+              proofs,
+            ],
+            chainId: votingChainId,
+          })
+        : writeContract(this.wagmiConfig, {
+            abi: votingMachine.abi,
+            address: votingMachine.address,
+            functionName: 'submitVote',
+            args: [BigInt(proposalId), support, proofs],
+            chainId: votingChainId,
+          });
+    }
+    return undefined;
   }
 
   async voteBySignature({
@@ -846,11 +888,12 @@ export class GovDataService {
     proofOfRepresentation?: Hex;
   }) {
     const relay = new GelatoRelay();
-    let connectedVotingMachine = this.votingMachines[votingChainId];
-    if (this.walletClient) {
+    let votingMachine = this.votingMachines[votingChainId];
+
+    if (this.wagmiConfig) {
       const signatureParams = !!voterAddress
         ? await getVoteSignatureParams({
-            walletClient: this.walletClient,
+            wagmiConfig: this.wagmiConfig,
             votingChainId,
             proposalId,
             voterAddress,
@@ -859,7 +902,7 @@ export class GovDataService {
             votingAssetsWithSlot,
           })
         : await getVoteSignatureParams({
-            walletClient: this.walletClient,
+            wagmiConfig: this.wagmiConfig,
             votingChainId,
             proposalId,
             voterAddress: signerAddress,
@@ -872,7 +915,7 @@ export class GovDataService {
       const data =
         !!voterAddress && !!proofOfRepresentation
           ? encodeFunctionData({
-              abi: connectedVotingMachine.abi,
+              abi: votingMachine.abi,
               functionName: 'submitVoteAsRepresentativeBySignature',
               args: [
                 BigInt(proposalId),
@@ -888,7 +931,7 @@ export class GovDataService {
               ],
             })
           : encodeFunctionData({
-              abi: connectedVotingMachine.abi,
+              abi: votingMachine.abi,
               functionName: 'submitVoteBySignature',
               args: [
                 BigInt(proposalId),
@@ -903,39 +946,56 @@ export class GovDataService {
 
       const request: SponsoredCallRequest = {
         chainId: BigInt(votingChainId),
-        target: appConfig.votingMachineConfig[votingChainId].contractAddress,
+        target: votingMachine.address,
         data: data as BaseRelayParams['data'],
       };
 
       return relay.sponsoredCall(request, gelatoApiKey);
-    } else {
-      return connectedVotingMachine.write.submitVote([
-        BigInt(proposalId),
-        support,
-        proofs,
-      ]);
     }
+    return undefined;
   }
 
-  closeAndSendVote(votingChainId: number, proposalId: number) {
-    let connectedVotingMachine = this.votingMachines[votingChainId];
-    return connectedVotingMachine.write.closeAndSendVote([BigInt(proposalId)]);
+  async closeAndSendVote(votingChainId: number, proposalId: number) {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.votingMachines[votingChainId].abi,
+        address: this.votingMachines[votingChainId].address,
+        functionName: 'closeAndSendVote',
+        args: [BigInt(proposalId)],
+        chainId: votingChainId,
+      });
+    }
+    return undefined;
   }
 
-  executeProposal(proposalId: number) {
-    return this.govCore.write.executeProposal([BigInt(proposalId)]);
+  async executeProposal(proposalId: number) {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.govCore.abi,
+        address: this.govCore.address,
+        functionName: 'executeProposal',
+        args: [BigInt(proposalId)],
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+    return undefined;
   }
 
-  executePayload(chainId: number, payloadId: number, payloadsController: Hex) {
-    const payloadsControllerContract = initPayloadControllerContract({
-      client: this.clients[chainId],
-      contractAddress: payloadsController,
-      walletClient: this.walletClient,
-    });
-    return payloadsControllerContract.write.executePayload([payloadId], {
-      // TODO: need for gnosis safe wallet for now (https://github.com/safe-global/safe-apps-sdk/issues/480)
-      value: BigInt(0) as any,
-    });
+  async executePayload(
+    chainId: number,
+    payloadId: number,
+    payloadsController: Hex,
+  ) {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: IPayloadsControllerCore_ABI,
+        address: payloadsController,
+        functionName: 'executePayload',
+        chainId,
+        args: [payloadId],
+      });
+    }
+    return undefined;
   }
 
   async createPayload(
@@ -943,12 +1003,6 @@ export class GovDataService {
     payloadActions: PayloadAction[],
     payloadsController: Hex,
   ) {
-    const payloadsControllerContract = initPayloadControllerContract({
-      client: this.clients[chainId],
-      contractAddress: payloadsController,
-      walletClient: this.walletClient,
-    });
-
     const formattedPayloadActions = payloadActions.map((payloadData) => {
       return {
         target: payloadData.payloadAddress,
@@ -960,9 +1014,16 @@ export class GovDataService {
       };
     });
 
-    return payloadsControllerContract.write.createPayload([
-      formattedPayloadActions,
-    ]);
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: IPayloadsControllerCore_ABI,
+        address: payloadsController,
+        functionName: 'createPayload',
+        chainId,
+        args: [formattedPayloadActions],
+      });
+    }
+    return undefined;
   }
 
   async createProposal(
@@ -1021,17 +1082,31 @@ export class GovDataService {
       } as PayloadForCreation;
     });
 
-    return this.govCore.write.createProposal(
-      [formattedPayloads, votingPortalAddress, ipfsHash],
-      {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.govCore.abi,
+        address: this.govCore.address,
+        functionName: 'createProposal',
+        args: [formattedPayloads, votingPortalAddress, ipfsHash],
         value: BigInt(cancellationFee),
-      },
-    );
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+    return undefined;
   }
 
   // only for admin
   async cancelProposal(proposalId: number) {
-    return this.govCore.write.cancelProposal([BigInt(proposalId)]);
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.govCore.abi,
+        address: this.govCore.address,
+        functionName: 'cancelProposal',
+        args: [BigInt(proposalId)],
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+    return undefined;
   }
 
   // history events

@@ -1,12 +1,14 @@
+import { IERC20_ABI } from '@bgd-labs/aave-address-book';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
-  erc20Contract,
-  normalizeBN,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import { safeSdkOptions, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+  safeSdkOptions,
+  StoreSlice,
+  WalletType,
+} from '@bgd-labs/frontend-web3-utils';
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
-import { Hex, zeroAddress } from 'viem';
+import { getContract, Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -69,9 +71,10 @@ export const createDelegationSlice: StoreSlice<
 
       const delegateData = await Promise.all(
         underlyingAssets.map(async (underlyingAsset) => {
-          const erc20 = erc20Contract({
+          const erc20 = getContract({
+            abi: IERC20_ABI,
+            address: underlyingAsset,
             client: get().appClients[appConfig.govCoreChainId].instance,
-            contractAddress: underlyingAsset,
           });
           const symbol = getTokenName(underlyingAsset) as Token;
           const balance = await erc20.read.balanceOf([activeAddress]);
@@ -201,24 +204,15 @@ export const createDelegationSlice: StoreSlice<
     const data = await get().prepareDataForDelegation(formDelegateData);
 
     if (activeAddress && !isWalletAddressContract) {
-      const sigs: BatchMetaDelegateParams[] = [];
-      for (let i = 0; i < data.length; i++) {
-        const item = data[i];
-        const sig = (await delegationService.delegateMetaSig(
-          item.underlyingAsset,
-          item.delegatee,
-          item.delegationType,
-          item.delegator,
-          item.increaseNonce,
-        )) as BatchMetaDelegateParams;
-        sigs.push(sig);
-      }
-
-      if (!!sigs.length) {
+      if (data.length === 1) {
         await get().executeTx({
           body: () => {
             get().setModalOpen(true);
-            return delegationService.batchMetaDelegate(sigs);
+            return delegationService.delegate(
+              data[0].underlyingAsset,
+              data[0].delegatee,
+              data[0].delegationType,
+            );
           },
           params: {
             type: TxType.delegate,
@@ -230,14 +224,47 @@ export const createDelegationSlice: StoreSlice<
             },
           },
         });
+      } else {
+        const sigs: BatchMetaDelegateParams[] = [];
+        for (let i = 0; i < data.length; i++) {
+          const item = data[i];
+          const sig = (await delegationService.delegateMetaSig(
+            item.underlyingAsset,
+            item.delegatee,
+            item.delegationType,
+            item.delegator,
+            item.increaseNonce,
+          )) as BatchMetaDelegateParams;
+          sigs.push(sig);
+        }
+
+        if (!!sigs.length) {
+          await get().executeTx({
+            body: () => {
+              get().setModalOpen(true);
+              return delegationService.batchMetaDelegate(
+                sigs,
+                get().activeWallet?.address || zeroAddress,
+              );
+            },
+            params: {
+              type: TxType.delegate,
+              desiredChainID: appConfig.govCoreChainId,
+              payload: {
+                delegateData: stateDelegateData,
+                formDelegateData,
+                timestamp,
+              },
+            },
+          });
+        }
       }
     } else if (activeAddress && isWalletAddressContract) {
-      if (get().activeWallet?.walletType === 'Safe') {
+      if (get().activeWallet?.walletType === WalletType.Safe) {
         const safeSdk = new Sdk(safeSdkOptions);
 
         const txsData = data.map((item) => {
           const txData = delegationService.getDelegateTxParams(
-            item.underlyingAsset,
             item.delegatee,
             item.delegationType,
           );

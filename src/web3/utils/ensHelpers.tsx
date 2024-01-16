@@ -1,7 +1,7 @@
 import makeBlockie from 'ethereum-blockies-base64';
 import { Hex, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
-import { normalize } from 'viem/ens';
+import { getEnsAddress, getEnsAvatar, getEnsName, normalize } from 'viem/ens';
 
 import { chainInfoHelper } from '../../utils/configs';
 
@@ -9,7 +9,7 @@ const client = chainInfoHelper.clientInstances[mainnet.id].instance;
 
 export const getName = async (address: Hex) => {
   try {
-    const name = await client.getEnsName({ address });
+    const name = await getEnsName(client, { address });
     return name ? name : undefined;
   } catch (error) {
     console.error('ENS name lookup error', error);
@@ -18,7 +18,7 @@ export const getName = async (address: Hex) => {
 
 export const getAvatar = async (name: string, address: string) => {
   try {
-    const background_image = await client.getEnsAvatar({ name });
+    const background_image = await getEnsAvatar(client, { name });
     return !!background_image ? background_image : makeBlockie(address);
   } catch (error) {
     console.error('ENS avatar lookup error', error);
@@ -27,7 +27,7 @@ export const getAvatar = async (name: string, address: string) => {
 
 export const getAddress = async (name: string) => {
   try {
-    const address = await client.getEnsAddress({
+    const address = await getEnsAddress(client, {
       name: normalize(name),
     });
     return address ? address.toLocaleLowerCase() : undefined;

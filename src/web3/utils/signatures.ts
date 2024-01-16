@@ -1,10 +1,11 @@
-import { WalletClient } from '@wagmi/core';
+import { signTypedData } from '@wagmi/core';
 import { Hex, hexToSignature } from 'viem';
+import { Config } from 'wagmi';
 
 import { appConfig } from '../../utils/appConfig';
 
 export async function getVoteSignatureParams({
-  walletClient,
+  wagmiConfig,
   votingChainId,
   proposalId,
   voterAddress,
@@ -12,7 +13,7 @@ export async function getVoteSignatureParams({
   support,
   votingAssetsWithSlot,
 }: {
-  walletClient: WalletClient;
+  wagmiConfig: Config;
   votingChainId: number;
   proposalId: number;
   voterAddress: Hex;
@@ -30,7 +31,7 @@ export async function getVoteSignatureParams({
 
   if (!!representativeAddress) {
     const sig = hexToSignature(
-      await walletClient.signTypedData({
+      await signTypedData(wagmiConfig, {
         domain,
         types: {
           VotingAssetWithSlot: [
@@ -83,7 +84,7 @@ export async function getVoteSignatureParams({
     };
   } else {
     const sig = hexToSignature(
-      await walletClient.signTypedData({
+      await signTypedData(wagmiConfig, {
         domain,
         types: {
           VotingAssetWithSlot: [

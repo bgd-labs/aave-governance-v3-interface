@@ -1,6 +1,6 @@
-import { PublicClient } from '@wagmi/core';
 import {
   Block,
+  Client,
   concat,
   encodeAbiParameters,
   fromRlp,
@@ -11,6 +11,7 @@ import {
   toHex,
   toRlp,
 } from 'viem';
+import { getBlock } from 'viem/actions';
 
 import { appConfig } from '../../utils/appConfig';
 
@@ -45,16 +46,16 @@ export const slots = {
   },
 };
 
-export const formatToProofRLP = (rawData: Hex[]): Hex => {
+export const formatToProofRLP = (rawData: Hex[]) => {
   return toRlp(rawData.map((d: Hex) => fromRlp(d, 'hex')));
 };
 
 export const getProof = async (
-  client: PublicClient,
+  client: Client,
   address: Hex,
   storageKeys: string[],
   blockNumber: number,
-): Promise<Proof> => {
+) => {
   return (await client.request({
     method: 'eth_getProof' as any,
     params: [address, storageKeys, toHex(blockNumber)] as any,
@@ -62,17 +63,17 @@ export const getProof = async (
 };
 
 export const getExtendedBlock = async (
-  client: PublicClient,
+  client: Client,
   blockNumber: number,
 ): Promise<Block> => {
-  return client.getBlock({
+  return (await getBlock(client, {
     blockNumber: BigInt(blockNumber),
     includeTransactions: false,
-  });
+  })) as Block;
 };
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`
-export const prepareBLockRLP = (rawBlock: Block): Hex => {
+export const prepareBLockRLP = (rawBlock: Block) => {
   const rawData: Hex[] = [
     rawBlock.parentHash,
     rawBlock.sha3Uncles,
@@ -95,10 +96,7 @@ export const prepareBLockRLP = (rawBlock: Block): Hex => {
   return toRlp(rawData);
 };
 
-export const getSolidityStorageSlotBytes = (
-  mappingSlot: Hex,
-  key: Hex,
-): Hex => {
+export const getSolidityStorageSlotBytes = (mappingSlot: Hex, key: Hex) => {
   const slot = pad(mappingSlot).toString();
   return (
     //hexStripZeros

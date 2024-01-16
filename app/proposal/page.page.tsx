@@ -1,14 +1,15 @@
+import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 import {
   CachedDetails,
   getGovCoreConfigs,
   getProposalMetadata,
   getProposalState,
   getVotingMachineProposalState,
-  govCoreContract,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import type { Metadata } from 'next';
 import React from 'react';
+import { getContract } from 'viem';
 
 import { ProposalClientPageSSR } from '../../src/proposals/components/proposal/ProposalClientPageSSR';
 import { metaTexts } from '../../src/ui/utils/metaTexts';
@@ -78,8 +79,9 @@ export default async function ProposalPage({
   const id = Number(proposalId);
 
   // contracts
-  const govCore = govCoreContract({
-    contractAddress: appConfig.govCoreConfig.contractAddress,
+  const govCore = getContract({
+    address: appConfig.govCoreConfig.contractAddress,
+    abi: IGovernanceCore_ABI,
     client: initialClients[appConfig.govCoreChainId],
   });
 

@@ -38,7 +38,7 @@ export const makeTestTransaction = (
     to: zeroAddress,
     timestamp: timestamp,
     localTimestamp: timestamp,
-    walletType: 'Injected',
+    walletType: WalletType.Injected,
     status,
   } as TransactionItem;
 };

@@ -21,6 +21,7 @@ import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
+import { getBlock } from 'viem/actions';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExplorerSlice';
@@ -1118,9 +1119,8 @@ export const createProposalsSlice: StoreSlice<
       const proposalData = get().detailedProposalsData[proposalId];
 
       if (checkHash(proposalData.snapshotBlockHash).notZero) {
-        const block = await get().appClients[
-          appConfig.govCoreChainId
-        ].instance.getBlock({
+        const client = get().appClients[appConfig.govCoreChainId].instance;
+        const block = await getBlock(client, {
           blockHash: proposalData.snapshotBlockHash as Hex,
         });
 

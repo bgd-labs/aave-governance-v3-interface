@@ -26,7 +26,7 @@ export function WalletItem({
   const iconSize = 28;
 
   const handleWalletClick = async () => {
-    if (walletType === 'Impersonated' && setOpenImpersonatedForm) {
+    if (walletType === WalletType.Impersonated && setOpenImpersonatedForm) {
       setOpenImpersonatedForm(true);
     } else {
       await connectWallet(walletType);
@@ -58,7 +58,7 @@ export function WalletItem({
           {title}
         </Box>
 
-        {walletType === 'Injected' ? (
+        {walletType === WalletType.Injected ? (
           <Box
             sx={(theme) => ({
               width: iconSize,

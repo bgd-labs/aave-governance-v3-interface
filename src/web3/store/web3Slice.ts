@@ -76,11 +76,11 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
 
   walletConnectedTimeLock: false,
   connectSigner() {
-    const activeWallet = get().activeWallet;
+    const config = get().wagmiConfig;
     set({ walletConnectedTimeLock: true });
-    if (activeWallet?.walletClient) {
-      get().govDataService.connectSigner(activeWallet.walletClient);
-      get().delegationService.connectSigner(activeWallet.walletClient);
+    if (config) {
+      get().govDataService.connectSigner(config);
+      get().delegationService.connectSigner(config);
     }
     setTimeout(() => set({ walletConnectedTimeLock: false }), 1000);
   },

@@ -1,5 +1,6 @@
 'use client';
 
+import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import arrayMutators from 'final-form-arrays';
@@ -172,7 +173,7 @@ export function DelegatePage() {
           <BackButton3D onClick={router.back} isVisibleOnMobile />
           {activeWallet &&
             activeWallet.isContractAddress &&
-            activeWallet.walletType === 'WalletConnect' && (
+            activeWallet.walletType === WalletType.WalletConnect && (
               <NoSSR>
                 <Box
                   sx={{

@@ -1,6 +1,7 @@
 import {
   TxAdapter,
   TxLocalStatusTxParams,
+  WalletType,
 } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { zeroAddress, zeroHash } from 'viem';
@@ -23,7 +24,7 @@ export function getTestTx({
     localTimestamp: dayjs().unix(),
     txKey: zeroHash,
     hash: zeroHash,
-    walletType: 'Injected',
+    walletType: WalletType.Injected,
     pending: txPending,
     isError: false,
     isSuccess: txSuccess,

@@ -1,17 +1,27 @@
 'use client';
 
-import { WagmiProvider as BaseWagmiProvider } from '@bgd-labs/frontend-web3-utils';
+import {
+  createWagmiConfig,
+  WagmiZustandSync,
+} from '@bgd-labs/frontend-web3-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useMemo } from 'react';
+import { WagmiProvider as BaseWagmiProvider } from 'wagmi';
 
 import { useStore } from '../../store';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';
 import { CHAINS } from '../../utils/chains';
 
+const queryClient = new QueryClient();
+
 export default function WagmiProvider() {
-  return (
-    <BaseWagmiProvider
-      connectorsInitProps={{
+  const { getImpersonatedAddress } = useStore();
+
+  const config = useMemo(() => {
+    return createWagmiConfig({
+      chains: CHAINS,
+      connectorsInitProps: {
         appName: 'AAVEGovernanceV3',
-        chains: CHAINS,
         defaultChainId: appConfig.govCoreChainId,
         wcParams: {
           projectId: WC_PROJECT_ID,
@@ -25,8 +35,21 @@ export default function WagmiProvider() {
             ],
           },
         },
-      }}
-      useStore={useStore}
-    />
+      },
+      getImpersonatedAccount: getImpersonatedAddress,
+      ssr: true,
+    });
+  }, []);
+
+  return (
+    <BaseWagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <WagmiZustandSync
+          wagmiConfig={config}
+          defaultChainId={appConfig.govCoreChainId}
+          useStore={useStore}
+        />
+      </QueryClientProvider>
+    </BaseWagmiProvider>
   );
 }
