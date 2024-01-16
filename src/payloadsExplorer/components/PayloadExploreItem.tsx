@@ -6,6 +6,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import { toHex } from 'viem';
+import { metis } from 'viem/chains';
 
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
 import { PayloadCreator } from '../../proposals/components/proposal/PayloadCreator';
@@ -275,17 +276,19 @@ export function PayloadExploreItem({
         </Box>
 
         <Box>
-          <Link
-            href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
-            inNewWindow
-            css={{ display: 'flex', alignItems: 'center' }}>
-            <SmallButton
-              onClick={(e) => {
-                e.stopPropagation();
-              }}>
-              {texts.proposals.payloadsDetails.seatbelt}
-            </SmallButton>
-          </Link>
+          {payload.chainId !== metis.id && (
+            <Link
+              href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
+              inNewWindow
+              css={{ display: 'flex', alignItems: 'center' }}>
+              <SmallButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}>
+                {texts.proposals.payloadsDetails.seatbelt}
+              </SmallButton>
+            </Link>
+          )}
 
           {isPayloadReadyForExecution &&
             !isFinalStatus &&
