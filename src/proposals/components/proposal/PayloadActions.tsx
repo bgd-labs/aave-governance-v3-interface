@@ -1,5 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
+import { metis } from 'viem/chains';
 
 import { NewPayload } from '../../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { Link, SmallButton } from '../../../ui';
@@ -122,22 +123,26 @@ export function PayloadActions({
       )}
 
       {withLink && !report && !forCreate ? (
-        <Link
-          href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
-          inNewWindow
-          css={{
-            display: 'flex',
-            alignItems: 'center',
-            mt: 4,
-            outline: 'none !important',
-          }}>
-          <SmallButton
-            onClick={(e) => {
-              e.stopPropagation();
-            }}>
-            {texts.proposals.payloadsDetails.seatbelt}
-          </SmallButton>
-        </Link>
+        <>
+          {payload.chainId !== metis.id && (
+            <Link
+              href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
+              inNewWindow
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                mt: 4,
+                outline: 'none !important',
+              }}>
+              <SmallButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}>
+                {texts.proposals.payloadsDetails.seatbelt}
+              </SmallButton>
+            </Link>
+          )}
+        </>
       ) : (
         withLink &&
         !!setIsSeatbeltModalOpen &&
