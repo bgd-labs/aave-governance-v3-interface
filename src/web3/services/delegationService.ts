@@ -1,10 +1,7 @@
 'use client';
 
-import {
-  aaveTokenV3Contract,
-  metaDelegateHelperContract,
-  normalizeBN,
-} from '@bgd-labs/aave-governance-ui-helpers';
+import { IMetaDelegateHelper_ABI } from '@bgd-labs/aave-address-book';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IAaveTokenV3';
 import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IATokenWithDelegation';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
@@ -17,6 +14,7 @@ import {
   hexToSignature,
   zeroAddress,
 } from 'viem';
+import { getBlock, multicall } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { appConfig } from '../../utils/appConfig';
@@ -65,22 +63,20 @@ export class DelegationService {
   }
 
   async getUserPowers(userAddress: Hex, underlyingAssets: Hex[]) {
-    const contracts = underlyingAssets.map((asset) => {
-      return {
-        contract: aaveTokenV3Contract({
-          contractAddress: asset,
-          client: this.clients[appConfig.govCoreChainId],
-        }),
-        underlyingAsset: asset,
-      };
-    });
+    const contracts = underlyingAssets.map((asset) =>
+      getContract({
+        address: asset,
+        abi: IAaveTokenV3_ABI,
+        client: this.clients[appConfig.govCoreChainId],
+      }),
+    );
 
     return await Promise.all(
       contracts.map(async (contract) => {
         const data = await Promise.all([
-          await contract.contract.read.balanceOf([userAddress]),
-          await contract.contract.read.getPowersCurrent([userAddress]),
-          await contract.contract.read.getDelegates([userAddress]),
+          await contract.read.balanceOf([userAddress]),
+          await contract.read.getPowersCurrent([userAddress]),
+          await contract.read.getDelegates([userAddress]),
         ]);
 
         const isPropositionPowerDelegated =
@@ -134,8 +130,8 @@ export class DelegationService {
 
         return {
           timestamp: dayjs().unix(),
-          tokenName: getTokenName(contract.underlyingAsset),
-          underlyingAsset: contract.underlyingAsset,
+          tokenName: getTokenName(contract.address),
+          underlyingAsset: contract.address,
           proposition,
           voting,
         };
@@ -144,43 +140,32 @@ export class DelegationService {
   }
 
   async getDelegates(underlyingAsset: Hex, delegator: Hex) {
-    const assetContract = aaveTokenV3Contract({
-      contractAddress: underlyingAsset,
+    const assetContract = getContract({
+      address: underlyingAsset,
+      abi: IAaveTokenV3_ABI,
       client: this.clients[appConfig.govCoreChainId],
     });
-
-    return await Promise.all([
-      await assetContract.read.getDelegateeByType([
-        delegator,
-        GovernancePowerType.VOTING,
-      ]),
-      await assetContract.read.getDelegateeByType([
-        delegator,
-        GovernancePowerType.PROPOSITION,
-      ]),
-    ]);
+    return await assetContract.read.getDelegates([delegator]);
   }
 
   async getDelegatedPropositionPower(underlyingAssets: Hex[], user: Hex) {
-    const contracts = underlyingAssets.map((asset) => {
-      return {
-        contract: aaveTokenV3Contract({
-          contractAddress: asset,
-          client: this.clients[appConfig.govCoreChainId],
-        }),
-        underlyingAsset: asset,
-      };
-    });
+    const contracts = underlyingAssets.map((asset) =>
+      getContract({
+        address: asset,
+        abi: IAaveTokenV3_ABI,
+        client: this.clients[appConfig.govCoreChainId],
+      }),
+    );
 
     return Promise.all(
       contracts.map(async (contract) => {
-        const power = await contract.contract.read.getPowerCurrent([
+        const power = await contract.read.getPowerCurrent([
           user,
           GovernancePowerType.PROPOSITION,
         ]);
 
         return {
-          underlyingAsset: contract.underlyingAsset,
+          underlyingAsset: contract.address,
           delegationPropositionPower: power.toString(),
         };
       }),
@@ -193,11 +178,11 @@ export class DelegationService {
     underlyingAssets: Hex[],
   ) {
     const client = this.clients[appConfig.govCoreChainId];
-    const blockNumber = await client.getBlock({
+    const blockNumber = await getBlock(client, {
       blockHash,
     });
 
-    const userBalances = await client.multicall({
+    const userBalances = await multicall(client, {
       contracts: [
         ...underlyingAssets.map((asset) => {
           const wagmiContract = {
@@ -215,7 +200,7 @@ export class DelegationService {
       blockNumber: blockNumber.number,
     });
 
-    const votingPowers = await client.multicall({
+    const votingPowers = await multicall(client, {
       contracts: [
         ...underlyingAssets.map((asset) => {
           const wagmiContract = {
@@ -265,8 +250,9 @@ export class DelegationService {
         underlyingAsset.toLowerCase() ===
         appConfig.additional.aaveAddress.toLowerCase();
 
-      const normalAssetContract = aaveTokenV3Contract({
-        contractAddress: underlyingAsset,
+      const normalAssetContract = getContract({
+        address: underlyingAsset,
+        abi: IAaveTokenV3_ABI,
         client: this.clients[appConfig.govCoreChainId],
       });
       const aAssetContract = getContract({
@@ -366,8 +352,9 @@ export class DelegationService {
     sigs: BatchMetaDelegateParams[],
     accountAddress: Hex,
   ) {
-    const delegateHelperContract = metaDelegateHelperContract({
-      contractAddress: appConfig.additional.delegationHelper,
+    const delegateHelperContract = getContract({
+      abi: IMetaDelegateHelper_ABI,
+      address: appConfig.additional.delegationHelper,
       client: this.clients[appConfig.govCoreChainId],
     });
 

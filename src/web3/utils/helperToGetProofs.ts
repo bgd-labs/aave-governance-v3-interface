@@ -1,5 +1,6 @@
 import {
   Block,
+  Client,
   concat,
   encodeAbiParameters,
   fromRlp,
@@ -7,10 +8,10 @@ import {
   keccak256,
   pad,
   parseAbiParameters,
-  PublicClient,
   toHex,
   toRlp,
 } from 'viem';
+import { getBlock } from 'viem/actions';
 
 import { appConfig } from '../../utils/appConfig';
 
@@ -50,7 +51,7 @@ export const formatToProofRLP = (rawData: Hex[]) => {
 };
 
 export const getProof = async (
-  client: PublicClient,
+  client: Client,
   address: Hex,
   storageKeys: string[],
   blockNumber: number,
@@ -62,13 +63,13 @@ export const getProof = async (
 };
 
 export const getExtendedBlock = async (
-  client: PublicClient,
+  client: Client,
   blockNumber: number,
 ): Promise<Block> => {
-  return client.getBlock({
+  return (await getBlock(client, {
     blockNumber: BigInt(blockNumber),
     includeTransactions: false,
-  }) as Promise<Block>;
+  })) as Block;
 };
 
 // IMPORTANT valid only for post-Shapella blocks, as it includes `withdrawalsRoot`

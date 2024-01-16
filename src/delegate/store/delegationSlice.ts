@@ -1,7 +1,5 @@
-import {
-  erc20Contract,
-  normalizeBN,
-} from '@bgd-labs/aave-governance-ui-helpers';
+import { IERC20_ABI } from '@bgd-labs/aave-address-book';
+import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
   safeSdkOptions,
   StoreSlice,
@@ -10,7 +8,7 @@ import {
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
-import { Hex, zeroAddress } from 'viem';
+import { getContract, Hex, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -73,9 +71,10 @@ export const createDelegationSlice: StoreSlice<
 
       const delegateData = await Promise.all(
         underlyingAssets.map(async (underlyingAsset) => {
-          const erc20 = erc20Contract({
+          const erc20 = getContract({
+            abi: IERC20_ABI,
+            address: underlyingAsset,
             client: get().appClients[appConfig.govCoreChainId].instance,
-            contractAddress: underlyingAsset,
           });
           const symbol = getTokenName(underlyingAsset) as Token;
           const balance = await erc20.read.balanceOf([activeAddress]);

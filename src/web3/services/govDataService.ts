@@ -3,10 +3,13 @@
 import {
   IDataWarehouse_ABI,
   IGovernanceCore_ABI,
+  IGovernanceDataHelper_ABI,
   IPayloadsControllerCore_ABI,
+  IPayloadsControllerDataHelper_ABI,
+  IVotingMachineDataHelper_ABI,
+  IVotingMachineWithProofs_ABI,
 } from '@bgd-labs/aave-address-book';
 import {
-  baseVotingStrategyContract,
   BasicProposal,
   blockLimit,
   getBlocksForEvents,
@@ -21,22 +24,18 @@ import {
   getProposalQueued,
   getProposalVotingClosed,
   getVoters,
-  govCoreDataHelperContract,
   InitialProposal,
   Payload,
   PayloadAction,
   PayloadForCreation,
-  payloadsControllerContract as initPayloadControllerContract,
-  payloadsControllerDataHelperContract,
   PayloadState,
   ProposalData,
   updateVotingMachineData,
   VMProposalStructOutput,
   VotersData,
   VotingConfig,
-  votingMachineContract,
-  votingMachineDataHelperContract,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
@@ -52,6 +51,7 @@ import {
   zeroAddress,
   zeroHash,
 } from 'viem';
+import { getBlock, getBlockNumber, readContract } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -74,14 +74,16 @@ function initContracts(clients: ClientsRecord) {
     client: clients[appConfig.govCoreChainId],
   });
 
-  const govCoreDataHelper = govCoreDataHelperContract({
-    contractAddress: appConfig.govCoreConfig.dataHelperContractAddress,
+  const govCoreDataHelper = getContract({
+    address: appConfig.govCoreConfig.dataHelperContractAddress,
+    abi: IGovernanceDataHelper_ABI,
     client: clients[appConfig.govCoreChainId],
   });
 
   const votingMachines = {
-    [appConfig.votingMachineChainIds[0]]: votingMachineContract({
-      contractAddress:
+    [appConfig.votingMachineChainIds[0]]: getContract({
+      abi: IVotingMachineWithProofs_ABI,
+      address:
         appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
           .contractAddress,
       client: clients[appConfig.votingMachineChainIds[0]],
@@ -90,16 +92,18 @@ function initContracts(clients: ClientsRecord) {
   if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
       const votingMachineConfig = appConfig.votingMachineConfig[chainId];
-      votingMachines[chainId] = votingMachineContract({
-        contractAddress: votingMachineConfig.contractAddress,
+      votingMachines[chainId] = getContract({
+        abi: IVotingMachineWithProofs_ABI,
+        address: votingMachineConfig.contractAddress,
         client: clients[chainId],
       });
     });
   }
 
   const votingMachineDataHelpers = {
-    [appConfig.votingMachineChainIds[0]]: votingMachineDataHelperContract({
-      contractAddress:
+    [appConfig.votingMachineChainIds[0]]: getContract({
+      abi: IVotingMachineDataHelper_ABI,
+      address:
         appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
           .dataHelperContractAddress,
       client: clients[appConfig.votingMachineChainIds[0]],
@@ -108,32 +112,33 @@ function initContracts(clients: ClientsRecord) {
   if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
       const votingMachineConfig = appConfig.votingMachineConfig[chainId];
-      votingMachineDataHelpers[chainId] = votingMachineDataHelperContract({
-        contractAddress: votingMachineConfig.dataHelperContractAddress,
+      votingMachineDataHelpers[chainId] = getContract({
+        abi: IVotingMachineDataHelper_ABI,
+        address: votingMachineConfig.dataHelperContractAddress,
         client: clients[chainId],
       });
     });
   }
 
   const payloadsControllerDataHelpers = {
-    [appConfig.payloadsControllerChainIds[0]]:
-      payloadsControllerDataHelperContract({
-        contractAddress:
-          appConfig.payloadsControllerConfig[
-            appConfig.payloadsControllerChainIds[0]
-          ].dataHelperContractAddress,
-        client: clients[appConfig.payloadsControllerChainIds[0]],
-      }),
+    [appConfig.payloadsControllerChainIds[0]]: getContract({
+      abi: IPayloadsControllerDataHelper_ABI,
+      address:
+        appConfig.payloadsControllerConfig[
+          appConfig.payloadsControllerChainIds[0]
+        ].dataHelperContractAddress,
+      client: clients[appConfig.payloadsControllerChainIds[0]],
+    }),
   };
   if (appConfig.payloadsControllerChainIds.length > 1) {
     appConfig.payloadsControllerChainIds.forEach((chainId) => {
       const payloadsControllerConfig =
         appConfig.payloadsControllerConfig[chainId];
-      payloadsControllerDataHelpers[chainId] =
-        payloadsControllerDataHelperContract({
-          contractAddress: payloadsControllerConfig.dataHelperContractAddress,
-          client: clients[chainId],
-        });
+      payloadsControllerDataHelpers[chainId] = getContract({
+        abi: IPayloadsControllerDataHelper_ABI,
+        address: payloadsControllerConfig.dataHelperContractAddress,
+        client: clients[chainId],
+      });
     });
   }
 
@@ -256,13 +261,11 @@ export class GovDataService {
     const rpcUrl = this.clients[chainId]?.chain?.rpcUrls.default.http[0];
 
     try {
-      const payloadsControllerContract = initPayloadControllerContract({
-        client: this.clients[chainId],
-        contractAddress: payloadsController,
+      const payloadsCount = await readContract(this.clients[chainId], {
+        abi: IPayloadsControllerCore_ABI,
+        address: payloadsController,
+        functionName: 'getPayloadsCount',
       });
-
-      const payloadsCount =
-        await payloadsControllerContract.read.getPayloadsCount();
 
       if (!!setRpcError && rpcUrl) {
         setRpcError({
@@ -477,7 +480,7 @@ export class GovDataService {
     lastBlockNumber: number | undefined,
   ): Promise<VotersData[]> {
     const currentBlock =
-      (await this.clients[votingChainId].getBlockNumber()) || 0;
+      (await getBlockNumber(this.clients[votingChainId])) || 0;
 
     const { startBlock, endBlock } = getBlocksForEvents(
       Number(currentBlock),
@@ -508,9 +511,10 @@ export class GovDataService {
   async getVotingStrategyContract() {
     const votingStrategyAddress = await this.govCore.read.getPowerStrategy();
 
-    return baseVotingStrategyContract({
+    return getContract({
+      abi: IBaseVotingStrategy_ABI,
+      address: votingStrategyAddress,
       client: this.clients[appConfig.govCoreChainId],
-      contractAddress: votingStrategyAddress,
     });
   }
 
@@ -760,7 +764,7 @@ export class GovDataService {
   // proofs for vote
   async getCoreBlockNumber(blockHash: Hex) {
     return Number(
-      (await this.clients[appConfig.govCoreChainId].getBlock({ blockHash }))
+      (await getBlock(this.clients[appConfig.govCoreChainId], { blockHash }))
         .number,
     );
   }

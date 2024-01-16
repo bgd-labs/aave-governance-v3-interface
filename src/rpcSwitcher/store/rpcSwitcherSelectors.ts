@@ -1,4 +1,4 @@
-import { PublicClient } from 'viem';
+import { Client } from 'viem';
 
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 
@@ -8,7 +8,7 @@ export const selectAppClients = (store: IRpcSwitcherSlice) => {
       acc[key] = value.instance;
       return acc;
     },
-    {} as Record<string, PublicClient>,
+    {} as Record<string, Client>,
   );
 };
 

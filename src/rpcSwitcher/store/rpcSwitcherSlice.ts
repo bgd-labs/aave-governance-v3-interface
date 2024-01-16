@@ -1,11 +1,11 @@
+import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 import {
   blockLimit,
   getPayloadsCreated,
-  payloadsControllerContract as payloadsControllerContractInit,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
-import { Chain, PublicClient, zeroAddress, zeroHash } from 'viem';
+import { Chain, Client, getContract, zeroAddress, zeroHash } from 'viem';
 import { mainnet } from 'viem/chains';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
@@ -21,7 +21,7 @@ import { getProof } from '../../web3/utils/helperToGetProofs';
 import { selectAppClients } from './rpcSwitcherSelectors';
 
 export type AppClient = {
-  instance: PublicClient;
+  instance: Client;
   rpcUrl: string;
 };
 
@@ -30,7 +30,7 @@ export type RpcSwitcherFormData = { chainId: number; rpcUrl: string }[];
 export type AppClientsStorage = Omit<AppClient, 'instance'>;
 
 export type ChainInfo = {
-  clientInstances: Record<number, { instance: PublicClient }>;
+  clientInstances: Record<number, { instance: Client }>;
   getChainParameters: (chainId: number) => Chain;
 };
 
@@ -120,7 +120,7 @@ export const createRpcSwitcherSlice: StoreSlice<
                   clients.getChainParameters(chainIdNumber).rpcUrls.default
                     .http[0],
                 instance: clients.clientInstances[chainIdNumber]
-                  .instance as Draft<PublicClient>,
+                  .instance as Draft<Client>,
               };
             });
         }),
@@ -253,8 +253,9 @@ export const createRpcSwitcherSlice: StoreSlice<
       appConfig.payloadsControllerConfig[chainId].contractAddresses;
     const lastPayloadsController =
       contractAddresses[contractAddresses.length - 1];
-    const payloadsControllerContract = payloadsControllerContractInit({
-      contractAddress: lastPayloadsController,
+    const payloadsControllerContract = getContract({
+      abi: IPayloadsControllerCore_ABI,
+      address: lastPayloadsController,
       client,
     });
 

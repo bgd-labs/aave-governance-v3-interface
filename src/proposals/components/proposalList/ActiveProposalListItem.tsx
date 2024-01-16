@@ -6,7 +6,7 @@ import {
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
-import { createWalletClient, http, zeroAddress } from 'viem';
+import { zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
 import { Link } from '../../../ui';
@@ -49,14 +49,7 @@ export function ActiveProposalListItem({
       address: zeroAddress,
       chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
       chainId: appConfig.govCoreChainId,
-      publicClient: appClients[appConfig.govCoreChainId].instance,
-      walletClient: createWalletClient({
-        chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
-        transport: http(
-          chainInfoHelper.getChainParameters(appConfig.govCoreChainId).rpcUrls
-            .default.http[0],
-        ),
-      }),
+      connectorClient: appClients[appConfig.govCoreChainId].instance,
       isActive: true,
       isContractAddress: false,
     };
