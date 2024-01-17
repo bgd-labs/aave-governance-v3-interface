@@ -1,5 +1,5 @@
 import { Draft } from 'immer';
-import { Chain, createPublicClient, fallback, http } from 'viem';
+import { Chain, createClient, fallback, http } from 'viem';
 import {
   arbitrum,
   avalanche,
@@ -81,30 +81,6 @@ export const initialRpcUrls: Record<number, string[]> = {
   [bscTestnet.id]: ['https://data-seed-prebsc-1-s1.bnbchain.org:8545'],
 };
 
-export const fallBackConfig = {
-  rank: false,
-  retryDelay: 100,
-  retryCount: 5,
-};
-
-export const createViemClient = (
-  chain: Chain,
-  rpcUrl: string,
-  withoutFallback?: boolean,
-) =>
-  createPublicClient({
-    batch: {
-      multicall: true,
-    },
-    chain: setChain(chain, rpcUrl) as Draft<Chain>,
-    transport: withoutFallback
-      ? http(rpcUrl)
-      : fallback(
-          [http(rpcUrl), ...initialRpcUrls[chain.id].map((url) => http(url))],
-          fallBackConfig,
-        ),
-  });
-
 export function setChain(chain: Chain, url?: string) {
   return {
     ...chain,
@@ -114,6 +90,13 @@ export function setChain(chain: Chain, url?: string) {
         ...chain.rpcUrls.default,
         http: [url || initialRpcUrls[chain.id][0], ...initialRpcUrls[chain.id]],
       },
+    },
+    blockExplorers: {
+      ...chain.blockExplorers,
+      default:
+        chain.id === gnosis.id
+          ? { name: 'Gnosis chain explorer', url: 'https://gnosisscan.io' }
+          : chain.blockExplorers?.default || mainnet.blockExplorers.default,
     },
   };
 }
@@ -135,3 +118,27 @@ export const CHAINS: Record<number, Chain> = {
   [avalancheFuji.id]: setChain(avalancheFuji),
   [bscTestnet.id]: setChain(bscTestnet),
 };
+
+export const fallBackConfig = {
+  rank: false,
+  retryDelay: 100,
+  retryCount: 5,
+};
+
+export const createViemClient = (
+  chain: Chain,
+  rpcUrl: string,
+  withoutFallback?: boolean,
+) =>
+  createClient({
+    batch: {
+      multicall: true,
+    },
+    chain: setChain(chain, rpcUrl) as Draft<Chain>,
+    transport: withoutFallback
+      ? http(rpcUrl)
+      : fallback(
+          [http(rpcUrl), ...initialRpcUrls[chain.id].map((url) => http(url))],
+          fallBackConfig,
+        ),
+  });

@@ -556,7 +556,7 @@ export function ProposalTimeline({
           <TimelineLineWrapper
             sx={{
               width: `calc(100% / ${timelines.length - 1})`,
-              left: '65%',
+              left: '55%',
             }}>
             <CanceledItemWrapper
               sx={{
