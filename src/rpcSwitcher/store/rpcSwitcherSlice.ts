@@ -6,6 +6,7 @@ import {
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Chain, Client, getContract, zeroAddress, zeroHash } from 'viem';
+import { getBlock } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
@@ -264,7 +265,7 @@ export const createRpcSwitcherSlice: StoreSlice<
       await payloadsControllerContract.read.getPayloadsCount();
       // check get logs if initial request success
       try {
-        const currentBlock = await client.getBlock({ blockTag: 'latest' });
+        const currentBlock = await getBlock(client, { blockTag: 'latest' });
 
         await getPayloadsCreated({
           contractAddress: payloadsControllerContract.address,
