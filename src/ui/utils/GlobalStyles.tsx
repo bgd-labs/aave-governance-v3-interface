@@ -192,13 +192,13 @@ export function GlobalStyles() {
       },
       '.ProposalLoading__SSR': {
         '.BoxWith3D__content': {
-          backgroundColor: '#FFFFFF !important',
+          backgroundColor: '#FFFFFF',
         },
         '.BoxWith3D__left-shadow': {
-          backgroundColor: '#C6C3D1 !important',
+          backgroundColor: '#C6C3D1',
         },
         '.BoxWith3D__bottom-shadow': {
-          backgroundColor: '#F2F0F9 !important',
+          backgroundColor: '#F2F0F9',
         },
       },
 
@@ -369,13 +369,13 @@ export function GlobalStyles() {
       },
       '.ProposalLoading__SSR': {
         '.BoxWith3D__content': {
-          backgroundColor: '#212948 !important',
+          backgroundColor: '#212948',
         },
         '.BoxWith3D__left-shadow': {
-          backgroundColor: '#090C16 !important',
+          backgroundColor: '#090C16',
         },
         '.BoxWith3D__bottom-shadow': {
-          backgroundColor: '#0C101E !important',
+          backgroundColor: '#0C101E',
         },
       },
 

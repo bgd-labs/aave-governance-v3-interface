@@ -266,7 +266,7 @@ export function ProposalLoading({
               sx={{
                 [theme.breakpoints.up('sm')]: { display: 'none' },
               }}>
-              <BlockWrapper toBottom>
+              <BlockWrapper contentColor="$mainLight" toBottom>
                 <TimelineLoader />
               </BlockWrapper>
             </Box>
