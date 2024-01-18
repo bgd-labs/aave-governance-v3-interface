@@ -30,6 +30,7 @@ export function RepresentingButton() {
   const [isAvatarExists, setIsAvatarExists] = useState<boolean | undefined>(
     undefined,
   );
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   useEffect(() => {
     const activeAddress = representative.address;
@@ -44,6 +45,11 @@ export function RepresentingButton() {
       });
     }
   }, [ensData, representative.address]);
+
+  useEffect(() => {
+    setIsTooltipVisible(true);
+    setTimeout(() => setIsTooltipVisible(false), 2000);
+  }, []);
 
   return (
     <Box
@@ -102,7 +108,12 @@ export function RepresentingButton() {
         color="light"
         tooltipCss={{
           display: 'none',
-          [theme.breakpoints.up('md')]: { display: 'block' },
+          [theme.breakpoints.up('md')]: {
+            display: 'block',
+            opacity: isTooltipVisible ? 1 : undefined,
+            zIndex: isTooltipVisible ? 1 : undefined,
+            visibility: isTooltipVisible ? 'visible' : undefined,
+          },
         }}
         tooltipContent={
           <Box

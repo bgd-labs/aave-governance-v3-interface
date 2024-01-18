@@ -26,10 +26,15 @@ export function ProposalEstimatedStatus({
   const { getDetailedProposalsData } = useStore();
 
   const statusTextStringArray = estimatedStatus.split(' ');
-  statusTextStringArray.splice(-1);
+  statusTextStringArray.splice(
+    estimatedStatus === ProposalEstimatedState.Active ? -3 : -1,
+  );
   const statusText = statusTextStringArray.join(' ');
   const statusStringArray = estimatedStatus.split(' ');
-  const status = statusStringArray[statusStringArray.length - 1];
+  const status =
+    estimatedStatus === ProposalEstimatedState.Active
+      ? statusStringArray.splice(1).join(' ')
+      : statusStringArray[statusStringArray.length - 1];
 
   return (
     <Box
