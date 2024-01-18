@@ -1,6 +1,8 @@
 import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, useTheme } from '@mui/system';
-import React from 'react';
+import css from 'dom-css';
+import React, { useRef } from 'react';
+import Scrollbars, { positionValues } from 'react-custom-scrollbars-2';
 import { zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
@@ -16,11 +18,12 @@ import { VoteBar } from '../VoteBar';
 
 const BarWrapper = styled('div')(({ theme }) => ({
   position: 'sticky',
-  top: -32,
+  top: -50,
+  paddingTop: 20,
   backgroundColor: theme.palette.$paper,
   zIndex: 2,
   marginBottom: 24,
-  [theme.breakpoints.up('sm')]: { top: 0 },
+  [theme.breakpoints.up('sm')]: { top: 0, paddingTop: 0 },
 }));
 
 const ListItem = styled('div')(({ theme }) => ({
@@ -103,44 +106,84 @@ export function VotersModal({
 
   const VotersTable = ({ type }: { type: 'for' | 'against' }) => {
     const isFor = type === 'for';
+    const bottomShadowRef = useRef<HTMLDivElement>(Box as any);
+    const handleUpdate = (values: positionValues) => {
+      const { scrollTop, scrollHeight, clientHeight } = values;
+      const bottomScrollTop = scrollHeight - clientHeight;
+      const shadowTopOpacity =
+        (1 / 20) *
+        (bottomScrollTop - Math.max(scrollTop, bottomScrollTop - 20));
+      css(bottomShadowRef.current, { opacity: shadowTopOpacity });
+    };
 
     return (
       <Box
         sx={{
-          display: 'none',
-          [theme.breakpoints.up('sm')]: {
-            display: 'block',
-            width: !(isFor ? votersAgainst : votersFor).length
-              ? '70%'
-              : 'calc(50% - 12px)',
-            margin: !(isFor ? votersAgainst : votersFor).length
-              ? '0 auto'
-              : 'unset',
-          },
+          display: 'block',
+          width: !(isFor ? votersAgainst : votersFor).length
+            ? '70%'
+            : 'calc(50% - 12px)',
+          margin: !(isFor ? votersAgainst : votersFor).length
+            ? '0 auto'
+            : 'unset',
         }}>
-        <BarWrapper>
-          <VoteBar
-            type={type}
-            value={isFor ? forVotes : againstVotes}
-            requiredValue={isFor ? requiredForVotes : requiredAgainstVotes}
-            linePercent={isFor ? forPercent : againstPercent}
-            isFinished={isFinished}
+        <Box sx={{ position: 'relative' }}>
+          <Scrollbars
+            style={{ width: '100%' }}
+            onUpdate={handleUpdate}
+            autoHeight
+            universal
+            autoHeightMin={100}
+            autoHeightMax={370}>
+            <Box sx={{ position: 'relative', pr: 16 }}>
+              <BarWrapper>
+                <VoteBar
+                  type={type}
+                  value={isFor ? forVotes : againstVotes}
+                  requiredValue={
+                    isFor ? requiredForVotes : requiredAgainstVotes
+                  }
+                  linePercent={isFor ? forPercent : againstPercent}
+                  isFinished={isFinished}
+                />
+              </BarWrapper>
+
+              <ListItem>
+                <Box component="p" sx={{ typography: 'headline' }}>
+                  {texts.proposals.voters} (
+                  {(type === 'for' ? votersFor : votersAgainst).length})
+                </Box>
+                <Box component="p" sx={{ typography: 'headline' }}>
+                  {texts.proposals.votersListVotingPower}
+                </Box>
+              </ListItem>
+              {(type === 'for' ? votersFor : votersAgainst).map(
+                (vote, index) => (
+                  <ListItem key={index}>
+                    <ListItemAddress vote={vote} />
+                    <FormattedNumber
+                      value={vote.votingPower}
+                      visibleDecimals={3}
+                    />
+                  </ListItem>
+                ),
+              )}
+            </Box>
+          </Scrollbars>
+
+          <Box
+            ref={bottomShadowRef}
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: 10,
+              background:
+                'linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)',
+            }}
           />
-        </BarWrapper>
-        <ListItem>
-          <Box component="p" sx={{ typography: 'headline' }}>
-            {texts.proposals.voters}
-          </Box>
-          <Box component="p" sx={{ typography: 'headline' }}>
-            {texts.proposals.votersListVotingPower}
-          </Box>
-        </ListItem>
-        {(type === 'for' ? votersFor : votersAgainst).map((vote, index) => (
-          <ListItem key={index}>
-            <ListItemAddress vote={vote} />
-            <FormattedNumber value={vote.votingPower} visibleDecimals={3} />
-          </ListItem>
-        ))}
+        </Box>
       </Box>
     );
   };
@@ -166,19 +209,7 @@ export function VotersModal({
           }}>
           {title}
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            width: '100%',
-            flexDirection: 'column',
-            [theme.breakpoints.up('sm')]: {
-              height: 320,
-              overflowY: 'auto',
-              flexDirection: 'row',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-            },
-          }}>
+        <Box>
           <Box sx={{ [theme.breakpoints.up('sm')]: { display: 'none' } }}>
             <BarWrapper>
               {!!votersFor.length && (
@@ -212,7 +243,7 @@ export function VotersModal({
                       display: 'inline-flex',
                       justifyContent: 'flex-start',
                     }}>
-                    {texts.proposals.voters}
+                    {texts.proposals.voters} ({voters.length})
                   </Box>
                   <Box
                     component="p"
@@ -271,8 +302,19 @@ export function VotersModal({
             )}
           </Box>
 
-          {!!votersFor.length && <VotersTable type="for" />}
-          {!!votersAgainst.length && <VotersTable type="against" />}
+          <Box
+            sx={{
+              display: 'none',
+              [theme.breakpoints.up('sm')]: {
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+              },
+            }}>
+            {!!votersFor.length && <VotersTable type="for" />}
+            {!!votersAgainst.length && <VotersTable type="against" />}
+          </Box>
         </Box>
       </Box>
     </BasicModal>

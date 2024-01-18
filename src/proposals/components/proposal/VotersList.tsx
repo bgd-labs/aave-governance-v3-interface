@@ -192,7 +192,7 @@ export function VotersListViewAllButton({
             transition: 'all 0.2s ease',
             hover: { color: theme.palette.$text },
           }}>
-          {texts.proposals.votersListShowAll} {voters.length}
+          {texts.proposals.votersListShowAll}
         </Box>
       </button>
     </Box>
