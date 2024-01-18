@@ -4,7 +4,7 @@ import {
   payloadsControllerChainIds,
   votingMachineChainIds,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { avalanche, bsc, goerli, polygon, sepolia } from 'viem/chains';
+import { avalanche, goerli, polygon, sepolia } from 'viem/chains';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 export const isTermsAndConditionsVisible =
@@ -17,9 +17,7 @@ export const WC_PROJECT_ID =
 export const appUsedNetworks: number[] = [
   ...votingMachineChainIds[coreName],
   ...payloadsControllerChainIds[coreName],
-]
-  .filter((value, index, self) => self.indexOf(value) === index)
-  .filter((value) => value !== bsc.id); // temporary
+].filter((value, index, self) => self.indexOf(value) === index);
 
 export const gelatoApiKeys: Record<number, string> = {
   [polygon.id]: 'eyUjscMpge_d3qScFe2ueftb95FDZ1eChyDJGqPx2uQ_',
