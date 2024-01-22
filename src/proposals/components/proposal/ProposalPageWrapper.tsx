@@ -1,6 +1,6 @@
 import {
+  CombineProposalState,
   ProposalMetadata,
-  ProposalState,
   ProposalWithLoadings,
   VotersData,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -115,10 +115,10 @@ export function ProposalPageWrapper({
         store.getL1Balances([id]);
       }
       const isFinished =
-        proposalData.proposal.state === ProposalState.Executed ||
-        proposalData.proposal.state === ProposalState.Defeated ||
-        proposalData.proposal.state === ProposalState.Canceled ||
-        proposalData.proposal.state === ProposalState.Expired;
+        proposalData.proposal.combineState === CombineProposalState.Executed ||
+        proposalData.proposal.combineState === CombineProposalState.Failed ||
+        proposalData.proposal.combineState === CombineProposalState.Canceled ||
+        proposalData.proposal.combineState === CombineProposalState.Expired;
 
       if (!proposalData.proposal.data.prerender && !isFinished) {
         store.startDetailedProposalDataPolling([id]);
@@ -128,7 +128,7 @@ export function ProposalPageWrapper({
     id,
     proposalData?.loading,
     store.representative.address,
-    proposalData?.proposal.state,
+    proposalData?.proposal.combineState,
     store.representativeLoading,
   ]);
 

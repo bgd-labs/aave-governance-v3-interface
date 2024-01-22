@@ -1,5 +1,7 @@
 import {
   getProposalStepsAndAmounts,
+  HistoryItemType,
+  ProposalHistoryItem as IProposalHistoryItem,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
@@ -8,10 +10,6 @@ import React from 'react';
 
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
-import {
-  HistoryItemType,
-  ProposalHistoryItem as IProposalHistoryItem,
-} from '../../store/proposalsHistorySlice';
 import { ProposalHistoryItemTxLink } from './ProposalHistoryItemTxLink';
 
 export interface ProposalHistoryItemProps {

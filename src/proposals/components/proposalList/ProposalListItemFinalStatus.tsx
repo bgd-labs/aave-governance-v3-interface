@@ -1,4 +1,4 @@
-import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers';
+import { CombineProposalState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 
@@ -10,7 +10,7 @@ import { proposalStatuses } from '../../utils/statuses';
 
 interface ProposalListItemFinalStatusProps {
   timestamp: number;
-  status: ProposalState;
+  status: CombineProposalState;
 }
 
 export function ProposalListItemFinalStatus({
@@ -21,14 +21,16 @@ export function ProposalListItemFinalStatus({
   const statusTitle = proposalStatuses.find((s) => s.value === status)?.title;
 
   const color =
-    status === ProposalState.Defeated
+    status === CombineProposalState.Failed
       ? '$mainAgainst'
-      : status === ProposalState.Executed || status === ProposalState.Succeed
+      : status === CombineProposalState.Executed ||
+          status === CombineProposalState.Succeed
         ? '$mainFor'
         : '$disabled';
 
   const icon =
-    status === ProposalState.Executed || status === ProposalState.Succeed
+    status === CombineProposalState.Executed ||
+    status === CombineProposalState.Succeed
       ? SuccessIcon
       : ErrorIcon;
 
@@ -84,11 +86,11 @@ export function ProposalListItemFinalStatus({
         }}>
         <IconBox
           sx={{
-            width: status === ProposalState.Executed ? 14 : 12,
-            height: status === ProposalState.Executed ? 14 : 12,
+            width: status === CombineProposalState.Executed ? 14 : 12,
+            height: status === CombineProposalState.Executed ? 14 : 12,
             '> svg': {
-              width: status === ProposalState.Executed ? 14 : 12,
-              height: status === ProposalState.Executed ? 14 : 12,
+              width: status === CombineProposalState.Executed ? 14 : 12,
+              height: status === CombineProposalState.Executed ? 14 : 12,
             },
             position: 'relative',
             mr: 5,

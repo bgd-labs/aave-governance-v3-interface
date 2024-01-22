@@ -64,7 +64,7 @@ export function CachedProposalListItem({
 
             <ProposalListItemFinalStatus
               timestamp={proposal.data.finishedTimestamp}
-              status={proposal.state}
+              status={proposal.combineState}
             />
           </Box>
         </ProposalListItemWrapper>

@@ -34,7 +34,7 @@ export function PayloadActions({
   showMoreClick,
   withoutEllipsis,
 }: PayloadActionsProps) {
-  const isWithShowMore = !!showMoreClick && payload.actionAddresses.length > 2;
+  const isWithShowMore = !!showMoreClick && payload.actions.length > 2;
 
   return (
     <>
@@ -50,7 +50,7 @@ export function PayloadActions({
         {!withoutTitle && (
           <Box sx={{ typography: 'descriptorAccent' }}>
             {texts.proposals.payloadsDetails.actions(
-              payload.actionAddresses?.length || 0,
+              payload.actions?.length || 0,
             )}
             :
           </Box>
@@ -62,48 +62,47 @@ export function PayloadActions({
             display: 'flex',
             flexDirection: 'column',
           }}>
-          {(isWithShowMore
-            ? payload.actionAddresses.slice(-2)
-            : payload.actionAddresses
-          )?.map((address, index) => (
-            <Box
-              sx={{ display: 'inline-flex', alignItems: 'center', mb: 4 }}
-              key={index}>
-              <Link
-                css={{ display: 'inline-flex', alignItems: 'center' }}
-                inNewWindow
-                href={`${chainInfoHelper.getChainParameters(
-                  payload.chainId || appConfig.govCoreChainId,
-                ).blockExplorers?.default.url}/address/${address}${
-                  forCreate ? '#code' : ''
-                }`}>
-                <Box
-                  className="PayloadActions__link"
-                  component="li"
-                  sx={{
-                    typography: 'descriptor',
-                    transition: 'all 0.2s ease',
-                    wordBreak: 'break-word',
-                    hover: { opacity: 0.7 },
-                  }}>
-                  {withoutEllipsis
-                    ? address
-                    : textCenterEllipsis(address, 6, 6)}
-                </Box>
-              </Link>
+          {(isWithShowMore ? payload.actions.slice(-2) : payload.actions)?.map(
+            (action, index) => (
+              <Box
+                sx={{ display: 'inline-flex', alignItems: 'center', mb: 4 }}
+                key={index}>
+                <Link
+                  css={{ display: 'inline-flex', alignItems: 'center' }}
+                  inNewWindow
+                  href={`${chainInfoHelper.getChainParameters(
+                    payload.chainId || appConfig.govCoreChainId,
+                  ).blockExplorers?.default.url}/address/${action.target}${
+                    forCreate ? '#code' : ''
+                  }`}>
+                  <Box
+                    className="PayloadActions__link"
+                    component="li"
+                    sx={{
+                      typography: 'descriptor',
+                      transition: 'all 0.2s ease',
+                      wordBreak: 'break-word',
+                      hover: { opacity: 0.7 },
+                    }}>
+                    {withoutEllipsis
+                      ? action.target
+                      : textCenterEllipsis(action.target, 6, 6)}
+                  </Box>
+                </Link>
 
-              <CopyAndExternalIconsSet
-                iconSize={10}
-                copyText={address}
-                externalLink={`${chainInfoHelper.getChainParameters(
-                  payload.chainId || appConfig.govCoreChainId,
-                ).blockExplorers?.default.url}/address/${address}${
-                  forCreate ? '#code' : ''
-                }`}
-                sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
-              />
-            </Box>
-          ))}
+                <CopyAndExternalIconsSet
+                  iconSize={10}
+                  copyText={action.target}
+                  externalLink={`${chainInfoHelper.getChainParameters(
+                    payload.chainId || appConfig.govCoreChainId,
+                  ).blockExplorers?.default.url}/address/${action.target}${
+                    forCreate ? '#code' : ''
+                  }`}
+                  sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
+                />
+              </Box>
+            ),
+          )}
         </Box>
       </Box>
 

@@ -105,7 +105,7 @@ export default async function Page({
           title: proposal.title,
           ipfsHash: proposal.ipfsHash,
         },
-        state: proposal.state,
+        combineState: proposal.combineState,
       },
     } as CachedProposalDataItemWithId;
   });

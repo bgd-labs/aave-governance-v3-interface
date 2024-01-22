@@ -193,7 +193,7 @@ export function PayloadItemDetailsModal({
         <Box sx={{ mt: 30 }}>
           <Box sx={{ typography: 'headline', mb: 4 }}>
             {texts.proposals.payloadsDetails.actions(
-              payload.actionAddresses?.length || 0,
+              payload.actions?.length || 0,
             )}
             :
           </Box>

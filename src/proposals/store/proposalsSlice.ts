@@ -415,7 +415,7 @@ export const createProposalsSlice: StoreSlice<
     if (!get().detailedPayloadsData[key]) {
       set((state) =>
         produce(state, (draft) => {
-          draft.detailedPayloadsData[key] = data;
+          draft.detailedPayloadsData[key] = data as Draft<Payload>;
         }),
       );
     }
@@ -441,7 +441,7 @@ export const createProposalsSlice: StoreSlice<
             payloadsData.forEach((payload) => {
               draft.detailedPayloadsData[
                 `${payload.payloadsController}_${payload.id}`
-              ] = payload;
+              ] = payload as Draft<Payload>;
             });
           }),
         );
@@ -506,7 +506,9 @@ export const createProposalsSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         allIpfsData.forEach((ipfs, index) => {
-          draft.ipfsData[filteredNewIpfsHashes[index]] = ipfs;
+          if (ipfs) {
+            draft.ipfsData[filteredNewIpfsHashes[index]] = ipfs;
+          }
         });
         ids.forEach((id) => {
           const proposalData = draft.detailedProposalsData[id];

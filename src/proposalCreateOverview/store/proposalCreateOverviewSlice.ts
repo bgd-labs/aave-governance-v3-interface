@@ -4,7 +4,7 @@ import {
   PayloadState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import { produce } from 'immer';
+import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
@@ -58,7 +58,7 @@ export const createProposalCreateOverviewSlice: StoreSlice<
           ] = {
             ...oldData,
             ...payload,
-          };
+          } as Draft<Payload>;
         }),
       );
     });

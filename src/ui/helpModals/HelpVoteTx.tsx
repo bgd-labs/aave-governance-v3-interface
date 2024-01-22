@@ -1,8 +1,8 @@
 import {
   Balance,
+  CombineProposalState,
   formatProposal,
   getEstimatedState,
-  ProposalState,
   ProposalWithLoadings,
   valueToBigNumber,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -357,7 +357,8 @@ export function HelpVoteTx({
                 activeColorType={support ? 'against' : 'for'}
                 disabled={
                   localVotingPower <= 0 ||
-                  proposalData.proposal.state > ProposalState.Active
+                  proposalData.proposal.combineState >
+                    CombineProposalState.Active
                 }
                 onClick={() => {
                   setTxPending(true);

@@ -211,7 +211,7 @@ export function PayloadExploreItem({
               },
             }}>
             {texts.proposals.payloadsDetails.actions(
-              payload.actionAddresses?.length || 0,
+              payload.actions?.length || 0,
             )}
             :
           </Box>

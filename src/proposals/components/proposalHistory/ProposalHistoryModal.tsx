@@ -1,7 +1,7 @@
+import { HistoryItemType, TxInfo } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect } from 'react';
 
 import { useStore } from '../../../store';
-import { HistoryItemType, TxInfo } from '../../store/proposalsHistorySlice';
 import { getProposalDataById } from '../../store/proposalsSelectors';
 import { DetailsModalWrapper } from '../DetailsModalWrapper';
 import { ProposalHistoryItem } from './ProposalHistoryItem';

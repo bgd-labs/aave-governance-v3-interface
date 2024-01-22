@@ -169,7 +169,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
           statusInfoText: texts.faq.lifeCycles.finishedFailed.description,
           buttonText: texts.faq.lifeCycles.finishedFailed.nextButtonTitle,
           backButtonText: texts.faq.lifeCycles.finishedFailed.prevButtonTitle,
-          state: ProposalStateWithName.Defeated,
+          state: ProposalStateWithName.Failed,
           createdTimestamp: now - 60 * 8,
           openToVoteTimestamp: now - 60 * 4,
           votingClosedTimestamp: now - 60 * 2,
@@ -201,7 +201,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
 
   const isFinished =
     statusInfo.state === ProposalStateWithName.Executed ||
-    statusInfo.state === ProposalStateWithName.Defeated ||
+    statusInfo.state === ProposalStateWithName.Failed ||
     statusInfo.state === ProposalStateWithName.Canceled ||
     statusInfo.state === ProposalStateWithName.Expired;
 
@@ -306,7 +306,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
               votingClosedTimestamp={statusInfo.votingClosedTimestamp}
               finishedTimestamp={statusInfo.finishedTimestamp}
               failedTimestamp={
-                statusInfo.state === ProposalStateWithName.Defeated
+                statusInfo.state === ProposalStateWithName.Failed
                   ? statusInfo.votingClosedTimestamp
                   : undefined
               }

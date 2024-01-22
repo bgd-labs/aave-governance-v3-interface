@@ -60,7 +60,7 @@ export const getCachedProposalDataById = (store: RootState, id: number) => {
           title: cachedProposalData.title,
           ipfsHash: cachedProposalData.ipfsHash,
         },
-        state: cachedProposalData.state,
+        combineState: cachedProposalData.combineState,
       },
     };
   }
@@ -128,7 +128,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
       },
     };
 
-    const state = getProposalState({
+    const combineState = getProposalState({
       proposalData: proposalDataWithoutState.data,
       quorum: proposalDataWithoutState.config.quorum,
       differential: proposalDataWithoutState.config.differential,
@@ -142,7 +142,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
       balanceLoading,
       proposal: {
         ...proposalDataWithoutState,
-        state,
+        combineState,
       },
     } as ProposalWithLoadings;
   }
@@ -209,10 +209,10 @@ const selectFilteredProposalIds = (store: RootState) => {
       ? detailedData
           .filter((proposal) =>
             store.filteredState !== 7
-              ? proposal?.proposal.state === store.filteredState
-              : proposal?.proposal.state === 0 ||
-                proposal?.proposal.state === 1 ||
-                proposal?.proposal.state === 2,
+              ? proposal?.proposal.combineState === store.filteredState
+              : proposal?.proposal.combineState === 0 ||
+                proposal?.proposal.combineState === 1 ||
+                proposal?.proposal.combineState === 2,
           )
           .map((proposal) => proposal?.proposal.data.id || 0)
       : store.filteredState === null && store.titleSearchValue !== undefined
@@ -221,7 +221,10 @@ const selectFilteredProposalIds = (store: RootState) => {
             .map((item) => item.item?.proposal.data.id || 0)
         : fuse
             .search(store.titleSearchValue || '')
-            .filter((item) => item.item?.proposal.state === store.filteredState)
+            .filter(
+              (item) =>
+                item.item?.proposal.combineState === store.filteredState,
+            )
             .map((item) => item.item?.proposal.data.id || 0);
 };
 

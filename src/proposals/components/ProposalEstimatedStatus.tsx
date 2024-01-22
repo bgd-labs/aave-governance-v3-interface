@@ -47,7 +47,7 @@ export function ProposalEstimatedStatus({
           typography: 'headline',
           mr: 4,
           color:
-            estimatedStatus === ProposalEstimatedState.Defeated
+            estimatedStatus === ProposalEstimatedState.Failed
               ? isForModal
                 ? '$mainAgainst'
                 : '$text'

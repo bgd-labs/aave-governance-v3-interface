@@ -1,12 +1,16 @@
 import {
-  BasicProposalState,
   checkHash,
+  CombineProposalState,
+  FilteredEvent,
   getBlockNumberByTimestamp,
   getProposalStepsAndAmounts,
+  HistoryItemType,
   PayloadState,
   Proposal,
+  ProposalHistoryItem,
   ProposalState,
   ProposalWithLoadings,
+  TxInfo,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
@@ -16,42 +20,6 @@ import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
-
-export enum HistoryItemType {
-  PAYLOADS_CREATED,
-  CREATED,
-  PROPOSAL_ACTIVATE,
-  OPEN_TO_VOTE,
-  VOTING_OVER,
-  VOTING_CLOSED,
-  RESULTS_SENT,
-  PROPOSAL_QUEUED,
-  PROPOSAL_EXECUTED,
-  PAYLOADS_QUEUED,
-  PAYLOADS_EXECUTED,
-  PROPOSAL_CANCELED,
-  PAYLOADS_EXPIRED,
-  PROPOSAL_EXPIRED,
-}
-
-type FilteredEvent = {
-  transactionHash: string;
-};
-
-export type TxInfo = {
-  id: number;
-  hash: string;
-  chainId: number;
-  hashLoading: boolean;
-};
-
-export type ProposalHistoryItem = {
-  type: HistoryItemType;
-  title: string;
-  txInfo: TxInfo;
-  timestamp?: number;
-  addresses?: string[];
-};
 
 export interface IProposalsHistorySlice {
   proposalHistory: Record<string, ProposalHistoryItem>;
@@ -178,7 +146,7 @@ export const createProposalsHistorySlice: StoreSlice<
         payload.id,
         payload.chainId,
         payload.createdAt,
-        payload.actionAddresses,
+        payload.actions.map((action) => action.target),
       );
     });
 
@@ -276,7 +244,7 @@ export const createProposalsHistorySlice: StoreSlice<
     }
 
     // PROPOSAL_EXECUTED
-    if (proposal.data.basicState === BasicProposalState.Executed) {
+    if (proposal.data.state === ProposalState.Executed) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_EXECUTED}`;
       get().initProposalHistoryItem(
         historyId,
@@ -336,7 +304,7 @@ export const createProposalsHistorySlice: StoreSlice<
     }
 
     // PROPOSAL_CANCELED
-    if (proposal.state === ProposalState.Canceled) {
+    if (proposal.combineState === CombineProposalState.Canceled) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_CANCELED}`;
       get().initProposalHistoryItem(
         historyId,
@@ -377,7 +345,7 @@ export const createProposalsHistorySlice: StoreSlice<
     }
 
     // PROPOSAL_EXPIRED
-    if (proposal.state === ProposalState.Expired) {
+    if (proposal.combineState === CombineProposalState.Expired) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_EXPIRED}`;
       get().initProposalHistoryItem(
         historyId,
@@ -385,7 +353,7 @@ export const createProposalsHistorySlice: StoreSlice<
         texts.proposalHistory.proposalExpired(proposal.data.id),
         proposal.data.id,
         appConfig.govCoreChainId,
-        proposal.data.basicState === BasicProposalState.Executed
+        proposal.data.state === ProposalState.Executed
           ? lastPayloadExpiredAt
           : proposal.data.creationTime + proposal.timings.expirationTime,
       );

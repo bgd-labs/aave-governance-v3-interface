@@ -127,7 +127,7 @@ export function ProposalVoteInfo({
         borderSize={10}
         contentColor="$mainLight"
         bottomBorderColor={
-          estimatedStatus === ProposalEstimatedState.Defeated && !isFinished
+          estimatedStatus === ProposalEstimatedState.Failed && !isFinished
             ? '$secondaryAgainst'
             : estimatedStatus === ProposalEstimatedState.Succeed && !isFinished
               ? '$secondaryFor'

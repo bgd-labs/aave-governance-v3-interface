@@ -1,6 +1,6 @@
 import { Payload, PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import { produce } from 'immer';
+import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
@@ -187,12 +187,12 @@ export const createPayloadsExplorerSlice: StoreSlice<
           idsForRequest,
         );
 
-        const formattedPayloadsData: Record<string, Payload> = {};
+        const formattedPayloadsData: Record<string, Draft<Payload>> = {};
         payloadsData.forEach((payload) => {
           if (payload) {
             formattedPayloadsData[
               `${payload.payloadsController}_${payload.id}`
-            ] = payload;
+            ] = payload as Draft<Payload>;
           }
         });
 
@@ -220,11 +220,11 @@ export const createPayloadsExplorerSlice: StoreSlice<
       [payloadId],
     );
 
-    const formattedPayloadsData: Record<string, Payload> = {};
+    const formattedPayloadsData: Record<string, Draft<Payload>> = {};
     payloadsData.forEach((payload) => {
       if (payload) {
         formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
-          payload;
+          payload as Draft<Payload>;
       }
     });
 

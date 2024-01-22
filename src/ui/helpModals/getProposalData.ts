@@ -15,7 +15,7 @@ export function getProposalData() {
         votingDuration: 600,
         creationTime: dayjs().unix() - 1200,
         accessLevel: 1,
-        basicState: 2,
+        state: 2,
         queuingTime: 0,
         ipfsHash:
           '0x0a387fa966f5616423bea53801a843496b1eac5cab5e6bc9426c0958e6496e77',
@@ -34,7 +34,7 @@ export function getProposalData() {
         canceledAt: 0,
         votingActivationTime: dayjs().unix() - 600,
         votingChainId: appConfig.govCoreChainId,
-        prerender: true,
+        prerender: false,
         votingMachineData: {
           id: 0,
           forVotes: '0',
@@ -76,7 +76,7 @@ export function getProposalData() {
             payloadsController:
               appConfig.payloadsControllerConfig[appConfig.govCoreChainId]
                 .contractAddresses[0],
-            actionAddresses: [],
+            actions: [],
           },
         ],
         title: 'Test proposal',
@@ -127,7 +127,7 @@ export function getProposalData() {
         expirationTime: 2592000,
         executionDelay: 600,
       },
-      state: 1,
+      combineState: 1,
     },
   } as ProposalWithLoadings;
 }
