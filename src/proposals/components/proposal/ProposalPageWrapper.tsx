@@ -120,7 +120,7 @@ export function ProposalPageWrapper({
         proposalData.proposal.combineState === CombineProposalState.Canceled ||
         proposalData.proposal.combineState === CombineProposalState.Expired;
 
-      if (!proposalData.proposal.data.prerender && !isFinished) {
+      if (!proposalData.proposal.data.isFinished && !isFinished) {
         store.startDetailedProposalDataPolling([id]);
       }
     }

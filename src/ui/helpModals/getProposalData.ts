@@ -34,7 +34,7 @@ export function getProposalData() {
         canceledAt: 0,
         votingActivationTime: dayjs().unix() - 600,
         votingChainId: appConfig.govCoreChainId,
-        prerender: false,
+        isFinished: false,
         votingMachineData: {
           id: 0,
           forVotes: '0',

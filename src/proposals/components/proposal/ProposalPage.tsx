@@ -104,7 +104,7 @@ export function ProposalPage({
     const totalVotes = forVotes + againstVotes;
 
     if (startBlock > 0) {
-      if (totalVotes > 0 && !proposal.data.prerender && isVotingActive) {
+      if (totalVotes > 0 && !proposal.data.isFinished && isVotingActive) {
         getVoters(
           proposal.data.id,
           proposal.data.votingChainId,
@@ -484,7 +484,7 @@ export function ProposalPage({
               discussionLink={ipfsData?.discussions}
               ipfsHash={proposal.data.ipfsHash}
               proposalId={proposal.data.id}
-              prerender={proposal.data.prerender}
+              prerender={proposal.data.isFinished}
             />
           </BoxWith3D>
 
@@ -521,7 +521,7 @@ export function ProposalPage({
                 discussionLink={ipfsData?.discussions}
                 ipfsHash={proposal.data.ipfsHash}
                 proposalId={proposal.data.id}
-                prerender={proposal.data.prerender}
+                prerender={proposal.data.isFinished}
               />
             </Box>
 

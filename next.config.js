@@ -6,6 +6,8 @@ const nextConfig = {
     webpackBuildWorker: true,
   },
   webpack(config) {
+    config.resolve.fallback = { fs: false, path: false };
+
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg'),

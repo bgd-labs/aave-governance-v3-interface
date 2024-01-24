@@ -374,7 +374,7 @@ export const createProposalsSlice: StoreSlice<
             draft.detailedProposalsData[id] = {
               ...proposalData,
               title: getProposalTitle(get(), id, proposalData.ipfsHash),
-              prerender: true,
+              isFinished: true,
             };
           }
         });
@@ -722,11 +722,11 @@ export const createProposalsSlice: StoreSlice<
           proposalsData.forEach((proposal) => {
             draft.detailedProposalsData[proposal.id] = {
               ...proposal,
-              prerender: !draft.detailedProposalsData[proposal.id]?.prerender
-                ? proposal.prerender
-                : !!draft.detailedProposalsData[proposal.id]?.prerender,
+              isFinished: !draft.detailedProposalsData[proposal.id]?.isFinished
+                ? proposal.isFinished
+                : !!draft.detailedProposalsData[proposal.id]?.isFinished,
               votingMachineState: getVotingMachineProposalState(proposal),
-              payloads: !!draft.detailedProposalsData[proposal.id]?.prerender
+              payloads: !!draft.detailedProposalsData[proposal.id]?.isFinished
                 ? draft.detailedProposalsData[proposal.id].payloads
                 : proposalPayloadsData.filter(
                     (payload) => payload.proposalId === proposal.id,
