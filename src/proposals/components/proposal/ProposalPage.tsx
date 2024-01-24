@@ -568,11 +568,13 @@ export function ProposalPage({
         />
       )}
 
-      <ProposalHistoryModal
-        isOpen={isProposalHistoryModalOpen}
-        setIsOpen={setIsProposalHistoryOpen}
-        proposalId={proposal.data.id}
-      />
+      {isProposalHistoryModalOpen && (
+        <ProposalHistoryModal
+          isOpen={isProposalHistoryModalOpen}
+          setIsOpen={setIsProposalHistoryOpen}
+          proposalId={proposal.data.id}
+        />
+      )}
 
       <ActivateVotingOnVotingMachineModal
         isOpen={isActivateVotingOnVotingMachineModalOpen}

@@ -12,4 +12,4 @@ export const cachedVotesPath = (id: number) =>
   `/votes/vote_for_proposal_${id}.json`;
 
 export const cachedEventsPath = (id: number) =>
-  `/votes/proposal_${id}_events.json`;
+  `/events/proposal_${id}_events.json`;

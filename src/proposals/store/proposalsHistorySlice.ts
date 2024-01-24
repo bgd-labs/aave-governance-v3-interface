@@ -23,16 +23,28 @@ import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 export interface IProposalsHistorySlice {
   proposalHistory: Record<string, ProposalHistoryItem>;
-  initProposalHistoryItem: (
-    historyId: string,
-    type: HistoryItemType,
-    title: string,
-    txId: number,
-    txChainId: number,
-    timestamp?: number,
-    addresses?: string[],
+  initProposalHistoryItem: ({
+    historyId,
+    type,
+    title,
+    txId,
+    txChainId,
+    timestamp,
+    addresses,
+  }: {
+    historyId: string;
+    type: HistoryItemType;
+    title: string;
+    txId: number;
+    txChainId: number;
+    timestamp?: number;
+    addresses?: string[];
+    txHash?: string;
+  }) => void;
+  initProposalHistory: (
+    proposal: Proposal,
+    proposalEvents?: Record<string, ProposalHistoryItem>,
   ) => void;
-  initProposalHistory: (proposal: Proposal) => void;
   setHistoryItemLoading: (historyId: string) => void;
   setHistoryItemHash: (
     historyId: string,
@@ -86,7 +98,7 @@ export const createProposalsHistorySlice: StoreSlice<
 > = (set, get) => ({
   // initial
   proposalHistory: {},
-  initProposalHistoryItem: (
+  initProposalHistoryItem: ({
     historyId,
     type,
     title,
@@ -94,7 +106,8 @@ export const createProposalsHistorySlice: StoreSlice<
     txChainId,
     timestamp,
     addresses,
-  ) => {
+    txHash,
+  }) => {
     set((state) =>
       produce(state, (draft) => {
         const historyItem = draft.proposalHistory[historyId];
@@ -110,7 +123,7 @@ export const createProposalsHistorySlice: StoreSlice<
               typeof historyItem?.txInfo.hash !== 'undefined' &&
               historyItem?.txInfo.hash !== zeroHash
                 ? historyItem?.txInfo.hash
-                : zeroHash,
+                : txHash || zeroHash,
             chainId: txChainId,
             hashLoading: false,
           },
@@ -118,7 +131,7 @@ export const createProposalsHistorySlice: StoreSlice<
       }),
     );
   },
-  initProposalHistory: (proposal) => {
+  initProposalHistory: (proposal, proposalEvents) => {
     const {
       isVotingFailed,
       isVotingEnded,
@@ -136,70 +149,90 @@ export const createProposalsHistorySlice: StoreSlice<
     // PAYLOADS_CREATED
     proposal.data.payloads.forEach((payload, index) => {
       const historyId = `${proposal.data.id}_${HistoryItemType.PAYLOADS_CREATED}_${payload.id}_${payload.chainId}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.PAYLOADS_CREATED,
-        texts.proposalHistory.payloadCreated(
+        type: HistoryItemType.PAYLOADS_CREATED,
+        title: texts.proposalHistory.payloadCreated(
           index + 1,
           proposal.data.payloads.length,
         ),
-        payload.id,
-        payload.chainId,
-        payload.createdAt,
-        payload.actions.map((action) => action.target),
-      );
+        txId: payload.id,
+        txChainId: payload.chainId,
+        timestamp: payload.createdAt,
+        addresses: payload.actions.map((action) => action.target),
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     });
 
     // PROPOSAL_CREATED
     const historyIdProposalCreated = `${proposal.data.id}_${HistoryItemType.CREATED}`;
-    get().initProposalHistoryItem(
-      historyIdProposalCreated,
-      HistoryItemType.CREATED,
-      texts.proposalHistory.proposalCreated(proposal.data.id),
-      proposal.data.id,
-      appConfig.govCoreChainId,
-      proposal.data.creationTime,
-    );
+    get().initProposalHistoryItem({
+      historyId: historyIdProposalCreated,
+      type: HistoryItemType.CREATED,
+      title: texts.proposalHistory.proposalCreated(proposal.data.id),
+      txId: proposal.data.id,
+      txChainId: appConfig.govCoreChainId,
+      timestamp: proposal.data.creationTime,
+      txHash:
+        proposalEvents && proposalEvents[historyIdProposalCreated]
+          ? proposalEvents[historyIdProposalCreated].txInfo.hash
+          : undefined,
+    });
 
     // PROPOSAL_ACTIVATE
     if (checkHash(proposal.data.snapshotBlockHash).notZero) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_ACTIVATE}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.PROPOSAL_ACTIVATE,
-        texts.proposalHistory.proposalActivated(proposal.data.id),
-        proposal.data.id,
-        appConfig.govCoreChainId,
-        proposal.data.votingActivationTime,
-      );
+        type: HistoryItemType.PROPOSAL_ACTIVATE,
+        title: texts.proposalHistory.proposalActivated(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: appConfig.govCoreChainId,
+        timestamp: proposal.data.votingActivationTime,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // OPEN_TO_VOTE
     if (proposal.data.votingMachineData.createdBlock > 0) {
       const historyId = `${proposal.data.id}_${HistoryItemType.OPEN_TO_VOTE}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.OPEN_TO_VOTE,
-        texts.proposalHistory.proposalOpenForVoting(proposal.data.id),
-        proposal.data.id,
-        proposal.data.votingChainId,
-        proposal.data.votingMachineData.startTime,
-      );
+        type: HistoryItemType.OPEN_TO_VOTE,
+        title: texts.proposalHistory.proposalOpenForVoting(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: proposal.data.votingChainId,
+        timestamp: proposal.data.votingMachineData.startTime,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // VOTING_OVER
     if (isVotingEnded) {
       const historyId = `${proposal.data.id}_${HistoryItemType.VOTING_OVER}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.VOTING_OVER,
-        isVotingFailed
+        type: HistoryItemType.VOTING_OVER,
+        title: isVotingFailed
           ? texts.proposalHistory.votingFailed
           : texts.proposalHistory.votingOver,
-        proposal.data.id,
-        proposal.data.votingChainId,
-        proposal.data.votingMachineData.endTime,
-      );
+        txId: proposal.data.id,
+        txChainId: proposal.data.votingChainId,
+        timestamp: proposal.data.votingMachineData.endTime,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // VOTING_CLOSED
@@ -208,51 +241,75 @@ export const createProposalsHistorySlice: StoreSlice<
       !isVotingFailed
     ) {
       const historyId = `${proposal.data.id}_${HistoryItemType.VOTING_CLOSED}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.VOTING_CLOSED,
-        texts.proposalHistory.proposalVotingClosed(proposal.data.id),
-        proposal.data.id,
-        proposal.data.votingChainId,
-        proposal.data.votingMachineData.votingClosedAndSentTimestamp,
-      );
+        type: HistoryItemType.VOTING_CLOSED,
+        title: texts.proposalHistory.proposalVotingClosed(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: proposal.data.votingChainId,
+        timestamp: proposal.data.votingMachineData.votingClosedAndSentTimestamp,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // RESULTS_SENT
     if (proposal.data.votingMachineData.sentToGovernance && !isVotingFailed) {
       const historyId = `${proposal.data.id}_${HistoryItemType.RESULTS_SENT}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.RESULTS_SENT,
-        texts.proposalHistory.votingResultsSent,
-        proposal.data.id,
-        appConfig.govCoreChainId,
-      );
+        type: HistoryItemType.RESULTS_SENT,
+        title: texts.proposalHistory.votingResultsSent,
+        txId: proposal.data.id,
+        txChainId: appConfig.govCoreChainId,
+        timestamp:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].timestamp
+            : undefined,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // PROPOSAL_QUEUED
     if (proposal.data.queuingTime > 0 && !isVotingFailed) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_QUEUED}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.PROPOSAL_QUEUED,
-        texts.proposalHistory.proposalTimeLocked(proposal.data.id),
-        proposal.data.id,
-        appConfig.govCoreChainId,
-        proposal.data.queuingTime,
-      );
+        type: HistoryItemType.PROPOSAL_QUEUED,
+        title: texts.proposalHistory.proposalTimeLocked(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: appConfig.govCoreChainId,
+        timestamp: proposal.data.queuingTime,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // PROPOSAL_EXECUTED
     if (proposal.data.state === ProposalState.Executed) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_EXECUTED}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.PROPOSAL_EXECUTED,
-        texts.proposalHistory.proposalExecuted(proposal.data.id),
-        proposal.data.id,
-        appConfig.govCoreChainId,
-      );
+        type: HistoryItemType.PROPOSAL_EXECUTED,
+        title: texts.proposalHistory.proposalExecuted(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: appConfig.govCoreChainId,
+        timestamp:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].timestamp
+            : undefined,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // PAYLOADS_QUEUED
@@ -264,17 +321,21 @@ export const createProposalsHistorySlice: StoreSlice<
       proposal.data.payloads.forEach((payload, index) => {
         if (payload?.queuedAt > 0) {
           const historyId = `${proposal.data.id}_${HistoryItemType.PAYLOADS_QUEUED}_${payload.id}_${payload.chainId}`;
-          get().initProposalHistoryItem(
+          get().initProposalHistoryItem({
             historyId,
-            HistoryItemType.PAYLOADS_QUEUED,
-            texts.proposalHistory.payloadTimeLocked(
+            type: HistoryItemType.PAYLOADS_QUEUED,
+            title: texts.proposalHistory.payloadTimeLocked(
               index + 1,
               proposal.data.payloads.length,
             ),
-            payload.id,
-            payload.chainId,
-            payload.queuedAt,
-          );
+            txId: payload.id,
+            txChainId: payload.chainId,
+            timestamp: payload.queuedAt,
+            txHash:
+              proposalEvents && proposalEvents[historyId]
+                ? proposalEvents[historyId].txInfo.hash
+                : undefined,
+          });
         }
       });
     }
@@ -288,17 +349,21 @@ export const createProposalsHistorySlice: StoreSlice<
       proposal.data.payloads.forEach((payload, index) => {
         if (payload?.executedAt > 0) {
           const historyId = `${proposal.data.id}_${HistoryItemType.PAYLOADS_EXECUTED}_${payload.id}_${payload.chainId}`;
-          get().initProposalHistoryItem(
+          get().initProposalHistoryItem({
             historyId,
-            HistoryItemType.PAYLOADS_EXECUTED,
-            texts.proposalHistory.payloadExecuted(
+            type: HistoryItemType.PAYLOADS_EXECUTED,
+            title: texts.proposalHistory.payloadExecuted(
               index + 1,
               proposal.data.payloads.length,
             ),
-            payload.id,
-            payload.chainId,
-            payload.executedAt,
-          );
+            txId: payload.id,
+            txChainId: payload.chainId,
+            timestamp: payload.executedAt,
+            txHash:
+              proposalEvents && proposalEvents[historyId]
+                ? proposalEvents[historyId].txInfo.hash
+                : undefined,
+          });
         }
       });
     }
@@ -306,16 +371,21 @@ export const createProposalsHistorySlice: StoreSlice<
     // PROPOSAL_CANCELED
     if (proposal.combineState === CombineProposalState.Canceled) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_CANCELED}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.PROPOSAL_CANCELED,
-        texts.proposalHistory.proposalCanceled(proposal.data.id),
-        proposal.data.id,
-        appConfig.govCoreChainId,
-        lastPayloadCanceledAt > proposal.data.canceledAt
-          ? lastPayloadCanceledAt
-          : proposal.data.canceledAt,
-      );
+        type: HistoryItemType.PROPOSAL_CANCELED,
+        title: texts.proposalHistory.proposalCanceled(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: appConfig.govCoreChainId,
+        timestamp:
+          lastPayloadCanceledAt > proposal.data.canceledAt
+            ? lastPayloadCanceledAt
+            : proposal.data.canceledAt,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
 
     // PAYLOADS_EXPIRED
@@ -327,19 +397,24 @@ export const createProposalsHistorySlice: StoreSlice<
       proposal.data.payloads.forEach((payload, index) => {
         if (payload.state === PayloadState.Expired) {
           const historyId = `${proposal.data.id}_${HistoryItemType.PAYLOADS_EXPIRED}_${payload.id}_${payload.chainId}`;
-          get().initProposalHistoryItem(
+          get().initProposalHistoryItem({
             historyId,
-            HistoryItemType.PAYLOADS_EXPIRED,
-            texts.proposalHistory.payloadExpired(
+            type: HistoryItemType.PAYLOADS_EXPIRED,
+            title: texts.proposalHistory.payloadExpired(
               index + 1,
               proposal.data.payloads.length,
             ),
-            payload.id,
-            payload.chainId,
-            payload.queuedAt <= 0
-              ? payload.createdAt + payload.expirationTime
-              : payload.queuedAt + payload.delay + payload.gracePeriod,
-          );
+            txId: payload.id,
+            txChainId: payload.chainId,
+            timestamp:
+              payload.queuedAt <= 0
+                ? payload.createdAt + payload.expirationTime
+                : payload.queuedAt + payload.delay + payload.gracePeriod,
+            txHash:
+              proposalEvents && proposalEvents[historyId]
+                ? proposalEvents[historyId].txInfo.hash
+                : undefined,
+          });
         }
       });
     }
@@ -347,16 +422,21 @@ export const createProposalsHistorySlice: StoreSlice<
     // PROPOSAL_EXPIRED
     if (proposal.combineState === CombineProposalState.Expired) {
       const historyId = `${proposal.data.id}_${HistoryItemType.PROPOSAL_EXPIRED}`;
-      get().initProposalHistoryItem(
+      get().initProposalHistoryItem({
         historyId,
-        HistoryItemType.PROPOSAL_EXPIRED,
-        texts.proposalHistory.proposalExpired(proposal.data.id),
-        proposal.data.id,
-        appConfig.govCoreChainId,
-        proposal.data.state === ProposalState.Executed
-          ? lastPayloadExpiredAt
-          : proposal.data.creationTime + proposal.timings.expirationTime,
-      );
+        type: HistoryItemType.PROPOSAL_EXPIRED,
+        title: texts.proposalHistory.proposalExpired(proposal.data.id),
+        txId: proposal.data.id,
+        txChainId: appConfig.govCoreChainId,
+        timestamp:
+          proposal.data.state === ProposalState.Executed
+            ? lastPayloadExpiredAt
+            : proposal.data.creationTime + proposal.timings.expirationTime,
+        txHash:
+          proposalEvents && proposalEvents[historyId]
+            ? proposalEvents[historyId].txInfo.hash
+            : undefined,
+      });
     }
   },
   setHistoryItemLoading: (historyId) => {

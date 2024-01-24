@@ -1,7 +1,9 @@
 import { HistoryItemType, TxInfo } from '@bgd-labs/aave-governance-ui-helpers';
+import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
 import { useStore } from '../../../store';
+import { getProposalEventsCache } from '../../../utils/githubCacheRequests';
 import { getProposalDataById } from '../../store/proposalsSelectors';
 import { DetailsModalWrapper } from '../DetailsModalWrapper';
 import { ProposalHistoryItem } from './ProposalHistoryItem';
@@ -20,12 +22,15 @@ export function ProposalHistoryModal({
   const store = useStore();
 
   const proposalData = getProposalDataById(store, proposalId);
+  const { loading: cacheEventsLoading, data: cacheEventsData } = useRequest(
+    getProposalEventsCache(proposalId),
+  );
 
   useEffect(() => {
     if (proposalData?.proposal) {
-      store.initProposalHistory(proposalData.proposal);
+      store.initProposalHistory(proposalData.proposal, cacheEventsData);
     }
-  }, [isOpen, proposalId, proposalData?.loading]);
+  }, [isOpen, proposalId, proposalData?.loading, cacheEventsLoading]);
 
   if (!proposalData?.proposal) return null;
 
