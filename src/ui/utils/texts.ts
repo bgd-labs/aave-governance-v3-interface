@@ -53,7 +53,6 @@ export const texts = {
     fallbackVoteTitle: 'Fallback vote',
     fallbackVoteDescription:
       "If you don't want to relay your vote via Gelato, it is always possible to submit and pay for your own vote transaction by disabling the gas-less mode. Beware that you will need to pay on the gas token of the voting network (e.g. MATIC for Polygon)",
-    noVotersData: (type: 'for' | 'against') => `No votes '${type}'`,
     payloadsDetails: {
       payload: 'Payload',
       payloads: 'Payloads',
@@ -343,6 +342,8 @@ export const texts = {
       }. Try to use the application later or go to the RPC change screen.`,
     payloadsNetwork: 'Payloads network',
     voted: 'Voted',
+    noPayloadsInController:
+      'There are no payloads created in this payloads controller yet',
   },
   terms: {
     description:
