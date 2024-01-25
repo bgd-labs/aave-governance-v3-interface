@@ -1,5 +1,44 @@
 # Changelog
 
+## [2.0.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.1.1...v2.0.0) (2024-01-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* update caching system ([#59](https://github.com/bgd-labs/aave-governance-v3-interface/issues/59))
+
+### Features
+
+* current power visibility ([#40](https://github.com/bgd-labs/aave-governance-v3-interface/issues/40)) ([76d6593](https://github.com/bgd-labs/aave-governance-v3-interface/commit/76d6593cea7b0efeb269b9152ee57980be15736f))
+* update caching system ([#59](https://github.com/bgd-labs/aave-governance-v3-interface/issues/59)) ([079d3b0](https://github.com/bgd-labs/aave-governance-v3-interface/commit/079d3b0d8357581d154f34e9f541fa1f07f2fb75))
+* update viem and wagmi packages and logic ([#53](https://github.com/bgd-labs/aave-governance-v3-interface/issues/53)) ([59065bf](https://github.com/bgd-labs/aave-governance-v3-interface/commit/59065bf72c917b2080a42fd709f2f75b409ed988))
+
+
+### Bug Fixes
+
+* calculation of required against votes ([d65527a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/d65527af93035d3362ec498c2e8baf0ddac1bcb8))
+* eth mainnet rpc's ([62db790](https://github.com/bgd-labs/aave-governance-v3-interface/commit/62db790280c9876d89e89348b6dc3e669a54b7c8))
+* fallback providers ([61695df](https://github.com/bgd-labs/aave-governance-v3-interface/commit/61695df5a99eef15614adbcfd8284787906ab257))
+* gas less voting ([90cbaea](https://github.com/bgd-labs/aave-governance-v3-interface/commit/90cbaeaffed18ec5cb153e6efb068a79a99f08cf))
+* gelato voting ([daa852d](https://github.com/bgd-labs/aave-governance-v3-interface/commit/daa852dd78d35ae41f2ac2a247747a6422ea3f70))
+* get voting power ([89220dd](https://github.com/bgd-labs/aave-governance-v3-interface/commit/89220dda60d718c8eb322dc117f13b367e90215c))
+* gnosis safe explorer link and small styles fix ([c9305a8](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c9305a8b74efac0b667130a1733e78e04f36a7f1))
+* optimize proposals data requests ([2da4578](https://github.com/bgd-labs/aave-governance-v3-interface/commit/2da4578ffded494b9848a0a6b70a2adbb913a721))
+* remove console logs ([7aeae29](https://github.com/bgd-labs/aave-governance-v3-interface/commit/7aeae2966b563c7e68e2dcfe1029e718deb58a46))
+* remove pokt polygon rpc url ([523778c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/523778ce3fd1ef11f3cb11e17d28746ac1582230))
+* rename local storage RPC field name ([88ba467](https://github.com/bgd-labs/aave-governance-v3-interface/commit/88ba4670225d88ac72f42350c8bd5a4fe6b68542))
+* rpc switcher ([3a70242](https://github.com/bgd-labs/aave-governance-v3-interface/commit/3a70242e04447cd12bee3c680adc17cdd9010a5a))
+* seatbelt button for payloads explorer screen ([f380af8](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f380af810578a427494ef03549fe00d695f0fc61))
+* switch chain ([01caddb](https://github.com/bgd-labs/aave-governance-v3-interface/commit/01caddbcdf59def5a46bb191db65bd9ac3d60e99))
+* timeline styles ([be5bf0e](https://github.com/bgd-labs/aave-governance-v3-interface/commit/be5bf0efd5e850a8f5384b12a91f39d77f080ffe))
+* timeline time ([cce00a1](https://github.com/bgd-labs/aave-governance-v3-interface/commit/cce00a15edd44fe24ef880b04d0501b5b609e3e8))
+* turn on gelato by default ([120bebb](https://github.com/bgd-labs/aave-governance-v3-interface/commit/120bebbc365dfcc2df3472423bf1df2c79005401))
+* ui bugs ([#50](https://github.com/bgd-labs/aave-governance-v3-interface/issues/50)) ([8a443ac](https://github.com/bgd-labs/aave-governance-v3-interface/commit/8a443acd73ef2152052d44141ca7f85bcf88f260))
+* ui bugs ([#54](https://github.com/bgd-labs/aave-governance-v3-interface/issues/54)) ([2d46409](https://github.com/bgd-labs/aave-governance-v3-interface/commit/2d46409c44543dffa038eafea249a6489124a6f8))
+* use unique hash as array key, not the index of a mutable array structure ([#44](https://github.com/bgd-labs/aave-governance-v3-interface/issues/44)) ([38a676a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/38a676aa57101832111db4cffdc161fde4e8128c))
+* voters requests and remove winter styles ([829a316](https://github.com/bgd-labs/aave-governance-v3-interface/commit/829a316773aa1d6591b7cf146203bd13dde8562b))
+* voting duration and networks icons ([fb0d88c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/fb0d88c3de9433af6f141f69f1b27558e512774a))
+
 ## [1.1.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.1.0...v1.1.1) (2023-12-26)
 
 
