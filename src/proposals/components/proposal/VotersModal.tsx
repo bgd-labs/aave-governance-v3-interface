@@ -52,6 +52,126 @@ interface VotersModalProps {
   isFinished: boolean;
 }
 
+function ListItemAddress({ vote }: { vote: VotersData }) {
+  const { activeWallet, representative } = useStore();
+  const sm = useMediaQuery(media.sm);
+
+  return (
+    <Link
+      inNewWindow
+      css={{
+        flex: 1,
+        textAlign: 'left',
+        transition: 'all 0.2s ease',
+        hover: { opacity: '0.5' },
+      }}
+      href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
+        .blockExplorers?.default.url}/address/${vote.address}`}>
+      <Box
+        component="p"
+        sx={{
+          typography:
+            vote.address.toLowerCase() ===
+            (
+              representative.address ||
+              activeWallet?.address ||
+              zeroAddress
+            ).toLowerCase()
+              ? 'headline'
+              : 'body',
+        }}>
+        {formatVoterAddress(vote, sm)}
+      </Box>
+    </Link>
+  );
+}
+
+function VotersTable({
+  voters,
+  unVoters,
+  votes,
+  requiredVotes,
+  percent,
+  isFinished,
+  type,
+}: {
+  voters: VotersData[];
+  unVoters: VotersData[];
+  votes: number;
+  requiredVotes: number;
+  percent: number;
+  isFinished: boolean;
+  type: 'for' | 'against';
+}) {
+  const bottomShadowRef = useRef<HTMLDivElement>(Box as any);
+  const handleUpdate = (values: positionValues) => {
+    const { scrollTop, scrollHeight, clientHeight } = values;
+    const bottomScrollTop = scrollHeight - clientHeight;
+    const shadowTopOpacity =
+      (1 / 20) * (bottomScrollTop - Math.max(scrollTop, bottomScrollTop - 20));
+    css(bottomShadowRef.current, { opacity: shadowTopOpacity });
+  };
+
+  return (
+    <Box
+      sx={{
+        display: 'block',
+        width: !unVoters.length ? '70%' : 'calc(50% - 12px)',
+        margin: !unVoters.length ? '0 auto' : 'unset',
+      }}>
+      <Box sx={{ position: 'relative' }}>
+        <Scrollbars
+          style={{ width: '100%' }}
+          onUpdate={handleUpdate}
+          autoHeight
+          universal
+          autoHeightMin={100}
+          autoHeightMax={370}>
+          <Box sx={{ position: 'relative', pr: 16 }}>
+            <BarWrapper>
+              <VoteBar
+                type={type}
+                value={votes}
+                requiredValue={requiredVotes}
+                linePercent={percent}
+                isFinished={isFinished}
+              />
+            </BarWrapper>
+
+            <ListItem>
+              <Box component="p" sx={{ typography: 'headline' }}>
+                {texts.proposals.voters} ({voters.length})
+              </Box>
+              <Box component="p" sx={{ typography: 'headline' }}>
+                {texts.proposals.votersListVotingPower}
+              </Box>
+            </ListItem>
+            {voters.map((vote, index) => (
+              <ListItem key={index}>
+                <ListItemAddress vote={vote} />
+                <FormattedNumber value={vote.votingPower} visibleDecimals={3} />
+              </ListItem>
+            ))}
+          </Box>
+        </Scrollbars>
+
+        <Box
+          ref={bottomShadowRef}
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 10,
+            background:
+              'linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)',
+          }}
+        />
+      </Box>
+    </Box>
+  );
+}
+
 export function VotersModal({
   isOpen,
   setIsOpen,
@@ -65,128 +185,10 @@ export function VotersModal({
   requiredAgainstVotes,
   isFinished,
 }: VotersModalProps) {
-  const { activeWallet, representative } = useStore();
   const theme = useTheme();
 
   const votersFor = voters.filter((vote) => vote.support);
   const votersAgainst = voters.filter((vote) => !vote.support);
-
-  const ListItemAddress = ({ vote }: { vote: VotersData }) => {
-    const sm = useMediaQuery(media.sm);
-
-    return (
-      <Link
-        inNewWindow
-        css={{
-          flex: 1,
-          textAlign: 'left',
-          transition: 'all 0.2s ease',
-          hover: { opacity: '0.5' },
-        }}
-        href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-          .blockExplorers?.default.url}/address/${vote.address}`}>
-        <Box
-          component="p"
-          sx={{
-            typography:
-              vote.address.toLowerCase() ===
-              (
-                representative.address ||
-                activeWallet?.address ||
-                zeroAddress
-              ).toLowerCase()
-                ? 'headline'
-                : 'body',
-          }}>
-          {formatVoterAddress(vote, sm)}
-        </Box>
-      </Link>
-    );
-  };
-
-  const VotersTable = ({ type }: { type: 'for' | 'against' }) => {
-    const isFor = type === 'for';
-    const bottomShadowRef = useRef<HTMLDivElement>(Box as any);
-    const handleUpdate = (values: positionValues) => {
-      const { scrollTop, scrollHeight, clientHeight } = values;
-      const bottomScrollTop = scrollHeight - clientHeight;
-      const shadowTopOpacity =
-        (1 / 20) *
-        (bottomScrollTop - Math.max(scrollTop, bottomScrollTop - 20));
-      css(bottomShadowRef.current, { opacity: shadowTopOpacity });
-    };
-
-    return (
-      <Box
-        sx={{
-          display: 'block',
-          width: !(isFor ? votersAgainst : votersFor).length
-            ? '70%'
-            : 'calc(50% - 12px)',
-          margin: !(isFor ? votersAgainst : votersFor).length
-            ? '0 auto'
-            : 'unset',
-        }}>
-        <Box sx={{ position: 'relative' }}>
-          <Scrollbars
-            style={{ width: '100%' }}
-            onUpdate={handleUpdate}
-            autoHeight
-            universal
-            autoHeightMin={100}
-            autoHeightMax={370}>
-            <Box sx={{ position: 'relative', pr: 16 }}>
-              <BarWrapper>
-                <VoteBar
-                  type={type}
-                  value={isFor ? forVotes : againstVotes}
-                  requiredValue={
-                    isFor ? requiredForVotes : requiredAgainstVotes
-                  }
-                  linePercent={isFor ? forPercent : againstPercent}
-                  isFinished={isFinished}
-                />
-              </BarWrapper>
-
-              <ListItem>
-                <Box component="p" sx={{ typography: 'headline' }}>
-                  {texts.proposals.voters} (
-                  {(type === 'for' ? votersFor : votersAgainst).length})
-                </Box>
-                <Box component="p" sx={{ typography: 'headline' }}>
-                  {texts.proposals.votersListVotingPower}
-                </Box>
-              </ListItem>
-              {(type === 'for' ? votersFor : votersAgainst).map(
-                (vote, index) => (
-                  <ListItem key={index}>
-                    <ListItemAddress vote={vote} />
-                    <FormattedNumber
-                      value={vote.votingPower}
-                      visibleDecimals={3}
-                    />
-                  </ListItem>
-                ),
-              )}
-            </Box>
-          </Scrollbars>
-
-          <Box
-            ref={bottomShadowRef}
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 10,
-              background:
-                'linear-gradient(to top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%)',
-            }}
-          />
-        </Box>
-      </Box>
-    );
-  };
 
   return (
     <BasicModal
@@ -312,8 +314,28 @@ export function VotersModal({
                 justifyContent: 'space-between',
               },
             }}>
-            {!!votersFor.length && <VotersTable type="for" />}
-            {!!votersAgainst.length && <VotersTable type="against" />}
+            {!!votersFor.length && (
+              <VotersTable
+                voters={votersFor}
+                unVoters={votersAgainst}
+                isFinished={isFinished}
+                votes={forVotes}
+                requiredVotes={requiredForVotes}
+                percent={forPercent}
+                type="for"
+              />
+            )}
+            {!!votersAgainst.length && (
+              <VotersTable
+                voters={votersAgainst}
+                unVoters={votersFor}
+                isFinished={isFinished}
+                votes={againstVotes}
+                requiredVotes={requiredAgainstVotes}
+                percent={againstPercent}
+                type="against"
+              />
+            )}
           </Box>
         </Box>
       </Box>
