@@ -380,10 +380,19 @@ export function PayloadsExplorerPage() {
                   ))}
               </>
             )}
-            {!payloadsExplorePagination[controllerAddress]?.currentIds.length &&
-              !filteredPayloadsData.length && (
-                <PayloadExploreItemLoading isColumns={isColumns} />
-              )}
+
+            {payloadsExplorePagination[controllerAddress]?.currentIds.length ===
+            0 ? (
+              <PayloadExploreItemLoading isColumns={false} noData />
+            ) : (
+              <>
+                {!payloadsExplorePagination[controllerAddress]?.currentIds
+                  .length &&
+                  !filteredPayloadsData.length && (
+                    <PayloadExploreItemLoading isColumns={isColumns} />
+                  )}
+              </>
+            )}
           </Box>
         </Box>
 

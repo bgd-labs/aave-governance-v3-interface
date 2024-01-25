@@ -1,10 +1,10 @@
-import { ProposalState } from '@bgd-labs/aave-governance-ui-helpers';
+import { CombineProposalState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 
 import { proposalStatuses } from '../utils/statuses';
 
 export interface ProposalStatusProps {
-  status: ProposalState;
+  status: CombineProposalState;
   isSecondary?: boolean;
   isFinished?: boolean;
 }
@@ -25,11 +25,11 @@ export function ProposalStatus({
         mr: 4,
         color: isFinished
           ? '$text'
-          : status === ProposalState.Defeated
+          : status === CombineProposalState.Failed
             ? '$mainAgainst'
-            : status === ProposalState.Succeed
+            : status === CombineProposalState.Succeed
               ? '$mainFor'
-              : status === ProposalState.Expired
+              : status === CombineProposalState.Expired
                 ? '$textDisabled'
                 : isSecondary
                   ? '$textSecondary'

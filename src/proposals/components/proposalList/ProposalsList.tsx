@@ -483,7 +483,7 @@ export function ProposalsList({
                       return (
                         <div className="ProposalListItem" key={data.id}>
                           <ProposalListItemWrapper
-                            estimatedState={ProposalEstimatedState.Defeated}
+                            estimatedState={ProposalEstimatedState.Failed}
                             isFinished={false}
                             isForHelpModal>
                             <Box component="p" sx={{ typography: 'body' }}>

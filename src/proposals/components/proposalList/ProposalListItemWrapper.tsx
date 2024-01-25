@@ -34,7 +34,7 @@ export function ProposalListItemWrapper({
       disableActiveState={isVotingActive}
       contentColor="$mainLight"
       bottomBorderColor={
-        estimatedState === ProposalEstimatedState.Defeated && !isFinished
+        estimatedState === ProposalEstimatedState.Failed && !isFinished
           ? '$secondaryAgainst'
           : estimatedState === ProposalEstimatedState.Succeed && !isFinished
             ? '$secondaryFor'

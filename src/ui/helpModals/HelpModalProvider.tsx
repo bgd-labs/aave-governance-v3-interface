@@ -2,10 +2,6 @@ import { Box, useTheme } from '@mui/system';
 import { useEffect, useState } from 'react';
 
 import { useStore } from '../../store';
-import {
-  getLocalStorageIsHelpModalVisible,
-  setLocalStorageIsHelpModalVisible,
-} from '../../utils/localStorage';
 import { BigButton } from '../components/BigButton';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -23,8 +19,6 @@ import { HelpVotingModal } from './HelpVotingModal';
 import { HelpVotingPowerModal } from './HelpVotingPowerModal';
 import { HelpWalletModal } from './HelpWalletModal';
 
-export type IsHelpModalVisible = 'true' | 'false';
-
 export function HelpModalProvider() {
   const theme = useTheme();
   const {
@@ -32,23 +26,12 @@ export function HelpModalProvider() {
     isModalOpen,
     setIsHelpNavigationModalOpen,
     setIsClickedOnStartButtonOnHelpModal,
-    isAppBlockedByTerms,
-    isRendered,
+
     closeHelpModals,
     isClickedOnStartButtonOnHelpModal,
   } = useStore();
 
   const [infoType, setInfoType] = useState<InfoType | undefined>(undefined);
-
-  useEffect(() => {
-    const isHelpModalVisible = getLocalStorageIsHelpModalVisible();
-
-    if (isHelpModalVisible && !isAppBlockedByTerms) {
-      setIsHelpModalOpen(isHelpModalVisible === 'true');
-    } else if (!isClickedOnStartButtonOnHelpModal) {
-      setIsHelpModalOpen(!isAppBlockedByTerms);
-    }
-  }, [isRendered]);
 
   useEffect(() => {
     setInfoType(undefined);
@@ -82,7 +65,6 @@ export function HelpModalProvider() {
               alwaysWithBorders
               color="white"
               onClick={() => {
-                setLocalStorageIsHelpModalVisible('false');
                 closeHelpModals();
                 setIsHelpModalOpen(false);
               }}>
@@ -92,7 +74,6 @@ export function HelpModalProvider() {
               alwaysWithBorders
               css={{ ml: 8 }}
               onClick={() => {
-                setLocalStorageIsHelpModalVisible('false');
                 setIsClickedOnStartButtonOnHelpModal(true);
                 setIsHelpNavigationModalOpen(true);
               }}>

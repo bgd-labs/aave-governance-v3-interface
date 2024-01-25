@@ -1,8 +1,8 @@
 import {
   Balance,
+  CombineProposalState,
   formatProposal,
   getEstimatedState,
-  ProposalState,
   valueToBigNumber,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
@@ -72,10 +72,10 @@ export function VoteModal({
   useEffect(() => {
     if (proposalData) {
       const isFinished =
-        proposalData.proposal.state === ProposalState.Executed ||
-        proposalData.proposal.state === ProposalState.Defeated ||
-        proposalData.proposal.state === ProposalState.Canceled ||
-        proposalData.proposal.state === ProposalState.Expired;
+        proposalData.proposal.combineState === CombineProposalState.Executed ||
+        proposalData.proposal.combineState === CombineProposalState.Failed ||
+        proposalData.proposal.combineState === CombineProposalState.Canceled ||
+        proposalData.proposal.combineState === CombineProposalState.Expired;
 
       if (!isFinished) {
         checkIsGelatoAvailableWithApiKey(
@@ -88,10 +88,10 @@ export function VoteModal({
   useEffect(() => {
     if (proposalData) {
       const isFinished =
-        proposalData.proposal.state === ProposalState.Executed ||
-        proposalData.proposal.state === ProposalState.Defeated ||
-        proposalData.proposal.state === ProposalState.Canceled ||
-        proposalData.proposal.state === ProposalState.Expired;
+        proposalData.proposal.combineState === CombineProposalState.Executed ||
+        proposalData.proposal.combineState === CombineProposalState.Failed ||
+        proposalData.proposal.combineState === CombineProposalState.Canceled ||
+        proposalData.proposal.combineState === CombineProposalState.Expired;
 
       if (!isFinished) {
         checkIsGaslessVote(proposalData.proposal.data.votingChainId);
@@ -475,7 +475,7 @@ export function VoteModal({
                   loading={loading}
                   disabled={
                     loading ||
-                    proposal.state > ProposalState.Active ||
+                    proposal.combineState > CombineProposalState.Active ||
                     localVotingPower <= 0
                   }
                   activeColorType={support ? 'against' : 'for'}

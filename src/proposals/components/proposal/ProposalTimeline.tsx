@@ -400,7 +400,7 @@ export function ProposalTimeline({
         (state === ProposalStateWithName.Executed ||
           state === ProposalStateWithName.Canceled ||
           state === ProposalStateWithName.Expired ||
-          state === ProposalStateWithName.Defeated) &&
+          state === ProposalStateWithName.Failed) &&
         isWrapperWithScroll
       ) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -420,14 +420,14 @@ export function ProposalTimeline({
       .toNumber();
 
   const isExecuted = state === ProposalStateWithName.Executed;
-  const isFailed = state === ProposalStateWithName.Defeated;
+  const isFailed = state === ProposalStateWithName.Failed;
   const isExpired = state === ProposalStateWithName.Expired;
 
   const getVotingClosedState = () => {
     if (now >= votingClosedTimestamp || !!canceledTimestamp) {
       if (isExecuted || state === ProposalStateWithName.Succeed) {
         return ProposalStateWithName.Succeed;
-      } else if (state === ProposalStateWithName.Defeated) {
+      } else if (state === ProposalStateWithName.Failed) {
         return ProposalStateWithName.Failed;
       }
     } else {
@@ -702,7 +702,7 @@ export function ProposalTimeline({
                       color={
                         timeline.state === ProposalStateWithName.Executed
                           ? 'success'
-                          : timeline.state === ProposalStateWithName.Defeated
+                          : timeline.state === ProposalStateWithName.Failed
                             ? 'error'
                             : 'expired'
                       }>

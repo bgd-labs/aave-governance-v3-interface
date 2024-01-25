@@ -1,6 +1,6 @@
 import {
+  CombineProposalState,
   formatProposal,
-  ProposalState,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
@@ -74,12 +74,14 @@ export function ActiveProposalListItem({
     votedPower,
   } = formatProposal(proposal);
 
-  const isVotingActive = !loading && proposal.state === ProposalState.Active;
-  const isVotingFinished = !loading && proposal.state > ProposalState.Active;
+  const isVotingActive =
+    !loading && proposal.combineState === CombineProposalState.Active;
+  const isVotingFinished =
+    !loading && proposal.combineState > CombineProposalState.Active;
   const isFinished =
     !loading &&
-    (proposal.state >= ProposalState.Executed ||
-      proposal.state === ProposalState.Defeated);
+    (proposal.combineState >= CombineProposalState.Executed ||
+      proposal.combineState === CombineProposalState.Failed);
 
   const support = proposal.data.votingMachineData.votedInfo.support;
 
@@ -196,7 +198,7 @@ export function ActiveProposalListItem({
                       }}>
                       <ProposalStatusWithDate
                         css={{ mt: 8 }}
-                        status={proposal.state}
+                        status={proposal.combineState}
                         timestamp={stateTimestamp}
                         waitForState={waitForState}
                         isFinished={isFinished}
@@ -325,7 +327,7 @@ export function ActiveProposalListItem({
                   {isFinished ? (
                     <ProposalListItemFinalStatus
                       timestamp={stateTimestamp}
-                      status={proposal.state}
+                      status={proposal.combineState}
                     />
                   ) : (
                     <Box

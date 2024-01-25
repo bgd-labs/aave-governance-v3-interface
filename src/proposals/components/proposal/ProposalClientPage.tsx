@@ -62,7 +62,7 @@ export function ProposalClientPage() {
     );
 
   if (store.detailedProposalsData[id]) {
-    if (store.detailedProposalsData[id].prerender) {
+    if (store.detailedProposalsData[id].isFinished) {
       return (
         <Container>
           <ProposalPageWrapperWithCache id={id} />

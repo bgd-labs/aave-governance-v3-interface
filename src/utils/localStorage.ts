@@ -5,7 +5,6 @@ import {
 
 import { RepresentativeAddress } from '../representations/store/representationsSlice';
 import { AppClientsStorage } from '../rpcSwitcher/store/rpcSwitcherSlice';
-import { IsHelpModalVisible } from '../ui/helpModals/HelpModalProvider';
 import { AppModeType, IsGaslessVote } from '../ui/store/uiSlice';
 import { EnsDataItem } from '../web3/store/ensSlice';
 
@@ -13,7 +12,6 @@ export enum LocalStorageKeys {
   EnsAddresses = 'EnsAddresses',
   RpcUrls = 'rpcUrls',
   RepresentingAddresses = 'representingAddresses',
-  HelpModalVisible = 'isHelpModalVisible',
   GaslessVote = 'isGaslessVote',
   TermsAccept = 'termsAccept',
   AppMode = 'appMode',
@@ -73,18 +71,6 @@ export const getLocalStorageLastConnectedWallet = () => {
   return localStorage?.getItem(Web3LocalStorageKeys.LastConnectedWallet) as
     | WalletType
     | undefined;
-};
-
-export const getLocalStorageIsHelpModalVisible = () => {
-  return localStorage?.getItem(
-    LocalStorageKeys.HelpModalVisible,
-  ) as IsHelpModalVisible;
-};
-
-export const setLocalStorageIsHelpModalVisible = (
-  value: IsHelpModalVisible,
-) => {
-  return localStorage?.setItem(LocalStorageKeys.HelpModalVisible, value);
 };
 
 export const getLocalStorageGaslessVote = () => {

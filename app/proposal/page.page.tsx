@@ -44,11 +44,11 @@ export async function generateMetadata({
 
     return {
       title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
-      description: ipfsData.title,
+      description: ipfsData?.title || '',
       openGraph: {
         images: ['/metaLogo.jpg'],
         title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
-        description: ipfsData.title,
+        description: ipfsData?.title || '',
       },
     };
   }
@@ -152,7 +152,7 @@ export default async function ProposalPage({
       },
     };
 
-    const state = getProposalState({
+    const combineState = getProposalState({
       proposalData: proposalDataWithoutState.data,
       quorum: proposalDataWithoutState.config.quorum,
       differential: proposalDataWithoutState.config.differential,
@@ -166,7 +166,7 @@ export default async function ProposalPage({
       balanceLoading: true,
       proposal: {
         ...proposalDataWithoutState,
-        state,
+        combineState,
       },
     } as ProposalWithLoadings;
   }

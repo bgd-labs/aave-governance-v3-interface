@@ -1,6 +1,6 @@
 import {
-  BasicProposalState,
   checkHash,
+  CombineProposalState,
   ProposalState,
   VotingMachineProposalState,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -40,8 +40,8 @@ interface ProposalStatusDetailsProps {
   votingBlockHash: string;
   creationTime: number;
   coolDownBeforeVotingStart: number;
-  proposalBasicStatus: BasicProposalState;
-  proposalStatus: ProposalState;
+  proposalBasicStatus: ProposalState;
+  combineProposalStatus: CombineProposalState;
   votingMachineState: VotingMachineProposalState;
   proposalId: number;
   proposalResultsSent: boolean;
@@ -58,7 +58,7 @@ export function ProposalStatusDetails({
   creationTime,
   coolDownBeforeVotingStart,
   proposalBasicStatus,
-  proposalStatus,
+  combineProposalStatus,
   proposalId,
   votingMachineState,
   proposalResultsSent,
@@ -110,12 +110,16 @@ export function ProposalStatusDetails({
   const isExpertMode = appMode === 'expert';
 
   const isExecuted =
-    proposalStatus === ProposalState.Expired ||
-    proposalStatus === ProposalState.Executed ||
-    proposalStatus === ProposalState.Canceled ||
-    proposalStatus === ProposalState.Defeated;
+    combineProposalStatus === CombineProposalState.Expired ||
+    combineProposalStatus === CombineProposalState.Executed ||
+    combineProposalStatus === CombineProposalState.Canceled ||
+    combineProposalStatus === CombineProposalState.Failed;
 
-  if (proposalStatus === ProposalState.Active || isExecuted || !isExpertMode)
+  if (
+    combineProposalStatus === CombineProposalState.Active ||
+    isExecuted ||
+    !isExpertMode
+  )
     return null;
 
   const getTxStatus = ({
@@ -208,7 +212,7 @@ export function ProposalStatusDetails({
   const actions = () => {
     if (activeWallet?.isActive) {
       if (
-        proposalBasicStatus === BasicProposalState.Created &&
+        proposalBasicStatus === ProposalState.Created &&
         votingMachineState === VotingMachineProposalState.NotCreated &&
         checkHash(blockHash).zero
       ) {
@@ -255,7 +259,7 @@ export function ProposalStatusDetails({
           ),
         };
       } else if (
-        proposalBasicStatus <= BasicProposalState.Active &&
+        proposalBasicStatus <= ProposalState.Active &&
         votingMachineState === VotingMachineProposalState.NotCreated &&
         checkHash(blockHash).notZero &&
         !hasRequiredRoots
@@ -299,7 +303,7 @@ export function ProposalStatusDetails({
           ),
         };
       } else if (
-        proposalBasicStatus <= BasicProposalState.Active &&
+        proposalBasicStatus <= ProposalState.Active &&
         votingMachineState === VotingMachineProposalState.NotCreated &&
         checkHash(blockHash).notZero &&
         hasRequiredRoots
@@ -393,7 +397,7 @@ export function ProposalStatusDetails({
       } else if (
         proposalResultsSent &&
         proposalQueuingTime !== 0 &&
-        proposalBasicStatus !== BasicProposalState.Executed &&
+        proposalBasicStatus !== ProposalState.Executed &&
         !isExecuted
       ) {
         const returnObject = {

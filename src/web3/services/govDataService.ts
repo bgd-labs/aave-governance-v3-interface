@@ -303,19 +303,9 @@ export class GovDataService {
 
     return initialPayloadsData.map((payload) => {
       return {
-        creator: payload.data.creator,
+        ...payload.data,
         id: Number(payload.id),
         chainId,
-        maximumAccessLevelRequired: payload.data.maximumAccessLevelRequired,
-        state: payload.data.state,
-        createdAt: payload.data.createdAt,
-        queuedAt: payload.data.queuedAt,
-        executedAt: payload.data.executedAt,
-        cancelledAt: payload.data.cancelledAt,
-        expirationTime: payload.data.expirationTime,
-        delay: payload.data.delay,
-        gracePeriod: payload.data.gracePeriod,
-        actionAddresses: payload.data.actions.map((action) => action.target),
         payloadsController,
       };
     });

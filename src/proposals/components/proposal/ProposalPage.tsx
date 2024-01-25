@@ -1,5 +1,5 @@
 import {
-  BasicProposalState,
+  CombineProposalState,
   formatProposal,
   getProposalStepsAndAmounts,
   InitialPayload,
@@ -104,7 +104,7 @@ export function ProposalPage({
     const totalVotes = forVotes + againstVotes;
 
     if (startBlock > 0) {
-      if (totalVotes > 0 && !proposal.data.prerender && isVotingActive) {
+      if (totalVotes > 0 && !proposal.data.isFinished && isVotingActive) {
         getVoters(
           proposal.data.id,
           proposal.data.votingChainId,
@@ -144,8 +144,8 @@ export function ProposalPage({
 
     const isFinished =
       !loading &&
-      (proposal.state >= ProposalState.Executed ||
-        proposal.state === ProposalState.Defeated);
+      (proposal.combineState >= CombineProposalState.Executed ||
+        proposal.combineState === CombineProposalState.Failed);
 
     if (!isFinished) {
       getProposalCreatorBalance(
@@ -192,12 +192,14 @@ export function ProposalPage({
     votedPower,
   } = formatProposal(proposal);
 
-  const isVotingActive = !loading && proposal.state === ProposalState.Active;
-  const isVotingFinished = !loading && proposal.state > ProposalState.Active;
+  const isVotingActive =
+    !loading && proposal.combineState === CombineProposalState.Active;
+  const isVotingFinished =
+    !loading && proposal.combineState > CombineProposalState.Active;
   const isFinished =
     !loading &&
-    (proposal.state >= ProposalState.Executed ||
-      proposal.state === ProposalState.Defeated);
+    (proposal.combineState >= CombineProposalState.Executed ||
+      proposal.combineState === CombineProposalState.Failed);
 
   const now = dayjs().unix();
 
@@ -273,7 +275,7 @@ export function ProposalPage({
       <NoSSR>
         <ProposalTimeline
           expiredTimestamp={
-            proposal.data.basicState === BasicProposalState.Executed
+            proposal.data.state === ProposalState.Executed
               ? lastPayloadExpiredAt
               : proposal.data.creationTime + proposal.timings.expirationTime
           }
@@ -283,7 +285,7 @@ export function ProposalPage({
           votingClosedTimestamp={votingClosedTimestamp}
           finishedTimestamp={payloadsExecutedTimestamp}
           failedTimestamp={
-            proposal.state === ProposalState.Defeated
+            proposal.combineState === CombineProposalState.Failed
               ? votingClosedTimestamp
               : undefined
           }
@@ -294,8 +296,8 @@ export function ProposalPage({
           }
           isFinished={isFinished}
           state={
-            proposalStatuses.find((s) => s.value === proposal?.state)?.title ||
-            ProposalStateWithName.Created
+            proposalStatuses.find((s) => s.value === proposal?.combineState)
+              ?.title || ProposalStateWithName.Created
           }
         />
       </NoSSR>
@@ -368,7 +370,9 @@ export function ProposalPage({
               requiredAgainstVotes={requiredAgainstVotes}
               estimatedStatus={estimatedState}
               isFinished={isFinished}
-              isStarted={!loading && proposal.state > ProposalState.Created}
+              isStarted={
+                !loading && proposal.combineState > CombineProposalState.Created
+              }
               isVotingFinished={isVotingFinished}
               voters={votersForCurrentProposal}
               votersInitialLoading={
@@ -440,8 +444,8 @@ export function ProposalPage({
                 coolDownBeforeVotingStart={
                   proposal.config.coolDownBeforeVotingStart
                 }
-                proposalBasicStatus={proposal.data.basicState}
-                proposalStatus={proposal.state}
+                proposalBasicStatus={proposal.data.state}
+                combineProposalStatus={proposal.combineState}
                 proposalId={proposal.data.id}
                 votingMachineState={proposal.data.votingMachineState}
                 proposalResultsSent={
@@ -480,7 +484,7 @@ export function ProposalPage({
               discussionLink={ipfsData?.discussions}
               ipfsHash={proposal.data.ipfsHash}
               proposalId={proposal.data.id}
-              prerender={proposal.data.prerender}
+              prerender={proposal.data.isFinished}
             />
           </BoxWith3D>
 
@@ -517,7 +521,7 @@ export function ProposalPage({
                 discussionLink={ipfsData?.discussions}
                 ipfsHash={proposal.data.ipfsHash}
                 proposalId={proposal.data.id}
-                prerender={proposal.data.prerender}
+                prerender={proposal.data.isFinished}
               />
             </Box>
 
@@ -564,11 +568,13 @@ export function ProposalPage({
         />
       )}
 
-      <ProposalHistoryModal
-        isOpen={isProposalHistoryModalOpen}
-        setIsOpen={setIsProposalHistoryOpen}
-        proposalId={proposal.data.id}
-      />
+      {isProposalHistoryModalOpen && (
+        <ProposalHistoryModal
+          isOpen={isProposalHistoryModalOpen}
+          setIsOpen={setIsProposalHistoryOpen}
+          proposalId={proposal.data.id}
+        />
+      )}
 
       <ActivateVotingOnVotingMachineModal
         isOpen={isActivateVotingOnVotingMachineModalOpen}

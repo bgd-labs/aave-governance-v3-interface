@@ -61,9 +61,7 @@ export function PayloadStatus({
             titleTypography={titleTypography}
             textTypography={textTypography}
             title={texts.proposals.payloadsDetails.executedAt}>
-            <>
-              {dayjs.unix(payload.executedAt).format('MMM D, YYYY, , h:mm A')}
-            </>
+            <>{dayjs.unix(payload.executedAt).format('MMM D, YYYY, h:mm A')}</>
           </PayloadItemStatusInfo>
         )}
 
@@ -72,9 +70,7 @@ export function PayloadStatus({
             titleTypography={titleTypography}
             textTypography={textTypography}
             title={texts.proposals.payloadsDetails.cancelledAt}>
-            <>
-              {dayjs.unix(payload.cancelledAt).format('MMM D, YYYY, , h:mm A')}
-            </>
+            <>{dayjs.unix(payload.cancelledAt).format('MMM D, YYYY, h:mm A')}</>
           </PayloadItemStatusInfo>
         )}
 
@@ -90,7 +86,7 @@ export function PayloadStatus({
                     ? payload.expirationTime
                     : payload.queuedAt + payload.delay + payload.gracePeriod,
                 )
-                .format('MMM D, YYYY, , h:mm A')}
+                .format('MMM D, YYYY, h:mm A')}
             </>
           </PayloadItemStatusInfo>
         )}

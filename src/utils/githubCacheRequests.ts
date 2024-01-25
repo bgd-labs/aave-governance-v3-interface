@@ -1,6 +1,7 @@
 import {
   CachedDetails,
   FinishedProposalForList,
+  ProposalHistoryItem,
   VotersData,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { createAlova } from 'alova';
@@ -9,6 +10,7 @@ import ReactHook from 'alova/react';
 
 import {
   cachedDetailsPath,
+  cachedEventsPath,
   cachedProposalsIdsPath,
   cachedVotesPath,
   githubStartUrl,
@@ -41,3 +43,6 @@ export const getProposalDetailsCache = (id: number) =>
 
 export const getProposalVotesCache = (id: number) =>
   alovaInstance.Get<{ votes: VotersData[] }>(cachedVotesPath(id));
+
+export const getProposalEventsCache = (id: number) =>
+  alovaInstance.Get<Record<string, ProposalHistoryItem>>(cachedEventsPath(id));

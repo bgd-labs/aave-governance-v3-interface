@@ -20,7 +20,7 @@ export const proposalStatuses = [
   },
   {
     value: 3,
-    title: ProposalStateWithName.Defeated,
+    title: ProposalStateWithName.Failed,
   },
   {
     value: 4,

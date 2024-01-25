@@ -37,7 +37,7 @@ export function ProposalPageWrapperWithCache({
           ),
           payloads: detailsData.payloads || [],
           title: detailsData.ipfs.title || `Proposal #${id}`,
-          prerender: true,
+          isFinished: true,
         };
 
         detailsData.payloads.forEach((payload) => {
