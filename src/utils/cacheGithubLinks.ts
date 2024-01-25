@@ -1,7 +1,6 @@
 import { coreName } from './appConfig';
 
-// TODO: need change start url
-export const githubStartUrl = `https://raw.githubusercontent.com/bgd-labs/aave-governance-ui-helpers/feat/cache-update/cache/ui/${coreName}`;
+export const githubStartUrl = `https://raw.githubusercontent.com/bgd-labs/aave-governance-ui-helpers/main/cache/ui/${coreName}`;
 
 export const listViewPath = '/list_view_proposals.json';
 export const cachedProposalsIdsPath = '/cached_proposals_ids.json';
