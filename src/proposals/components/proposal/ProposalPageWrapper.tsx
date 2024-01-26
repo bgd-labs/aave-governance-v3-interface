@@ -1,5 +1,6 @@
 import {
   CombineProposalState,
+  ProposalHistoryItem,
   ProposalMetadata,
   ProposalWithLoadings,
   VotersData,
@@ -7,7 +8,7 @@ import {
 import React, { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store';
-import { appConfig } from '../../../utils/appConfig';
+import { appConfig, isForIPFS } from '../../../utils/appConfig';
 import {
   getProposalDataById,
   selectIpfsDataByProposalId,
@@ -25,6 +26,7 @@ interface ProposalPageWrapperProps {
   votesData?: {
     votes: VotersData[];
   };
+  cachedProposalEvents?: Record<string, ProposalHistoryItem>;
 }
 
 export function ProposalPageWrapper({
@@ -33,6 +35,7 @@ export function ProposalPageWrapper({
   ipfsDataSSR,
   cachedProposalsIds,
   votesData,
+  cachedProposalEvents,
 }: ProposalPageWrapperProps) {
   const store = useStore();
 
@@ -154,6 +157,16 @@ export function ProposalPageWrapper({
       setProposalDetailsVoters(store, votesData.votes);
     }
   }, []);
+
+  useEffect(() => {
+    if (!!cachedProposalEvents) {
+      if (!!Object.keys(cachedProposalEvents).length && !!proposalData) {
+        store.initProposalHistory(proposalData.proposal, cachedProposalEvents);
+      }
+    } else if (!cachedProposalEvents && !isForIPFS && !!proposalData) {
+      store.initProposalHistory(proposalData.proposal);
+    }
+  }, [!!Object.keys(cachedProposalEvents || {}).length, proposalData?.loading]);
 
   if (!proposalData?.proposal && ipfsData && !ipfsDataError)
     return (

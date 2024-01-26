@@ -3,6 +3,7 @@
 import {
   CachedDetails,
   ContractsConstants,
+  ProposalHistoryItem,
   ProposalMetadata,
   ProposalWithLoadings,
   VotersData,
@@ -30,6 +31,7 @@ interface ProposalClientPageSSRProps {
   proposalCount: number;
   proposalDataSSR?: ProposalWithLoadings;
   ipfsDataSSR?: ProposalMetadata;
+  cachedProposalEvents?: Record<string, ProposalHistoryItem>;
 }
 export function ProposalClientPageSSR({
   idSSR,
@@ -41,6 +43,7 @@ export function ProposalClientPageSSR({
   proposalCount,
   proposalDataSSR,
   ipfsDataSSR,
+  cachedProposalEvents,
 }: ProposalClientPageSSRProps) {
   const id = Number(idSSR);
   const store = useStore();
@@ -86,6 +89,7 @@ export function ProposalClientPageSSR({
           votesData={cachedVotesData}
           proposalDataSSR={proposalDataSSR}
           cachedProposalsIds={cachedProposalsIdsData?.cachedProposalsIds}
+          cachedProposalEvents={cachedProposalEvents}
         />
       </Container>
     );
@@ -98,6 +102,7 @@ export function ProposalClientPageSSR({
           ipfsDataSSR={cachedDetailsData?.ipfs || ipfsDataSSR}
           cachedProposalsIds={cachedProposalsIdsData?.cachedProposalsIds}
           votesData={cachedVotesData}
+          cachedProposalEvents={cachedProposalEvents}
         />
       </Container>
     );

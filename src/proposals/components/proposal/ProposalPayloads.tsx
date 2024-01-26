@@ -10,7 +10,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Hex } from 'viem';
+import { Hex, zeroHash } from 'viem';
 
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
@@ -95,6 +95,41 @@ export function PayloadError({ payload }: { payload: NewPayload }) {
   );
 }
 
+function PayloadStatusWithHash({
+  payload,
+  txHash,
+  children,
+}: {
+  payload: NewPayload;
+  txHash?: string;
+  children: ReactNode;
+}) {
+  return (
+    <>
+      {!!txHash && txHash !== zeroHash ? (
+        <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+          <Link
+            inNewWindow
+            href={`${chainInfoHelper.getChainParameters(
+              payload.chainId || appConfig.govCoreChainId,
+            ).blockExplorers?.default.url}/tx/${txHash}`}>
+            {children}
+          </Link>
+          <CopyAndExternalIconsSet
+            iconSize={12}
+            externalLink={`${chainInfoHelper.getChainParameters(
+              payload.chainId || appConfig.govCoreChainId,
+            ).blockExplorers?.default.url}/tx/${txHash}`}
+            sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
+          />
+        </Box>
+      ) : (
+        children
+      )}
+    </>
+  );
+}
+
 function PayloadItem({
   proposalId,
   payload,
@@ -149,6 +184,7 @@ function PayloadItem({
     payloadExpiredTime,
     payloadNumber,
     isFinalStatus,
+    txHash,
   } = formatPayloadData({
     payload,
     payloadCount,
@@ -156,6 +192,8 @@ function PayloadItem({
     forCreate,
     isProposalExecuted,
     proposalQueuingTime,
+    proposalId,
+    proposalHistory: store.proposalHistory,
   });
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;
@@ -333,7 +371,13 @@ function PayloadItem({
                       </IconBox>
                     </Link>
                   ) : (
-                    dayjs.unix(payload.createdAt).format('MMM D, YYYY, h:mm A')
+                    <PayloadStatusWithHash
+                      txHash={txHash}
+                      payload={payload}
+                      children={dayjs
+                        .unix(payload.createdAt)
+                        .format('MMM D, YYYY, h:mm A')}
+                    />
                   )}
                 </>
               </PayloadItemStatusInfo>
@@ -361,11 +405,13 @@ function PayloadItem({
             {isExecuted && (
               <PayloadItemStatusInfo
                 title={texts.proposals.payloadsDetails.executedAt}>
-                <>
-                  {dayjs
+                <PayloadStatusWithHash
+                  txHash={txHash}
+                  payload={payload}
+                  children={dayjs
                     .unix(payload.executedAt)
-                    .format('MMM D, YYYY, , h:mm A')}
-                </>
+                    .format('MMM D, YYYY, h:mm A')}
+                />
               </PayloadItemStatusInfo>
             )}
 
@@ -375,7 +421,7 @@ function PayloadItem({
                 <>
                   {dayjs
                     .unix(payload.cancelledAt)
-                    .format('MMM D, YYYY, , h:mm A')}
+                    .format('MMM D, YYYY, h:mm A')}
                 </>
               </PayloadItemStatusInfo>
             )}
@@ -392,7 +438,7 @@ function PayloadItem({
                             payload.delay +
                             payload.gracePeriod,
                     )
-                    .format('MMM D, YYYY, , h:mm A')}
+                    .format('MMM D, YYYY, h:mm A')}
                 </>
               </PayloadItemStatusInfo>
             )}
