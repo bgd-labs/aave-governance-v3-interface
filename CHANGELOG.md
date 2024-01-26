@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.0.0...v2.1.0) (2024-01-26)
+
+
+### Features
+
+* small improvements and bug fixes ([#62](https://github.com/bgd-labs/aave-governance-v3-interface/issues/62)) ([67be26a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/67be26a8100b773c4d71f256c546b8a3845babdc))
+
+
+### Bug Fixes
+
+* readme ([ea83bd1](https://github.com/bgd-labs/aave-governance-v3-interface/commit/ea83bd1f258df5862f753727986570e1ff23aece))
+
 ## [2.0.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v1.1.1...v2.0.0) (2024-01-25)
 
 
