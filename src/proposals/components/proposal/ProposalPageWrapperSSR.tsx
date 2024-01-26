@@ -2,6 +2,7 @@ import {
   CachedDetails,
   getVotingMachineProposalState,
   ProposalData,
+  ProposalHistoryItem,
   ProposalWithLoadings,
   VotersData,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -19,6 +20,7 @@ interface ProposalPageWrapperSSRProps {
   };
   proposalDataSSR?: ProposalWithLoadings;
   cachedProposalsIds?: number[];
+  cachedProposalEvents?: Record<string, ProposalHistoryItem>;
 }
 
 export function ProposalPageWrapperSSR({
@@ -27,6 +29,7 @@ export function ProposalPageWrapperSSR({
   votesData,
   proposalDataSSR,
   cachedProposalsIds,
+  cachedProposalEvents,
 }: ProposalPageWrapperSSRProps) {
   const store = useStore();
 
@@ -39,7 +42,7 @@ export function ProposalPageWrapperSSR({
         votingMachineState: getVotingMachineProposalState(detailsData.proposal),
         payloads: detailsData.payloads || [],
         title: detailsData.ipfs.title || `Proposal #${id}`,
-        isFinished: true,
+        isFinished: detailsData.proposal.isFinished,
       };
 
       detailsData.payloads.forEach((payload) => {
@@ -67,6 +70,7 @@ export function ProposalPageWrapperSSR({
       proposalDataSSR={proposalDataSSR}
       ipfsDataSSR={detailsData?.ipfs}
       cachedProposalsIds={cachedProposalsIds}
+      cachedProposalEvents={cachedProposalEvents}
     />
   );
 }

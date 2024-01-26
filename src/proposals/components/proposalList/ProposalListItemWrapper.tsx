@@ -40,7 +40,14 @@ export function ProposalListItemWrapper({
             ? '$secondaryFor'
             : '$light'
       }
-      wrapperCss={{ mb: 18, [theme.breakpoints.up('sm')]: { mb: 24 } }}
+      wrapperCss={{
+        mb: 18,
+        position: 'relative',
+        [theme.breakpoints.up('sm')]: { mb: 24 },
+        '&:hover': {
+          zIndex: 10,
+        },
+      }}
       css={{
         display: 'flex',
         alignItems: 'center',

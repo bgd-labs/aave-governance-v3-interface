@@ -52,14 +52,14 @@ jobs:
         with:
           retries: 3
           script: |
-            const release = await github.rest.repos.getLatestRelease({
+            const { data } = await github.rest.repos.getLatestRelease({
               owner: context.repo.owner,
-              repo: context.repo.repo
+              repo: context.repo.repo,
             })
 
             github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: release.data.id
-              body: release.data.body + `\nIpfs deployment: [${{steps.pinata.outputs.hash}}](${{steps.pinata.outputs.uri}})`
+              release_id: data.id,
+              body: data.body + `\nIpfs deployment: [${{steps.pinata.outputs.hash}}](${{steps.pinata.outputs.uri}})`,
             })

@@ -16,6 +16,7 @@ import { metaTexts } from '../../src/ui/utils/metaTexts';
 import { appConfig } from '../../src/utils/appConfig';
 import {
   cachedDetailsPath,
+  cachedEventsPath,
   cachedProposalsIdsPath,
   cachedVotesPath,
   githubStartUrl,
@@ -107,6 +108,13 @@ export default async function ProposalPage({
     ? await resCachedVotes.json()
     : undefined;
 
+  const resCachedEvents = await fetch(
+    `${githubStartUrl}${cachedEventsPath(id)}`,
+  );
+  const cachedEventsData = resCachedEvents.ok
+    ? await resCachedEvents.json()
+    : undefined;
+
   // data from contracts
   const { configs, contractsConstants } = await getGovCoreConfigs({
     client: initialClients[appConfig.govCoreChainId],
@@ -188,6 +196,7 @@ export default async function ProposalPage({
       proposalCount={proposalCount}
       proposalDataSSR={proposalDataSSR}
       ipfsDataSSR={ipfsDataSSR}
+      cachedProposalEvents={cachedEventsData}
     />
   );
 }

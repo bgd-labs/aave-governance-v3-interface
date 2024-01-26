@@ -1,8 +1,12 @@
 import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
+import React from 'react';
+
+import InfoIcon from '/public/images/icons/info.svg';
 
 import { useStore } from '../../store';
-import { Timer } from '../../ui';
+import { Timer, Tooltip } from '../../ui';
+import { IconBox } from '../../ui/primitives/IconBox';
 
 interface ProposalEstimatedStatusProps {
   proposalId: number;
@@ -75,6 +79,61 @@ export function ProposalEstimatedStatus({
           }
         />
       </Box>
+
+      {estimatedStatus === ProposalEstimatedState.PayloadsExecuted && (
+        <Box
+          sx={(theme) => ({
+            mx: 4,
+            cursor: 'help',
+            display: 'none',
+            [theme.breakpoints.up('md')]: {
+              display: 'block',
+            },
+          })}>
+          <Tooltip
+            tooltipContent={
+              <Box
+                component="p"
+                sx={{
+                  p: 12,
+                  backgroundColor: '$appBackground',
+                  typography: 'descriptor',
+                  wordBreak: 'break-word',
+                  cursor: 'default',
+                  whiteSpace: 'normal',
+                  minWidth: 250,
+                }}>
+                When a proposal has multiple payloads across different networks,
+                the execution time of each payload will be slightly different,
+                as bridging time varies depending on the destination network and
+                underlying bridge providers.
+                <br />
+                <br />
+                <span>
+                  The time on when a <b>payloads will start executing</b> refers
+                  to when the <b>first</b> network payload will be enacted.
+                </span>
+              </Box>
+            }>
+            <IconBox
+              sx={(theme) => ({
+                position: 'relative',
+                top: 1,
+                width: 14,
+                height: 14,
+                '> svg': {
+                  width: 14,
+                  height: 14,
+                  path: {
+                    fill: theme.palette.$text,
+                  },
+                },
+              })}>
+              <InfoIcon />
+            </IconBox>
+          </Tooltip>
+        </Box>
+      )}
     </Box>
   );
 }
