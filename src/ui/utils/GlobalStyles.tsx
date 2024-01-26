@@ -104,6 +104,17 @@ export function GlobalStyles() {
           border: `1px solid #101423`,
         },
       },
+      '.BoxWith3DButton': {
+        '.BoxWith3DButton__left-shadow': {
+          borderColor: '#101423',
+        },
+        '.BoxWith3DButton__bottom-shadow': {
+          borderColor: '#101423',
+        },
+        '.BoxWith3DButton__content > div': {
+          border: `1px solid #101423`,
+        },
+      },
       '.BigButton': {
         '.BoxWith3D': {
           '.BoxWith3D__content': {
@@ -278,6 +289,17 @@ export function GlobalStyles() {
           borderColor: '#05070D',
         },
         '.BoxWith3D__content > div': {
+          border: `1px solid #05070D`,
+        },
+      },
+      '.BoxWith3DButton': {
+        '.BoxWith3DButton__left-shadow': {
+          borderColor: '#05070D',
+        },
+        '.BoxWith3DButton__bottom-shadow': {
+          borderColor: '#05070D',
+        },
+        '.BoxWith3DButton__content > div': {
           border: `1px solid #05070D`,
         },
       },

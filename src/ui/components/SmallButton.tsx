@@ -23,7 +23,7 @@ function InitialBox({ disabled, borderLinesColor, children }: BoxWith3DProps) {
 
   return (
     <Box
-      className="BoxWith3D__initial--box"
+      className="BoxWith3DButton__initial--box"
       sx={{
         position: 'relative',
         pb: borderSize,
@@ -31,35 +31,35 @@ function InitialBox({ disabled, borderLinesColor, children }: BoxWith3DProps) {
         hover: disabled
           ? undefined
           : {
-              '.BoxWith3D__left-shadow': {
+              '.BoxWith3DButton__left-shadow': {
                 transition: 'all 0.15s ease',
                 width: borderSize,
                 top: borderSize / 2,
               },
-              '.BoxWith3D__bottom-shadow': {
+              '.BoxWith3DButton__bottom-shadow': {
                 transition: 'all 0.09s ease',
                 height: borderSize,
                 left: borderSize / 2,
                 width: `calc(100% + ${borderSize / 6}px)`,
               },
-              '.BoxWith3D__content': {
+              '.BoxWith3DButton__content': {
                 transform: `translate(-0px, 0px)`,
               },
             },
         '&:active': disabled
           ? undefined
           : {
-              '.BoxWith3D__left-shadow': {
+              '.BoxWith3DButton__left-shadow': {
                 transition: 'all 0.15s ease',
                 width: 0,
                 top: borderSize,
               },
-              '.BoxWith3D__bottom-shadow': {
+              '.BoxWith3DButton__bottom-shadow': {
                 transition: 'all 0.09s ease',
                 height: 0,
                 left: -0.5,
               },
-              '.BoxWith3D__content': {
+              '.BoxWith3DButton__content': {
                 transform: `translate(-${borderSize}px, ${borderSize}px)`,
               },
               '.SmallButton__inner': {
@@ -102,12 +102,12 @@ function BoxWith3D({
     : theme.palette[borderLinesColor];
 
   return (
-    <Box sx={wrapperCss} className={`BoxWith3D ${className}`}>
+    <Box sx={wrapperCss} className={`"BoxWith3DButton ${className}`}>
       <InitialBox
         borderLinesColor={borderLinesColorWithRender}
         disabled={disabled}>
         <Box
-          className="BoxWith3D__left-shadow"
+          className="BoxWith3DButton__left-shadow"
           sx={{
             position: 'absolute',
             backgroundColor: leftBorderColorWithRender,
@@ -122,7 +122,7 @@ function BoxWith3D({
           }}
         />
         <Box
-          className="BoxWith3D__bottom-shadow"
+          className="BoxWith3DButton__bottom-shadow"
           sx={{
             position: 'absolute',
             backgroundColor: bottomBorderColorWithRender,
@@ -139,7 +139,7 @@ function BoxWith3D({
         />
 
         <Box
-          className="BoxWith3D__content"
+          className="BoxWith3DButton__content"
           sx={{
             position: 'relative',
             zIndex: 3,
