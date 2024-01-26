@@ -525,7 +525,11 @@ export function ProposalPage({
               />
             </Box>
 
-            <Details ipfs={ipfsData} ipfsError={ipfsDataError} />
+            <Details
+              proposalCreator={proposal.data.creator}
+              ipfs={ipfsData}
+              ipfsError={ipfsDataError}
+            />
           </RightPanelWrapper>
 
           <Box

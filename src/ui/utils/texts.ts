@@ -17,6 +17,7 @@ export const texts = {
     votingNotStartedEnd: 'has not started yet',
     walletNotConnected: 'Wallet is not connected',
     notVoted: "You didn't vote on this proposal",
+    creator: 'Creator',
     author: 'Author',
     canBeClosedByPropositionPower:
       'Proposal can be closed because the proposition power of the creator is not enough',
