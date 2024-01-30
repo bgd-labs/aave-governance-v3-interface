@@ -264,6 +264,7 @@ export function VoteModal({
       contentMinHeight={isTxStart ? 287 : 211}
       fullTxErrorMessage={fullTxErrorMessage}
       setFullTxErrorMessage={setFullTxErrorMessage}
+      contentCss={{ pt: 12 }}
       tx={tx}
       topBlock={
         !isVotingModesInfoOpen &&

@@ -26,13 +26,10 @@ export function DetailsLinks({
   const theme = useTheme();
 
   const links = [
-    {
-      title: texts.proposals.detailsLinkSnapshotVoting,
-      link: `https://snapshot.org/#/aave.eth/proposal/${ipfsHash}`,
-    },
+    // TODO: need think how to get correct snapshot link if it's real
     // {
-    //   title: texts.proposals.detailsLinkBGDReport,
-    //   link: 'https://www.google.com/', // TODO: need fix
+    //   title: texts.proposals.detailsLinkSnapshotVoting,
+    //   link: `https://snapshot.org/#/aave.eth/proposal/${ipfsHash}`,
     // },
   ];
 
@@ -46,9 +43,9 @@ export function DetailsLinks({
   if (!!prerender) {
     links.unshift({
       title: texts.proposals.detailsLinkSeatbeltReport,
-      link: `https://github.com/bgd-labs/seatbelt-for-ghosts/tree/master/reports/Aave/0xEC568fffba86c094cf06b22134B23074DFE2252c/${String(
+      link: `https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/proposals/${String(
         proposalId,
-      ).padStart(3, '0')}.md`,
+      )}.md`,
     });
   }
 

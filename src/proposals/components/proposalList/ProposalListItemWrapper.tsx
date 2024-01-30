@@ -44,9 +44,11 @@ export function ProposalListItemWrapper({
         mb: 18,
         position: 'relative',
         [theme.breakpoints.up('sm')]: { mb: 24 },
-        '&:hover': {
-          zIndex: 10,
-        },
+        '&:hover': isForHelpModal
+          ? undefined
+          : {
+              zIndex: 10,
+            },
       }}
       css={{
         display: 'flex',

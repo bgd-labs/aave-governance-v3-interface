@@ -1,3 +1,4 @@
+import { SxProps } from '@mui/system';
 import React, { useEffect } from 'react';
 
 import { BasicModal } from '../../ui';
@@ -11,6 +12,7 @@ export interface BasicActionModalProps extends ActionModalContentProps {
   setFullTxErrorMessage: (value: string) => void;
   withMinHeight?: boolean;
   minHeight?: number;
+  contentCss?: SxProps;
 }
 
 export function BasicActionModal({
@@ -30,6 +32,7 @@ export function BasicActionModal({
   tx,
   withMinHeight,
   minHeight,
+  contentCss,
 }: BasicActionModalProps) {
   useEffect(() => {
     setIsTxStart(false);
@@ -43,6 +46,7 @@ export function BasicActionModal({
       setIsOpen={setIsOpen}
       withCloseButton
       withMinHeight={withMinHeight}
+      contentCss={contentCss}
       minHeight={minHeight}>
       <ActionModalContent
         topBlock={topBlock}
