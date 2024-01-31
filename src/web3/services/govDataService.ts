@@ -41,6 +41,7 @@ import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import { writeContract } from '@wagmi/core';
 import {
+  Address,
   bytesToHex,
   encodeFunctionData,
   getContract,
@@ -254,7 +255,7 @@ export class GovDataService {
   }
 
   async getTotalPayloadsCount(
-    payloadsController: Hex,
+    payloadsController: Address,
     chainId: number,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<number> {
@@ -289,7 +290,7 @@ export class GovDataService {
 
   async getPayloads(
     chainId: number,
-    payloadsController: Hex,
+    payloadsController: Address,
     payloadsIds: number[],
   ): Promise<Payload[]> {
     const payloadsControllerDataHelper =
@@ -313,8 +314,8 @@ export class GovDataService {
 
   async getVotingData(
     initialProposals: InitialProposal[],
-    userAddress?: Hex,
-    representative?: Hex,
+    userAddress?: Address,
+    representative?: Address,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const votingMachineChainIds = initialProposals
@@ -374,8 +375,8 @@ export class GovDataService {
     configs: VotingConfig[],
     from: number,
     to?: number,
-    userAddress?: Hex,
-    representative?: Hex,
+    userAddress?: Address,
+    representative?: Address,
     pageSize?: number,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<BasicProposal[]> {
@@ -432,8 +433,8 @@ export class GovDataService {
   async getOnlyVotingMachineData(
     configs: VotingConfig[],
     proposals: ProposalData[],
-    userAddress?: Hex,
-    representative?: Hex,
+    userAddress?: Address,
+    representative?: Address,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const initialProposals = proposals.map((proposal) => {
@@ -509,7 +510,7 @@ export class GovDataService {
   }
 
   // representations
-  async getRepresentationData(address: Hex) {
+  async getRepresentationData(address: Address) {
     const data = await this.govCoreDataHelper.read.getRepresentationData([
       appConfig.govCoreConfig.contractAddress,
       address,
@@ -525,7 +526,7 @@ export class GovDataService {
   async updateRepresentatives({
     data,
   }: {
-    data: { representative: Hex; chainId: bigint }[];
+    data: { representative: Address; chainId: bigint }[];
   }) {
     if (this.wagmiConfig) {
       return await writeContract(this.wagmiConfig, {
@@ -555,7 +556,7 @@ export class GovDataService {
   }
 
   async sendProofs(
-    user: Hex,
+    user: Address,
     blockNumber: number,
     asset: string,
     chainId: number,
@@ -764,7 +765,7 @@ export class GovDataService {
     slot,
     blockNumber,
   }: {
-    underlyingAsset: Hex;
+    underlyingAsset: Address;
     slot: string;
     blockNumber: number;
   }) {
@@ -784,8 +785,8 @@ export class GovDataService {
     blockNumber,
     baseBalanceSlotRaw,
   }: {
-    userAddress: Hex;
-    underlyingAsset: Hex;
+    userAddress: Address;
+    underlyingAsset: Address;
     blockNumber: number;
     baseBalanceSlotRaw: number;
   }) {
@@ -820,11 +821,11 @@ export class GovDataService {
     proposalId: number;
     support: boolean;
     proofs: {
-      underlyingAsset: Hex;
+      underlyingAsset: Address;
       slot: bigint;
       proof: Hex;
     }[];
-    voterAddress?: Hex;
+    voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
     let votingMachine = this.votingMachines[votingChainId];
@@ -867,14 +868,14 @@ export class GovDataService {
     votingChainId: number;
     proposalId: number;
     support: boolean;
-    votingAssetsWithSlot: { underlyingAsset: Hex; slot: number }[];
+    votingAssetsWithSlot: { underlyingAsset: Address; slot: number }[];
     proofs: {
-      underlyingAsset: Hex;
+      underlyingAsset: Address;
       slot: bigint;
       proof: Hex;
     }[];
-    signerAddress: Hex;
-    voterAddress?: Hex;
+    signerAddress: Address;
+    voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
     const relay = new GelatoRelay();
@@ -974,7 +975,7 @@ export class GovDataService {
   async executePayload(
     chainId: number,
     payloadId: number,
-    payloadsController: Hex,
+    payloadsController: Address,
   ) {
     if (this.wagmiConfig) {
       return writeContract(this.wagmiConfig, {
@@ -991,7 +992,7 @@ export class GovDataService {
   async createPayload(
     chainId: number,
     payloadActions: PayloadAction[],
-    payloadsController: Hex,
+    payloadsController: Address,
   ) {
     const formattedPayloadActions = payloadActions.map((payloadData) => {
       return {
@@ -1017,12 +1018,12 @@ export class GovDataService {
   }
 
   async createProposal(
-    votingPortalAddress: Hex,
+    votingPortalAddress: Address,
     payloads: {
       chain: number;
       accessLevel: number;
       id: number;
-      payloadsController: Hex;
+      payloadsController: Address;
     }[],
     ipfsHash: Hex,
     cancellationFee: string,
@@ -1102,7 +1103,7 @@ export class GovDataService {
   // history events
   async getPayloadsCreatedEvents(
     chainId: number,
-    address: Hex,
+    address: Address,
     startBlock: number,
     endBlock: number,
   ) {
@@ -1171,7 +1172,7 @@ export class GovDataService {
 
   async getPayloadsQueuedEvents(
     chainId: number,
-    address: Hex,
+    address: Address,
     startBlock: number,
     endBlock: number,
   ) {
@@ -1186,7 +1187,7 @@ export class GovDataService {
 
   async getPayloadsExecutedEvents(
     chainId: number,
-    address: Hex,
+    address: Address,
     startBlock: number,
     endBlock: number,
   ) {

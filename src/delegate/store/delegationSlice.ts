@@ -1,3 +1,5 @@
+// TODO: need check delegation
+
 import { IERC20_ABI } from '@bgd-labs/aave-address-book';
 import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
@@ -8,7 +10,7 @@ import {
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
-import { getContract, Hex, zeroAddress } from 'viem';
+import { getContract, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -27,6 +29,7 @@ import {
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { DelegateData, DelegateItem } from '../types';
+import { getToAddress, selectDelegateToAddress } from './delegationSelectors';
 
 export interface IDelegationSlice {
   delegateData: DelegateItem[];
@@ -91,18 +94,11 @@ export const createDelegationSlice: StoreSlice<
             underlyingAsset,
             symbol,
             amount: normalizeBN(balance.toString(), 18).toNumber(),
-            votingToAddress: (votingToAddress === activeAddress ||
-            votingToAddress === zeroAddress
-              ? ''
-              : !!votingToAddress
-                ? votingToAddress
-                : '') as Hex | '',
-            propositionToAddress: (propositionToAddress === activeAddress ||
-            propositionToAddress === zeroAddress
-              ? ''
-              : !!propositionToAddress
-                ? propositionToAddress
-                : '') as Hex | '',
+            votingToAddress: getToAddress(activeAddress, votingToAddress),
+            propositionToAddress: getToAddress(
+              propositionToAddress,
+              votingToAddress,
+            ),
           };
         }),
       );
@@ -122,34 +118,38 @@ export const createDelegationSlice: StoreSlice<
     if (activeAddress) {
       for await (const formDelegateItem of formDelegateData) {
         const { underlyingAsset } = formDelegateItem;
-        let votingToAddress = formDelegateItem.votingToAddress;
-        let propositionToAddress = formDelegateItem.propositionToAddress;
 
-        // convert ENS name to address
-        if (votingToAddress && votingToAddress.length < 42) {
-          votingToAddress =
-            (await get().fetchAddressByEnsName(votingToAddress)) ||
-            votingToAddress;
-        }
-        if (propositionToAddress && propositionToAddress.length < 42) {
-          propositionToAddress =
-            (await get().fetchAddressByEnsName(propositionToAddress)) ||
-            propositionToAddress;
-        }
+        const votingToAddress = await selectDelegateToAddress({
+          store: get(),
+          activeAddress,
+          addressTo: formDelegateItem.votingToAddress,
+        });
+        const propositionToAddress = await selectDelegateToAddress({
+          store: get(),
+          activeAddress,
+          addressTo: formDelegateItem.propositionToAddress,
+        });
 
         // get previous delegation data for current asset
         const delegateData: DelegateItem = get().delegateData.filter(
           (data) => data.underlyingAsset === underlyingAsset,
         )[0];
 
-        const isAddressSame = votingToAddress === propositionToAddress;
-        const isInitialAddressSame =
-          delegateData.propositionToAddress === delegateData.votingToAddress;
+        console.log('prev delegate data', delegateData);
+        console.log('votingToAddress', votingToAddress);
+        console.log('propositionToAddress', propositionToAddress);
 
+        const isAddressSame =
+          votingToAddress.toLowerCase() === propositionToAddress.toLowerCase();
+        const isInitialAddressSame =
+          delegateData.propositionToAddress.toLowerCase() ===
+          delegateData.votingToAddress.toLowerCase();
         const isVotingToAddressSame =
-          delegateData.votingToAddress === votingToAddress;
+          delegateData.votingToAddress.toLowerCase() ===
+          votingToAddress.toLowerCase();
         const isPropositionToAddressSame =
-          delegateData.propositionToAddress === propositionToAddress;
+          delegateData.propositionToAddress.toLowerCase() ===
+          propositionToAddress.toLowerCase();
 
         // check if delegationTo is the same address and not equal to previous delegation
         if (
@@ -160,7 +160,7 @@ export const createDelegationSlice: StoreSlice<
           data.push({
             underlyingAsset,
             delegator: activeAddress,
-            delegatee: votingToAddress === '' ? activeAddress : votingToAddress,
+            delegatee: votingToAddress,
             delegationType: GovernancePowerTypeApp.All,
           });
         } else {
@@ -170,8 +170,7 @@ export const createDelegationSlice: StoreSlice<
             data.push({
               underlyingAsset,
               delegator: activeAddress,
-              delegatee:
-                votingToAddress === '' ? activeAddress : votingToAddress,
+              delegatee: votingToAddress,
               delegationType: GovernancePowerTypeApp.VOTING,
             });
           }
@@ -180,10 +179,7 @@ export const createDelegationSlice: StoreSlice<
             data.push({
               underlyingAsset,
               delegator: activeAddress,
-              delegatee:
-                propositionToAddress === ''
-                  ? activeAddress
-                  : propositionToAddress,
+              delegatee: propositionToAddress,
               delegationType: GovernancePowerTypeApp.PROPOSITION,
               increaseNonce:
                 !isVotingToAddressSame && !isPropositionToAddressSame,

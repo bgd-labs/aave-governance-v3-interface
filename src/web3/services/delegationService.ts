@@ -8,6 +8,7 @@ import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { signTypedData, writeContract } from '@wagmi/core';
 import dayjs from 'dayjs';
 import {
+  Address,
   encodeFunctionData,
   getContract,
   Hex,
@@ -32,17 +33,17 @@ export enum GovernancePowerTypeApp {
 }
 
 export type DelegateDataParams = {
-  underlyingAsset: Hex;
-  delegator: Hex;
-  delegatee: Hex;
+  underlyingAsset: Address;
+  delegator: Address;
+  delegatee: Address;
   delegationType: GovernancePowerTypeApp;
   increaseNonce?: boolean;
 };
 
 export type BatchMetaDelegateParams = {
-  underlyingAsset: Hex;
-  delegator: Hex;
-  delegatee: Hex;
+  underlyingAsset: Address;
+  delegator: Address;
+  delegatee: Address;
   deadline: bigint;
   v: number;
   r: Hex;
@@ -62,7 +63,7 @@ export class DelegationService {
     this.wagmiConfig = wagmiConfig;
   }
 
-  async getUserPowers(userAddress: Hex, underlyingAssets: Hex[]) {
+  async getUserPowers(userAddress: Address, underlyingAssets: Address[]) {
     const contracts = underlyingAssets.map((asset) =>
       getContract({
         address: asset,
@@ -139,7 +140,7 @@ export class DelegationService {
     );
   }
 
-  async getDelegates(underlyingAsset: Hex, delegator: Hex) {
+  async getDelegates(underlyingAsset: Address, delegator: Address) {
     const assetContract = getContract({
       address: underlyingAsset,
       abi: IAaveTokenV3_ABI,
@@ -148,7 +149,10 @@ export class DelegationService {
     return await assetContract.read.getDelegates([delegator]);
   }
 
-  async getDelegatedPropositionPower(underlyingAssets: Hex[], user: Hex) {
+  async getDelegatedPropositionPower(
+    underlyingAssets: Address[],
+    user: Address,
+  ) {
     const contracts = underlyingAssets.map((asset) =>
       getContract({
         address: asset,
@@ -174,8 +178,8 @@ export class DelegationService {
 
   async getDelegatedVotingPowerByBlockHash(
     blockHash: Hex,
-    userAddress: Hex,
-    underlyingAssets: Hex[],
+    userAddress: Address,
+    underlyingAssets: Address[],
   ) {
     const client = this.clients[appConfig.govCoreChainId];
     const blockNumber = await getBlock(client, {
@@ -235,10 +239,10 @@ export class DelegationService {
   }
 
   async delegateMetaSig(
-    underlyingAsset: Hex,
-    delegateToAddress: Hex,
+    underlyingAsset: Address,
+    delegateToAddress: Address,
     delegationType: GovernancePowerTypeApp,
-    activeAddress: Hex,
+    activeAddress: Address,
     increaseNonce?: boolean,
   ): Promise<BatchMetaDelegateParams | undefined> {
     if (this.wagmiConfig) {
@@ -350,7 +354,7 @@ export class DelegationService {
 
   async batchMetaDelegate(
     sigs: BatchMetaDelegateParams[],
-    accountAddress: Hex,
+    accountAddress: Address,
   ) {
     const delegateHelperContract = getContract({
       abi: IMetaDelegateHelper_ABI,
@@ -377,8 +381,8 @@ export class DelegationService {
 
   // need only for gnosis safe wallet
   async delegate(
-    underlyingAsset: Hex,
-    delegateToAddress: Hex,
+    underlyingAsset: Address,
+    delegateToAddress: Address,
     type: GovernancePowerTypeApp,
   ) {
     if (this.wagmiConfig) {
@@ -402,7 +406,10 @@ export class DelegationService {
     }
   }
 
-  getDelegateTxParams(delegateToAddress: Hex, type: GovernancePowerTypeApp) {
+  getDelegateTxParams(
+    delegateToAddress: Address,
+    type: GovernancePowerTypeApp,
+  ) {
     if (type === GovernancePowerTypeApp.All) {
       return encodeFunctionData({
         abi: IAaveTokenV3_ABI,

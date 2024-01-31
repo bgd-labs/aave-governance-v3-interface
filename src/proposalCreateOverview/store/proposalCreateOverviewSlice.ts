@@ -5,7 +5,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -17,7 +17,7 @@ import { PayloadParams } from '../types';
 
 export type NewPayload = Payload & {
   seatbeltMD?: string;
-  creator?: Hex;
+  creator?: Address;
   transactionHash?: string;
 };
 
@@ -157,7 +157,7 @@ export const createProposalCreateOverviewSlice: StoreSlice<
               const events =
                 await get().govDataService.getPayloadsCreatedEvents(
                   payload.chainId,
-                  payload.payloadsController as Hex,
+                  payload.payloadsController as Address,
                   minBlockNumber,
                   maxBlockNumber,
                 );

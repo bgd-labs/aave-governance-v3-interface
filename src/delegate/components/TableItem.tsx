@@ -1,5 +1,5 @@
 import { Box, useTheme } from '@mui/system';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
 import { useStore } from '../../store';
 import { Divider } from '../../ui';
@@ -12,11 +12,11 @@ import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
 
 export interface TableItemProps {
-  underlyingAsset?: Hex;
+  underlyingAsset?: Address;
   symbol?: Token;
   amount?: number;
-  votingToAddress?: Hex | '';
-  propositionToAddress?: Hex | '';
+  votingToAddress?: Address | string;
+  propositionToAddress?: Address | string;
   loading?: boolean;
   isEdit?: boolean;
   isViewChanges?: boolean;

@@ -1,3 +1,5 @@
+// TODO: need make general function getScanLink(type|address|chainId)
+
 import { Listbox } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';

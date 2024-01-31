@@ -8,7 +8,6 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Hex } from 'viem';
 
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
@@ -53,7 +52,6 @@ export function DelegatePage() {
     setIsDelegateChangedView,
     delegate,
     incorrectDelegationToFields,
-    ensData,
   } = store;
 
   const [isEdit, setIsEdit] = useState(false);
@@ -100,18 +98,13 @@ export function DelegatePage() {
     }
   }, [delegateData.length]);
 
-  // TODO: need fix `ensName` should be string
   useEffect(() => {
     setFormDelegateData(
       delegateData.map((data) => {
         return {
           underlyingAsset: data.underlyingAsset,
-          votingToAddress:
-            (ensData[data.votingToAddress.toLocaleLowerCase() as Hex]
-              ?.name as Hex) || data.votingToAddress,
-          propositionToAddress:
-            (ensData[data.propositionToAddress.toLocaleLowerCase() as Hex]
-              ?.name as Hex) || data.propositionToAddress,
+          votingToAddress: data.votingToAddress,
+          propositionToAddress: data.propositionToAddress,
         };
       }),
     );
