@@ -12,23 +12,28 @@ import {
 import {
   BasicProposal,
   blockLimit,
+  formatToProofRLP,
   getBlocksForEvents,
   getDetailedProposalsData,
+  getExtendedBlock,
   getGovCoreConfigs,
   getPayloadsCreated,
   getPayloadsExecuted,
   getPayloadsQueued,
+  getProof,
   getProposalActivated,
   getProposalActivatedOnVM,
   getProposalCreated,
   getProposalQueued,
   getProposalVotingClosed,
+  getSolidityStorageSlotBytes,
   getVoters,
   InitialProposal,
   Payload,
   PayloadAction,
   PayloadForCreation,
   PayloadState,
+  prepareBLockRLP,
   ProposalData,
   updateVotingMachineData,
   VMProposalStructOutput,
@@ -52,18 +57,11 @@ import {
   zeroAddress,
   zeroHash,
 } from 'viem';
-import { getBlock, getBlockNumber, readContract } from 'viem/actions';
+import { getBlockNumber, readContract } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { appConfig, gelatoApiKeys } from '../../utils/appConfig';
-import {
-  formatToProofRLP,
-  getExtendedBlock,
-  getProof,
-  getSolidityStorageSlotBytes,
-  prepareBLockRLP,
-} from '../utils/helperToGetProofs';
 import { getVoteSignatureParams } from '../utils/signatures';
 
 export const PAGE_SIZE = 12;
@@ -751,63 +749,6 @@ export class GovDataService {
     }
     return undefined;
   }
-
-  // proofs for vote
-  async getCoreBlockNumber(blockHash: Hex) {
-    return Number(
-      (await getBlock(this.clients[appConfig.govCoreChainId], { blockHash }))
-        .number,
-    );
-  }
-
-  async getProofs({
-    underlyingAsset,
-    slot,
-    blockNumber,
-  }: {
-    underlyingAsset: Address;
-    slot: string;
-    blockNumber: number;
-  }) {
-    const rawProofData = await getProof(
-      this.clients[appConfig.govCoreChainId],
-      underlyingAsset,
-      [slot],
-      blockNumber,
-    );
-
-    return formatToProofRLP(rawProofData.storageProof[0].proof);
-  }
-
-  async getAndFormatProof({
-    userAddress,
-    underlyingAsset,
-    blockNumber,
-    baseBalanceSlotRaw,
-  }: {
-    userAddress: Address;
-    underlyingAsset: Address;
-    blockNumber: number;
-    baseBalanceSlotRaw: number;
-  }) {
-    const hashedHolderSlot = getSolidityStorageSlotBytes(
-      pad(toHex(baseBalanceSlotRaw), { size: 32 }),
-      userAddress,
-    );
-
-    const proof = await this.getProofs({
-      underlyingAsset,
-      slot: hashedHolderSlot,
-      blockNumber,
-    });
-
-    return {
-      underlyingAsset,
-      slot: BigInt(baseBalanceSlotRaw),
-      proof,
-    };
-  }
-  // end proofs
 
   async vote({
     votingChainId,

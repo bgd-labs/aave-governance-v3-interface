@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { zeroAddress } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
-import { getTokenName } from '../../utils/getTokenName';
+import { getAssetName } from '../../utils/getAssetName';
 
 export function getProposalData() {
   return {
@@ -86,7 +86,7 @@ export function getProposalData() {
         {
           blockHash:
             '0x411a5298589b9cfac5848f43dff3cf06d894693d044447791dd25d3fcf16723e',
-          tokenName: getTokenName(appConfig.additional.aaveAddress),
+          tokenName: getAssetName(appConfig.additional.aaveAddress),
           underlyingAsset: appConfig.additional.aaveAddress,
           value: '250',
           basicValue: '2500000000000000000000',
@@ -96,7 +96,7 @@ export function getProposalData() {
         {
           blockHash:
             '0x411a5298589b9cfac5848f43dff3cf06d894693d044447791dd25d3fcf16723e',
-          tokenName: getTokenName(appConfig.additional.stkAAVEAddress),
+          tokenName: getAssetName(appConfig.additional.stkAAVEAddress),
           underlyingAsset: appConfig.additional.stkAAVEAddress,
           value: '50',
           basicValue: '500000000000000000000',
@@ -106,7 +106,7 @@ export function getProposalData() {
         {
           blockHash:
             '0x411a5298589b9cfac5848f43dff3cf06d894693d044447791dd25d3fcf16723e',
-          tokenName: getTokenName(appConfig.additional.aAaveAddress),
+          tokenName: getAssetName(appConfig.additional.aAaveAddress),
           underlyingAsset: appConfig.additional.aAaveAddress,
           value: '0',
           basicValue: '0',

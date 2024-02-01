@@ -1,3 +1,5 @@
+// TODO: need fix ternary
+
 import {
   CombineProposalState,
   formatProposal,

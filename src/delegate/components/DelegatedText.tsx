@@ -1,5 +1,4 @@
-// TODO: need make general function getScanLink(type|address|chainId)
-
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React from 'react';
 import { Address } from 'viem';
@@ -9,18 +8,12 @@ import { Link } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
-import { appConfig } from '../../utils/appConfig';
-import { chainInfoHelper } from '../../utils/configs';
-import { getTokenName, Token } from '../../utils/getTokenName';
+import { getAssetName } from '../../utils/getAssetName';
+import { getScanLink } from '../../utils/getScanLink';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty } from '../../web3/store/ensSlice';
 import { isEnsName } from '../../web3/utils/ensHelpers';
 import { DelegateData, DelegateItem, TxDelegateData } from '../types';
-
-function generateScanLink(address: string) {
-  return `${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-    .blockExplorers?.default.url}/address/${address}`;
-}
 
 function getPreText({
   condition,
@@ -166,7 +159,7 @@ export function DelegatedText({
   for (const formDelegateItem of formDelegateData) {
     const { votingToAddress, propositionToAddress, underlyingAsset } =
       formDelegateItem;
-    const symbol = getTokenName(underlyingAsset) || Token.AAVE;
+    const symbol = getAssetName(underlyingAsset) || Asset.AAVE;
 
     // get previous delegation data for current asset
     const delegateDataLocal: DelegateItem = delegateData.filter(
@@ -272,13 +265,19 @@ export function DelegatedText({
 
         const link =
           typeof data.bothAddresses !== 'undefined' && data.bothAddresses !== ''
-            ? generateScanLink(data.bothAddresses)
+            ? getScanLink({
+                address: data.bothAddresses,
+              })
             : typeof data.votingToAddress !== 'undefined' &&
                 data.votingToAddress !== ''
-              ? generateScanLink(data.votingToAddress)
+              ? getScanLink({
+                  address: data.votingToAddress,
+                })
               : typeof data.propositionToAddress !== 'undefined' &&
                   data.propositionToAddress !== ''
-                ? generateScanLink(data.propositionToAddress)
+                ? getScanLink({
+                    address: data.propositionToAddress,
+                  })
                 : undefined;
 
         return (

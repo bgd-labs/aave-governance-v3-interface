@@ -2,6 +2,7 @@ import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 import {
   blockLimit,
   getPayloadsCreated,
+  getProof,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
@@ -18,7 +19,6 @@ import {
   setLocalStorageRpcUrls,
 } from '../../utils/localStorage';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
-import { getProof } from '../../web3/utils/helperToGetProofs';
 import { selectAppClients } from './rpcSwitcherSelectors';
 
 export type AppClient = {

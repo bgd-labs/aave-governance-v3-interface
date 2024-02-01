@@ -1,5 +1,3 @@
-// TODO: need make general function getScanLink(type|address|chainId)
-
 import { Listbox } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
@@ -18,7 +16,7 @@ import { IconBox } from '../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
-import { chainInfoHelper } from '../../utils/configs';
+import { getScanLink } from '../../utils/getScanLink';
 
 interface PayloadsControllerSelectProps {
   chainId: number;
@@ -77,8 +75,10 @@ export function PayloadsControllerSelect({
             <CopyAndExternalIconsSet
               sx={{ ml: 8 }}
               iconSize={14}
-              externalLink={`${chainInfoHelper.getChainParameters(chainId)
-                .blockExplorers?.default.url}/address/${controllerAddress}`}
+              externalLink={getScanLink({
+                chainId,
+                address: controllerAddress,
+              })}
             />
           </>
         ) : (
@@ -208,8 +208,7 @@ export function PayloadsControllerSelect({
           <CopyAndExternalIconsSet
             sx={{ ml: 8 }}
             iconSize={14}
-            externalLink={`${chainInfoHelper.getChainParameters(chainId)
-              .blockExplorers?.default.url}/address/${controllerAddress}`}
+            externalLink={getScanLink({ chainId, address: controllerAddress })}
           />
         </Box>
       </NoSSR>

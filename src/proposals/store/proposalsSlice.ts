@@ -3,9 +3,13 @@ import {
   BasicProposal,
   checkHash,
   ContractsConstants,
+  formatBalances,
+  getProofOfRepresentative,
   getProposalMetadata,
   getProposalStepsAndAmounts,
+  getVotingAssetsWithSlot,
   getVotingMachineProposalState,
+  getVotingProofs,
   InitialPayload,
   normalizeBN,
   Payload,
@@ -20,7 +24,7 @@ import {
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 import { getBlock } from 'viem/actions';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
@@ -40,12 +44,7 @@ import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
-import {
-  formatBalances,
-  getProofOfRepresentative,
-  getVotingAssetsWithSlot,
-  getVotingProofs,
-} from '../utils/formatBalances';
+import { assetsBalanceSlots } from '../../web3/utils/assetsBalanceSlots';
 import { IProposalsHistorySlice } from './proposalsHistorySlice';
 import { IProposalsListCacheSlice } from './proposalsListCacheSlice';
 import {
@@ -1183,28 +1182,39 @@ export const createProposalsSlice: StoreSlice<
     voterAddress,
   }) => {
     const activeAddress = get().activeWallet?.address;
+    const aAaveAddress = appConfig.additional.aAaveAddress;
+    const govCoreClient = get().appClients[appConfig.govCoreChainId].instance;
+
     const proposal = get().detailedProposalsData[proposalId];
     const govDataService = get().govDataService;
 
     if (proposal && activeAddress) {
       if (balances && balances.length > 0) {
-        const formattedBalances = formatBalances(balances);
+        const formattedBalances = formatBalances(
+          balances,
+          appConfig.additional.aAaveAddress,
+        );
 
         if (voterAddress) {
-          const proofs = await getVotingProofs(
-            proposal.snapshotBlockHash as Hex,
-            formattedBalances,
-            govDataService,
-            voterAddress as Hex,
-          );
+          const proofs = await getVotingProofs({
+            client: govCoreClient,
+            blockHash: proposal.snapshotBlockHash as Hex,
+            balances: formattedBalances,
+            address: voterAddress as Address,
+            aAaveAddress,
+            slots: assetsBalanceSlots,
+          });
 
           if (proofs && proofs.length > 0) {
-            const proofOfRepresentative = await getProofOfRepresentative(
-              proposal.votingMachineData.l1BlockHash,
-              govDataService,
-              voterAddress as Hex,
-              votingChainId,
-            );
+            const proofOfRepresentative = await getProofOfRepresentative({
+              client: govCoreClient,
+              blockHash: proposal.votingMachineData.l1BlockHash,
+              address: voterAddress as Address,
+              chainId: votingChainId,
+              govCoreAddress: appConfig.govCoreConfig.contractAddress,
+              aAaveAddress,
+              slots: assetsBalanceSlots,
+            });
 
             await get().executeTx({
               body: () => {
@@ -1214,11 +1224,14 @@ export const createProposalsSlice: StoreSlice<
                       votingChainId,
                       proposalId,
                       support,
-                      votingAssetsWithSlot:
-                        getVotingAssetsWithSlot(formattedBalances),
+                      votingAssetsWithSlot: getVotingAssetsWithSlot({
+                        balances: formattedBalances,
+                        aAaveAddress,
+                        slots: assetsBalanceSlots,
+                      }),
                       proofs,
                       signerAddress: activeAddress,
-                      voterAddress: voterAddress as Hex,
+                      voterAddress: voterAddress as Address,
                       proofOfRepresentation: proofOfRepresentative,
                     })
                   : govDataService.vote({
@@ -1226,7 +1239,7 @@ export const createProposalsSlice: StoreSlice<
                       proposalId,
                       support,
                       proofs,
-                      voterAddress: voterAddress as Hex,
+                      voterAddress: voterAddress as Address,
                       proofOfRepresentation: proofOfRepresentative,
                     });
               },
@@ -1242,12 +1255,14 @@ export const createProposalsSlice: StoreSlice<
             });
           }
         } else {
-          const proofs = await getVotingProofs(
-            proposal.votingMachineData.l1BlockHash,
-            formattedBalances,
-            govDataService,
-            activeAddress,
-          );
+          const proofs = await getVotingProofs({
+            client: govCoreClient,
+            blockHash: proposal.votingMachineData.l1BlockHash,
+            balances: formattedBalances,
+            address: activeAddress,
+            aAaveAddress,
+            slots: assetsBalanceSlots,
+          });
 
           if (proofs && proofs.length > 0) {
             await get().executeTx({
@@ -1258,8 +1273,11 @@ export const createProposalsSlice: StoreSlice<
                       votingChainId,
                       proposalId,
                       support,
-                      votingAssetsWithSlot:
-                        getVotingAssetsWithSlot(formattedBalances),
+                      votingAssetsWithSlot: getVotingAssetsWithSlot({
+                        balances: formattedBalances,
+                        aAaveAddress,
+                        slots: assetsBalanceSlots,
+                      }),
                       signerAddress: activeAddress,
                       proofs,
                     })

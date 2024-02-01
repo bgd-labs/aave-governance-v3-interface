@@ -1,10 +1,9 @@
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Address } from 'viem';
-
-import { Token } from '../utils/getTokenName';
 
 export type DelegateItem = {
   underlyingAsset: Address;
-  symbol: Token;
+  symbol: Asset;
   amount: number;
   votingToAddress: Address | string;
   propositionToAddress: Address | string;
@@ -17,7 +16,7 @@ export type DelegateData = {
 };
 
 export type TxDelegateData = {
-  symbol: Token;
+  symbol: Asset;
   underlyingAsset: Address;
   bothAddresses?: Address | string;
   votingToAddress?: Address | string;

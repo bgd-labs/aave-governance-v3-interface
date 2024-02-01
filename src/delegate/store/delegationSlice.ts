@@ -1,7 +1,7 @@
 // TODO: need check delegation
 
 import { IERC20_ABI } from '@bgd-labs/aave-address-book';
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset, normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
   safeSdkOptions,
   StoreSlice,
@@ -20,7 +20,7 @@ import {
 } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
-import { getTokenName, Token } from '../../utils/getTokenName';
+import { getAssetName } from '../../utils/getAssetName';
 import {
   BatchMetaDelegateParams,
   DelegateDataParams,
@@ -79,7 +79,7 @@ export const createDelegationSlice: StoreSlice<
             address: underlyingAsset,
             client: get().appClients[appConfig.govCoreChainId].instance,
           });
-          const symbol = getTokenName(underlyingAsset) as Token;
+          const symbol = getAssetName(underlyingAsset) as Asset;
           const balance = await erc20.read.balanceOf([activeAddress]);
 
           const delegatesAddresses = await get().delegationService.getDelegates(

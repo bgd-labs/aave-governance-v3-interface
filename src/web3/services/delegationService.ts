@@ -19,7 +19,7 @@ import { getBlock, multicall } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { appConfig } from '../../utils/appConfig';
-import { getTokenName } from '../../utils/getTokenName';
+import { getAssetName } from '../../utils/getAssetName';
 
 export enum GovernancePowerType {
   VOTING,
@@ -131,7 +131,7 @@ export class DelegationService {
 
         return {
           timestamp: dayjs().unix(),
-          tokenName: getTokenName(contract.address),
+          tokenName: getAssetName(contract.address),
           underlyingAsset: contract.address,
           proposition,
           voting,
@@ -228,7 +228,7 @@ export class DelegationService {
 
       return {
         blockHash,
-        tokenName: getTokenName(asset),
+        tokenName: getAssetName(asset),
         underlyingAsset: asset,
         basicValue: String(votingPower),
         value: normalizeBN(String(votingPower), 18).toString(),

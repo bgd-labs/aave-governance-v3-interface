@@ -28,8 +28,7 @@ import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalI
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { formatPayloadData } from '../../utils/formatPayloadData';
 import { PayloadActions } from './PayloadActions';
 import { PayloadCreator } from './PayloadCreator';
@@ -84,9 +83,10 @@ export function PayloadError({ payload }: { payload: NewPayload }) {
         payloadController:{' '}
         <Link
           css={{ display: 'inline-block' }}
-          href={`${chainInfoHelper.getChainParameters(
-            payload.chainId || appConfig.govCoreChainId,
-          ).blockExplorers?.default.url}/address/${payload.payloadsController}`}
+          href={getScanLink({
+            chainId: payload.chainId,
+            address: payload.payloadsController,
+          })}
           inNewWindow>
           {payload.payloadsController}
         </Link>
@@ -110,16 +110,20 @@ function PayloadStatusWithHash({
         <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
           <Link
             inNewWindow
-            href={`${chainInfoHelper.getChainParameters(
-              payload.chainId || appConfig.govCoreChainId,
-            ).blockExplorers?.default.url}/tx/${txHash}`}>
+            href={getScanLink({
+              chainId: payload.chainId,
+              address: txHash,
+              type: 'tx',
+            })}>
             {children}
           </Link>
           <CopyAndExternalIconsSet
             iconSize={12}
-            externalLink={`${chainInfoHelper.getChainParameters(
-              payload.chainId || appConfig.govCoreChainId,
-            ).blockExplorers?.default.url}/tx/${txHash}`}
+            externalLink={getScanLink({
+              chainId: payload.chainId,
+              address: txHash,
+              type: 'tx',
+            })}
             sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
           />
         </Box>
@@ -342,10 +346,11 @@ function PayloadItem({
                     <Link
                       css={{ display: 'inline-flex', alignItems: 'center' }}
                       inNewWindow
-                      href={`${chainInfoHelper.getChainParameters(
-                        payload.chainId || appConfig.govCoreChainId,
-                      ).blockExplorers?.default
-                        .url}/tx/${createTransactionHash}`}>
+                      href={getScanLink({
+                        chainId: payload.chainId,
+                        address: createTransactionHash,
+                        type: 'tx',
+                      })}>
                       {dayjs
                         .unix(payload.createdAt)
                         .format('MMM D, YYYY, h:mm A')}

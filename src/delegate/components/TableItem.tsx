@@ -1,3 +1,4 @@
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { Address } from 'viem';
 
@@ -6,14 +7,13 @@ import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
 import { TokenIcon } from '../../ui/components/TokenIcon';
-import { Token } from '../../utils/getTokenName';
 import { DelegateData } from '../types';
 import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
 
 export interface TableItemProps {
   underlyingAsset?: Address;
-  symbol?: Token;
+  symbol?: Asset;
   amount?: number;
   votingToAddress?: Address | string;
   propositionToAddress?: Address | string;

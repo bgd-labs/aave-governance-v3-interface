@@ -1,3 +1,5 @@
+// TODO: need fix ternary
+
 import { ProposalStateWithName } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled, SxProps, useTheme } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
