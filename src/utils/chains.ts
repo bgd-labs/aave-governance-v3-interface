@@ -14,6 +14,7 @@ import {
   optimism,
   polygon,
   polygonMumbai,
+  scroll,
   sepolia,
 } from 'viem/chains';
 
@@ -74,6 +75,10 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://gnosis.blockpi.network/v1/rpc/public',
     'https://gnosis-mainnet.public.blastapi.io',
   ],
+  [scroll.id]: [
+    'https://scroll.blockpi.network/v1/rpc/public',
+    'https://scroll-mainnet.public.blastapi.io',
+  ],
   // testnets
   [goerli.id]: [
     'https://ethereum-goerli.publicnode.com',
@@ -124,6 +129,7 @@ export const CHAINS: Record<number, Chain> = {
   [metis.id]: setChain(metis),
   [optimism.id]: setChain(optimism),
   [gnosis.id]: setChain(gnosis),
+  [scroll.id]: setChain(scroll),
   // testnets
   [goerli.id]: setChain(goerli),
   [sepolia.id]: setChain(sepolia),
