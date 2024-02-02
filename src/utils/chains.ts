@@ -14,36 +14,50 @@ import {
   optimism,
   polygon,
   polygonMumbai,
+  scroll,
   sepolia,
 } from 'viem/chains';
 
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
-    'https://blissful-purple-sky.quiknode.pro',
+    process.env.NEXT_PUBLIC_RPC_MAINNET ||
+      'https://blissful-purple-sky.quiknode.pro',
     'https://rpc.ankr.com/eth',
     'https://eth.nodeconnect.org',
   ],
   [polygon.id]: [
+    process.env.NEXT_PUBLIC_RPC_POLYGON ||
+      'https://polygon.blockpi.network/v1/rpc/public',
     'https://polygon.blockpi.network/v1/rpc/public',
     'https://polygon.llamarpc.com',
     'https://polygon-bor.publicnode.com',
     'https://endpoints.omniatech.io/v1/matic/mainnet/public',
   ],
   [avalanche.id]: [
+    process.env.NEXT_PUBLIC_RPC_AVALANCHE ||
+      'https://api.avax.network/ext/bc/C/rpc',
     'https://api.avax.network/ext/bc/C/rpc',
     'https://avalanche.drpc.org',
     'https://avax.meowrpc.com',
     'https://avalanche.blockpi.network/v1/rpc/public',
   ],
-  [bsc.id]: ['https://binance.llamarpc.com', 'https://bsc.meowrpc.com'],
+  [bsc.id]: [
+    process.env.NEXT_PUBLIC_RPC_BNB || 'https://bsc.meowrpc.com',
+    'https://binance.llamarpc.com',
+    'https://bsc.meowrpc.com',
+  ],
   [base.id]: [
+    process.env.NEXT_PUBLIC_RPC_BASE ||
+      'https://base.blockpi.network/v1/rpc/public',
     'https://base.blockpi.network/v1/rpc/public',
     'https://base.llamarpc.com',
     'https://base-mainnet.public.blastapi.io',
     'https://base.meowrpc.com',
   ],
   [arbitrum.id]: [
+    process.env.NEXT_PUBLIC_RPC_ARBITRUM ||
+      'https://endpoints.omniatech.io/v1/arbitrum/one/public',
     'https://arbitrum.llamarpc.com',
     'https://arb-mainnet-public.unifra.io',
     'https://endpoints.omniatech.io/v1/arbitrum/one/public',
@@ -60,6 +74,10 @@ export const initialRpcUrls: Record<number, string[]> = {
   [gnosis.id]: [
     'https://gnosis.blockpi.network/v1/rpc/public',
     'https://gnosis-mainnet.public.blastapi.io',
+  ],
+  [scroll.id]: [
+    'https://scroll.blockpi.network/v1/rpc/public',
+    'https://scroll-mainnet.public.blastapi.io',
   ],
   // testnets
   [goerli.id]: [
@@ -111,6 +129,7 @@ export const CHAINS: Record<number, Chain> = {
   [metis.id]: setChain(metis),
   [optimism.id]: setChain(optimism),
   [gnosis.id]: setChain(gnosis),
+  [scroll.id]: setChain(scroll),
   // testnets
   [goerli.id]: setChain(goerli),
   [sepolia.id]: setChain(sepolia),
@@ -121,8 +140,8 @@ export const CHAINS: Record<number, Chain> = {
 
 export const fallBackConfig = {
   rank: false,
-  retryDelay: 100,
-  retryCount: 5,
+  retryDelay: 30,
+  retryCount: 3,
 };
 
 export const createViemClient = (

@@ -14,6 +14,7 @@ import {
   optimism,
   polygon,
   polygonMumbai,
+  scroll,
   sepolia,
 } from 'viem/chains';
 
@@ -59,6 +60,8 @@ const getIconNetworkName = (chainId: number) => {
       return 'optimism';
     case gnosis.id:
       return 'gnosis';
+    case scroll.id:
+      return 'scroll';
     default:
       return 'ethereum';
   }

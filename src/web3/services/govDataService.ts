@@ -486,7 +486,7 @@ export class GovDataService {
         client: this.clients[votingChainId],
         endBlock,
         startBlock,
-        blockLimit,
+        blockLimit: isForIPFS ? blockLimit : 9999,
         chainId: votingChainId,
       });
 
