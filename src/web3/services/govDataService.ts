@@ -61,7 +61,7 @@ import { getBlockNumber, readContract } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { appConfig, gelatoApiKeys } from '../../utils/appConfig';
+import { appConfig, gelatoApiKeys, isForIPFS } from '../../utils/appConfig';
 import { getVoteSignatureParams } from '../utils/signatures';
 
 export const PAGE_SIZE = 12;
