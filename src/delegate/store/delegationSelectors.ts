@@ -28,10 +28,13 @@ export const selectDelegateToAddress = async ({
     // get address `to` from ens name
     const addressFromENSName = await store.fetchAddressByEnsName(addressTo);
     if (addressFromENSName) {
-      return addressFromENSName;
+      if (addressFromENSName.toLowerCase() === activeAddress.toLowerCase()) {
+        return '';
+      } else {
+        return addressFromENSName;
+      }
     } else {
-      // return active address as default
-      return activeAddress;
+      return '';
     }
   }
 };

@@ -174,7 +174,10 @@ export function DelegateTableItemAddress({
 
   const isAddressToVisible =
     formattedAddress.toLowerCase() !==
-    (isEnsName(addressTo || '') ? hoveredAddressTo : addressTo)?.toLowerCase();
+    ((isEnsName(addressTo || '')
+      ? hoveredAddressTo
+      : addressTo
+    )?.toLowerCase() || '');
 
   return (
     <>

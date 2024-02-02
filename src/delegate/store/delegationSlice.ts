@@ -1,5 +1,3 @@
-// TODO: need check delegation
-
 import { IERC20_ABI } from '@bgd-labs/aave-address-book';
 import { Asset, normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
@@ -135,10 +133,6 @@ export const createDelegationSlice: StoreSlice<
           (data) => data.underlyingAsset === underlyingAsset,
         )[0];
 
-        console.log('prev delegate data', delegateData);
-        console.log('votingToAddress', votingToAddress);
-        console.log('propositionToAddress', propositionToAddress);
-
         const isAddressSame =
           votingToAddress.toLowerCase() === propositionToAddress.toLowerCase();
         const isInitialAddressSame =
@@ -160,7 +154,7 @@ export const createDelegationSlice: StoreSlice<
           data.push({
             underlyingAsset,
             delegator: activeAddress,
-            delegatee: votingToAddress,
+            delegatee: votingToAddress === '' ? activeAddress : votingToAddress,
             delegationType: GovernancePowerTypeApp.All,
           });
         } else {
@@ -170,7 +164,8 @@ export const createDelegationSlice: StoreSlice<
             data.push({
               underlyingAsset,
               delegator: activeAddress,
-              delegatee: votingToAddress,
+              delegatee:
+                votingToAddress === '' ? activeAddress : votingToAddress,
               delegationType: GovernancePowerTypeApp.VOTING,
             });
           }
@@ -179,7 +174,10 @@ export const createDelegationSlice: StoreSlice<
             data.push({
               underlyingAsset,
               delegator: activeAddress,
-              delegatee: propositionToAddress,
+              delegatee:
+                propositionToAddress === ''
+                  ? activeAddress
+                  : propositionToAddress,
               delegationType: GovernancePowerTypeApp.PROPOSITION,
               increaseNonce:
                 !isVotingToAddressSame && !isPropositionToAddressSame,
@@ -199,12 +197,15 @@ export const createDelegationSlice: StoreSlice<
     const isWalletAddressContract = get().activeWallet?.isContractAddress;
     const data = await get().prepareDataForDelegation(formDelegateData);
 
+    console.log(data);
+
     if (activeAddress && !isWalletAddressContract) {
       if (data.length === 1) {
         await get().executeTx({
           body: () => {
             get().setModalOpen(true);
             return delegationService.delegate(
+              activeAddress,
               data[0].underlyingAsset,
               data[0].delegatee,
               data[0].delegationType,
@@ -292,6 +293,7 @@ export const createDelegationSlice: StoreSlice<
             const item = data[i];
             if (!isEqual(item, data[data.length - 1])) {
               await delegationService.delegate(
+                activeAddress,
                 item.underlyingAsset,
                 item.delegatee,
                 item.delegationType,
@@ -304,6 +306,7 @@ export const createDelegationSlice: StoreSlice<
           body: () => {
             get().setModalOpen(true);
             return delegationService.delegate(
+              activeAddress,
               data[data.length - 1].underlyingAsset,
               data[data.length - 1].delegatee,
               data[data.length - 1].delegationType,

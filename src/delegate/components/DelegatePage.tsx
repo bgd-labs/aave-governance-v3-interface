@@ -8,10 +8,11 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
+import { Address, zeroAddress } from 'viem';
 
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
-import { useStore } from '../../store';
+import { RootState, useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import {
@@ -35,6 +36,32 @@ import { isEnsName } from '../../web3/utils/ensHelpers';
 import { DelegateData, DelegateItem } from '../types';
 import { DelegateModal } from './DelegateModal';
 import { DelegateTableWrapper } from './DelegateTableWrapper';
+
+function checkAddress(
+  store: RootState,
+  activeWalletAddress: Address,
+  address?: Address | string,
+) {
+  if (
+    address === undefined ||
+    address.toLowerCase() === activeWalletAddress.toLowerCase()
+  ) {
+    return '';
+  } else if (isEnsName(address)) {
+    const addressFromENS = getAddressByENSNameIfExists(store, address);
+    if (addressFromENS) {
+      if (addressFromENS?.toLowerCase() === activeWalletAddress.toLowerCase()) {
+        return '';
+      } else {
+        return addressFromENS;
+      }
+    } else {
+      return address;
+    }
+  } else {
+    return address;
+  }
+}
 
 export function DelegatePage() {
   const theme = useTheme();
@@ -118,18 +145,16 @@ export function DelegatePage() {
     const formattedFormData = formDelegateData.map((data) => {
       return {
         underlyingAsset: data.underlyingAsset,
-        votingToAddress:
-          data.votingToAddress === undefined ||
-          data.votingToAddress.toLocaleLowerCase() ===
-            activeWallet?.address.toLocaleLowerCase()
-            ? ''
-            : data.votingToAddress,
-        propositionToAddress:
-          data.propositionToAddress === undefined ||
-          data.propositionToAddress.toLocaleLowerCase() ===
-            activeWallet?.address.toLocaleLowerCase()
-            ? ''
-            : data.propositionToAddress,
+        votingToAddress: checkAddress(
+          store,
+          activeWallet?.address || zeroAddress,
+          data.votingToAddress,
+        ),
+        propositionToAddress: checkAddress(
+          store,
+          activeWallet?.address || zeroAddress,
+          data.propositionToAddress,
+        ),
       };
     });
 
@@ -308,39 +333,23 @@ export function DelegatePage() {
                           delegateData.map((data) => {
                             return {
                               underlyingAsset: data.underlyingAsset,
-                              votingToAddress:
-                                data.votingToAddress?.toLocaleLowerCase(),
-                              propositionToAddress:
-                                data.propositionToAddress?.toLocaleLowerCase(),
+                              votingToAddress: data.votingToAddress,
+                              propositionToAddress: data.propositionToAddress,
                             };
                           }),
                           values.formDelegateData.map((data) => {
                             return {
                               underlyingAsset: data.underlyingAsset,
-                              votingToAddress:
-                                data.votingToAddress === undefined ||
-                                data.votingToAddress.toLocaleLowerCase() ===
-                                  activeWallet.address.toLocaleLowerCase()
-                                  ? ''
-                                  : isEnsName(data.votingToAddress)
-                                    ? getAddressByENSNameIfExists(
-                                        store,
-                                        data.votingToAddress,
-                                      ) ||
-                                      data.votingToAddress.toLocaleLowerCase()
-                                    : data.votingToAddress.toLocaleLowerCase(),
-                              propositionToAddress:
-                                data.propositionToAddress === undefined ||
-                                data.propositionToAddress.toLocaleLowerCase() ===
-                                  activeWallet.address.toLocaleLowerCase()
-                                  ? ''
-                                  : isEnsName(data.propositionToAddress)
-                                    ? getAddressByENSNameIfExists(
-                                        store,
-                                        data.propositionToAddress,
-                                      ) ||
-                                      data.propositionToAddress.toLocaleLowerCase()
-                                    : data.propositionToAddress.toLocaleLowerCase(),
+                              votingToAddress: checkAddress(
+                                store,
+                                activeWallet.address,
+                                data.votingToAddress,
+                              ),
+                              propositionToAddress: checkAddress(
+                                store,
+                                activeWallet.address,
+                                data.propositionToAddress,
+                              ),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length

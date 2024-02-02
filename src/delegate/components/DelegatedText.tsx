@@ -254,11 +254,11 @@ export function DelegatedText({
 
         const middleText =
           typeof data.bothAddresses !== 'undefined'
-            ? `${texts.delegatePage.votingAndPropositionPowers} ${address}`
+            ? `${texts.delegatePage.votingAndPropositionPowers}`
             : typeof data.votingToAddress !== 'undefined'
-              ? `${texts.delegatePage.votingPower} ${address}`
+              ? `${texts.delegatePage.votingPower}`
               : typeof data.propositionToAddress !== 'undefined'
-                ? `${texts.delegatePage.propositionPower} ${address}`
+                ? `${texts.delegatePage.propositionPower}`
                 : '';
 
         const endText = delegatedData.length - 1 !== index ? 'and ' : '';
@@ -285,10 +285,12 @@ export function DelegatedText({
             {firstText} <b>{data.symbol}</b> {middleText}{' '}
             {!!link && (
               <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                to
                 <Link
                   href={link}
                   css={{
                     color: '$textSecondary',
+                    ml: 3,
                     hover: { opacity: '0.7 !important' },
                   }}
                   inNewWindow>
