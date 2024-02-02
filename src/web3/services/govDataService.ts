@@ -55,7 +55,7 @@ import { getBlock, getBlockNumber, readContract } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { appConfig, gelatoApiKeys } from '../../utils/appConfig';
+import { appConfig, gelatoApiKeys, isForIPFS } from '../../utils/appConfig';
 import {
   formatToProofRLP,
   getExtendedBlock,
@@ -487,7 +487,7 @@ export class GovDataService {
         client: this.clients[votingChainId],
         endBlock,
         startBlock,
-        blockLimit,
+        blockLimit: isForIPFS ? blockLimit : 9999,
         chainId: votingChainId,
       });
 
