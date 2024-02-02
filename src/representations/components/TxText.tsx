@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { Link } from '../../ui';
@@ -31,7 +31,8 @@ export function TxText({
   const { activeWallet, ensData } = store;
   const activeAddress = activeWallet?.address || '';
 
-  const formattedData: { representative: Hex | ''; chainId: number }[] = [];
+  const formattedData: { representative: Address | string; chainId: number }[] =
+    [];
   for (const item of formData) {
     let representative = item.representative;
     // get previous representative data for current chain id

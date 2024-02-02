@@ -1,7 +1,7 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
-import { Hex, zeroAddress } from 'viem';
+import { Address, zeroAddress } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -15,32 +15,33 @@ import {
   getLocalStorageRepresentingAddresses,
   setLocalStorageRepresentingAddresses,
 } from '../../utils/localStorage';
+import { selectInputToAddress } from '../../web3/store/ensSelectors';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { getFormattedRepresentedAddresses } from '../utils/getRepresentedAddresses';
 
 export type RepresentationDataItem = {
-  representative: Hex | '';
-  represented: Hex[];
+  representative: Address | '';
+  represented: Address[];
 };
 
 export type RepresentationFormData = {
   chainId: number;
-  representative: Hex | '';
+  representative: Address | '';
 };
 
 export type RepresentativeAddress = {
   chainsIds: number[];
-  address: Hex | '';
+  address: Address | '';
 };
 
-export type RepresentedAddress = { chainId: number; address: Hex | '' };
+export type RepresentedAddress = { chainId: number; address: Address | '' };
 
 export interface IRepresentationsSlice {
   representativeLoading: boolean;
   representative: RepresentativeAddress;
   getRepresentingAddress: () => void;
-  setRepresentativeAddress: (address: Hex, chainsIds: number[]) => void;
+  setRepresentativeAddress: (address: Address, chainsIds: number[]) => void;
 
   representationData: Record<number, RepresentationDataItem>;
   representationDataLoading: boolean;
@@ -80,8 +81,7 @@ export const createRepresentationsSlice: StoreSlice<
     const data = get().representationData;
 
     if (activeAddress && !!Object.keys(data).length) {
-      const walletRepresentative: RepresentativeAddress | undefined =
-        addresses[activeAddress];
+      const walletRepresentative = addresses[activeAddress];
 
       const formattedRepresentedAddresses =
         getFormattedRepresentedAddresses(data);
@@ -198,7 +198,10 @@ export const createRepresentationsSlice: StoreSlice<
     const activeAddress = get().activeWallet?.address;
 
     if (activeAddress) {
-      const formattedData: { representative: Hex; chainId: bigint }[] = [];
+      const formattedData: {
+        representative: Address;
+        chainId: bigint;
+      }[] = [];
       for await (const item of formData) {
         let representative = item.representative;
 
@@ -207,19 +210,17 @@ export const createRepresentationsSlice: StoreSlice<
           initialData.filter((data) => data.chainId === item.chainId)[0];
 
         if (initialRepresentativeItem.representative !== representative) {
-          if (representative && representative.length < 42) {
-            representative =
-              (await get().fetchAddressByEnsName(representative)) ||
-              representative;
-          }
+          representative = await selectInputToAddress({
+            store: get(),
+            activeAddress,
+            addressTo: item.representative,
+          });
 
           formattedData.push({
             representative:
-              representative === undefined ||
-              representative === '' ||
-              representative === activeAddress
+              representative === '' || representative === activeAddress
                 ? zeroAddress
-                : representative,
+                : (representative as Address),
             chainId: BigInt(item.chainId),
           });
         }

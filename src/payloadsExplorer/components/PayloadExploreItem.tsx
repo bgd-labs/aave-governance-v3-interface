@@ -1,5 +1,3 @@
-// TODO: need fix ternary
-
 import { InitialPayload, Payload } from '@bgd-labs/aave-governance-ui-helpers';
 import {
   selectLastTxByTypeAndPayload,

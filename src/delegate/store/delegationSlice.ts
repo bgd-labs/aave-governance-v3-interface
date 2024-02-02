@@ -24,10 +24,11 @@ import {
   DelegateDataParams,
   GovernancePowerTypeApp,
 } from '../../web3/services/delegationService';
+import { selectInputToAddress } from '../../web3/store/ensSelectors';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import { DelegateData, DelegateItem } from '../types';
-import { getToAddress, selectDelegateToAddress } from './delegationSelectors';
+import { getToAddress } from './delegationSelectors';
 
 export interface IDelegationSlice {
   delegateData: DelegateItem[];
@@ -117,12 +118,12 @@ export const createDelegationSlice: StoreSlice<
       for await (const formDelegateItem of formDelegateData) {
         const { underlyingAsset } = formDelegateItem;
 
-        const votingToAddress = await selectDelegateToAddress({
+        const votingToAddress = await selectInputToAddress({
           store: get(),
           activeAddress,
           addressTo: formDelegateItem.votingToAddress,
         });
-        const propositionToAddress = await selectDelegateToAddress({
+        const propositionToAddress = await selectInputToAddress({
           store: get(),
           activeAddress,
           addressTo: formDelegateItem.propositionToAddress,

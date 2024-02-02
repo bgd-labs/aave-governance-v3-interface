@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
-import { Address } from 'viem';
+import { Address, isAddress } from 'viem';
 
-import { ENS_TTL } from '../utils/ensHelpers';
+import { RootState } from '../../store';
+import { ENS_TTL, isEnsName } from '../utils/ensHelpers';
 import { ENSProperty, IEnsSlice } from './ensSlice';
 
 export const ENSDataExists = (
@@ -63,5 +64,58 @@ export const selectENSAvatar = (
   } else {
     setAvatar(undefined);
     setIsAvatarExists(false);
+  }
+};
+
+export const selectInputToAddress = async ({
+  store,
+  activeAddress,
+  addressTo,
+}: {
+  store: IEnsSlice;
+  activeAddress: Address;
+  addressTo: Address | string;
+}) => {
+  // check is address `to` not ens name
+  if (isAddress(addressTo)) {
+    return addressTo as Address;
+  } else {
+    // get address `to` from ens name
+    const addressFromENSName = await store.fetchAddressByEnsName(addressTo);
+    if (addressFromENSName) {
+      if (addressFromENSName.toLowerCase() === activeAddress.toLowerCase()) {
+        return '';
+      } else {
+        return addressFromENSName;
+      }
+    } else {
+      return '';
+    }
+  }
+};
+
+export const checkIfAddressENS = (
+  store: RootState,
+  activeWalletAddress: Address,
+  address?: Address | string,
+) => {
+  if (
+    address === undefined ||
+    address.toLowerCase() === activeWalletAddress.toLowerCase()
+  ) {
+    return '';
+  } else if (isEnsName(address)) {
+    const addressFromENS = getAddressByENSNameIfExists(store, address);
+    if (addressFromENS) {
+      if (addressFromENS?.toLowerCase() === activeWalletAddress.toLowerCase()) {
+        return '';
+      } else {
+        return addressFromENS;
+      }
+    } else {
+      return address;
+    }
+  } else {
+    return address;
   }
 };

@@ -8,11 +8,11 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Address, zeroAddress } from 'viem';
+import { zeroAddress } from 'viem';
 
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
-import { RootState, useStore } from '../../store';
+import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import {
@@ -29,39 +29,12 @@ import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import {
+  checkIfAddressENS,
   checkIsGetAddressByENSNamePending,
-  getAddressByENSNameIfExists,
 } from '../../web3/store/ensSelectors';
-import { isEnsName } from '../../web3/utils/ensHelpers';
 import { DelegateData, DelegateItem } from '../types';
 import { DelegateModal } from './DelegateModal';
 import { DelegateTableWrapper } from './DelegateTableWrapper';
-
-function checkAddress(
-  store: RootState,
-  activeWalletAddress: Address,
-  address?: Address | string,
-) {
-  if (
-    address === undefined ||
-    address.toLowerCase() === activeWalletAddress.toLowerCase()
-  ) {
-    return '';
-  } else if (isEnsName(address)) {
-    const addressFromENS = getAddressByENSNameIfExists(store, address);
-    if (addressFromENS) {
-      if (addressFromENS?.toLowerCase() === activeWalletAddress.toLowerCase()) {
-        return '';
-      } else {
-        return addressFromENS;
-      }
-    } else {
-      return address;
-    }
-  } else {
-    return address;
-  }
-}
 
 export function DelegatePage() {
   const theme = useTheme();
@@ -145,12 +118,12 @@ export function DelegatePage() {
     const formattedFormData = formDelegateData.map((data) => {
       return {
         underlyingAsset: data.underlyingAsset,
-        votingToAddress: checkAddress(
+        votingToAddress: checkIfAddressENS(
           store,
           activeWallet?.address || zeroAddress,
           data.votingToAddress,
         ),
-        propositionToAddress: checkAddress(
+        propositionToAddress: checkIfAddressENS(
           store,
           activeWallet?.address || zeroAddress,
           data.propositionToAddress,
@@ -340,12 +313,12 @@ export function DelegatePage() {
                           values.formDelegateData.map((data) => {
                             return {
                               underlyingAsset: data.underlyingAsset,
-                              votingToAddress: checkAddress(
+                              votingToAddress: checkIfAddressENS(
                                 store,
                                 activeWallet.address,
                                 data.votingToAddress,
                               ),
-                              propositionToAddress: checkAddress(
+                              propositionToAddress: checkIfAddressENS(
                                 store,
                                 activeWallet.address,
                                 data.propositionToAddress,

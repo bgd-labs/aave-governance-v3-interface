@@ -7,7 +7,7 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
 import { useStore } from '../../store';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
@@ -18,16 +18,15 @@ import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { texts } from '../../ui/utils/texts';
 import {
+  checkIfAddressENS,
   checkIsGetAddressByENSNamePending,
-  getAddressByENSNameIfExists,
 } from '../../web3/store/ensSelectors';
-import { isEnsName } from '../../web3/utils/ensHelpers';
 import { RepresentationFormData as BaseRepresentationFormData } from '../store/representationsSlice';
 import { RepresentationsModal } from './RepresentationsModal';
 import { RepresentationsTableWrapper } from './RepresentationsTableWrapper';
 
 type RepresentationFormData = BaseRepresentationFormData & {
-  representative: Hex | string;
+  representative: Address | string;
 };
 
 export function RepresentationsPage() {
@@ -46,7 +45,6 @@ export function RepresentationsPage() {
     setRepresentationsModalOpen,
     resetL1Balances,
     incorrectRepresentationFields,
-    ensData,
   } = store;
 
   const [loadingData, setLoadingData] = useState(true);
@@ -60,13 +58,10 @@ export function RepresentationsPage() {
   >([]);
   const [timestampTx] = useState(dayjs().unix());
 
-  // TODO: need fix `ensName` should be string
   const initialData = Object.entries(representationData).map((data) => {
     return {
       chainId: +data[0],
-      representative:
-        (ensData[data[1].representative.toLocaleLowerCase() as Hex]
-          ?.name as Hex) || data[1].representative,
+      representative: data[1].representative,
     };
   });
 
@@ -227,25 +222,21 @@ export function RepresentationsPage() {
                           initialData.map((data) => {
                             return {
                               chainId: data.chainId,
-                              representative:
-                                data.representative?.toLocaleLowerCase(),
+                              representative: checkIfAddressENS(
+                                store,
+                                activeWallet.address,
+                                data.representative,
+                              ),
                             };
                           }),
                           values.formData.map((data) => {
                             return {
                               chainId: data.chainId,
-                              representative:
-                                data.representative === undefined ||
-                                data.representative.toLocaleLowerCase() ===
-                                  activeWallet.address.toLocaleLowerCase()
-                                  ? ''
-                                  : isEnsName(data.representative)
-                                    ? getAddressByENSNameIfExists(
-                                        store,
-                                        data.representative,
-                                      ) ||
-                                      data.representative.toLocaleLowerCase()
-                                    : data.representative.toLocaleLowerCase(),
+                              representative: checkIfAddressENS(
+                                store,
+                                activeWallet.address,
+                                data.representative,
+                              ),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length
