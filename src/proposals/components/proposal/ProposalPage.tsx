@@ -484,7 +484,7 @@ export function ProposalPage({
 
             <DetailsLinks
               discussionLink={ipfsData?.discussions}
-              ipfsHash={proposal.data.ipfsHash}
+              snapshot={ipfsData?.snapshot}
               proposalId={proposal.data.id}
               prerender={proposal.data.isFinished}
             />
@@ -521,7 +521,7 @@ export function ProposalPage({
               <Timeline />
               <DetailsLinks
                 discussionLink={ipfsData?.discussions}
-                ipfsHash={proposal.data.ipfsHash}
+                snapshot={ipfsData?.snapshot}
                 proposalId={proposal.data.id}
                 prerender={proposal.data.isFinished}
               />

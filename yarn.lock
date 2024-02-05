@@ -1331,10 +1331,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.19.0.tgz#5278bd4c8645b4ee783680c1b9d3df489f571060"
   integrity sha512-JrZOZqzunJqFe4+/ZpL3vD7ddtGjjlBRCnMeQ68egNBAB2CYXvkXj6pSZLJBWklkoLgh17or1IdAQHTMYtBSsg==
 
-"@bgd-labs/aave-governance-ui-helpers@2.1.1-e610471109c5693439567c640d8013ae12881c44.0":
-  version "2.1.1-e610471109c5693439567c640d8013ae12881c44.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-2.1.1-e610471109c5693439567c640d8013ae12881c44.0.tgz#c478f4f9951177cdc1593a6063308ee12dcc2589"
-  integrity sha512-w6Q/5QAxazlYtKkvWVfNSD6MDiImV2v4mmPhJr5UY2r2b5Ed+9k/HXv/WbrGVCcHRcvzDkF8IQED+nFmEFbNVQ==
+"@bgd-labs/aave-governance-ui-helpers@2.1.1-21dc81a992d3961744a63f47f612e337486dd6a0.0":
+  version "2.1.1-21dc81a992d3961744a63f47f612e337486dd6a0.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-2.1.1-21dc81a992d3961744a63f47f612e337486dd6a0.0.tgz#8a04f7ee12081331faa3ef4d335d0a7479c7aed5"
+  integrity sha512-EMvG/46W3w/4Lp5YvEEmQsXl58fI2KhWA3slyIHFGgdxrPG/x3yNaO0nviloWEii+boUk6Qgfe+Oz9OEgEKJjQ==
   dependencies:
     "@bgd-labs/js-utils" "1.1.1"
     dayjs "^1.11.10"

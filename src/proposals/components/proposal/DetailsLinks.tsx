@@ -12,34 +12,32 @@ import { texts } from '../../../ui/utils/texts';
 interface DetailsLinksProps {
   proposalId: number;
   discussionLink?: string;
-  ipfsHash: string;
+  snapshot?: string;
   prerender?: boolean;
 }
 
 export function DetailsLinks({
   proposalId,
   discussionLink,
-  ipfsHash,
+  snapshot,
   prerender,
 }: DetailsLinksProps) {
   const store = useStore();
   const theme = useTheme();
 
-  const links = [
-    // TODO: need think how to get correct snapshot link if it's real
-    // {
-    //   title: texts.proposals.detailsLinkSnapshotVoting,
-    //   link: `https://snapshot.org/#/aave.eth/proposal/${ipfsHash}`,
-    // },
-  ];
-
+  const links = [];
+  if (snapshot) {
+    links.unshift({
+      title: texts.proposals.detailsLinkSnapshotVoting,
+      link: snapshot,
+    });
+  }
   if (!!discussionLink) {
     links.unshift({
       title: texts.proposals.detailsLinkForumDiscussion,
       link: discussionLink,
     });
   }
-
   if (!!prerender) {
     links.unshift({
       title: texts.proposals.detailsLinkSeatbeltReport,
