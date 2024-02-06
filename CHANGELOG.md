@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.2.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.1.0...v2.2.0) (2024-02-06)
+
+
+### Features
+
+* added scroll chain support ([4d5156c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/4d5156c1bb12d883c5935937a46955118d85b44c))
+* update vote proofs and fix code style ([#66](https://github.com/bgd-labs/aave-governance-v3-interface/issues/66)) ([f8adbca](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f8adbca3becb3a5e7648270e67e7124a1628442b))
+
+
+### Bug Fixes
+
+* block limit for getting voters ([a1f9757](https://github.com/bgd-labs/aave-governance-v3-interface/commit/a1f975756d7ac092a192fa62306177097c0eaf20))
+* core ([96fd361](https://github.com/bgd-labs/aave-governance-v3-interface/commit/96fd361eb46e3ab19dd1a7d2e4cd4b13eb3ab865))
+* ipfs version ([e636c41](https://github.com/bgd-labs/aave-governance-v3-interface/commit/e636c4184e9a572779722a05872a54d6e5d54b34))
+* rpc urls ([1600b0e](https://github.com/bgd-labs/aave-governance-v3-interface/commit/1600b0ee8df12b58a069040e214b6959071c9fb0))
+* seatbelt proposal link and temporary remove snapshot voting link ([f0af1b3](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f0af1b38b53695cf8c0e494adc26ba36473d1277))
+
 ## [2.1.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.0.0...v2.1.0) (2024-01-26)
 
 
