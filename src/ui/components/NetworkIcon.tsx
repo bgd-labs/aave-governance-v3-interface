@@ -1,4 +1,5 @@
 import { Box, SxProps } from '@mui/system';
+import { useState } from 'react';
 import { toHex } from 'viem';
 import {
   arbitrum,
@@ -73,8 +74,8 @@ export function NetworkIcon({
   css,
   withTooltip,
 }: NetworkIconProps) {
-  const networkIconName = getIconNetworkName(chainId);
-  const chain = chainInfoHelper.getChainParameters(chainId);
+  const [networkIconName] = useState(getIconNetworkName(chainId));
+  const [chain] = useState(chainInfoHelper.getChainParameters(chainId));
 
   return (
     <>
@@ -103,7 +104,7 @@ export function NetworkIcon({
             src={setRelativePath(
               `/images/networks/${networkIconName.toLowerCase()}.svg`,
             )}
-            alt={`${chainInfoHelper.getChainParameters(chainId).name} icon`}
+            alt={`${chain.name} icon`}
           />
         </Tooltip>
       ) : (
@@ -118,7 +119,7 @@ export function NetworkIcon({
           src={setRelativePath(
             `/images/networks/${networkIconName.toLowerCase()}.svg`,
           )}
-          alt={`${chainInfoHelper.getChainParameters(chainId).name} icon`}
+          alt={`${chain.name} icon`}
         />
       )}
     </>

@@ -120,7 +120,7 @@ export function Details({
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box component="p">
+            <Box component="p" sx={{ wordBreak: 'break-word' }}>
               {(ensData[proposalCreator.toLocaleLowerCase() as Hex]
                 ?.name as Hex) || proposalCreator}
             </Box>

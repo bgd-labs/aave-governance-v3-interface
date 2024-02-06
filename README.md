@@ -15,7 +15,7 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 
 ## Pre-requirements
 
-- [Node.js](https://nodejs.org/ru): version 18.17 or higher.
+- [Node.js](https://nodejs.org/ru): version 18 or higher.
 - [Git](https://git-scm.com/downloads): version 2.3.x or higher.
 - Package manager: we recommend [Yarn](https://yarnpkg.com/), version 1.x or higher.
 

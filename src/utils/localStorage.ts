@@ -10,7 +10,7 @@ import { EnsDataItem } from '../web3/store/ensSlice';
 
 export enum LocalStorageKeys {
   EnsAddresses = 'EnsAddresses',
-  RpcUrls = 'URLsRPCs',
+  RpcUrls = 'UrlsRpcS',
   RepresentingAddresses = 'representingAddresses',
   GaslessVote = 'isGaslessVote',
   TermsAccept = 'termsAccept',
