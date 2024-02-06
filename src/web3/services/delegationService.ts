@@ -373,6 +373,7 @@ export class DelegationService {
         address: delegateHelperContract.address,
         functionName: 'batchMetaDelegate',
         args: [sigs],
+        // TODO: need test delegation with all assets without increase of gas, maybe increase not need
         gas: gasLimit + BigInt(100000),
         chainId: appConfig.govCoreChainId,
       });

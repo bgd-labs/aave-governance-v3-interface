@@ -1340,10 +1340,10 @@
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
 
-"@bgd-labs/frontend-web3-utils@1.1.1-42535cba7c7219c7dce00400f481098140a5f0b7.0":
-  version "1.1.1-42535cba7c7219c7dce00400f481098140a5f0b7.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.1.1-42535cba7c7219c7dce00400f481098140a5f0b7.0.tgz#08232cb32cc88cc530463e9318b518846fbe5fd2"
-  integrity sha512-HW9TbLsYdX5orkA/nv4gWV7UtJwYDpPqJrfMzOqzXWNiAsi3PSdKtM9vqb3/apricPxAdJOhY7NixR/x6Q2MsA==
+"@bgd-labs/frontend-web3-utils@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.1.1.tgz#084c432243e38f877103cf71eda810cce6e59e04"
+  integrity sha512-9KfDt6FUA97jKSkNI8x8iP8CkW1yexy4Y5eq176nxTlCWbXsKtjRW38qWbrDhWdWVtsIxVMEdgqgrvO3h9X6cA==
   dependencies:
     "@tanstack/react-query" "^5.18.1"
     dayjs "^1.11.10"
