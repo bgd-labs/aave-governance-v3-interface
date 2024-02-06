@@ -1,6 +1,7 @@
 import {
   checkHash,
   CombineProposalState,
+  getVoteBalanceSlot,
   ProposalState,
   VotingMachineProposalState,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -11,6 +12,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
+import { Address } from 'viem';
 
 import { useStore } from '../../../store';
 import {
@@ -20,8 +22,8 @@ import {
 import { BigButton, BoxWith3D, Timer } from '../../../ui';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
-import { getTokenName } from '../../../utils/getTokenName';
-import { getVoteBalanceSlot } from '../../../web3/utils/helperToGetProofs';
+import { getAssetName } from '../../../utils/getAssetName';
+import { assetsBalanceSlots } from '../../../web3/utils/assetsBalanceSlots';
 import { ActivateVotingModal } from '../actionModals/ActivateVotingModal';
 import { CloseVotingModal } from '../actionModals/CloseVotingModal';
 import { ExecuteProposalModal } from '../actionModals/ExecuteProposalModal';
@@ -169,7 +171,12 @@ export function ProposalStatusDetails({
     return {
       underlyingAsset: asset,
       withSlot: false,
-      baseBalanceSlotRaw: getVoteBalanceSlot(asset, false),
+      baseBalanceSlotRaw: getVoteBalanceSlot(
+        asset as Address,
+        false,
+        appConfig.additional.aAaveAddress,
+        assetsBalanceSlots,
+      ),
       isModalOpen: isSTKAAVEToken
         ? isSendSTKAAVEProofModalOpen
         : isAAAVEToken
@@ -203,6 +210,8 @@ export function ProposalStatusDetails({
       baseBalanceSlotRaw: getVoteBalanceSlot(
         appConfig.govCoreConfig.contractAddress,
         false,
+        appConfig.additional.aAaveAddress,
+        assetsBalanceSlots,
       ),
       isModalOpen: isSendRepresentationsProofModalOpen,
       setIsModalOpen: setIsSendRepresentationsProofModalOpen,
@@ -295,7 +304,7 @@ export function ProposalStatusDetails({
                     }).isSuccess
                   }
                   onClick={() => asset.setIsModalOpen(true)}>
-                  Send {getTokenName(asset.underlyingAsset)}{' '}
+                  Send {getAssetName(asset.underlyingAsset)}{' '}
                   {asset.withSlot ? 'slot' : 'root'}
                 </BigButton>
               ))}

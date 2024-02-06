@@ -7,8 +7,7 @@ import { Link, SmallButton } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { seatbeltStartLink } from '../../utils/formatPayloadData';
 
 interface PayloadActionsProps {
@@ -70,11 +69,10 @@ export function PayloadActions({
                 <Link
                   css={{ display: 'inline-flex', alignItems: 'center' }}
                   inNewWindow
-                  href={`${chainInfoHelper.getChainParameters(
-                    payload.chainId || appConfig.govCoreChainId,
-                  ).blockExplorers?.default.url}/address/${action.target}${
-                    forCreate ? '#code' : ''
-                  }`}>
+                  href={`${getScanLink({
+                    chainId: payload.chainId,
+                    address: action.target,
+                  })}${forCreate ? '#code' : ''}`}>
                   <Box
                     className="PayloadActions__link"
                     component="li"
@@ -93,11 +91,10 @@ export function PayloadActions({
                 <CopyAndExternalIconsSet
                   iconSize={10}
                   copyText={action.target}
-                  externalLink={`${chainInfoHelper.getChainParameters(
-                    payload.chainId || appConfig.govCoreChainId,
-                  ).blockExplorers?.default.url}/address/${action.target}${
-                    forCreate ? '#code' : ''
-                  }`}
+                  externalLink={`${getScanLink({
+                    chainId: payload.chainId,
+                    address: action.target,
+                  })}${forCreate ? '#code' : ''}`}
                   sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
                 />
               </Box>

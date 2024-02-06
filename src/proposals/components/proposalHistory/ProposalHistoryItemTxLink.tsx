@@ -9,7 +9,7 @@ import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalI
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { ProposalHistoryItemProps } from './ProposalHistoryItem';
 
 export function ProposalHistoryItemTxLink({
@@ -76,8 +76,11 @@ export function ProposalHistoryItemTxLink({
       ) : (
         <>
           <Link
-            href={`${chainInfoHelper.getChainParameters(item.txInfo.chainId)
-              .blockExplorers?.default.url}/tx/${item.txInfo.hash}`}
+            href={getScanLink({
+              chainId: item.txInfo.chainId,
+              address: item.txInfo.hash,
+              type: 'tx',
+            })}
             css={{
               color: '$textSecondary',
               hover: { color: theme.palette.$text },
@@ -91,9 +94,11 @@ export function ProposalHistoryItemTxLink({
           <CopyAndExternalIconsSet
             iconSize={10}
             sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
-            externalLink={`${chainInfoHelper.getChainParameters(
-              item.txInfo.chainId,
-            ).blockExplorers?.default.url}/tx/${item.txInfo.hash}`}
+            externalLink={getScanLink({
+              chainId: item.txInfo.chainId,
+              address: item.txInfo.hash,
+              type: 'tx',
+            })}
             copyText={item.txInfo.hash}
           />
         </>

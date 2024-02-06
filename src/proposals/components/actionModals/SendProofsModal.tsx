@@ -5,7 +5,7 @@ import { useStore } from '../../../store';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
-import { getTokenName } from '../../../utils/getTokenName';
+import { getAssetName } from '../../../utils/getAssetName';
 import {
   ActionModalContentWrapper,
   ActionModalTitle,
@@ -50,7 +50,7 @@ export function SendProofsModal({
       actionButtonTitle={texts.other.confirm}
       topBlock={
         <ActionModalTitle
-          title={`Send ${getTokenName(underlyingAsset)} ${
+          title={`Send ${getAssetName(underlyingAsset)} ${
             withSlot ? 'slot' : 'root'
           }`}
         />

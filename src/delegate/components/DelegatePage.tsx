@@ -8,7 +8,7 @@ import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
-import { Hex } from 'viem';
+import { zeroAddress } from 'viem';
 
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
@@ -29,10 +29,9 @@ import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { IconBox } from '../../ui/primitives/IconBox';
 import { texts } from '../../ui/utils/texts';
 import {
+  checkIfAddressENS,
   checkIsGetAddressByENSNamePending,
-  getAddressByENSNameIfExists,
 } from '../../web3/store/ensSelectors';
-import { isEnsName } from '../../web3/utils/ensHelpers';
 import { DelegateData, DelegateItem } from '../types';
 import { DelegateModal } from './DelegateModal';
 import { DelegateTableWrapper } from './DelegateTableWrapper';
@@ -53,7 +52,6 @@ export function DelegatePage() {
     setIsDelegateChangedView,
     delegate,
     incorrectDelegationToFields,
-    ensData,
   } = store;
 
   const [isEdit, setIsEdit] = useState(false);
@@ -100,18 +98,13 @@ export function DelegatePage() {
     }
   }, [delegateData.length]);
 
-  // TODO: need fix `ensName` should be string
   useEffect(() => {
     setFormDelegateData(
       delegateData.map((data) => {
         return {
           underlyingAsset: data.underlyingAsset,
-          votingToAddress:
-            (ensData[data.votingToAddress.toLocaleLowerCase() as Hex]
-              ?.name as Hex) || data.votingToAddress,
-          propositionToAddress:
-            (ensData[data.propositionToAddress.toLocaleLowerCase() as Hex]
-              ?.name as Hex) || data.propositionToAddress,
+          votingToAddress: data.votingToAddress,
+          propositionToAddress: data.propositionToAddress,
         };
       }),
     );
@@ -125,18 +118,16 @@ export function DelegatePage() {
     const formattedFormData = formDelegateData.map((data) => {
       return {
         underlyingAsset: data.underlyingAsset,
-        votingToAddress:
-          data.votingToAddress === undefined ||
-          data.votingToAddress.toLocaleLowerCase() ===
-            activeWallet?.address.toLocaleLowerCase()
-            ? ''
-            : data.votingToAddress,
-        propositionToAddress:
-          data.propositionToAddress === undefined ||
-          data.propositionToAddress.toLocaleLowerCase() ===
-            activeWallet?.address.toLocaleLowerCase()
-            ? ''
-            : data.propositionToAddress,
+        votingToAddress: checkIfAddressENS(
+          store,
+          activeWallet?.address || zeroAddress,
+          data.votingToAddress,
+        ),
+        propositionToAddress: checkIfAddressENS(
+          store,
+          activeWallet?.address || zeroAddress,
+          data.propositionToAddress,
+        ),
       };
     });
 
@@ -315,39 +306,23 @@ export function DelegatePage() {
                           delegateData.map((data) => {
                             return {
                               underlyingAsset: data.underlyingAsset,
-                              votingToAddress:
-                                data.votingToAddress?.toLocaleLowerCase(),
-                              propositionToAddress:
-                                data.propositionToAddress?.toLocaleLowerCase(),
+                              votingToAddress: data.votingToAddress,
+                              propositionToAddress: data.propositionToAddress,
                             };
                           }),
                           values.formDelegateData.map((data) => {
                             return {
                               underlyingAsset: data.underlyingAsset,
-                              votingToAddress:
-                                data.votingToAddress === undefined ||
-                                data.votingToAddress.toLocaleLowerCase() ===
-                                  activeWallet.address.toLocaleLowerCase()
-                                  ? ''
-                                  : isEnsName(data.votingToAddress)
-                                    ? getAddressByENSNameIfExists(
-                                        store,
-                                        data.votingToAddress,
-                                      ) ||
-                                      data.votingToAddress.toLocaleLowerCase()
-                                    : data.votingToAddress.toLocaleLowerCase(),
-                              propositionToAddress:
-                                data.propositionToAddress === undefined ||
-                                data.propositionToAddress.toLocaleLowerCase() ===
-                                  activeWallet.address.toLocaleLowerCase()
-                                  ? ''
-                                  : isEnsName(data.propositionToAddress)
-                                    ? getAddressByENSNameIfExists(
-                                        store,
-                                        data.propositionToAddress,
-                                      ) ||
-                                      data.propositionToAddress.toLocaleLowerCase()
-                                    : data.propositionToAddress.toLocaleLowerCase(),
+                              votingToAddress: checkIfAddressENS(
+                                store,
+                                activeWallet.address,
+                                data.votingToAddress,
+                              ),
+                              propositionToAddress: checkIfAddressENS(
+                                store,
+                                activeWallet.address,
+                                data.propositionToAddress,
+                              ),
                             };
                           }),
                         ) || !!Object.keys(errors || {}).length

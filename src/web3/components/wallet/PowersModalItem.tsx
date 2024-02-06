@@ -5,7 +5,7 @@ import { RepresentationIcon } from '../../../proposals/components/Representation
 import { Divider } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { TokenIcon } from '../../../ui/components/TokenIcon';
-import { getTokenName, Token } from '../../../utils/getTokenName';
+import { getAssetName } from '../../../utils/getAssetName';
 import { GovernancePowerType } from '../../services/delegationService';
 import { PowersByAssets } from '../../store/web3Slice';
 
@@ -102,7 +102,7 @@ export function PowersModalItem({
           type === GovernancePowerType.VOTING
             ? asset.voting
             : asset.proposition;
-        const symbol = getTokenName(asset.underlyingAsset) as Token;
+        const symbol = getAssetName(asset.underlyingAsset);
 
         return (
           <Box

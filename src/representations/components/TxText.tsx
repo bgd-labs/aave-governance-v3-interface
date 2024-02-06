@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
 import React from 'react';
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
 import { useStore } from '../../store';
 import { Link } from '../../ui';
@@ -8,8 +8,7 @@ import { ChainNameWithIcon } from '../../ui/components/ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
-import { appConfig } from '../../utils/appConfig';
-import { chainInfoHelper } from '../../utils/configs';
+import { getScanLink } from '../../utils/getScanLink';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty } from '../../web3/store/ensSlice';
 import { isEnsName } from '../../web3/utils/ensHelpers';
@@ -32,7 +31,8 @@ export function TxText({
   const { activeWallet, ensData } = store;
   const activeAddress = activeWallet?.address || '';
 
-  const formattedData: { representative: Hex | ''; chainId: number }[] = [];
+  const formattedData: { representative: Address | string; chainId: number }[] =
+    [];
   for (const item of formData) {
     let representative = item.representative;
     // get previous representative data for current chain id
@@ -62,9 +62,7 @@ export function TxText({
 
         const endText = formattedData.length - 1 !== index ? 'and ' : '';
 
-        const link = `${chainInfoHelper.getChainParameters(
-          appConfig.govCoreChainId,
-        ).blockExplorers?.default.url}/address/${item.representative}`;
+        const link = getScanLink({ address: item.representative });
 
         return (
           <Box sx={{ display: 'inline' }} key={item.chainId}>

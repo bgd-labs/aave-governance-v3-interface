@@ -19,7 +19,7 @@ import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { CurrentPowers } from './CurrentPowers';
 import { RepresentingForm } from './RepresentingForm';
 
@@ -162,7 +162,6 @@ export function AccountInfoModalContent({
   const filteredTransactions = allTransactions.filter(
     (tx) => !!Object.keys(TxType).find((key) => key === tx.type)?.length,
   );
-  // .filter((tx) => tx.type !== TxType.delegate);
 
   const visibleTxCount = forTest ? 1 : isRepresentedAvailable ? 3 : 4;
 
@@ -196,8 +195,7 @@ export function AccountInfoModalContent({
               <CopyAndExternalIconsSet
                 iconSize={16}
                 copyText={activeAddress}
-                externalLink={`${chainInfoHelper.getChainParameters(chainId)
-                  .blockExplorers?.default.url}/address/${activeAddress}`}
+                externalLink={getScanLink({ chainId, address: activeAddress })}
                 sx={{ '.CopyAndExternalIconsSet__copy': { mx: 8 } }}
               />
             </Box>

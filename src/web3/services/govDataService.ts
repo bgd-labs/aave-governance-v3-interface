@@ -12,23 +12,28 @@ import {
 import {
   BasicProposal,
   blockLimit,
+  formatToProofRLP,
   getBlocksForEvents,
   getDetailedProposalsData,
+  getExtendedBlock,
   getGovCoreConfigs,
   getPayloadsCreated,
   getPayloadsExecuted,
   getPayloadsQueued,
+  getProof,
   getProposalActivated,
   getProposalActivatedOnVM,
   getProposalCreated,
   getProposalQueued,
   getProposalVotingClosed,
+  getSolidityStorageSlotBytes,
   getVoters,
   InitialProposal,
   Payload,
   PayloadAction,
   PayloadForCreation,
   PayloadState,
+  prepareBLockRLP,
   ProposalData,
   updateVotingMachineData,
   VMProposalStructOutput,
@@ -41,6 +46,7 @@ import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import { writeContract } from '@wagmi/core';
 import {
+  Address,
   bytesToHex,
   encodeFunctionData,
   getContract,
@@ -51,18 +57,11 @@ import {
   zeroAddress,
   zeroHash,
 } from 'viem';
-import { getBlock, getBlockNumber, readContract } from 'viem/actions';
+import { getBlockNumber, readContract } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { appConfig, gelatoApiKeys, isForIPFS } from '../../utils/appConfig';
-import {
-  formatToProofRLP,
-  getExtendedBlock,
-  getProof,
-  getSolidityStorageSlotBytes,
-  prepareBLockRLP,
-} from '../utils/helperToGetProofs';
+import { appConfig, gelatoApiKeys } from '../../utils/appConfig';
 import { getVoteSignatureParams } from '../utils/signatures';
 
 export const PAGE_SIZE = 12;
@@ -254,7 +253,7 @@ export class GovDataService {
   }
 
   async getTotalPayloadsCount(
-    payloadsController: Hex,
+    payloadsController: Address,
     chainId: number,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<number> {
@@ -289,7 +288,7 @@ export class GovDataService {
 
   async getPayloads(
     chainId: number,
-    payloadsController: Hex,
+    payloadsController: Address,
     payloadsIds: number[],
   ): Promise<Payload[]> {
     const payloadsControllerDataHelper =
@@ -313,8 +312,8 @@ export class GovDataService {
 
   async getVotingData(
     initialProposals: InitialProposal[],
-    userAddress?: Hex,
-    representative?: Hex,
+    userAddress?: Address,
+    representative?: Address,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const votingMachineChainIds = initialProposals
@@ -374,8 +373,8 @@ export class GovDataService {
     configs: VotingConfig[],
     from: number,
     to?: number,
-    userAddress?: Hex,
-    representative?: Hex,
+    userAddress?: Address,
+    representative?: Address,
     pageSize?: number,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ): Promise<BasicProposal[]> {
@@ -432,8 +431,8 @@ export class GovDataService {
   async getOnlyVotingMachineData(
     configs: VotingConfig[],
     proposals: ProposalData[],
-    userAddress?: Hex,
-    representative?: Hex,
+    userAddress?: Address,
+    representative?: Address,
     setRpcError?: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void,
   ) {
     const initialProposals = proposals.map((proposal) => {
@@ -487,7 +486,7 @@ export class GovDataService {
         client: this.clients[votingChainId],
         endBlock,
         startBlock,
-        blockLimit: isForIPFS ? blockLimit : 9999,
+        blockLimit,
         chainId: votingChainId,
       });
 
@@ -509,7 +508,7 @@ export class GovDataService {
   }
 
   // representations
-  async getRepresentationData(address: Hex) {
+  async getRepresentationData(address: Address) {
     const data = await this.govCoreDataHelper.read.getRepresentationData([
       appConfig.govCoreConfig.contractAddress,
       address,
@@ -525,7 +524,7 @@ export class GovDataService {
   async updateRepresentatives({
     data,
   }: {
-    data: { representative: Hex; chainId: bigint }[];
+    data: { representative: Address; chainId: bigint }[];
   }) {
     if (this.wagmiConfig) {
       return await writeContract(this.wagmiConfig, {
@@ -555,7 +554,7 @@ export class GovDataService {
   }
 
   async sendProofs(
-    user: Hex,
+    user: Address,
     blockNumber: number,
     asset: string,
     chainId: number,
@@ -751,63 +750,6 @@ export class GovDataService {
     return undefined;
   }
 
-  // proofs for vote
-  async getCoreBlockNumber(blockHash: Hex) {
-    return Number(
-      (await getBlock(this.clients[appConfig.govCoreChainId], { blockHash }))
-        .number,
-    );
-  }
-
-  async getProofs({
-    underlyingAsset,
-    slot,
-    blockNumber,
-  }: {
-    underlyingAsset: Hex;
-    slot: string;
-    blockNumber: number;
-  }) {
-    const rawProofData = await getProof(
-      this.clients[appConfig.govCoreChainId],
-      underlyingAsset,
-      [slot],
-      blockNumber,
-    );
-
-    return formatToProofRLP(rawProofData.storageProof[0].proof);
-  }
-
-  async getAndFormatProof({
-    userAddress,
-    underlyingAsset,
-    blockNumber,
-    baseBalanceSlotRaw,
-  }: {
-    userAddress: Hex;
-    underlyingAsset: Hex;
-    blockNumber: number;
-    baseBalanceSlotRaw: number;
-  }) {
-    const hashedHolderSlot = getSolidityStorageSlotBytes(
-      pad(toHex(baseBalanceSlotRaw), { size: 32 }),
-      userAddress,
-    );
-
-    const proof = await this.getProofs({
-      underlyingAsset,
-      slot: hashedHolderSlot,
-      blockNumber,
-    });
-
-    return {
-      underlyingAsset,
-      slot: BigInt(baseBalanceSlotRaw),
-      proof,
-    };
-  }
-  // end proofs
-
   async vote({
     votingChainId,
     proposalId,
@@ -820,11 +762,11 @@ export class GovDataService {
     proposalId: number;
     support: boolean;
     proofs: {
-      underlyingAsset: Hex;
+      underlyingAsset: Address;
       slot: bigint;
       proof: Hex;
     }[];
-    voterAddress?: Hex;
+    voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
     let votingMachine = this.votingMachines[votingChainId];
@@ -867,14 +809,14 @@ export class GovDataService {
     votingChainId: number;
     proposalId: number;
     support: boolean;
-    votingAssetsWithSlot: { underlyingAsset: Hex; slot: number }[];
+    votingAssetsWithSlot: { underlyingAsset: Address; slot: number }[];
     proofs: {
-      underlyingAsset: Hex;
+      underlyingAsset: Address;
       slot: bigint;
       proof: Hex;
     }[];
-    signerAddress: Hex;
-    voterAddress?: Hex;
+    signerAddress: Address;
+    voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
     const relay = new GelatoRelay();
@@ -974,7 +916,7 @@ export class GovDataService {
   async executePayload(
     chainId: number,
     payloadId: number,
-    payloadsController: Hex,
+    payloadsController: Address,
   ) {
     if (this.wagmiConfig) {
       return writeContract(this.wagmiConfig, {
@@ -991,7 +933,7 @@ export class GovDataService {
   async createPayload(
     chainId: number,
     payloadActions: PayloadAction[],
-    payloadsController: Hex,
+    payloadsController: Address,
   ) {
     const formattedPayloadActions = payloadActions.map((payloadData) => {
       return {
@@ -1017,12 +959,12 @@ export class GovDataService {
   }
 
   async createProposal(
-    votingPortalAddress: Hex,
+    votingPortalAddress: Address,
     payloads: {
       chain: number;
       accessLevel: number;
       id: number;
-      payloadsController: Hex;
+      payloadsController: Address;
     }[],
     ipfsHash: Hex,
     cancellationFee: string,
@@ -1102,7 +1044,7 @@ export class GovDataService {
   // history events
   async getPayloadsCreatedEvents(
     chainId: number,
-    address: Hex,
+    address: Address,
     startBlock: number,
     endBlock: number,
   ) {
@@ -1171,7 +1113,7 @@ export class GovDataService {
 
   async getPayloadsQueuedEvents(
     chainId: number,
-    address: Hex,
+    address: Address,
     startBlock: number,
     endBlock: number,
   ) {
@@ -1186,7 +1128,7 @@ export class GovDataService {
 
   async getPayloadsExecutedEvents(
     chainId: number,
-    address: Hex,
+    address: Address,
     startBlock: number,
     endBlock: number,
   ) {

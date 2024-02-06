@@ -30,7 +30,6 @@ export const texts = {
     timelinePointCreated: 'Created',
     timelinePointOpenVote: 'Open for voting',
     timelinePointVotingClosed: 'Voting closed',
-    timelinePointPayloadsExecuted: 'Payloads executed',
     timelinePointFinished: 'Finished',
     timelinePointCanceled: 'Canceled',
     voters: 'Voters',

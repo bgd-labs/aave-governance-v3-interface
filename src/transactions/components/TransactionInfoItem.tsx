@@ -22,7 +22,8 @@ import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { chainInfoHelper } from '../../utils/configs';
-import { getTokenName } from '../../utils/getTokenName';
+import { getAssetName } from '../../utils/getAssetName';
+import { getScanLink } from '../../utils/getScanLink';
 import { TxType, TxWithStatus } from '../store/transactionsSlice';
 
 interface TransactionInfoItemProps {
@@ -104,7 +105,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === TxType.sendProofs && tx.payload && (
             <>
               {texts.transactions.sendProofsTx}{' '}
-              <b>{getTokenName(tx.payload.underlyingAsset)}</b> for the proposal{' '}
+              <b>{getAssetName(tx.payload.underlyingAsset)}</b> for the proposal{' '}
               <b>#{tx.payload.proposalId}</b>, on <NetworkIconWitchChainN />
             </>
           )}
@@ -128,20 +129,19 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                         fontWeight: 500,
                         hover: { opacity: 0.7 },
                       }}
-                      href={`${chainInfoHelper.getChainParameters(tx.chainId)
-                        .blockExplorers?.default.url}/address/${
-                        tx.payload.voter
-                      }`}
+                      href={getScanLink({
+                        chainId: tx.chainId,
+                        address: tx.payload.voter,
+                      })}
                       inNewWindow>
                       {textCenterEllipsis(tx.payload.voter, 6, 4)}
                     </Link>
                     <CopyAndExternalIconsSet
                       iconSize={12}
-                      externalLink={`${chainInfoHelper.getChainParameters(
-                        tx.chainId,
-                      ).blockExplorers?.default.url}/address/${
-                        tx.payload.voter
-                      }`}
+                      externalLink={getScanLink({
+                        chainId: tx.chainId,
+                        address: tx.payload.voter,
+                      })}
                       sx={{ '.CopyAndExternalIconsSet__link': { ml: 3 } }}
                     />
                   </Box>

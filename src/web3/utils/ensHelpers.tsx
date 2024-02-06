@@ -1,5 +1,5 @@
 import makeBlockie from 'ethereum-blockies-base64';
-import { Hex, isAddress } from 'viem';
+import { Address, Hex, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
 import { getEnsAddress, getEnsAvatar, getEnsName, normalize } from 'viem/ens';
 
@@ -30,7 +30,9 @@ export const getAddress = async (name: string) => {
     const address = await getEnsAddress(client, {
       name: normalize(name),
     });
-    return address ? address.toLocaleLowerCase() : undefined;
+    return (address ? address.toLocaleLowerCase() : undefined) as
+      | Address
+      | undefined;
   } catch (error) {
     console.error('ENS address lookup error', error);
   }

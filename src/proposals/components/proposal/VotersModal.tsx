@@ -11,8 +11,7 @@ import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { formatVoterAddress } from '../../utils/formatVoterAddress';
 import { VoteBar } from '../VoteBar';
 
@@ -65,8 +64,9 @@ function ListItemAddress({ vote }: { vote: VotersData }) {
         transition: 'all 0.2s ease',
         hover: { opacity: '0.5' },
       }}
-      href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-        .blockExplorers?.default.url}/address/${vote.address}`}>
+      href={getScanLink({
+        address: vote.address,
+      })}>
       <Box
         component="p"
         sx={{

@@ -9,8 +9,7 @@ import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalI
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { MarkdownContainer } from '../../../ui/components/MarkdownContainer';
 import { texts } from '../../../ui/utils/texts';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { ENSDataExists } from '../../../web3/store/ensSelectors';
 import { ENSProperty } from '../../../web3/store/ensSlice';
 
@@ -128,9 +127,9 @@ export function Details({
             <NoSSR>
               <CopyAndExternalIconsSet
                 iconSize={14}
-                externalLink={`${chainInfoHelper.getChainParameters(
-                  appConfig.govCoreChainId,
-                ).blockExplorers?.default.url}/address/${proposalCreator}`}
+                externalLink={getScanLink({
+                  address: proposalCreator,
+                })}
                 copyText={proposalCreator}
                 sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
               />

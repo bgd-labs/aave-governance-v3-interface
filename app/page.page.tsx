@@ -1,5 +1,4 @@
 import {
-  CachedProposalDataItemWithId,
   FinishedProposalForList,
   getGovCoreConfigs,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -42,7 +41,7 @@ export default async function Page({
   const res = await fetch(`${githubStartUrl}/${listViewPath}`);
   const data = res.ok
     ? ((await res.json()) as PageServerSideData)
-    : ({ totalProposalCount: -1, proposals: [] } as PageServerSideData);
+    : { totalProposalCount: -1, proposals: [] };
   const cachedIds = data.proposals.map((data) => data.id);
   const totalIds =
     data.totalProposalCount >= 0
@@ -107,7 +106,7 @@ export default async function Page({
         },
         combineState: proposal.combineState,
       },
-    } as CachedProposalDataItemWithId;
+    };
   });
 
   return (

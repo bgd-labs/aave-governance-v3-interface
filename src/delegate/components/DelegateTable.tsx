@@ -1,9 +1,9 @@
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 
 import { Divider } from '../../ui';
 import { TableHeaderTitle } from '../../ui/components/TableHeaderTitle';
 import { texts } from '../../ui/utils/texts';
-import { Token } from '../../utils/getTokenName';
 import { DelegateData, DelegateItem } from '../types';
 import { MobileCard } from './MobileCard';
 import { TableItem } from './TableItem';
@@ -29,7 +29,7 @@ export function DelegateTable({
 }: DelegateTableProps) {
   const theme = useTheme();
 
-  const dataForInputs: { symbol: Token; amount: number; inputName: string }[] =
+  const dataForInputs: { symbol: Asset; amount: number; inputName: string }[] =
     !!fields
       ? fields.map((name: string, index: number) => {
           return {

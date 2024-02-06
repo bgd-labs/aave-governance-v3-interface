@@ -176,7 +176,7 @@ export default async function ProposalPage({
         ...proposalDataWithoutState,
         combineState,
       },
-    } as ProposalWithLoadings;
+    };
   }
 
   const ipfsDataSSR = cachedDetailsData?.ipfs

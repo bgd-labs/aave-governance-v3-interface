@@ -9,8 +9,7 @@ import { useStore } from '../../../store';
 import { Image, Link, Tooltip } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { ENSDataExists, selectENSAvatar } from '../../store/ensSelectors';
 import { ENSProperty } from '../../store/ensSlice';
 import { ChainsIcons } from './ChainsIcons';
@@ -149,11 +148,9 @@ export function RepresentingButton() {
                   path: { stroke: theme.palette.$textSecondary },
                 },
               }}
-              href={`${chainInfoHelper.getChainParameters(
-                appConfig.govCoreChainId,
-              ).blockExplorers?.default.url}/address/${
-                representative.address
-              }`}>
+              href={getScanLink({
+                address: representative.address,
+              })}>
               <Box>
                 {ENSDataExists(
                   store,

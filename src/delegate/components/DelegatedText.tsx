@@ -1,19 +1,144 @@
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React from 'react';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
-import { useStore } from '../../store';
+import { RootState, useStore } from '../../store';
 import { Link } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
-import { appConfig } from '../../utils/appConfig';
-import { chainInfoHelper } from '../../utils/configs';
-import { getTokenName, Token } from '../../utils/getTokenName';
+import { getAssetName } from '../../utils/getAssetName';
+import { getScanLink } from '../../utils/getScanLink';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty } from '../../web3/store/ensSlice';
 import { isEnsName } from '../../web3/utils/ensHelpers';
 import { DelegateData, DelegateItem, TxDelegateData } from '../types';
+
+function getPreText({
+  condition,
+  isBeforeTx,
+}: {
+  condition: boolean;
+  isBeforeTx: boolean;
+}) {
+  if (condition) {
+    if (isBeforeTx) {
+      return texts.delegatePage.willDelegate;
+    } else {
+      return texts.delegatePage.delegated;
+    }
+  } else {
+    if (isBeforeTx) {
+      return texts.delegatePage.receiveBack;
+    } else {
+      return texts.delegatePage.receivedBack;
+    }
+  }
+}
+
+function getFirstText({
+  data,
+  isPropositionPowerDelegated,
+  isVotingPowerDelegated,
+  isBothPowersDelegated,
+  isBeforeTx,
+}: {
+  data: TxDelegateData;
+  isBothPowersDelegated: boolean;
+  isVotingPowerDelegated: boolean;
+  isPropositionPowerDelegated: boolean;
+  isBeforeTx?: boolean;
+}) {
+  if (typeof data.bothAddresses !== 'undefined') {
+    return getPreText({
+      condition: isBothPowersDelegated,
+      isBeforeTx: isBeforeTx || false,
+    });
+  } else if (typeof data.votingToAddress !== 'undefined') {
+    return getPreText({
+      condition: isVotingPowerDelegated,
+      isBeforeTx: isBeforeTx || false,
+    });
+  } else if (typeof data.propositionToAddress !== 'undefined') {
+    return getPreText({
+      condition: isPropositionPowerDelegated,
+      isBeforeTx: isBeforeTx || false,
+    });
+  }
+  return '';
+}
+
+function getFormattedAddress({
+  store,
+  address,
+}: {
+  store: RootState;
+  address: Address | string;
+}) {
+  if (isEnsName(address)) {
+    return address;
+  } else {
+    if (address && ENSDataExists(store, address, ENSProperty.NAME)) {
+      return store.ensData[address.toLowerCase() as Address].name;
+    } else {
+      return address;
+    }
+  }
+}
+
+function getVisibleAddressByType({
+  condition,
+  address,
+}: {
+  condition: boolean;
+  address: string;
+}) {
+  if (condition) {
+    if (address.startsWith('0x')) {
+      return textCenterEllipsis(address, 6, 4);
+    } else {
+      return address;
+    }
+  }
+  return '';
+}
+
+function getVisibleAddress({
+  data,
+  formattedBothAddresses,
+  formattedVotingToAddress,
+  formattedPropositionToAddress,
+  isPropositionPowerDelegated,
+  isVotingPowerDelegated,
+  isBothPowersDelegated,
+}: {
+  data: TxDelegateData;
+  formattedBothAddresses: string;
+  formattedVotingToAddress: string;
+  formattedPropositionToAddress: string;
+  isBothPowersDelegated: boolean;
+  isVotingPowerDelegated: boolean;
+  isPropositionPowerDelegated: boolean;
+}) {
+  if (typeof data.bothAddresses !== 'undefined') {
+    return getVisibleAddressByType({
+      condition: isBothPowersDelegated,
+      address: formattedBothAddresses,
+    });
+  } else if (typeof data.votingToAddress !== 'undefined') {
+    return getVisibleAddressByType({
+      condition: isVotingPowerDelegated,
+      address: formattedVotingToAddress,
+    });
+  } else if (typeof data.propositionToAddress !== 'undefined') {
+    return getVisibleAddressByType({
+      condition: isPropositionPowerDelegated,
+      address: formattedPropositionToAddress,
+    });
+  }
+  return '';
+}
 
 interface DelegatedTextProps {
   delegateData: DelegateItem[];
@@ -27,29 +152,31 @@ export function DelegatedText({
   isBeforeTx,
 }: DelegatedTextProps) {
   const store = useStore();
-  const { activeWallet, ensData } = store;
+  const { activeWallet } = store;
   const activeAddress = activeWallet?.address;
 
   const delegatedData: TxDelegateData[] = [];
   for (const formDelegateItem of formDelegateData) {
     const { votingToAddress, propositionToAddress, underlyingAsset } =
       formDelegateItem;
-    const symbol = getTokenName(underlyingAsset) || Token.AAVE;
+    const symbol = getAssetName(underlyingAsset) || Asset.AAVE;
 
     // get previous delegation data for current asset
     const delegateDataLocal: DelegateItem = delegateData.filter(
       (data) => data.underlyingAsset === underlyingAsset,
     )[0];
 
-    const isAddressSame = votingToAddress === propositionToAddress;
+    const isAddressSame =
+      votingToAddress.toLowerCase() === propositionToAddress.toLowerCase();
     const isInitialAddressSame =
-      delegateDataLocal?.propositionToAddress ===
-      delegateDataLocal?.votingToAddress;
-
+      delegateDataLocal.propositionToAddress.toLowerCase() ===
+      delegateDataLocal.votingToAddress.toLowerCase();
     const isVotingToAddressSame =
-      delegateDataLocal?.votingToAddress === votingToAddress;
+      delegateDataLocal.votingToAddress.toLowerCase() ===
+      votingToAddress.toLowerCase();
     const isPropositionToAddressSame =
-      delegateDataLocal?.propositionToAddress === propositionToAddress;
+      delegateDataLocal.propositionToAddress.toLowerCase() ===
+      propositionToAddress.toLowerCase();
 
     // check if delegationTo is the same address and not equal to previous delegation
     if (
@@ -94,107 +221,63 @@ export function DelegatedText({
           data.propositionToAddress !== '' &&
           data.propositionToAddress !== activeAddress;
 
-        const firstText =
-          typeof data.bothAddresses !== 'undefined'
-            ? isBothPowersDelegated
-              ? isBeforeTx
-                ? texts.delegatePage.willDelegate
-                : texts.delegatePage.delegated
-              : isBeforeTx
-                ? texts.delegatePage.receiveBack
-                : texts.delegatePage.receivedBack
-            : typeof data.votingToAddress !== 'undefined'
-              ? isVotingPowerDelegated
-                ? isBeforeTx
-                  ? texts.delegatePage.willDelegate
-                  : texts.delegatePage.delegated
-                : isBeforeTx
-                  ? texts.delegatePage.receiveBack
-                  : texts.delegatePage.receivedBack
-              : typeof data.propositionToAddress !== 'undefined'
-                ? isPropositionPowerDelegated
-                  ? isBeforeTx
-                    ? texts.delegatePage.willDelegate
-                    : texts.delegatePage.delegated
-                  : isBeforeTx
-                    ? texts.delegatePage.receiveBack
-                    : texts.delegatePage.receivedBack
-                : '';
+        const firstText = getFirstText({
+          data,
+          isPropositionPowerDelegated,
+          isVotingPowerDelegated,
+          isBothPowersDelegated,
+          isBeforeTx,
+        });
 
-        // TODO: maybe simplify this, but will be not readable
-        const formattedBothAddresses = isEnsName(data.bothAddresses || '')
-          ? data.bothAddresses
-          : data.bothAddresses &&
-              ENSDataExists(store, data.bothAddresses, ENSProperty.NAME)
-            ? ensData[data.bothAddresses?.toLocaleLowerCase() as Hex].name
-            : data.bothAddresses;
-        const formattedVotingToAddress = isEnsName(data.votingToAddress || '')
-          ? data.votingToAddress
-          : data.votingToAddress &&
-              ENSDataExists(store, data.votingToAddress, ENSProperty.NAME)
-            ? ensData[data.votingToAddress?.toLocaleLowerCase() as Hex].name
-            : data.votingToAddress;
-        const formattedPropositionToAddress = isEnsName(
-          data.propositionToAddress || '',
-        )
-          ? data.propositionToAddress
-          : data.propositionToAddress &&
-              ENSDataExists(store, data.propositionToAddress, ENSProperty.NAME)
-            ? ensData[data.propositionToAddress?.toLocaleLowerCase() as Hex]
-                .name
-            : data.propositionToAddress;
+        const formattedBothAddresses = getFormattedAddress({
+          store,
+          address: data.bothAddresses || '',
+        });
+        const formattedVotingToAddress = getFormattedAddress({
+          store,
+          address: data.votingToAddress || '',
+        });
+        const formattedPropositionToAddress = getFormattedAddress({
+          store,
+          address: data.propositionToAddress || '',
+        });
 
-        const address =
-          typeof data.bothAddresses !== 'undefined'
-            ? isBothPowersDelegated
-              ? formattedBothAddresses?.startsWith('0x')
-                ? textCenterEllipsis(formattedBothAddresses, 6, 4)
-                : formattedBothAddresses
-              : ''
-            : typeof data.votingToAddress !== 'undefined'
-              ? isVotingPowerDelegated
-                ? formattedVotingToAddress?.startsWith('0x')
-                  ? textCenterEllipsis(formattedVotingToAddress, 6, 4)
-                  : formattedVotingToAddress
-                : ''
-              : typeof data.propositionToAddress !== 'undefined'
-                ? isPropositionPowerDelegated
-                  ? formattedPropositionToAddress?.startsWith('0x')
-                    ? textCenterEllipsis(formattedPropositionToAddress, 6, 4)
-                    : formattedPropositionToAddress
-                  : ''
-                : '';
+        const address = getVisibleAddress({
+          data,
+          formattedBothAddresses: formattedBothAddresses || '',
+          formattedVotingToAddress: formattedVotingToAddress || '',
+          formattedPropositionToAddress: formattedPropositionToAddress || '',
+          isBothPowersDelegated,
+          isVotingPowerDelegated,
+          isPropositionPowerDelegated,
+        });
 
         const middleText =
           typeof data.bothAddresses !== 'undefined'
-            ? `${texts.delegatePage.votingAndPropositionPowers} ${
-                !!address ? 'to' : ''
-              }`
+            ? `${texts.delegatePage.votingAndPropositionPowers}`
             : typeof data.votingToAddress !== 'undefined'
-              ? `${texts.delegatePage.votingPower} ${!!address ? 'to' : ''}`
+              ? `${texts.delegatePage.votingPower}`
               : typeof data.propositionToAddress !== 'undefined'
-                ? `${texts.delegatePage.propositionPower} ${
-                    !!address ? 'to' : ''
-                  }`
+                ? `${texts.delegatePage.propositionPower}`
                 : '';
 
         const endText = delegatedData.length - 1 !== index ? 'and ' : '';
 
         const link =
           typeof data.bothAddresses !== 'undefined' && data.bothAddresses !== ''
-            ? `${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                .blockExplorers?.default.url}/address/${data.bothAddresses}`
+            ? getScanLink({
+                address: data.bothAddresses,
+              })
             : typeof data.votingToAddress !== 'undefined' &&
                 data.votingToAddress !== ''
-              ? `${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-                  .blockExplorers?.default.url}/address/${data.votingToAddress}`
+              ? getScanLink({
+                  address: data.votingToAddress,
+                })
               : typeof data.propositionToAddress !== 'undefined' &&
                   data.propositionToAddress !== ''
-                ? `${chainInfoHelper.getChainParameters(
-                    appConfig.govCoreChainId,
-                  ).blockExplorers?.default.url}/address/${
-                    data.propositionToAddress
-                  }`
+                ? getScanLink({
+                    address: data.propositionToAddress,
+                  })
                 : undefined;
 
         return (
@@ -202,10 +285,12 @@ export function DelegatedText({
             {firstText} <b>{data.symbol}</b> {middleText}{' '}
             {!!link && (
               <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                to
                 <Link
                   href={link}
                   css={{
                     color: '$textSecondary',
+                    ml: 3,
                     hover: { opacity: '0.7 !important' },
                   }}
                   inNewWindow>

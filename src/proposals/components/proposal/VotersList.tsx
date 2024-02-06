@@ -7,8 +7,7 @@ import { useStore } from '../../../store';
 import { Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { formatVoterAddress } from '../../utils/formatVoterAddress';
 
 export interface VotersListProps {
@@ -125,8 +124,9 @@ export function VotersListItem({
           transition: 'all 0.2s ease',
           hover: { opacity: '0.5' },
         }}
-        href={`${chainInfoHelper.getChainParameters(appConfig.govCoreChainId)
-          .blockExplorers?.default.url}/address/${vote.address}`}>
+        href={getScanLink({
+          address: vote.address,
+        })}>
         <Box
           component="p"
           sx={{

@@ -1,22 +1,22 @@
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
 import { useStore } from '../../store';
 import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
 import { TokenIcon } from '../../ui/components/TokenIcon';
-import { Token } from '../../utils/getTokenName';
 import { DelegateData } from '../types';
 import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
 
 export interface TableItemProps {
-  underlyingAsset?: Hex;
-  symbol?: Token;
+  underlyingAsset?: Address;
+  symbol?: Asset;
   amount?: number;
-  votingToAddress?: Hex | '';
-  propositionToAddress?: Hex | '';
+  votingToAddress?: Address | string;
+  propositionToAddress?: Address | string;
   loading?: boolean;
   isEdit?: boolean;
   isViewChanges?: boolean;

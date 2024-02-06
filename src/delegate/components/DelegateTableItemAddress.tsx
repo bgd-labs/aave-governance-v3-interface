@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Field } from 'react-final-form';
-import { Hex, isAddress } from 'viem';
+import { Address, isAddress } from 'viem';
 
 import { useStore } from '../../store';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
@@ -13,9 +13,10 @@ import {
 } from '../../ui/utils/inputValidation';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
+import { getAddressByENSNameIfExists } from '../../web3/store/ensSelectors';
 import { isEnsName } from '../../web3/utils/ensHelpers';
 
-const Text = ({
+function Text({
   address,
   shownAddress,
   isCrossed,
@@ -31,7 +32,7 @@ const Text = ({
   isEnsName?: boolean;
   isError?: boolean;
   forHelp?: boolean;
-}) => {
+}) {
   return (
     <TableText
       topText={texts.delegatePage.tableItemNotDelegated}
@@ -64,7 +65,7 @@ const Text = ({
       </>
     </TableText>
   );
-};
+}
 
 interface DelegateTableItemAddressProps {
   isEdit: boolean;
@@ -83,6 +84,7 @@ export function DelegateTableItemAddress({
   addressTo,
   forHelp,
 }: DelegateTableItemAddressProps) {
+  const store = useStore();
   const {
     fetchEnsNameByAddress,
     fetchAddressByEnsName,
@@ -90,12 +92,13 @@ export function DelegateTableItemAddress({
     addDelegationIncorrectToField,
     removeDelegationIncorrectToField,
     clearDelegationIncorrectToFields,
-  } = useStore();
+  } = store;
 
   const [hoveredAddressTo, setHoveredAddressTo] = React.useState<
     string | undefined
   >(undefined);
 
+  const [formattedAddress, setFormattedAddress] = useState(address || '');
   const [shownAddress, setShownAddress] = React.useState<string | undefined>(
     address,
   );
@@ -111,14 +114,25 @@ export function DelegateTableItemAddress({
     }
     if (address) {
       if (isAddress(address)) {
+        setFormattedAddress(address);
         fetchEnsNameByAddress(address).then(() => {
-          const addressData = ensData[address.toLocaleLowerCase() as Hex];
+          const addressData = ensData[address.toLocaleLowerCase() as Address];
           setShownAddress(
             addressData && addressData.name
-              ? ensData[address.toLocaleLowerCase() as Hex].name
+              ? ensData[address.toLocaleLowerCase() as Address].name
               : address,
           );
         });
+      } else if (isEnsName(address)) {
+        const addressFromEnsName = getAddressByENSNameIfExists(store, address);
+        setShownAddress(address);
+        if (addressFromEnsName) {
+          setFormattedAddress(addressFromEnsName);
+        } else {
+          setFormattedAddress('');
+        }
+      } else {
+        setFormattedAddress(address);
       }
     }
   }, [ensData, address]);
@@ -130,10 +144,10 @@ export function DelegateTableItemAddress({
     if (addressTo && !forHelp) {
       if (isAddress(addressTo)) {
         fetchEnsNameByAddress(addressTo).then(() => {
-          const addressData = ensData[addressTo.toLocaleLowerCase() as Hex];
+          const addressData = ensData[addressTo.toLocaleLowerCase() as Address];
           setShownAddressTo(
             addressData && addressData.name
-              ? ensData[addressTo.toLocaleLowerCase() as Hex].name
+              ? ensData[addressTo.toLocaleLowerCase() as Address].name
               : addressTo,
           );
         });
@@ -158,16 +172,21 @@ export function DelegateTableItemAddress({
     return () => clearDelegationIncorrectToFields();
   }, []);
 
-  const isAddressToVisible = address !== addressTo;
+  const isAddressToVisible =
+    formattedAddress.toLowerCase() !==
+    ((isEnsName(addressTo || '')
+      ? hoveredAddressTo
+      : addressTo
+    )?.toLowerCase() || '');
 
   return (
     <>
       {!isEdit && !isViewChanges && (
         <Text
           forHelp={forHelp}
-          address={address}
+          address={formattedAddress}
           shownAddress={shownAddress}
-          isEnsName={isEnsName(shownAddress || '')}
+          isEnsName={isEnsName(address || '')}
         />
       )}
       {isEdit && !isViewChanges && (
@@ -215,11 +234,11 @@ export function DelegateTableItemAddress({
           })}>
           <Text
             forHelp={forHelp}
-            address={address}
+            address={formattedAddress}
             shownAddress={shownAddress}
             isCrossed={isAddressToVisible}
             alwaysGray
-            isEnsName={isEnsName(shownAddress || '')}
+            isEnsName={isEnsName(address || '')}
           />
           {isAddressToVisible && (
             <Text
@@ -228,7 +247,7 @@ export function DelegateTableItemAddress({
                 isEnsName(addressTo || '') ? hoveredAddressTo : addressTo
               }
               shownAddress={shownAddressTo}
-              isEnsName={isEnsName(shownAddressTo || '')}
+              isEnsName={isEnsName(addressTo || '')}
               isError={isEnsToIncorrect}
             />
           )}

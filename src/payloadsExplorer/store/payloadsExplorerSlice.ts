@@ -1,7 +1,7 @@
 import { Payload, PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -10,22 +10,22 @@ import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
-type PayloadsData = Record<number, Record<Hex, Record<string, Payload>>>;
+type PayloadsData = Record<number, Record<Address, Record<string, Payload>>>;
 export interface IPayloadsExplorerSlice {
-  totalPayloadsCountByAddress: Record<Hex, number>;
+  totalPayloadsCountByAddress: Record<Address, number>;
   setPayloadsExploreActivePage: (
     value: number,
     chainId: number,
-    address: Hex,
+    address: Address,
   ) => Promise<void>;
   payloadsExplorePagination: Record<
-    Hex,
+    Address,
     { activePage: number; pageCount: number; currentIds: number[] }
   >;
 
   setPaginationDetails: (
     chainId: number,
-    address: Hex,
+    address: Address,
     activePage?: number,
   ) => Promise<{
     totalPayloadsCount: number;
@@ -35,12 +35,12 @@ export interface IPayloadsExplorerSlice {
   payloadsExploreData: PayloadsData;
   getPayloadsExploreData: (
     chainId: number,
-    address: Hex,
+    address: Address,
     activePage?: number,
   ) => Promise<void>;
   getPayloadsExploreDataById: (
     chainId: number,
-    address: Hex,
+    address: Address,
     payloadId: number,
   ) => Promise<void>;
 
@@ -50,7 +50,7 @@ export interface IPayloadsExplorerSlice {
   detailedPayloadsExplorerDataInterval: number | undefined;
   startDetailedPayloadsExplorerDataPolling: (
     chainId: number,
-    address: Hex,
+    address: Address,
     activePage?: number,
   ) => Promise<void>;
   stopDetailedPayloadsExplorerDataPolling: () => void;

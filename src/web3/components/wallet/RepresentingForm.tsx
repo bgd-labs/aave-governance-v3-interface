@@ -20,7 +20,7 @@ import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 import { ENSDataExists } from '../../store/ensSelectors';
 import { ENSProperty } from '../../store/ensSlice';
 import { ChainsIcons } from './ChainsIcons';
@@ -274,9 +274,10 @@ export function RepresentingForm({
           <CopyAndExternalIconsSet
             iconSize={16}
             copyText={sm ? localAddress.address : undefined}
-            externalLink={`${chainInfoHelper.getChainParameters(
-              localAddress.chainsIds[0],
-            ).blockExplorers?.default.url}/address/${localAddress.address}`}
+            externalLink={getScanLink({
+              chainId: localAddress.chainsIds[0],
+              address: localAddress.address,
+            })}
             sx={{
               '.CopyAndExternalIconsSet__copy, .CopyAndExternalIconsSet__link':
                 { ml: 8 },

@@ -1,15 +1,15 @@
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
 export type PayloadParams = {
   chainId: number;
   accessLevel: number;
-  payloadsController: Hex;
+  payloadsController: Address;
   payloadId: number;
 };
 
 export interface InitialParams {
   proposalId?: number;
   ipfsHash?: Hex;
-  votingPortal?: Hex;
+  votingPortal?: Address;
   payloads: PayloadParams[];
 }

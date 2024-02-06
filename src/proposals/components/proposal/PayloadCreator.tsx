@@ -6,8 +6,7 @@ import { Link } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
-import { appConfig } from '../../../utils/appConfig';
-import { chainInfoHelper } from '../../../utils/configs';
+import { getScanLink } from '../../../utils/getScanLink';
 
 interface PayloadCreatorProps {
   payload: NewPayload;
@@ -51,9 +50,10 @@ export function PayloadCreator({
               },
             }}
             inNewWindow
-            href={`${chainInfoHelper.getChainParameters(
-              payload.chainId || appConfig.govCoreChainId,
-            ).blockExplorers?.default.url}/address/${payload.creator}`}>
+            href={getScanLink({
+              chainId: payload.chainId,
+              address: payload.creator,
+            })}>
             {textCenterEllipsis(payload.creator, ellipsisFrom || 8, 8)}
           </Link>
 
@@ -61,9 +61,10 @@ export function PayloadCreator({
             sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
             iconSize={iconSize || 10}
             copyText={payload.creator}
-            externalLink={`${chainInfoHelper.getChainParameters(
-              payload.chainId || appConfig.govCoreChainId,
-            ).blockExplorers?.default.url}/address/${payload.creator}`}
+            externalLink={getScanLink({
+              chainId: payload.chainId,
+              address: payload.creator,
+            })}
           />
         </Box>
       </Box>

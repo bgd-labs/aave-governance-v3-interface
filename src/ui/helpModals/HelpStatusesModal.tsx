@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import BackArrow from '/public/images/icons/arrowToLeft.svg';
 import NextArrow from '/public/images/icons/arrowToRight.svg';
 
-import { ProposalTimeline } from '../../proposals/components/proposal/ProposalTimeline';
+import { TimelineContent } from '../../proposals/components/timeline/TimelineContent';
 import { useStore } from '../../store';
 import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
@@ -295,7 +295,7 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
 
         {currentStep > 0 && (
           <Box sx={{ mt: 32 }}>
-            <ProposalTimeline
+            <TimelineContent
               withoutDetails
               expiredTimestamp={
                 statusInfo.createdTimestamp + statusInfo.finishedTimestamp

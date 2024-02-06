@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Field } from 'react-final-form';
-import { Hex, isAddress } from 'viem';
+import { Address, isAddress, zeroAddress } from 'viem';
 
 import { useStore } from '../../store';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
@@ -13,6 +13,7 @@ import {
 } from '../../ui/utils/inputValidation';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
+import { checkIfAddressENS } from '../../web3/store/ensSelectors';
 import { isEnsName } from '../../web3/utils/ensHelpers';
 
 const Text = ({
@@ -83,16 +84,16 @@ export function RepresentationsTableItemField({
   addressTo,
   forHelp,
 }: RepresentationsTableItemFieldProps) {
-  const isAddressToVisible = address !== addressTo;
-
+  const store = useStore();
   const {
+    activeWallet,
     fetchEnsNameByAddress,
     fetchAddressByEnsName,
     ensData,
     addIncorrectRepresentationField,
     removeIncorrectRepresentationField,
     clearIncorrectRepresentationFields,
-  } = useStore();
+  } = store;
 
   const [shownAddress, setShownAddress] = React.useState<string | undefined>(
     address,
@@ -115,10 +116,11 @@ export function RepresentationsTableItemField({
     if (address) {
       if (isAddress(address)) {
         fetchEnsNameByAddress(address).then(() => {
-          const addressData = ensData[address.toLocaleLowerCase() as Hex];
+          const addressData = ensData[address.toLowerCase() as Address];
+
           setShownAddress(
             addressData && addressData.name
-              ? ensData[address.toLocaleLowerCase() as Hex].name
+              ? ensData[address.toLowerCase() as Address].name
               : address,
           );
         });
@@ -133,10 +135,10 @@ export function RepresentationsTableItemField({
     if (addressTo && !forHelp) {
       if (isAddress(addressTo)) {
         fetchEnsNameByAddress(addressTo).then(() => {
-          const addressData = ensData[addressTo.toLocaleLowerCase() as Hex];
+          const addressData = ensData[addressTo.toLocaleLowerCase() as Address];
           setShownAddressTo(
             addressData && addressData.name
-              ? ensData[addressTo.toLocaleLowerCase() as Hex].name
+              ? ensData[addressTo.toLocaleLowerCase() as Address].name
               : addressTo,
           );
         });
@@ -162,6 +164,18 @@ export function RepresentationsTableItemField({
       clearIncorrectRepresentationFields();
     };
   }, []);
+
+  const isAddressToVisible =
+    checkIfAddressENS(
+      store,
+      activeWallet?.address || zeroAddress,
+      address,
+    ).toLowerCase() !==
+    checkIfAddressENS(
+      store,
+      activeWallet?.address || zeroAddress,
+      addressTo,
+    ).toLowerCase();
 
   return (
     <>
@@ -221,7 +235,12 @@ export function RepresentationsTableItemField({
           {isAddressToVisible && (
             <Text
               forHelp={forHelp}
-              address={addressToFromEns}
+              address={
+                addressToFromEns?.toLowerCase() ===
+                activeWallet?.address.toLowerCase()
+                  ? ''
+                  : addressToFromEns
+              }
               ensName={shownAddressTo}
               isError={isEnsToIncorrect}
             />
