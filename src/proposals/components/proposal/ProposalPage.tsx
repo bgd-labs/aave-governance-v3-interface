@@ -1,42 +1,35 @@
-// TODO: need fix ternary
-
 import {
   CombineProposalState,
   formatProposal,
   getProposalStepsAndAmounts,
   InitialPayload,
   ProposalMetadata,
-  ProposalState,
-  ProposalStateWithName,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
 import { useStore } from '../../../store';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
-import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
 import { ToTopButton } from '../../../ui/components/ToTopButton';
 import { getChainName } from '../../../ui/utils/getChainName';
 import { texts } from '../../../ui/utils/texts';
 import { selectVotersByProposalId } from '../../store/proposalsSelectors';
-import { proposalStatuses } from '../../utils/statuses';
 import { ActivateVotingOnVotingMachineModal } from '../actionModals/ActivateVotingOnVotingMachineModal';
 import { ExecutePayloadModal } from '../actionModals/ExecutePayloadModal';
 import { VoteModal } from '../actionModals/VoteModal';
 import { BlockWrapper } from '../BlockWrapper';
 import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
+import { Timeline } from '../timeline/Timeline';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
 import { LeftPanelWrapper } from './LeftPanelWrapper';
 import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
-import { ProposalTimeline } from './ProposalTimeline';
 import { ProposalVoteInfo } from './ProposalVoteInfo';
 import { ProposalVotingPower } from './ProposalVotingPower';
 import { RightPanelWrapper } from './RightPanelWrapper';
@@ -167,13 +160,7 @@ export function ProposalPage({
   const loading = proposalData.loading;
   const balanceLoading = proposalData.balanceLoading;
 
-  const {
-    lastPayloadQueuedAt,
-    lastPayloadCanceledAt,
-    lastPayloadExecutedAt,
-    lastPayloadExpiredAt,
-    isProposalExecuted,
-  } = getProposalStepsAndAmounts({
+  const { isProposalExecuted } = getProposalStepsAndAmounts({
     proposalData: proposal.data,
     quorum: proposal.config.quorum,
     differential: proposal.config.differential,
@@ -199,112 +186,7 @@ export function ProposalPage({
   const isVotingFinished =
     !loading && proposal.combineState > CombineProposalState.Active;
   const isFinished =
-    !loading &&
-    (proposal.combineState >= CombineProposalState.Executed ||
-      proposal.combineState === CombineProposalState.Failed);
-
-  const now = dayjs().unix();
-
-  const openToVoteTimestamp =
-    proposal.data.votingMachineData.startTime > 0
-      ? proposal.data.votingMachineData.startTime
-      : now >
-          proposal.data.creationTime + proposal.config.coolDownBeforeVotingStart
-        ? now + 60
-        : proposal.data.creationTime +
-          proposal.config.coolDownBeforeVotingStart;
-
-  const votingClosedTimestamp =
-    proposal.data.votingMachineData.votingClosedAndSentTimestamp > 0
-      ? proposal.data.votingMachineData.votingClosedAndSentTimestamp
-      : (proposal.data.votingMachineData.endTime > 0 &&
-            proposal.data.votingMachineData.sentToGovernance) ||
-          (proposal.data.votingMachineData.endTime > 0 &&
-            now < proposal.data.votingMachineData.endTime) ||
-          (proposal.data.votingMachineData.endTime > 0 && isFinished)
-        ? proposal.data.votingMachineData.endTime
-        : proposal.data.votingMachineData.endTime > 0 &&
-            now > proposal.data.votingMachineData.endTime
-          ? now + 60
-          : openToVoteTimestamp + proposal.data.votingDuration;
-
-  const payloadsExecutedTimestamp =
-    lastPayloadExecutedAt > 0
-      ? lastPayloadExecutedAt
-      : lastPayloadQueuedAt > 0 &&
-          lastPayloadExecutedAt === 0 &&
-          lastPayloadQueuedAt + proposal.timings.executionDelay < now
-        ? now + 60
-        : lastPayloadQueuedAt > 0 &&
-            lastPayloadExecutedAt === 0 &&
-            lastPayloadQueuedAt + proposal.timings.executionDelay > now
-          ? lastPayloadQueuedAt + proposal.timings.executionDelay
-          : proposal.data.queuingTime > 0 && lastPayloadQueuedAt === 0
-            ? proposal.data.queuingTime + proposal.timings.executionDelay
-            : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
-                  0 &&
-                lastPayloadExecutedAt <= 0 &&
-                proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                  proposal.timings.executionDelay <
-                  now
-              ? now + 60
-              : proposal.data.votingMachineData.votingClosedAndSentTimestamp >
-                    0 &&
-                  lastPayloadExecutedAt <= 0 &&
-                  proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                    proposal.timings.executionDelay >
-                    now
-                ? proposal.data.votingMachineData.votingClosedAndSentTimestamp +
-                  proposal.timings.executionDelay
-                : proposal.data.votingMachineData.endTime > 0 &&
-                    lastPayloadExecutedAt <= 0
-                  ? proposal.data.votingMachineData.endTime +
-                    proposal.timings.executionDelay
-                  : openToVoteTimestamp +
-                    proposal.data.votingDuration +
-                    proposal.timings.executionDelay;
-
-  const Timeline = () => {
-    if (!store.isRendered) {
-      return (
-        <Box sx={{ mb: 18, [theme.breakpoints.up('lg')]: { mb: 24 } }}>
-          <CustomSkeleton height={80} />
-        </Box>
-      );
-    }
-
-    return (
-      <NoSSR>
-        <ProposalTimeline
-          expiredTimestamp={
-            proposal.data.state === ProposalState.Executed
-              ? lastPayloadExpiredAt
-              : proposal.data.creationTime + proposal.timings.expirationTime
-          }
-          votingStartTime={proposal.data.votingMachineData.startTime}
-          createdTimestamp={proposal.data.creationTime}
-          openToVoteTimestamp={openToVoteTimestamp}
-          votingClosedTimestamp={votingClosedTimestamp}
-          finishedTimestamp={payloadsExecutedTimestamp}
-          failedTimestamp={
-            proposal.combineState === CombineProposalState.Failed
-              ? votingClosedTimestamp
-              : undefined
-          }
-          canceledTimestamp={
-            lastPayloadCanceledAt > proposal.data.canceledAt
-              ? lastPayloadCanceledAt
-              : proposal.data.canceledAt
-          }
-          isFinished={isFinished}
-          state={
-            proposalStatuses.find((s) => s.value === proposal?.combineState)
-              ?.title || ProposalStateWithName.Created
-          }
-        />
-      </NoSSR>
-    );
-  };
+    !loading && proposal.combineState >= CombineProposalState.Failed;
 
   return (
     <>
@@ -479,7 +361,7 @@ export function ProposalPage({
             }}
             css={{ display: 'flex', flexDirection: 'column', py: 18 }}>
             <Box sx={{ ml: 18 }}>
-              <Timeline />
+              <Timeline proposal={proposal} loading={loading} />
             </Box>
 
             <DetailsLinks
@@ -518,7 +400,7 @@ export function ProposalPage({
                   flexDirection: 'column',
                 },
               }}>
-              <Timeline />
+              <Timeline proposal={proposal} loading={loading} />
               <DetailsLinks
                 discussionLink={ipfsData?.discussions}
                 snapshot={ipfsData?.snapshot}
