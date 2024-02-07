@@ -1347,10 +1347,10 @@
     "@tanstack/react-query" "^5.18.1"
     dayjs "^1.11.10"
 
-"@bgd-labs/governance-v3-ethers-utils@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/governance-v3-ethers-utils/-/governance-v3-ethers-utils-1.0.1.tgz#24fa46289de63bd838463b01224633b32d5ab240"
-  integrity sha512-BgMeztX9NNniH9gQqOITfM28jQSl7K+KxPkYXZn0A9XNSaSCQHHrnwCGHfOexQH6EmKa7NhK/X27Kemi7B28KQ==
+"@bgd-labs/governance-v3-js-utils@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/governance-v3-js-utils/-/governance-v3-js-utils-1.0.2.tgz#3556fe53a536d6634dd9b98a52db28deb3095cd3"
+  integrity sha512-b1B76BBOwI1eNGtyEV9JB8YhYnk5v2/IatAUgsLSmf9c6/KYPPXucqV2XivPfntWHlOtnf+7nYpBkz7OI7Ki3A==
 
 "@coinbase/wallet-sdk@3.9.1":
   version "3.9.1"

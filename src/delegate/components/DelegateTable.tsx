@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/governance-v3-ethers-utils/dist/helpers/types';
+import { Asset } from '@bgd-labs/governance-v3-js-utils/dist/utils';
 import { Box, useTheme } from '@mui/system';
 
 import { Divider } from '../../ui';
