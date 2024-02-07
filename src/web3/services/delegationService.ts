@@ -352,10 +352,7 @@ export class DelegationService {
     }
   }
 
-  async batchMetaDelegate(
-    sigs: BatchMetaDelegateParams[],
-    accountAddress: Address,
-  ) {
+  async batchMetaDelegate(sigs: BatchMetaDelegateParams[]) {
     const delegateHelperContract = getContract({
       abi: IMetaDelegateHelper_ABI,
       address: appConfig.additional.delegationHelper,
@@ -363,18 +360,11 @@ export class DelegationService {
     });
 
     if (this.wagmiConfig) {
-      const gasLimit =
-        await delegateHelperContract.estimateGas.batchMetaDelegate([sigs], {
-          account: accountAddress,
-        });
-
       return writeContract(this.wagmiConfig, {
         abi: delegateHelperContract.abi,
         address: delegateHelperContract.address,
         functionName: 'batchMetaDelegate',
         args: [sigs],
-        // TODO: need test delegation with all assets without increase of gas, maybe increase not need
-        gas: gasLimit + BigInt(100000),
         chainId: appConfig.govCoreChainId,
       });
     }

@@ -8,7 +8,7 @@ import {
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
-import { getContract, zeroAddress } from 'viem';
+import { getContract } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -237,10 +237,7 @@ export const createDelegationSlice: StoreSlice<
           await get().executeTx({
             body: () => {
               get().setModalOpen(true);
-              return delegationService.batchMetaDelegate(
-                sigs,
-                get().activeWallet?.address || zeroAddress,
-              );
+              return delegationService.batchMetaDelegate(sigs);
             },
             params: {
               type: TxType.delegate,
