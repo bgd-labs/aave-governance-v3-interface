@@ -1331,10 +1331,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.19.0.tgz#5278bd4c8645b4ee783680c1b9d3df489f571060"
   integrity sha512-JrZOZqzunJqFe4+/ZpL3vD7ddtGjjlBRCnMeQ68egNBAB2CYXvkXj6pSZLJBWklkoLgh17or1IdAQHTMYtBSsg==
 
-"@bgd-labs/aave-governance-ui-helpers@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-2.2.0.tgz#d1a6f90db911ee9b6ca0f48f26f23d4487eee9f3"
-  integrity sha512-2SHSv1nGFeebjhTqSoKNsl9jubsBkvLH7AAgULICxS1UHKQO+50bgaABpwjr2qj539Sp9ytW2mH4l9W6BF9j2Q==
+"@bgd-labs/aave-governance-ui-helpers@2.2.1-353cbb7f628c0f197a8d42fd2f62409395b578dc.0":
+  version "2.2.1-353cbb7f628c0f197a8d42fd2f62409395b578dc.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-2.2.1-353cbb7f628c0f197a8d42fd2f62409395b578dc.0.tgz#f563b5485d7eeddf6d94e8dc8097d26b12e58d77"
+  integrity sha512-p9s2l4XgtG5952fSV+o7rMVv7RUkuDbQetd5Q9KXgXTsCiPT/4+MjUv5MgSGpLTP3Q2OpP2dd5dUWdo97eQTfA==
   dependencies:
     "@bgd-labs/js-utils" "1.1.1"
     dayjs "^1.11.10"
@@ -1357,6 +1357,11 @@
     bs58 "^5.0.0"
     gray-matter "^4.0.3"
     tsx "^4.4.0"
+
+"@bgd-labs/proofs-helper@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/proofs-helper/-/proofs-helper-1.0.0.tgz#20f621c711acd843a6e7bd286dd94e2deb2607df"
+  integrity sha512-4gyBDtiuQngnV5vruXlxN3dfhXOTQUxl9RXHHxjhuo/VLq/v/3S8qyxOvd8DcXTXpM8TIPt/n8aYSz5/HhmFKQ==
 
 "@coinbase/wallet-sdk@3.9.1":
   version "3.9.1"

@@ -12,28 +12,23 @@ import {
 import {
   BasicProposal,
   blockLimit,
-  formatToProofRLP,
   getBlocksForEvents,
   getDetailedProposalsData,
-  getExtendedBlock,
   getGovCoreConfigs,
   getPayloadsCreated,
   getPayloadsExecuted,
   getPayloadsQueued,
-  getProof,
   getProposalActivated,
   getProposalActivatedOnVM,
   getProposalCreated,
   getProposalQueued,
   getProposalVotingClosed,
-  getSolidityStorageSlotBytes,
   getVoters,
   InitialProposal,
   Payload,
   PayloadAction,
   PayloadForCreation,
   PayloadState,
-  prepareBLockRLP,
   ProposalData,
   updateVotingMachineData,
   VMProposalStructOutput,
@@ -42,6 +37,13 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
+import {
+  formatToProofRLP,
+  getExtendedBlock,
+  getProof,
+  getSolidityStorageSlotBytes,
+  prepareBLockRLP,
+} from '@bgd-labs/proofs-helper/dist/viem';
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import { writeContract } from '@wagmi/core';

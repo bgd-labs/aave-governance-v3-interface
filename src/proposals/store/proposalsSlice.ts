@@ -3,13 +3,9 @@ import {
   BasicProposal,
   checkHash,
   ContractsConstants,
-  formatBalances,
-  getProofOfRepresentative,
   getProposalMetadata,
   getProposalStepsAndAmounts,
-  getVotingAssetsWithSlot,
   getVotingMachineProposalState,
-  getVotingProofs,
   InitialPayload,
   normalizeBN,
   Payload,
@@ -22,6 +18,10 @@ import {
   VotingConfig,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import {
+  getProofOfRepresentative,
+  getVotingProofs,
+} from '@bgd-labs/proofs-helper/dist/viem';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
 import { Address, Hex } from 'viem';
@@ -44,7 +44,11 @@ import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
-import { assetsBalanceSlots } from '../../web3/utils/assetsBalanceSlots';
+import {
+  assetsBalanceSlots,
+  formatBalances,
+  getVotingAssetsWithSlot,
+} from '../../web3/utils/assetsBalanceSlots';
 import { IProposalsHistorySlice } from './proposalsHistorySlice';
 import { IProposalsListCacheSlice } from './proposalsListCacheSlice';
 import {

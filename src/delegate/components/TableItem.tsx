@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset } from '@bgd-labs/proofs-helper/dist/helpers/types';
 import { Box, useTheme } from '@mui/system';
 import { Address } from 'viem';
 

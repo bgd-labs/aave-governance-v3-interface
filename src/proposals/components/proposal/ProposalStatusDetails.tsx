@@ -1,7 +1,6 @@
 import {
   checkHash,
   CombineProposalState,
-  getVoteBalanceSlot,
   ProposalState,
   VotingMachineProposalState,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -9,10 +8,10 @@ import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,
 } from '@bgd-labs/frontend-web3-utils';
+import { getVoteBalanceSlot } from '@bgd-labs/proofs-helper/dist/helpers/genericFunctions';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
-import { Address } from 'viem';
 
 import { useStore } from '../../../store';
 import {
@@ -172,7 +171,7 @@ export function ProposalStatusDetails({
       underlyingAsset: asset,
       withSlot: false,
       baseBalanceSlotRaw: getVoteBalanceSlot(
-        asset as Address,
+        asset,
         false,
         appConfig.additional.aAaveAddress,
         assetsBalanceSlots,

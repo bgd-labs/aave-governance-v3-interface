@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset } from '@bgd-labs/proofs-helper/dist/helpers/types';
 import { Address } from 'viem';
 
 export type DelegateItem = {
