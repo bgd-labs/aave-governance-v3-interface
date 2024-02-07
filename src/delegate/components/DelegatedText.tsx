@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/proofs-helper/dist/helpers/types';
+import { Asset } from '@bgd-labs/governance-v3-ethers-utils/dist/helpers/types';
 import { Box } from '@mui/system';
 import React from 'react';
 import { Address } from 'viem';

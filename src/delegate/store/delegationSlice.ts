@@ -5,7 +5,7 @@ import {
   StoreSlice,
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
-import { Asset } from '@bgd-labs/proofs-helper/dist/helpers/types';
+import { Asset } from '@bgd-labs/governance-v3-ethers-utils/dist/helpers/types';
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';

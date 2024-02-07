@@ -8,7 +8,7 @@ import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,
 } from '@bgd-labs/frontend-web3-utils';
-import { getVoteBalanceSlot } from '@bgd-labs/proofs-helper/dist/helpers/genericFunctions';
+import { getVoteBalanceSlot } from '@bgd-labs/governance-v3-ethers-utils/dist/helpers/genericFunctions';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';

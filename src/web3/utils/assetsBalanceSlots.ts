@@ -1,10 +1,10 @@
 import { Balance } from '@bgd-labs/aave-governance-ui-helpers';
-import { getVoteBalanceSlot } from '@bgd-labs/proofs-helper/dist/helpers/genericFunctions';
+import { getVoteBalanceSlot } from '@bgd-labs/governance-v3-ethers-utils/dist/helpers/genericFunctions';
 import {
   Asset,
   AssetsBalanceSlots,
   baseSlots,
-} from '@bgd-labs/proofs-helper/dist/helpers/types';
+} from '@bgd-labs/governance-v3-ethers-utils/dist/helpers/types';
 import { Address } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';

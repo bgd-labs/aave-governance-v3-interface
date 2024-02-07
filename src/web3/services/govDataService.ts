@@ -43,7 +43,7 @@ import {
   getProof,
   getSolidityStorageSlotBytes,
   prepareBLockRLP,
-} from '@bgd-labs/proofs-helper/dist/viem';
+} from '@bgd-labs/governance-v3-ethers-utils/dist/viem';
 import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import { writeContract } from '@wagmi/core';

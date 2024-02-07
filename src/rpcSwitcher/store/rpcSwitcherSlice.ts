@@ -4,7 +4,7 @@ import {
   getPayloadsCreated,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import { getProof } from '@bgd-labs/proofs-helper/dist/viem';
+import { getProof } from '@bgd-labs/governance-v3-ethers-utils/dist/viem';
 import { Draft, produce } from 'immer';
 import { Chain, Client, getContract, zeroAddress, zeroHash } from 'viem';
 import { getBlock } from 'viem/actions';

@@ -21,7 +21,7 @@ import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import {
   getProofOfRepresentative,
   getVotingProofs,
-} from '@bgd-labs/proofs-helper/dist/viem';
+} from '@bgd-labs/governance-v3-ethers-utils/dist/viem';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
 import { Address, Hex } from 'viem';
