@@ -1,6 +1,7 @@
 import {
   checkHash,
   CombineProposalState,
+  getVoteBalanceSlot,
   ProposalState,
   VotingMachineProposalState,
 } from '@bgd-labs/aave-governance-ui-helpers';
@@ -8,7 +9,6 @@ import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,
 } from '@bgd-labs/frontend-web3-utils';
-import { getVoteBalanceSlot } from '@bgd-labs/governance-v3-js-utils/dist/utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';

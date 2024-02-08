@@ -1,11 +1,10 @@
 import { IERC20_ABI } from '@bgd-labs/aave-address-book';
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset, normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
   safeSdkOptions,
   StoreSlice,
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
-import { Asset } from '@bgd-labs/governance-v3-js-utils/dist/utils';
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';

@@ -3,9 +3,11 @@ import {
   BasicProposal,
   checkHash,
   ContractsConstants,
+  getProofOfRepresentative,
   getProposalMetadata,
   getProposalStepsAndAmounts,
   getVotingMachineProposalState,
+  getVotingProofs,
   InitialPayload,
   normalizeBN,
   Payload,
@@ -18,10 +20,6 @@ import {
   VotingConfig,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
-import {
-  getProofOfRepresentative,
-  getVotingProofs,
-} from '@bgd-labs/governance-v3-js-utils/dist/viem';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
 import { Address, Hex } from 'viem';
@@ -692,7 +690,7 @@ export const createProposalsSlice: StoreSlice<
                 if (isProposalNotInCache) {
                   await get().getDetailedPayloadsData(
                     chainId,
-                    controller,
+                    controller as Address,
                     payloadsIds,
                   );
                 }
@@ -1353,7 +1351,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.executePayload(
           payload.chainId,
           payload.id,
-          payload.payloadsController,
+          payload.payloadsController as Address,
         );
       },
       params: {
@@ -1414,7 +1412,7 @@ export const createProposalsSlice: StoreSlice<
         if (!formattedPayload) {
           await get().getDetailedPayloadsData(
             payload.chainId,
-            payload.payloadsController,
+            payload.payloadsController as Address,
             [payload.id],
           );
           formattedPayload =
@@ -1427,7 +1425,7 @@ export const createProposalsSlice: StoreSlice<
           chain: formattedPayload.chainId,
           id: formattedPayload.id,
           accessLevel: formattedPayload.maximumAccessLevelRequired,
-          payloadsController: formattedPayload.payloadsController,
+          payloadsController: formattedPayload.payloadsController as Address,
         };
       }),
     );

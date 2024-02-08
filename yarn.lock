@@ -1331,11 +1331,12 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-2.19.0.tgz#5278bd4c8645b4ee783680c1b9d3df489f571060"
   integrity sha512-JrZOZqzunJqFe4+/ZpL3vD7ddtGjjlBRCnMeQ68egNBAB2CYXvkXj6pSZLJBWklkoLgh17or1IdAQHTMYtBSsg==
 
-"@bgd-labs/aave-governance-ui-helpers@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-2.2.1.tgz#ab2d6a5c33c18ad6ceb81c42c35b211d21e1f7ff"
-  integrity sha512-JIdBU75ZPgYxNHys6HXPIScotYg55lqovZzH32gdDOR1X/uaD9T6mk867YMNydrVob6yNOtZ8G4JVdv8+DPzTw==
+"@bgd-labs/aave-governance-ui-helpers@2.2.2-4947ae554c525459597b4509492c7b71bfb12708.0":
+  version "2.2.2-4947ae554c525459597b4509492c7b71bfb12708.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-2.2.2-4947ae554c525459597b4509492c7b71bfb12708.0.tgz#0039879981e01ef41ee41406dc92e595e1f26a5b"
+  integrity sha512-97KTrE/MoZZtUoPqdIXNJyKCMjTkUQLP1uFyb0UJSXiFg7oj+Tgj7zGfzGfnalygTtjzl00f6O4HTv8ZTpGlXQ==
   dependencies:
+    bs58 "^5.0.0"
     dayjs "^1.11.10"
     gray-matter "^4.0.3"
 
@@ -1346,11 +1347,6 @@
   dependencies:
     "@tanstack/react-query" "^5.18.1"
     dayjs "^1.11.10"
-
-"@bgd-labs/governance-v3-js-utils@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/governance-v3-js-utils/-/governance-v3-js-utils-1.0.2.tgz#3556fe53a536d6634dd9b98a52db28deb3095cd3"
-  integrity sha512-b1B76BBOwI1eNGtyEV9JB8YhYnk5v2/IatAUgsLSmf9c6/KYPPXucqV2XivPfntWHlOtnf+7nYpBkz7OI7Ki3A==
 
 "@coinbase/wallet-sdk@3.9.1":
   version "3.9.1"
@@ -3508,6 +3504,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base-x@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-4.0.0.tgz#d0e3b7753450c73f8ad2389b5c018a4af7b2224a"
+  integrity sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==
+
 base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -3610,6 +3611,13 @@ browserslist@^4.22.2:
     electron-to-chromium "^1.4.601"
     node-releases "^2.0.14"
     update-browserslist-db "^1.0.13"
+
+bs58@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/bs58/-/bs58-5.0.0.tgz#865575b4d13c09ea2a84622df6c8cbeb54ffc279"
+  integrity sha512-r+ihvQJvahgYT50JD05dyJNKlmmSlMoOGwn1lCcEzanPglg7TxYjioQUYehQ9mAR/+hOSd2jRc/Z2y5UxBymvQ==
+  dependencies:
+    base-x "^4.0.0"
 
 buffer-from@^1.0.0:
   version "1.1.2"
@@ -8573,10 +8581,10 @@ viem@^1.1.4:
     isows "1.0.3"
     ws "8.13.0"
 
-viem@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-2.7.1.tgz#b46e2d012b4b543e4377da8584cd12f79c6161b1"
-  integrity sha512-izAX2KedTFnI2l0ZshtnlK2ZuDvSlKeuaanWyNwC4ffDgrCGtwX1bvVXO3Krh53lZgqvjd8UGpjGaBl3WqJ4yQ==
+viem@^2.7.6:
+  version "2.7.6"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.7.6.tgz#2ada30ece1469367b606137983e5655cf66d721e"
+  integrity sha512-43TF0VYcTeNef9dax1/BhqlRLXpAo6HAiQ68hrJ8XRhDOou73nHZEjeFl8Eai4UFFodKhu+PbRUFzuuoixOUfg==
   dependencies:
     "@adraffy/ens-normalize" "1.10.0"
     "@noble/curves" "1.2.0"

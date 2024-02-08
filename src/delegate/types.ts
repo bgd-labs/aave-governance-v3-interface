@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/governance-v3-js-utils/dist/utils';
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Address } from 'viem';
 
 export type DelegateItem = {
