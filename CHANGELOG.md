@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.2.0...v2.2.1) (2024-02-15)
+
+
+### Bug Fixes
+
+* bugs fix & update rpc's ([aa5e023](https://github.com/bgd-labs/aave-governance-v3-interface/commit/aa5e023e96842eb32a7fc8fc03b7ed5777530b50))
+* remove extra gas for batch delegation ([36460fe](https://github.com/bgd-labs/aave-governance-v3-interface/commit/36460fe8369b47b4283e96aba442473a64dbebc7))
+* small ui fixes ([dd38cdb](https://github.com/bgd-labs/aave-governance-v3-interface/commit/dd38cdb8c00e0b4062ce344cdd0d6f555495cc9d))
+
 ## [2.2.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.1.0...v2.2.0) (2024-02-06)
 
 
