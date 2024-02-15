@@ -5,7 +5,7 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
-import { toHex } from 'viem';
+import { Address, toHex } from 'viem';
 import { metis } from 'viem/chains';
 
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
@@ -94,7 +94,7 @@ export function PayloadExploreItem({
   const handleDetailsOpen = () => {
     setSelectedPayloadForDetailsModal({
       chainId: payload.chainId,
-      payloadsController: payload.payloadsController,
+      payloadsController: payload.payloadsController as Address,
       id: payload.id,
     });
     store.setIsPayloadExplorerItemDetailsModalOpen(true);
@@ -302,7 +302,8 @@ export function PayloadExploreItem({
                     if (!!setSelectedPayloadForExecute) {
                       setSelectedPayloadForExecute({
                         chainId: payload.chainId,
-                        payloadsController: payload.payloadsController,
+                        payloadsController:
+                          payload.payloadsController as Address,
                         id: payload.id,
                       });
                     }

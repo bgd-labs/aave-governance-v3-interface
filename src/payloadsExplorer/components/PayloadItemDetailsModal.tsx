@@ -5,7 +5,7 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
-import { toHex } from 'viem';
+import { Address, toHex } from 'viem';
 import { metis } from 'viem/chains';
 
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
@@ -48,7 +48,7 @@ export function PayloadItemDetailsModal({
   useEffect(() => {
     getPayloadsExploreDataById(
       initialPayload.chainId,
-      initialPayload.payloadsController,
+      initialPayload.payloadsController as Address,
       initialPayload.id,
     );
   }, []);
@@ -56,7 +56,7 @@ export function PayloadItemDetailsModal({
   const payload = selectPayloadExploreById(
     store,
     initialPayload.chainId,
-    initialPayload.payloadsController,
+    initialPayload.payloadsController as Address,
     initialPayload.id,
   );
 
@@ -177,7 +177,8 @@ export function PayloadItemDetailsModal({
                     if (!!setSelectedPayloadForExecute) {
                       setSelectedPayloadForExecute({
                         chainId: payload?.chainId,
-                        payloadsController: payload?.payloadsController,
+                        payloadsController:
+                          payload?.payloadsController as Address,
                         id: payload?.id,
                       });
                     }

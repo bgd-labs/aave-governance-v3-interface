@@ -1,8 +1,11 @@
 import {
   Asset,
   AssetsBalanceSlots,
+  Balance,
   baseSlots,
+  getVoteBalanceSlot,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { Address } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';
 
@@ -20,3 +23,53 @@ export const assetsBalanceSlots: AssetsBalanceSlots = {
     ...baseSlots[Asset.GOVCORE],
   },
 };
+
+export function formatBalances(balances: Balance[], aAaveAddress: Address) {
+  let formattedBalances = balances;
+  const aAAVEBalance = balances.find(
+    (balance) => balance.underlyingAsset === aAaveAddress,
+  );
+
+  const isAAAVEBalanceWithDelegation =
+    aAAVEBalance?.isWithDelegatedPower || false;
+
+  if (aAAVEBalance) {
+    if (isAAAVEBalanceWithDelegation) {
+      const isUserAAAVEBalance = aAAVEBalance.userBalance !== '0';
+      if (isUserAAAVEBalance) {
+        formattedBalances = [
+          ...balances,
+          {
+            ...aAAVEBalance,
+            isWithDelegatedPower: false,
+          },
+        ];
+      }
+    }
+  }
+  return formattedBalances;
+}
+
+export function getVotingAssetsWithSlot({
+  balances,
+  aAaveAddress,
+  slots,
+}: {
+  balances: Balance[];
+  aAaveAddress: Address;
+  slots: AssetsBalanceSlots;
+}) {
+  return balances
+    .filter((balance) => balance.value !== '0')
+    .map((balance) => {
+      return {
+        underlyingAsset: balance.underlyingAsset,
+        slot: getVoteBalanceSlot(
+          balance.underlyingAsset,
+          balance.isWithDelegatedPower,
+          aAaveAddress,
+          slots,
+        ),
+      };
+    });
+}

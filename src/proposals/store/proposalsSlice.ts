@@ -3,11 +3,9 @@ import {
   BasicProposal,
   checkHash,
   ContractsConstants,
-  formatBalances,
   getProofOfRepresentative,
   getProposalMetadata,
   getProposalStepsAndAmounts,
-  getVotingAssetsWithSlot,
   getVotingMachineProposalState,
   getVotingProofs,
   InitialPayload,
@@ -44,7 +42,11 @@ import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
-import { assetsBalanceSlots } from '../../web3/utils/assetsBalanceSlots';
+import {
+  assetsBalanceSlots,
+  formatBalances,
+  getVotingAssetsWithSlot,
+} from '../../web3/utils/assetsBalanceSlots';
 import { IProposalsHistorySlice } from './proposalsHistorySlice';
 import { IProposalsListCacheSlice } from './proposalsListCacheSlice';
 import {
@@ -688,7 +690,7 @@ export const createProposalsSlice: StoreSlice<
                 if (isProposalNotInCache) {
                   await get().getDetailedPayloadsData(
                     chainId,
-                    controller,
+                    controller as Address,
                     payloadsIds,
                   );
                 }
@@ -1349,7 +1351,7 @@ export const createProposalsSlice: StoreSlice<
         return govDataService.executePayload(
           payload.chainId,
           payload.id,
-          payload.payloadsController,
+          payload.payloadsController as Address,
         );
       },
       params: {
@@ -1410,7 +1412,7 @@ export const createProposalsSlice: StoreSlice<
         if (!formattedPayload) {
           await get().getDetailedPayloadsData(
             payload.chainId,
-            payload.payloadsController,
+            payload.payloadsController as Address,
             [payload.id],
           );
           formattedPayload =
@@ -1423,7 +1425,7 @@ export const createProposalsSlice: StoreSlice<
           chain: formattedPayload.chainId,
           id: formattedPayload.id,
           accessLevel: formattedPayload.maximumAccessLevelRequired,
-          payloadsController: formattedPayload.payloadsController,
+          payloadsController: formattedPayload.payloadsController as Address,
         };
       }),
     );

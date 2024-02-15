@@ -186,7 +186,7 @@ export function DelegateTableItemAddress({
           forHelp={forHelp}
           address={formattedAddress}
           shownAddress={shownAddress}
-          isEnsName={isEnsName(address || '')}
+          isEnsName={isEnsName(shownAddress || '')}
         />
       )}
       {isEdit && !isViewChanges && (
@@ -238,7 +238,7 @@ export function DelegateTableItemAddress({
             shownAddress={shownAddress}
             isCrossed={isAddressToVisible}
             alwaysGray
-            isEnsName={isEnsName(address || '')}
+            isEnsName={isEnsName(shownAddress || '')}
           />
           {isAddressToVisible && (
             <Text
@@ -247,7 +247,7 @@ export function DelegateTableItemAddress({
                 isEnsName(addressTo || '') ? hoveredAddressTo : addressTo
               }
               shownAddress={shownAddressTo}
-              isEnsName={isEnsName(addressTo || '')}
+              isEnsName={isEnsName(shownAddressTo || '')}
               isError={isEnsToIncorrect}
             />
           )}
