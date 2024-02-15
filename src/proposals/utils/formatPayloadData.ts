@@ -133,7 +133,7 @@ export function formatPayloadData({
     !isFinalStatus &&
     isPayloadReadyForExecution
   ) {
-    statusText = 'Can be execute';
+    statusText = 'Can be executed';
   } else if (isExecuted) {
     statusText = 'Executed';
     txHash = getTxHashFromHistory({
