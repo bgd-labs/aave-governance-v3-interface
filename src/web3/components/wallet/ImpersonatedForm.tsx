@@ -27,13 +27,6 @@ export function ImpersonatedForm({ closeClick }: ImpersonatedFormProps) {
   return (
     <Box
       sx={{ display: 'flex', width: '100%', flex: 1, flexDirection: 'column' }}>
-      <BackButton3D
-        isSmall
-        alwaysWithBorders
-        alwaysVisible
-        onClick={() => closeClick(false)}
-        wrapperCss={{ mb: 40 }}
-      />
       <Box
         sx={{
           display: 'flex',
@@ -67,9 +60,17 @@ export function ImpersonatedForm({ closeClick }: ImpersonatedFormProps) {
                   />
                 )}
               </Field>
-              <BigButton alwaysWithBorders type="submit" css={{ mt: 24 }}>
-                {texts.walletConnect.impersonatedButtonTitle}
-              </BigButton>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <BigButton alwaysWithBorders type="submit" css={{ mt: 60 }}>
+                  {texts.walletConnect.impersonatedButtonTitle}
+                </BigButton>
+              </Box>
             </Box>
           )}
         </Form>

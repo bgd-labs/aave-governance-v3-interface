@@ -522,6 +522,23 @@ export function AppHeader() {
                 </React.Fragment>
               ))}
               <Link
+                href={ROUTES.adi}
+                inNewWindow
+                onClick={() => handleCloseMobileMenu()}
+                css={{
+                  color: '$textLight',
+                  mb: 14,
+                  display: 'block',
+                }}>
+                <Box
+                  component="p"
+                  sx={{
+                    typography: 'body',
+                  }}>
+                  {texts.header.adi}
+                </Box>
+              </Link>
+              <Link
                 href={ROUTES.payloadsExplorer}
                 onClick={() => handleCloseMobileMenu()}
                 css={{

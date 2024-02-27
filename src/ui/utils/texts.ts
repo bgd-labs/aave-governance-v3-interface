@@ -285,6 +285,7 @@ export const texts = {
     appMode: 'App mode',
     theme: 'Theme',
     payloadsExplorer: 'Payloads explorer',
+    adi: 'Aave delivery infrastructure',
     appModeDefault: 'Default',
     appModeDev: 'Dev',
     appModeExpert: 'Expert',

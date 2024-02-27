@@ -1,5 +1,5 @@
 import { Box, SxProps } from '@mui/system';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toHex } from 'viem';
 import {
   arbitrum,
@@ -74,8 +74,19 @@ export function NetworkIcon({
   css,
   withTooltip,
 }: NetworkIconProps) {
-  const [networkIconName] = useState(getIconNetworkName(chainId));
-  const [chain] = useState(chainInfoHelper.getChainParameters(chainId));
+  const [networkIconName, setNetworkIconName] = useState(
+    getIconNetworkName(chainId),
+  );
+  const [chain, setChain] = useState(
+    chainInfoHelper.getChainParameters(chainId),
+  );
+
+  useEffect(() => {
+    if (chainId) {
+      setNetworkIconName(getIconNetworkName(chainId));
+      setChain(chainInfoHelper.getChainParameters(chainId));
+    }
+  }, [chainId]);
 
   return (
     <>

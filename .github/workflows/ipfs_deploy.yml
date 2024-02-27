@@ -61,5 +61,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: data.id,
-              body: data.body + `\n <hr> \n Ipfs deployment:` + `${{steps.pinata.outputs.uri}}`,
+              body: data.body + `\n <hr> \n Ipfs deployment: ` + `${{steps.pinata.outputs.uri}}`,
             })

@@ -33,7 +33,7 @@ export function ConnectWalletModalContent({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        pt: 20,
+        pt: impersonatedFormOpen ? 60 : 20,
       }}>
       <Box
         sx={{

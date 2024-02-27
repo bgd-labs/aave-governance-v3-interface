@@ -46,7 +46,7 @@ export const wallets: Wallet[] = [
     walletType: WalletType.Impersonated,
     icon: `url(${setRelativePath('/images/wallets/impersonated.svg')})`,
     title: 'Impersonated',
-    isVisible: false,
+    isVisible: true,
   },
 ];
 
@@ -54,8 +54,7 @@ export function ConnectWalletModal({
   isOpen,
   setIsOpen,
 }: ConnectWalletModalProps) {
-  const { walletActivating, walletConnectionError, setModalOpen, appMode } =
-    useStore();
+  const { walletActivating, walletConnectionError, setModalOpen } = useStore();
 
   const [impersonatedFormOpen, setImpersonatedFormOpen] = useState(false);
 
@@ -71,19 +70,16 @@ export function ConnectWalletModal({
   }, [walletActivating, walletConnectionError]);
 
   return (
-    <BasicModal isOpen={isOpen} setIsOpen={setIsOpen} withCloseButton>
+    <BasicModal
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
+      withCloseButton
+      onBackButtonClick={
+        impersonatedFormOpen ? () => setImpersonatedFormOpen(false) : undefined
+      }>
       <ConnectWalletModalContent
         walletActivating={walletActivating}
-        wallets={wallets.map((wallet) => {
-          if (wallet.walletType === WalletType.Impersonated) {
-            return {
-              ...wallet,
-              isVisible: appMode === 'expert',
-            };
-          } else {
-            return wallet;
-          }
-        })}
+        wallets={wallets}
         walletConnectionError={walletConnectionError}
         impersonatedFormOpen={impersonatedFormOpen}
         setImpersonatedFormOpen={setImpersonatedFormOpen}

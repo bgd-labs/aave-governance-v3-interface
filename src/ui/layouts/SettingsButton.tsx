@@ -192,8 +192,27 @@ export function SettingsButton() {
                   [theme.breakpoints.up('lg')]: { width: 190 },
                 }}>
                 <Link
+                  href={ROUTES.adi}
+                  inNewWindow
+                  css={{
+                    display: 'inline-block',
+                    color: '$textDisabled',
+                    lineHeight: 1,
+                    hover: {
+                      color: theme.palette.$textWhite,
+                    },
+                    mb: 15,
+                  }}
+                  onClick={close}>
+                  <Box sx={{ typography: 'buttonSmall' }}>
+                    {texts.header.adi}
+                  </Box>
+                </Link>
+
+                <Link
                   href={ROUTES.payloadsExplorer}
                   css={{
+                    display: 'inline-block',
                     color: '$textDisabled',
                     lineHeight: 1,
                     hover: {
@@ -210,6 +229,7 @@ export function SettingsButton() {
                 <Link
                   href={ROUTES.rpcSwitcher}
                   css={{
+                    display: 'inline-block',
                     color: isRpcHasError ? '$error' : '$textDisabled',
                     lineHeight: 1,
                     hover: {
@@ -250,7 +270,11 @@ export function SettingsButton() {
                 </Link>
                 <Box
                   component="p"
-                  sx={{ typography: 'headline', color: '$textLight' }}>
+                  sx={{
+                    display: 'block',
+                    typography: 'headline',
+                    color: '$textLight',
+                  }}>
                   {texts.header.theme}
                 </Box>
                 <Divider sx={{ mt: 8, mb: 14 }} />
