@@ -20,7 +20,6 @@ import {
   getPayloadsCreated,
   getPayloadsExecuted,
   getPayloadsQueued,
-  getProof,
   getProposalActivated,
   getProposalActivatedOnVM,
   getProposalCreated,
@@ -57,7 +56,7 @@ import {
   zeroAddress,
   zeroHash,
 } from 'viem';
-import { getBlockNumber, readContract } from 'viem/actions';
+import { getBlockNumber, getProof, readContract } from 'viem/actions';
 import { Config } from 'wagmi';
 
 import { SetRpcErrorParams } from '../../rpcSwitcher/store/rpcSwitcherSlice';
@@ -602,9 +601,11 @@ export class GovDataService {
       if (AAVEAddress) {
         const rawAccountProofData = await getProof(
           this.clients[appConfig.govCoreChainId],
-          AAVEAddress,
-          [slot],
-          blockNumber,
+          {
+            address: AAVEAddress,
+            storageKeys: [slot],
+            blockNumber: BigInt(blockNumber),
+          },
         );
 
         const accountStateProofRLP = formatToProofRLP(
@@ -628,9 +629,11 @@ export class GovDataService {
       if (aAAVEAddress) {
         const rawAccountProofData = await getProof(
           this.clients[appConfig.govCoreChainId],
-          aAAVEAddress,
-          [slot, delegatedStateSlot],
-          blockNumber,
+          {
+            address: aAAVEAddress,
+            storageKeys: [slot, delegatedStateSlot],
+            blockNumber: BigInt(blockNumber),
+          },
         );
 
         const accountStateProofRLP = formatToProofRLP(
@@ -654,9 +657,11 @@ export class GovDataService {
       if (STKAAVEAddress && !withSlot) {
         const rawAccountProofData = await getProof(
           this.clients[appConfig.govCoreChainId],
-          STKAAVEAddress,
-          [slot, exchangeRateSlot],
-          blockNumber,
+          {
+            address: STKAAVEAddress,
+            storageKeys: [slot, exchangeRateSlot],
+            blockNumber: BigInt(blockNumber),
+          },
         );
 
         const accountStateProofRLP = formatToProofRLP(
@@ -680,9 +685,11 @@ export class GovDataService {
       if (STKAAVEAddress && withSlot) {
         const slotProof = await getProof(
           this.clients[appConfig.govCoreChainId],
-          STKAAVEAddress,
-          [exchangeRateSlot],
-          blockNumber,
+          {
+            address: STKAAVEAddress,
+            storageKeys: [exchangeRateSlot],
+            blockNumber: BigInt(blockNumber),
+          },
         );
 
         const slotProofRLP = formatToProofRLP(slotProof.storageProof[0].proof);
@@ -708,9 +715,11 @@ export class GovDataService {
 
         const rawAccountProofData = await getProof(
           this.clients[appConfig.govCoreChainId],
-          RepresentationsAddress,
-          [representationsSlot],
-          blockNumber,
+          {
+            address: RepresentationsAddress,
+            storageKeys: [representationsSlot],
+            blockNumber: BigInt(blockNumber),
+          },
         );
 
         const accountStateProofRLP = formatToProofRLP(

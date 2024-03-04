@@ -4,7 +4,7 @@ import React from 'react';
 import { Field, Form } from 'react-final-form';
 
 import { useStore } from '../../../store';
-import { BackButton3D, BigButton, Input } from '../../../ui';
+import { BigButton, Input } from '../../../ui';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 
