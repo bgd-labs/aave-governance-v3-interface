@@ -21,7 +21,6 @@ import {
 
 import { chainInfoHelper } from '../../utils/configs';
 import { Image } from '../primitives/Image';
-import { setRelativePath } from '../utils/relativePath';
 import { Tooltip } from './Tooltip';
 
 interface NetworkIconProps {
@@ -48,9 +47,9 @@ const getIconNetworkName = (chainId: number) => {
     case avalancheFuji.id:
       return 'avalanche';
     case bsc.id:
-      return 'bsc';
+      return 'binance';
     case bscTestnet.id:
-      return 'bsc';
+      return 'binance';
     case base.id:
       return 'base';
     case arbitrum.id:
@@ -112,9 +111,7 @@ export function NetworkIcon({
               height: size || 16,
               ...css,
             }}
-            src={setRelativePath(
-              `/images/networks/${networkIconName.toLowerCase()}.svg`,
-            )}
+            src={`https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/assets/chains/${networkIconName.toLowerCase()}.svg`}
             alt={`${chain.name} icon`}
           />
         </Tooltip>
@@ -127,9 +124,7 @@ export function NetworkIcon({
             height: size || 16,
             ...css,
           }}
-          src={setRelativePath(
-            `/images/networks/${networkIconName.toLowerCase()}.svg`,
-          )}
+          src={`https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/assets/chains/${networkIconName.toLowerCase()}.svg`}
           alt={`${chain.name} icon`}
         />
       )}
