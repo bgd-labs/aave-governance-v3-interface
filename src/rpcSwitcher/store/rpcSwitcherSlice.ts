@@ -2,12 +2,11 @@ import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 import {
   blockLimit,
   getPayloadsCreated,
-  getProof,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Chain, Client, getContract, zeroAddress, zeroHash } from 'viem';
-import { getBlock } from 'viem/actions';
+import { getBlock, getProof } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
@@ -279,12 +278,11 @@ export const createRpcSwitcherSlice: StoreSlice<
         // check get proofs if initial request success and chainId it's mainnet
         if (mainnet.id === chainId) {
           try {
-            await getProof(
-              client,
-              zeroAddress,
-              [zeroHash],
-              Number(currentBlock.number),
-            );
+            await getProof(client, {
+              address: zeroAddress,
+              storageKeys: [zeroHash],
+              blockNumber: currentBlock.number,
+            });
 
             get().setRpcFormError({ isError: false, rpcUrl, chainId });
           } catch {

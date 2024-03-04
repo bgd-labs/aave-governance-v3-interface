@@ -1,7 +1,6 @@
 import { SxProps } from '@mui/system';
 
 import { Image } from '../primitives/Image';
-import { setRelativePath } from '../utils/relativePath';
 
 interface TokenIconProps {
   symbol: string;
@@ -12,7 +11,11 @@ export function TokenIcon({ symbol, css }: TokenIconProps) {
   return (
     <Image
       sx={{ borderRadius: '50%', width: 12, height: 12, ...css }}
-      src={setRelativePath(`/images/tokens/${symbol.toLowerCase()}.svg`)}
+      src={
+        symbol.toLowerCase() === 'aaave'
+          ? `https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/assets/aToken/aave.svg`
+          : `https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/assets/underlying/${symbol.toLowerCase()}.svg`
+      }
       alt={`${symbol} icon`}
     />
   );
