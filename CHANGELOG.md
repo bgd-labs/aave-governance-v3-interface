@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.2.1...v2.3.0) (2024-03-04)
+
+
+### Features
+
+* add local bundle analyzer ([#71](https://github.com/bgd-labs/aave-governance-v3-interface/issues/71)) ([ce30cbd](https://github.com/bgd-labs/aave-governance-v3-interface/commit/ce30cbd2c50bad41e5c9a8077f71f6782957ef17))
+
+
+### Bug Fixes
+
+* impersonated visibility and added a.DI link to UI ([f7115ce](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f7115ce8a40d80ced5cab610ef37c17b9bbe8a87))
+* update packages and related code ([#72](https://github.com/bgd-labs/aave-governance-v3-interface/issues/72)) ([cd7b6b4](https://github.com/bgd-labs/aave-governance-v3-interface/commit/cd7b6b47a6b2fb0cbf364a4003ffb2381e3783f3))
+
 ## [2.2.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.2.0...v2.2.1) (2024-02-15)
 
 
