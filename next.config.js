@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const nextConfig = {
   experimental: {
@@ -40,23 +43,25 @@ const nextConfig = {
   trailingSlash: true,
 };
 
-module.exports = isForIPFS
-  ? {
-      ...nextConfig,
-      output: 'export',
-      images: {
-        unoptimized: true,
+module.exports = withBundleAnalyzer(
+  isForIPFS
+    ? {
+        ...nextConfig,
+        output: 'export',
+        images: {
+          unoptimized: true,
+        },
+        // assetPrefix: './',
+      }
+    : {
+        ...nextConfig,
+        pageExtensions: [
+          'page.tsx',
+          'page.ts',
+          'page.jsx',
+          'page.js',
+          'page.md',
+          'page.mdx',
+        ],
       },
-      // assetPrefix: './',
-    }
-  : {
-      ...nextConfig,
-      pageExtensions: [
-        'page.tsx',
-        'page.ts',
-        'page.jsx',
-        'page.js',
-        'page.md',
-        'page.mdx',
-      ],
-    };
+);
