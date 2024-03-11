@@ -5,7 +5,6 @@ import {
   ReactNode,
   ReactPortal,
 } from 'react';
-import Emoji from 'react-emoji-render';
 
 export interface TextWithEmojiProps {
   children:
@@ -21,7 +20,7 @@ export interface TextWithEmojiProps {
 export function TextWithEmoji({ children }: TextWithEmojiProps) {
   return (
     <Box
-      component={Emoji}
+      component="span"
       sx={{
         wordBreak: 'break-word',
         '> span': { verticalAlign: 'top !important' },
