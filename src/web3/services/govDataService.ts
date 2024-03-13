@@ -46,6 +46,7 @@ import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
 import { writeContract } from '@wagmi/core';
 import {
   Address,
+  Block,
   bytesToHex,
   encodeFunctionData,
   getContract,
@@ -561,10 +562,10 @@ export class GovDataService {
     withSlot?: boolean,
   ) {
     if (this.wagmiConfig) {
-      const blockData = await getExtendedBlock(
+      const blockData = (await getExtendedBlock(
         this.clients[appConfig.govCoreChainId],
         blockNumber,
-      );
+      )) as Block & { parentBeaconBlockRoot: Hex };
       const blockHeaderRLP = prepareBLockRLP(blockData);
 
       const slot = getSolidityStorageSlotBytes(
