@@ -99,18 +99,28 @@ export function WalletWidget() {
         setAllTransactionModalOpen={setAllTransactionModalOpen}
         representedAddresses={representedAddresses}
       />
-      <TransactionsModal
-        isOpen={allTransactionModalOpen}
-        setIsOpen={setAllTransactionModalOpen}
-      />
-      <PowersInfoModal
-        isOpen={powersInfoModalOpen}
-        setIsOpen={setPowersInfoModalOpen}
-      />
-      <ReturnFeesModal
-        isOpen={returnsFeeModalOpen}
-        setIsOpen={setReturnsFeeModalOpen}
-      />
+
+      {allTransactionModalOpen && (
+        <TransactionsModal
+          isOpen={allTransactionModalOpen}
+          setIsOpen={setAllTransactionModalOpen}
+        />
+      )}
+      {powersInfoModalOpen && (
+        <PowersInfoModal
+          isOpen={powersInfoModalOpen}
+          setIsOpen={setPowersInfoModalOpen}
+        />
+      )}
+      {returnsFeeModalOpen && (
+        <ReturnFeesModal
+          isOpen={returnsFeeModalOpen}
+          setIsOpen={setReturnsFeeModalOpen}
+          ensName={shownUserName}
+          ensAvatar={shownAvatar}
+          isAvatarExists={isAvatarExists}
+        />
+      )}
     </>
   );
 }

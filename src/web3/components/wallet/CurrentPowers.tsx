@@ -1,10 +1,8 @@
-import { Popover } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import InfoIcon from '/public/images/icons/info.svg';
 import ReloadIcon from '/public/images/icons/reload.svg';
 
 import { useStore } from '../../../store';
@@ -20,6 +18,7 @@ import {
   selectCurrentPowers,
   selectCurrentPowersForActiveWallet,
 } from '../../store/web3Selectors';
+import { BlockTitleWithTooltip } from './BlockTitleWithTooltip';
 import { CurrentPowerItem } from './CurrentPowerItem';
 
 export function CurrentPowers() {
@@ -62,83 +61,17 @@ export function CurrentPowers() {
           position: 'relative',
           zIndex: 3,
         }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-          }}>
-          <Box
-            component="h2"
-            sx={{
-              typography: 'h2',
-              textAlign: 'center',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-            {texts.walletConnect.currentPower}
-          </Box>
-
-          {currentPowersAll?.timestamp && (
-            <Popover as={Box} sx={{ position: 'relative' }}>
-              <Popover.Button
-                onClick={() => {
-                  setLocalStoragePowersInfoClicked('true');
-                  setClicked(true);
-                }}
-                as={Box}
-                sx={{
-                  ml: 4,
-                  transition: 'all 0.2s ease',
-                  lineHeight: 1,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: 23,
-                  cursor: 'pointer',
-                  '> *': {
-                    lineHeight: 0,
-                  },
-                  hover: { opacity: 0.6 },
-                }}>
-                <IconBox
-                  sx={{
-                    position: 'relative',
-                    top: 2,
-                    width: 14,
-                    height: 14,
-                    '> svg': {
-                      width: 14,
-                      height: 14,
-                      path: {
-                        fill: isInfoClicked
-                          ? theme.palette.$text
-                          : theme.palette.$error,
-                      },
-                    },
-                  }}>
-                  <InfoIcon />
-                </IconBox>
-              </Popover.Button>
-
-              <Popover.Panel
-                as={Box}
-                sx={{
-                  position: 'absolute',
-                  zIndex: 3,
-                  top: '100%',
-                  left: -100,
-                  width: 250,
-                  backgroundColor: '$light',
-                  p: 8,
-                }}>
-                <Box sx={{ typography: 'descriptor' }}>
-                  {texts.walletConnect.currentPowerDescription}
-                </Box>
-              </Popover.Panel>
-            </Popover>
-          )}
-        </Box>
+        <BlockTitleWithTooltip
+          title={texts.walletConnect.currentPower}
+          description={texts.walletConnect.currentPowerDescription}
+          isPopoverVisible={!!currentPowersAll?.timestamp}
+          isClicked={isInfoClicked}
+          onClick={() => {
+            setLocalStoragePowersInfoClicked('true');
+            setClicked(true);
+          }}
+          isRed
+        />
 
         <Box
           sx={{

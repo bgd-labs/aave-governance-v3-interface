@@ -34,35 +34,37 @@ async function getProposalPayloads(
     `${githubStartUrl}${cachedDetailsPath(proposal.id)}`,
   );
 
-  const finalProposalPayloadsData: Payload[] = resCachedDetails.ok
-    ? ((await resCachedDetails.json()).payloads as Payload[])
-    : await Promise.all(
-        proposal.initialPayloads.map(async (payload) => {
-          const dataFromStore =
-            payloadsData[`${payload.payloadsController}_${payload.id}`];
+  const finalProposalPayloadsData: Payload[] =
+    resCachedDetails.ok &&
+    ((await resCachedDetails.json()).proposal.isFinished as boolean)
+      ? ((await resCachedDetails.json()).payloads as Payload[])
+      : await Promise.all(
+          proposal.initialPayloads.map(async (payload) => {
+            const dataFromStore =
+              payloadsData[`${payload.payloadsController}_${payload.id}`];
 
-          if (dataFromStore) {
-            return dataFromStore;
-          } else {
-            const contract = getContract({
-              abi: IPayloadsControllerCore_ABI,
-              client: appClients[payload.chainId].instance,
-              address: payload.payloadsController as Address,
-            });
+            if (dataFromStore) {
+              return dataFromStore;
+            } else {
+              const contract = getContract({
+                abi: IPayloadsControllerCore_ABI,
+                client: appClients[payload.chainId].instance,
+                address: payload.payloadsController as Address,
+              });
 
-            const payloadData = await contract.read.getPayloadById([
-              payload.id,
-            ]);
+              const payloadData = await contract.read.getPayloadById([
+                payload.id,
+              ]);
 
-            return {
-              id: payload.id,
-              chainId: payload.chainId,
-              payloadsController: payload.payloadsController,
-              ...payloadData,
-            };
-          }
-        }),
-      );
+              return {
+                id: payload.id,
+                chainId: payload.chainId,
+                payloadsController: payload.payloadsController,
+                ...payloadData,
+              };
+            }
+          }),
+        );
 
   // maximum delay from all payloads in proposal for finished timestamp
   const executionDelay = Math.max.apply(
@@ -210,7 +212,9 @@ export const createReturnFeesSlice: StoreSlice<
           produce(state, (draft) => {
             draft.returnFeesData.data[creator] = {
               ...draft.returnFeesData.data[creator],
-              ...data,
+              [data.proposalId]: {
+                ...data,
+              },
             };
           }),
         );

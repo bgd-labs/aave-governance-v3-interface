@@ -20,6 +20,7 @@ import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { getScanLink } from '../../../utils/getScanLink';
+import { AccountAddressInfo } from './AccountAddressInfo';
 import { CurrentPowers } from './CurrentPowers';
 import { RepresentingForm } from './RepresentingForm';
 
@@ -176,42 +177,13 @@ export function AccountInfoModalContent({
   return (
     <>
       <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Image
-              src={
-                !isAvatarExists || forTest
-                  ? makeBlockie(
-                      activeAddress !== '' ? activeAddress : 'default',
-                    )
-                  : ensAvatar
-              }
-              alt=""
-              sx={{ width: 34, height: 34, borderRadius: '50%' }}
-            />
-
-            <Box sx={{ display: 'flex', ml: 10, alignItems: 'center' }}>
-              <Box component="h2" sx={{ typography: 'h1' }}>
-                {ensNameAbbreviated}
-              </Box>
-
-              <CopyAndExternalIconsSet
-                iconSize={16}
-                copyText={activeAddress}
-                externalLink={getScanLink({ chainId, address: activeAddress })}
-                sx={{ '.CopyAndExternalIconsSet__copy': { mx: 8 } }}
-              />
-            </Box>
-          </Box>
-        </Box>
-
-        <Divider
-          sx={{ my: 14, borderBottomColor: theme.palette.$secondaryBorder }}
+        <AccountAddressInfo
+          activeAddress={activeAddress}
+          chainId={chainId}
+          ensNameAbbreviated={ensNameAbbreviated}
+          ensAvatar={ensAvatar}
+          forTest={forTest}
+          isAvatarExists={isAvatarExists}
         />
 
         <Box

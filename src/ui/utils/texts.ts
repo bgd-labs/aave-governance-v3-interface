@@ -252,6 +252,8 @@ export const texts = {
     delegations: 'Manage delegations',
     representations: 'Manage representations',
     returnFees: 'Return fees',
+    returnFeesDescription: 'TODO: Here should be something about return fees',
+    returnAll: 'Return all',
     disconnect: 'Disconnect',
     allTransactions: 'View all',
     transactions: 'Transactions',

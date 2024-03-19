@@ -1,18 +1,42 @@
-import { Box } from '@mui/system';
-import React, { useEffect } from 'react';
+// TODO: styles in progress
+// TODO: need add loading state
+// TODO: need add no data state
+
+import { Box, useTheme } from '@mui/system';
+import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
-import { BackButton3D, BasicModal } from '../../../ui';
+import { BackButton3D, BasicModal, BigButton, Pagination } from '../../../ui';
+import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
+import { texts } from '../../../ui/utils/texts';
+import { media } from '../../../ui/utils/themeMUI';
+import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
+import { appConfig } from '../../../utils/appConfig';
 import { selectReturnsFeesDataByCreator } from '../../store/returnFeesSelectors';
+import { AccountAddressInfo } from './AccountAddressInfo';
+import { BlockTitleWithTooltip } from './BlockTitleWithTooltip';
+import { ReturnFeesModalItem } from './ReturnFeesModalItem';
 
 interface ReturnFeesModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
+  ensName?: string;
+  ensAvatar?: string;
+  isAvatarExists?: boolean;
 }
 
-export function ReturnFeesModal({ isOpen, setIsOpen }: ReturnFeesModalProps) {
+export function ReturnFeesModal({
+  isOpen,
+  setIsOpen,
+  ensName,
+  ensAvatar,
+  isAvatarExists,
+}: ReturnFeesModalProps) {
   const store = useStore();
+  const theme = useTheme();
+  const sm = useMediaQuery(media.sm);
+
   const {
     activeWallet,
     setAccountInfoModalOpen,
@@ -23,6 +47,8 @@ export function ReturnFeesModal({ isOpen, setIsOpen }: ReturnFeesModalProps) {
     dataByCreatorLength,
     setDataByCreatorLength,
   } = store;
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   const dataByCreator = selectReturnsFeesDataByCreator(
     store,
@@ -54,7 +80,16 @@ export function ReturnFeesModal({ isOpen, setIsOpen }: ReturnFeesModalProps) {
     }
   }, [activeWallet?.address, dataByCreatorLength]);
 
-  console.log(dataByCreator);
+  const ensNameAbbreviated = ensName
+    ? ensName.length > 30
+      ? textCenterEllipsis(ensName, sm ? 10 : 6, sm ? 10 : 6)
+      : ensName
+    : undefined;
+
+  const pageSize = 8;
+  const totalItemsCount = Object.values(dataByCreator).length;
+  const pageCount =
+    pageSize < totalItemsCount ? Math.ceil(totalItemsCount / pageSize) : 0;
 
   return (
     <BasicModal
@@ -62,9 +97,26 @@ export function ReturnFeesModal({ isOpen, setIsOpen }: ReturnFeesModalProps) {
       setIsOpen={setIsOpen}
       maxWidth={690}
       withCloseButton>
-      <h1>Hello</h1>
+      <AccountAddressInfo
+        activeAddress={activeWallet?.address || zeroAddress}
+        chainId={activeWallet?.chainId || appConfig.govCoreChainId}
+        ensNameAbbreviated={ensNameAbbreviated}
+        ensAvatar={ensAvatar}
+        forTest={false}
+        isAvatarExists={isAvatarExists}
+      />
 
-      <Box sx={{ mt: 40 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+        <BlockTitleWithTooltip
+          title={texts.walletConnect.returnFees}
+          description={texts.walletConnect.returnFeesDescription}
+        />
+
         <BackButton3D
           isSmall
           alwaysWithBorders
@@ -75,6 +127,47 @@ export function ReturnFeesModal({ isOpen, setIsOpen }: ReturnFeesModalProps) {
             setAccountInfoModalOpen(true);
           }}
         />
+      </Box>
+
+      <Box sx={{ mt: 24 }}>
+        {!!totalItemsCount ? (
+          Object.values(dataByCreator)
+            .sort((a, b) => b.proposalId - a.proposalId)
+            .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+            .map((data) => (
+              <ReturnFeesModalItem data={data} key={data.proposalId} />
+            ))
+        ) : (
+          <h1>No data</h1>
+        )}
+      </Box>
+
+      <Box sx={{ mt: 24, '.Pagination': { m: 0, maxWidth: '100%' } }}>
+        <Pagination
+          borderSize={4}
+          forcePage={0}
+          pageCount={pageCount}
+          onPageChange={(value) => {
+            setCurrentPage(value + 1);
+          }}
+          withoutQuery
+          isSmall
+        />
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mt: 40,
+        }}>
+        {!!totalItemsCount && (
+          <>
+            {/*TODO: need add representation TX modal and connect to this button */}
+            <BigButton>{texts.walletConnect.returnAll}</BigButton>
+          </>
+        )}
       </Box>
     </BasicModal>
   );
