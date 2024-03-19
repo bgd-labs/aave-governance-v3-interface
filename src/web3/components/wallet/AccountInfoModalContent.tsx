@@ -32,6 +32,7 @@ interface AccountInfoModalContentProps {
   onDisconnectButtonClick: () => void;
   onDelegateButtonClick: () => void;
   onRepresentationsButtonClick: () => void;
+  onReturnFeeButtonClick?: () => void;
   ensName?: string;
   ensAvatar?: string;
   isAvatarExists?: boolean;
@@ -44,7 +45,7 @@ type internalLink = {
   onClick: () => void;
   route: string;
   title: string;
-  iconType: 'delegate' | 'representation';
+  iconType?: 'delegate' | 'representation';
 };
 
 function InternalLink({
@@ -62,7 +63,7 @@ function InternalLink({
         display: 'flex',
         alignItems: 'center',
         mb: 14,
-        [`@media only screen and (min-width: 470px)`]: {
+        [`@media only screen and (min-width: 590px)`]: {
           mb: 0,
           mr: 14,
         },
@@ -105,7 +106,13 @@ function InternalLink({
             height: 16,
           },
         }}>
-        {iconType === 'delegate' ? <DelegationIcon /> : <RepresentationIcon />}
+        {!!iconType && iconType === 'delegate' ? (
+          <DelegationIcon />
+        ) : !!iconType ? (
+          <RepresentationIcon />
+        ) : (
+          <></>
+        )}
       </IconBox>
 
       {!forTest ? (
@@ -140,6 +147,7 @@ export function AccountInfoModalContent({
   onDisconnectButtonClick,
   onDelegateButtonClick,
   onRepresentationsButtonClick,
+  onReturnFeeButtonClick,
   forTest,
   ensName,
   ensAvatar,
@@ -210,7 +218,7 @@ export function AccountInfoModalContent({
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            [`@media only screen and (min-width: 470px)`]: {
+            [`@media only screen and (min-width: 590px)`]: {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -220,7 +228,7 @@ export function AccountInfoModalContent({
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              [`@media only screen and (min-width: 470px)`]: {
+              [`@media only screen and (min-width: 590px)`]: {
                 flexDirection: 'row',
               },
             }}>
@@ -239,6 +247,26 @@ export function AccountInfoModalContent({
               title={texts.walletConnect.representations}
               iconType="representation"
             />
+
+            {!!onReturnFeeButtonClick && (
+              <Box
+                onClick={onReturnFeeButtonClick}
+                sx={{
+                  color: '$textSecondary',
+                  cursor: 'pointer',
+                  lineHeight: 1,
+                  transition: 'all 0.2s ease',
+                  hover: { color: theme.palette.$text },
+                  mb: 14,
+                  [`@media only screen and (min-width: 590px)`]: {
+                    mb: 0,
+                  },
+                }}>
+                <Box component="p" sx={{ typography: 'headline' }}>
+                  {texts.walletConnect.returnFees}
+                </Box>
+              </Box>
+            )}
           </Box>
 
           <Box

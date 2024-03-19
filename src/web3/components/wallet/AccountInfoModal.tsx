@@ -34,6 +34,7 @@ export function AccountInfoModal({
     setModalOpen,
     representative,
     getCurrentPowers,
+    setReturnsFeeModalOpen,
   } = store;
 
   const allTransactions = activeWallet
@@ -77,6 +78,10 @@ export function AccountInfoModal({
         )}
         onDelegateButtonClick={() => setIsOpen(false)}
         onRepresentationsButtonClick={() => setIsOpen(false)}
+        onReturnFeeButtonClick={() => {
+          setIsOpen(false);
+          setReturnsFeeModalOpen(true);
+        }}
         onDisconnectButtonClick={handleDisconnectClick}
         onAllTransactionButtonClick={() => {
           setIsOpen(false);

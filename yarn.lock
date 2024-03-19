@@ -1333,10 +1333,10 @@
   dependencies:
     svgo "^3.2.0"
 
-"@bgd-labs/aave-governance-ui-helpers@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.0.7.tgz#591976d263b251486f09b763b2931a737f97122c"
-  integrity sha512-LMgF2CApDmmS51VELMTyGdqJs8hBZHgg8UC6fmH1RAlggo0sY4OjI/ECd5wxZjPtlGDMwhBEFnhtsGPE2cP4xw==
+"@bgd-labs/aave-governance-ui-helpers@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.1.1.tgz#e5597844b7524ee4214c5df3788d19afce57cb84"
+  integrity sha512-2+z2pONbDWbE3kF8UMDCa2hf3BZI4S1RQFCTelewtw3OMRWbWmZc1LgChW/XD0gM1IdlGMVjoT1qrLOf3ClK4Q==
   dependencies:
     bs58 "^5.0.0"
     dayjs "^1.11.10"

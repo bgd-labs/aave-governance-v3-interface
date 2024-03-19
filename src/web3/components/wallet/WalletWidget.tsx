@@ -9,6 +9,7 @@ import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
 import { PowersInfoModal } from './PowersInfoModal';
+import { ReturnFeesModal } from './ReturnFeesModal';
 
 export function WalletWidget() {
   const store = useStore();
@@ -27,6 +28,8 @@ export function WalletWidget() {
     fetchEnsNameByAddress,
     powersInfoModalOpen,
     setPowersInfoModalOpen,
+    returnsFeeModalOpen,
+    setReturnsFeeModalOpen,
   } = store;
 
   const activeAddress = activeWallet?.address || '';
@@ -103,6 +106,10 @@ export function WalletWidget() {
       <PowersInfoModal
         isOpen={powersInfoModalOpen}
         setIsOpen={setPowersInfoModalOpen}
+      />
+      <ReturnFeesModal
+        isOpen={returnsFeeModalOpen}
+        setIsOpen={setReturnsFeeModalOpen}
       />
     </>
   );

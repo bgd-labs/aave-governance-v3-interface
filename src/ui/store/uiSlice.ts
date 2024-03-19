@@ -92,6 +92,9 @@ export interface IUISlice {
   powersInfoModalOpen: boolean;
   setPowersInfoModalOpen: (value: boolean) => void;
 
+  returnsFeeModalOpen: boolean;
+  setReturnsFeeModalOpen: (value: boolean) => void;
+
   isCreatePayloadModalOpen: boolean;
   setIsCreatePayloadModalOpen: (value: boolean) => void;
 
@@ -433,6 +436,11 @@ export const createUISlice: StoreSlice<
   powersInfoModalOpen: false,
   setPowersInfoModalOpen: (value) => {
     set({ isModalOpen: value, powersInfoModalOpen: value });
+  },
+
+  returnsFeeModalOpen: false,
+  setReturnsFeeModalOpen: (value) => {
+    set({ isModalOpen: value, returnsFeeModalOpen: value });
   },
 
   isActivateVotingModalOpen: false,

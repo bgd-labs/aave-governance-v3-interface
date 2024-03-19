@@ -1051,6 +1051,20 @@ export class GovDataService {
     return undefined;
   }
 
+  // only for proposal creator
+  async returnFees(proposalIds: number[]) {
+    if (this.wagmiConfig) {
+      return writeContract(this.wagmiConfig, {
+        abi: this.govCore.abi,
+        address: this.govCore.address,
+        functionName: 'redeemCancellationFee',
+        args: [proposalIds.map((id) => BigInt(id))],
+        chainId: appConfig.govCoreChainId,
+      });
+    }
+    return undefined;
+  }
+
   // history events
   async getPayloadsCreatedEvents(
     chainId: number,

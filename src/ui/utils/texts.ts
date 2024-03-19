@@ -251,6 +251,7 @@ export const texts = {
   walletConnect: {
     delegations: 'Manage delegations',
     representations: 'Manage representations',
+    returnFees: 'Return fees',
     disconnect: 'Disconnect',
     allTransactions: 'View all',
     transactions: 'Transactions',

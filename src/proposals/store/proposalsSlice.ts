@@ -41,6 +41,7 @@ import { ipfsGateway } from '../../utils/configs';
 import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
+import { IReturnFeesSlice } from '../../web3/store/returnFeesSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import {
   assetsBalanceSlots,
@@ -228,7 +229,8 @@ export const createProposalsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
-    IPayloadsExplorerSlice
+    IPayloadsExplorerSlice &
+    IReturnFeesSlice
 > = (set, get) => ({
   isInitialLoading: true,
 

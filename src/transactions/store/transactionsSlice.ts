@@ -8,7 +8,7 @@ import {
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
@@ -26,6 +26,7 @@ import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { gelatoApiKeys } from '../../utils/appConfig';
 import { IEnsSlice } from '../../web3/store/ensSlice';
+import { IReturnFeesSlice } from '../../web3/store/returnFeesSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 export enum TxType {
@@ -42,6 +43,7 @@ export enum TxType {
   test = 'test',
   cancelProposal = 'cancelProposal',
   representations = 'representations',
+  returnFees = 'returnFees',
 }
 
 type BaseTx = BT & {
@@ -152,6 +154,15 @@ type RepresentationsTx = BaseTx & {
   };
 };
 
+type ReturnFeesTx = BaseTx & {
+  type: TxType.returnFees;
+  payload: {
+    creator: Address;
+    proposalIds: number[];
+    timestamp: number;
+  };
+};
+
 export type TransactionUnion =
   | CreatePayloadTx
   | CreateProposalTx
@@ -165,7 +176,8 @@ export type TransactionUnion =
   | DelegateTx
   | TestTx
   | CancelProposalTx
-  | RepresentationsTx;
+  | RepresentationsTx
+  | ReturnFeesTx;
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion> & {
   isGelatoAvailableChains: Record<number, boolean>;
@@ -193,7 +205,8 @@ export const createTransactionsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
-    IPayloadsExplorerSlice
+    IPayloadsExplorerSlice &
+    IReturnFeesSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
@@ -271,6 +284,17 @@ export const createTransactionsSlice: StoreSlice<
           break;
         case TxType.cancelProposal:
           await updateProposalData(data.payload.proposalId);
+          break;
+        case TxType.returnFees:
+          await get().updateReturnFeesDataByCreator(
+            data.payload.creator,
+            data.payload.proposalIds,
+          );
+          await Promise.all(
+            data.payload.proposalIds.map(
+              async (id) => await updateProposalData(id),
+            ),
+          );
           break;
       }
     },
