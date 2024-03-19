@@ -1,6 +1,7 @@
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 import {
   BasicProposal,
+  CachedDetails,
   CombineProposalState,
   getProposalState,
   getVotingMachineProposalState,
@@ -25,6 +26,38 @@ import {
 import { selectReturnsFeesDataByCreator } from './returnFeesSelectors';
 import { IWeb3Slice } from './web3Slice';
 
+async function getPayloads(
+  appClients: Record<number, AppClient>,
+  proposal: BasicProposal,
+  payloadsData: Record<string, Payload>,
+) {
+  return await Promise.all(
+    proposal.initialPayloads.map(async (payload) => {
+      const dataFromStore =
+        payloadsData[`${payload.payloadsController}_${payload.id}`];
+
+      if (dataFromStore) {
+        return dataFromStore;
+      } else {
+        const contract = getContract({
+          abi: IPayloadsControllerCore_ABI,
+          client: appClients[payload.chainId].instance,
+          address: payload.payloadsController as Address,
+        });
+
+        const payloadData = await contract.read.getPayloadById([payload.id]);
+
+        return {
+          id: payload.id,
+          chainId: payload.chainId,
+          payloadsController: payload.payloadsController,
+          ...payloadData,
+        };
+      }
+    }),
+  );
+}
+
 async function getProposalPayloads(
   appClients: Record<number, AppClient>,
   proposal: BasicProposal,
@@ -34,37 +67,25 @@ async function getProposalPayloads(
     `${githubStartUrl}${cachedDetailsPath(proposal.id)}`,
   );
 
-  const finalProposalPayloadsData: Payload[] =
-    resCachedDetails.ok &&
-    ((await resCachedDetails.json()).proposal.isFinished as boolean)
-      ? ((await resCachedDetails.json()).payloads as Payload[])
-      : await Promise.all(
-          proposal.initialPayloads.map(async (payload) => {
-            const dataFromStore =
-              payloadsData[`${payload.payloadsController}_${payload.id}`];
-
-            if (dataFromStore) {
-              return dataFromStore;
-            } else {
-              const contract = getContract({
-                abi: IPayloadsControllerCore_ABI,
-                client: appClients[payload.chainId].instance,
-                address: payload.payloadsController as Address,
-              });
-
-              const payloadData = await contract.read.getPayloadById([
-                payload.id,
-              ]);
-
-              return {
-                id: payload.id,
-                chainId: payload.chainId,
-                payloadsController: payload.payloadsController,
-                ...payloadData,
-              };
-            }
-          }),
-        );
+  let finalProposalPayloadsData: Payload[] = [];
+  if (resCachedDetails.ok) {
+    const proposalCacheData = (await resCachedDetails.json()) as CachedDetails;
+    if (proposalCacheData.proposal.isFinished) {
+      finalProposalPayloadsData = proposalCacheData.payloads;
+    } else {
+      finalProposalPayloadsData = await getPayloads(
+        appClients,
+        proposal,
+        payloadsData,
+      );
+    }
+  } else {
+    finalProposalPayloadsData = await getPayloads(
+      appClients,
+      proposal,
+      payloadsData,
+    );
+  }
 
   // maximum delay from all payloads in proposal for finished timestamp
   const executionDelay = Math.max.apply(
@@ -125,7 +146,6 @@ export const createReturnFeesSlice: StoreSlice<
     }
   },
 
-  // TODO: test update for not all creator proposals
   updateReturnFeesDataByCreator: async (creator, ids) => {
     const creatorReturnFeesData = selectReturnsFeesDataByCreator(
       get(),
