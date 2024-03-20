@@ -1,12 +1,15 @@
-// TODO: styles in progress
 // TODO: need add loading state
 // TODO: need add no data state
 
+import { ReturnFeeState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
+import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
+import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
+import { TxType } from '../../../transactions/store/transactionsSlice';
 import { BackButton3D, BasicModal, BigButton, Pagination } from '../../../ui';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
@@ -17,6 +20,7 @@ import { selectReturnsFeesDataByCreator } from '../../store/returnFeesSelectors'
 import { AccountAddressInfo } from './AccountAddressInfo';
 import { BlockTitleWithTooltip } from './BlockTitleWithTooltip';
 import { ReturnFeesModalItem } from './ReturnFeesModalItem';
+import { ReturnFeesTxModal } from './ReturnFeesTxModal';
 
 interface ReturnFeesModalProps {
   isOpen: boolean;
@@ -38,6 +42,7 @@ export function ReturnFeesModal({
   const sm = useMediaQuery(media.sm);
 
   const {
+    returnFeesProposalsCountOnRequest,
     activeWallet,
     setAccountInfoModalOpen,
     returnFeesData,
@@ -46,36 +51,49 @@ export function ReturnFeesModal({
     totalProposalCount,
     dataByCreatorLength,
     setDataByCreatorLength,
+    returnFees,
+    isReturnFeesTxModalOpen,
+    setIsReturnFeesTxModalOpen,
   } = store;
 
+  // get data logic
   const [currentPage, setCurrentPage] = useState(1);
-
   const dataByCreator = selectReturnsFeesDataByCreator(
     store,
     activeWallet?.address || zeroAddress,
   );
 
   useEffect(() => {
+    setSelectedProposalIds([]);
+    setCurrentPage(1);
+  }, [isOpen]);
+
+  useEffect(() => {
     if (isOpen && activeWallet) {
-      if (totalProposalCount > returnFeesData.proposalsCountOnRequest) {
+      if (totalProposalCount > returnFeesProposalsCountOnRequest) {
         getReturnFeesData();
-      } else if (!returnFeesData.data) {
+      } else if (!Object.keys(returnFeesData).length) {
         getReturnFeesData();
       }
     }
   }, [activeWallet?.address, isOpen]);
 
   useEffect(() => {
-    if (activeWallet && !!returnFeesData.data[activeWallet.address]) {
+    if (isOpen && activeWallet && !!returnFeesData[activeWallet.address]) {
       setDataByCreatorLength(
         activeWallet.address,
-        Object.keys(returnFeesData.data[activeWallet.address]).length,
+        Object.keys(returnFeesData[activeWallet.address]).length,
       );
     }
-  }, [activeWallet?.address, !!Object.values(returnFeesData.data).length]);
+  }, [
+    isOpen,
+    activeWallet?.address,
+    Object.keys(returnFeesData[activeWallet?.address || zeroAddress] || {})
+      .length,
+  ]);
 
   useEffect(() => {
-    if (activeWallet && !!dataByCreatorLength[activeWallet.address]) {
+    if (isOpen && activeWallet && !!dataByCreatorLength[activeWallet.address]) {
       updateReturnFeesDataByCreator(activeWallet.address);
     }
   }, [activeWallet?.address, dataByCreatorLength]);
@@ -86,89 +104,173 @@ export function ReturnFeesModal({
       : ensName
     : undefined;
 
-  const pageSize = 8;
+  // tx logic
+  const [selectedProposalIds, setSelectedProposalIds] = useState<number[]>([]);
+  const [timestampTx] = useState(dayjs().unix());
+
+  const {
+    error,
+    setError,
+    loading,
+    isTxStart,
+    setIsTxStart,
+    setFullTxErrorMessage,
+    fullTxErrorMessage,
+    executeTxWithLocalStatuses,
+    tx,
+  } = useLastTxLocalStatus({
+    type: TxType.returnFees,
+    payload: {
+      creator: activeWallet?.address,
+      proposalIds: selectedProposalIds,
+      timestamp: timestampTx,
+    },
+  });
+
+  const handleReturnFees = async () => {
+    setIsReturnFeesTxModalOpen(true);
+    if (!!selectedProposalIds.length) {
+      await executeTxWithLocalStatuses({
+        callbackFunction: async () =>
+          await returnFees(
+            activeWallet?.address || zeroAddress,
+            selectedProposalIds,
+            timestampTx,
+          ),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!!selectedProposalIds.length) {
+      handleReturnFees();
+    }
+  }, [selectedProposalIds]);
+
+  // logic for pagination in UI
+  const pageSize = 5;
   const totalItemsCount = Object.values(dataByCreator).length;
   const pageCount =
     pageSize < totalItemsCount ? Math.ceil(totalItemsCount / pageSize) : 0;
+  const filteredDataByCreator = Object.values(dataByCreator).filter(
+    (value) => value.status === ReturnFeeState.AVAILABLE,
+  );
+
+  // random
+  const txLoading = loading || tx.pending;
 
   return (
     <BasicModal
+      withoutOverlap={isReturnFeesTxModalOpen}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       maxWidth={690}
       withCloseButton>
-      <AccountAddressInfo
-        activeAddress={activeWallet?.address || zeroAddress}
-        chainId={activeWallet?.chainId || appConfig.govCoreChainId}
-        ensNameAbbreviated={ensNameAbbreviated}
-        ensAvatar={ensAvatar}
-        forTest={false}
-        isAvatarExists={isAvatarExists}
-      />
-
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <BlockTitleWithTooltip
-          title={texts.walletConnect.returnFees}
-          description={texts.walletConnect.returnFeesDescription}
+      <>
+        <AccountAddressInfo
+          activeAddress={activeWallet?.address || zeroAddress}
+          chainId={activeWallet?.chainId || appConfig.govCoreChainId}
+          ensNameAbbreviated={ensNameAbbreviated}
+          ensAvatar={ensAvatar}
+          forTest={false}
+          isAvatarExists={isAvatarExists}
         />
 
-        <BackButton3D
-          isSmall
-          alwaysWithBorders
-          isVisibleOnMobile
-          alwaysVisible
-          onClick={() => {
-            setIsOpen(false);
-            setAccountInfoModalOpen(true);
-          }}
-        />
-      </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            position: 'relative',
+            zIndex: 11,
+          }}>
+          <BlockTitleWithTooltip
+            title={texts.walletConnect.returnFees}
+            description={texts.walletConnect.returnFeesDescription}
+          />
 
-      <Box sx={{ mt: 24 }}>
-        {!!totalItemsCount ? (
-          Object.values(dataByCreator)
-            .sort((a, b) => b.proposalId - a.proposalId)
-            .slice((currentPage - 1) * pageSize, currentPage * pageSize)
-            .map((data) => (
-              <ReturnFeesModalItem data={data} key={data.proposalId} />
-            ))
-        ) : (
-          <h1>No data</h1>
+          <BackButton3D
+            isSmall
+            alwaysWithBorders
+            isVisibleOnMobile
+            alwaysVisible
+            onClick={() => {
+              setIsOpen(false);
+              setAccountInfoModalOpen(true);
+            }}
+          />
+        </Box>
+
+        <Box sx={{ mt: 24 }}>
+          {!!totalItemsCount ? (
+            Object.values(dataByCreator)
+              .sort((a, b) => b.proposalId - a.proposalId)
+              .slice((currentPage - 1) * pageSize, currentPage * pageSize)
+              .map((data) => (
+                <ReturnFeesModalItem
+                  data={data}
+                  setIsOpen={setIsOpen}
+                  selectedProposalIds={selectedProposalIds}
+                  setSelectedProposalIds={setSelectedProposalIds}
+                  txLoading={txLoading}
+                  key={data.proposalId}
+                />
+              ))
+          ) : (
+            <h1>No data</h1>
+          )}
+        </Box>
+
+        <Box sx={{ mt: 24, '.Pagination': { m: 0, maxWidth: '100%' } }}>
+          <Pagination
+            borderSize={4}
+            forcePage={0}
+            pageCount={pageCount}
+            onPageChange={(value) => {
+              setCurrentPage(value + 1);
+            }}
+            withoutQuery
+            isSmall
+          />
+        </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mt: 40,
+          }}>
+          {filteredDataByCreator.length > 1 && (
+            <BigButton
+              loading={txLoading}
+              onClick={() => {
+                setSelectedProposalIds(
+                  filteredDataByCreator.map((value) =>
+                    Number(value.proposalId),
+                  ),
+                );
+              }}>
+              {texts.walletConnect.returnAll}
+            </BigButton>
+          )}
+        </Box>
+
+        {!!selectedProposalIds.length && (
+          <ReturnFeesTxModal
+            isOpen={isReturnFeesTxModalOpen}
+            setIsOpen={setIsReturnFeesTxModalOpen}
+            setFullTxErrorMessage={setFullTxErrorMessage}
+            isTxStart={isTxStart}
+            setIsTxStart={setIsTxStart}
+            error={error}
+            setError={setError}
+            proposalIds={selectedProposalIds}
+            tx={tx}
+            fullTxErrorMessage={fullTxErrorMessage}
+          />
         )}
-      </Box>
-
-      <Box sx={{ mt: 24, '.Pagination': { m: 0, maxWidth: '100%' } }}>
-        <Pagination
-          borderSize={4}
-          forcePage={0}
-          pageCount={pageCount}
-          onPageChange={(value) => {
-            setCurrentPage(value + 1);
-          }}
-          withoutQuery
-          isSmall
-        />
-      </Box>
-
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mt: 40,
-        }}>
-        {!!totalItemsCount && (
-          <>
-            {/*TODO: need add representation TX modal and connect to this button */}
-            <BigButton>{texts.walletConnect.returnAll}</BigButton>
-          </>
-        )}
-      </Box>
+      </>
     </BasicModal>
   );
 }

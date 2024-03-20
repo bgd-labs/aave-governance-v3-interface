@@ -248,12 +248,22 @@ export const texts = {
     cancelProposalTx: 'You cancel the proposal',
     cancelPayloadTx: 'You cancel the payload',
   },
+  // TODO: need fix texts connected to return fees
   walletConnect: {
     delegations: 'Manage delegations',
     representations: 'Manage representations',
     returnFees: 'Return fees',
-    returnFeesDescription: 'TODO: Here should be something about return fees',
+    returnFeesDescription:
+      'TODO: Here should be something about return canceling fees',
     returnAll: 'Return all',
+    returnFeeTxInfo: (count: number) =>
+      count > 1
+        ? 'You have returned the fee for canceling the proposals ids:'
+        : 'You have returned the fee for canceling the proposal id',
+    returnFeePreTxInfo: (count: number) =>
+      count > 1
+        ? 'You get back the fee for canceling proposals ids:'
+        : 'You get back the fee for canceling proposals id',
     disconnect: 'Disconnect',
     allTransactions: 'View all',
     transactions: 'Transactions',
@@ -348,6 +358,8 @@ export const texts = {
     voted: 'Voted',
     noPayloadsInController:
       'There are no payloads created in this payloads controller yet',
+    details: 'Details',
+    returns: 'Return',
   },
   terms: {
     description:

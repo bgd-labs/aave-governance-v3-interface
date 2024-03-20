@@ -65,9 +65,11 @@ export function BlockTitleWithTooltip({
             <IconBox
               sx={{
                 position: 'relative',
-                top: 2,
                 width: 14,
                 height: 14,
+                [theme.breakpoints.up('lg')]: {
+                  top: 2,
+                },
                 '> svg': {
                   width: 14,
                   height: 14,

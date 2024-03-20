@@ -19,6 +19,12 @@ import {
   IRpcSwitcherSlice,
 } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import {
+  TransactionsSlice,
+  TxType,
+} from '../../transactions/store/transactionsSlice';
+import { IUISlice } from '../../ui/store/uiSlice';
+import { appConfig } from '../../utils/appConfig';
+import {
   cachedDetailsPath,
   cachedReturnFeesPath,
   githubStartUrl,
@@ -101,10 +107,8 @@ async function getProposalPayloads(
 }
 
 export interface IReturnFeesSlice {
-  returnFeesData: {
-    proposalsCountOnRequest: number;
-    data: Record<Address, Record<number, ReturnFee>>;
-  };
+  returnFeesProposalsCountOnRequest: number;
+  returnFeesData: Record<Address, Record<number, ReturnFee>>;
   getReturnFeesData: () => Promise<void>;
   updateReturnFeesDataByCreator: (
     creator: Address,
@@ -113,16 +117,25 @@ export interface IReturnFeesSlice {
 
   dataByCreatorLength: Record<Address, number>;
   setDataByCreatorLength: (creator: Address, length: number) => void;
+
+  returnFees: (
+    creator: Address,
+    proposalIds: number[],
+    timestamp: number,
+  ) => Promise<void>;
 }
 
 export const createReturnFeesSlice: StoreSlice<
   IReturnFeesSlice,
-  IWeb3Slice & IProposalsSlice & IRpcSwitcherSlice
+  IWeb3Slice &
+    IProposalsSlice &
+    IRpcSwitcherSlice &
+    TransactionsSlice &
+    IUISlice
 > = (set, get) => ({
-  returnFeesData: {
-    proposalsCountOnRequest: -1,
-    data: {},
-  },
+  returnFeesProposalsCountOnRequest: -1,
+
+  returnFeesData: {},
   getReturnFeesData: async () => {
     const returnFeesResult = await fetch(
       `${githubStartUrl}/${cachedReturnFeesPath}`,
@@ -133,13 +146,17 @@ export const createReturnFeesSlice: StoreSlice<
         data: Record<Address, Record<number, ReturnFee>>;
       };
 
+      const count =
+        get().totalProposalCount > 0
+          ? get().totalProposalCount
+          : await get().govDataService.getTotalProposalsCount();
+
       set((state) =>
         produce(state, (draft) => {
-          draft.returnFeesData.proposalsCountOnRequest =
-            get().totalProposalCount;
-          draft.returnFeesData.data = {
+          draft.returnFeesProposalsCountOnRequest = count;
+          draft.returnFeesData = {
             ...returnFeesData.data,
-            ...draft.returnFeesData.data,
+            ...draft.returnFeesData,
           };
         }),
       );
@@ -147,6 +164,18 @@ export const createReturnFeesSlice: StoreSlice<
   },
 
   updateReturnFeesDataByCreator: async (creator, ids) => {
+    const govCoreConfigs = !!get().configs.length
+      ? {
+          contractsConstants: get().contractsConstants,
+          configs: get().configs,
+        }
+      : await get().govDataService.getGovCoreConfigs();
+
+    const totalProposalCount =
+      get().totalProposalCount > 0
+        ? get().totalProposalCount
+        : await get().govDataService.getTotalProposalsCount();
+
     const creatorReturnFeesData = selectReturnsFeesDataByCreator(
       get(),
       creator,
@@ -161,83 +190,88 @@ export const createReturnFeesSlice: StoreSlice<
       const to = Math.min(...filteredData.map((data) => data.proposalId));
 
       const proposalsData = await get().govDataService.getDetailedProposalsData(
-        get().configs,
+        govCoreConfigs.configs,
         from,
         to,
         undefined,
         undefined,
-        get().totalProposalCount,
+        totalProposalCount,
         get().setRpcError,
       );
 
       const finalData = await Promise.all(
         filteredData.map(async (data) => {
-          const proposal = proposalsData.filter(
+          const proposal = proposalsData.find(
             (proposal) => proposal.id === data.proposalId,
-          )[0];
+          );
 
-          const proposalConfig = get().configs.filter(
-            (config) => config.accessLevel === proposal.accessLevel,
-          )[0];
+          if (proposal) {
+            const proposalConfig = govCoreConfigs.configs.filter(
+              (config) => config.accessLevel === proposal.accessLevel,
+            )[0];
 
-          const { proposalPayloadsData, executionDelay } =
-            await getProposalPayloads(
-              get().appClients,
-              proposal,
-              get().detailedPayloadsData,
-            );
+            const { proposalPayloadsData, executionDelay } =
+              await getProposalPayloads(
+                get().appClients,
+                proposal,
+                get().detailedPayloadsData,
+              );
 
-          const formattedProposalData = {
-            ...proposal,
-            payloads: proposalPayloadsData,
-            title: data.title || `Proposal ${proposal.id}`,
-            votingMachineState: getVotingMachineProposalState(proposal),
-          };
+            const formattedProposalData = {
+              ...proposal,
+              payloads: proposalPayloadsData,
+              title: data.title || `Proposal ${proposal.id}`,
+              votingMachineState: getVotingMachineProposalState(proposal),
+            };
 
-          const proposalState = getProposalState({
-            proposalData: formattedProposalData,
-            quorum: proposalConfig.quorum,
-            differential: proposalConfig.differential,
-            precisionDivider: get().contractsConstants.precisionDivider,
-            cooldownPeriod: get().contractsConstants.cooldownPeriod,
-            executionDelay,
-          });
+            const proposalState = getProposalState({
+              proposalData: formattedProposalData,
+              quorum: proposalConfig.quorum,
+              differential: proposalConfig.differential,
+              precisionDivider:
+                govCoreConfigs.contractsConstants.precisionDivider,
+              cooldownPeriod: govCoreConfigs.contractsConstants.cooldownPeriod,
+              executionDelay,
+            });
 
-          let status = ReturnFeeState.LATER;
-          if (
-            proposalState === CombineProposalState.Executed &&
-            proposal.cancellationFee > 0
-          ) {
-            status = ReturnFeeState.AVAILABLE;
-          } else if (
-            proposalState === CombineProposalState.Executed &&
-            proposal.cancellationFee <= 0
-          ) {
-            status = ReturnFeeState.RETURNED;
-          } else if (proposalState > CombineProposalState.Executed) {
-            status = ReturnFeeState.NOT_AVAILABLE;
-          } else {
-            status = ReturnFeeState.LATER;
+            let status = ReturnFeeState.LATER;
+            if (
+              proposalState === CombineProposalState.Executed &&
+              proposal.cancellationFee > 0
+            ) {
+              status = ReturnFeeState.AVAILABLE;
+            } else if (
+              proposalState === CombineProposalState.Executed &&
+              proposal.cancellationFee <= 0
+            ) {
+              status = ReturnFeeState.RETURNED;
+            } else if (proposalState > CombineProposalState.Executed) {
+              status = ReturnFeeState.NOT_AVAILABLE;
+            } else {
+              status = ReturnFeeState.LATER;
+            }
+
+            return {
+              ...data,
+              status,
+            };
           }
-
-          return {
-            ...data,
-            status,
-          };
         }),
       );
 
       finalData.forEach((data) => {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.returnFeesData.data[creator] = {
-              ...draft.returnFeesData.data[creator],
-              [data.proposalId]: {
-                ...data,
-              },
-            };
-          }),
-        );
+        if (!!data) {
+          set((state) =>
+            produce(state, (draft) => {
+              draft.returnFeesData[creator] = {
+                ...draft.returnFeesData[creator],
+                [data.proposalId]: {
+                  ...data,
+                },
+              };
+            }),
+          );
+        }
       });
     }
   },
@@ -250,6 +284,26 @@ export const createReturnFeesSlice: StoreSlice<
           draft.dataByCreatorLength[creator] = length;
         }),
       );
+    }
+  },
+
+  returnFees: async (creator, proposalIds, timestamp) => {
+    await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
+    const govDataService = get().govDataService;
+    const activeAddress = get().activeWallet?.address;
+
+    if (activeAddress) {
+      await get().executeTx({
+        body: () => {
+          get().setModalOpen(true);
+          return govDataService.returnFees(proposalIds);
+        },
+        params: {
+          type: TxType.returnFees,
+          desiredChainID: appConfig.govCoreChainId,
+          payload: { creator, proposalIds, timestamp },
+        },
+      });
     }
   },
 });

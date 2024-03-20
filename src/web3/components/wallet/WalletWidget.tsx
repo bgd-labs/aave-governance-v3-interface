@@ -112,15 +112,14 @@ export function WalletWidget() {
           setIsOpen={setPowersInfoModalOpen}
         />
       )}
-      {returnsFeeModalOpen && (
-        <ReturnFeesModal
-          isOpen={returnsFeeModalOpen}
-          setIsOpen={setReturnsFeeModalOpen}
-          ensName={shownUserName}
-          ensAvatar={shownAvatar}
-          isAvatarExists={isAvatarExists}
-        />
-      )}
+
+      <ReturnFeesModal
+        isOpen={returnsFeeModalOpen}
+        setIsOpen={setReturnsFeeModalOpen}
+        ensName={shownUserName}
+        ensAvatar={shownAvatar}
+        isAvatarExists={isAvatarExists}
+      />
     </>
   );
 }

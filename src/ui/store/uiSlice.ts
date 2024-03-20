@@ -204,6 +204,9 @@ export interface IUISlice {
   isRepresentationInfoModalOpen: boolean;
   setIsRepresentationInfoModalOpen: (value: boolean) => void;
 
+  isReturnFeesTxModalOpen: boolean;
+  setIsReturnFeesTxModalOpen: (value: boolean) => void;
+
   closeHelpModals: () => void;
 }
 
@@ -746,5 +749,10 @@ export const createUISlice: StoreSlice<
   isRepresentationInfoModalOpen: false,
   setIsRepresentationInfoModalOpen: (value) => {
     set({ isModalOpen: value, isRepresentationInfoModalOpen: value });
+  },
+
+  isReturnFeesTxModalOpen: false,
+  setIsReturnFeesTxModalOpen: (value) => {
+    set({ isModalOpen: value, isReturnFeesTxModalOpen: value });
   },
 });

@@ -193,10 +193,10 @@ export function Pagination({
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             [theme.breakpoints.up('sm')]: {
-              width: 75,
+              width: isSmall ? 48 : 75,
             },
             [theme.breakpoints.up('lg')]: {
-              width: isSmall ? 62 : 92,
+              width: isSmall ? 54 : 92,
             },
             span: {
               display: 'inline-flex',

@@ -6,6 +6,6 @@ export const selectReturnsFeesDataByCreator = (
   store: IReturnFeesSlice,
   creator: Address,
 ) => {
-  const returnFeesData = store.returnFeesData.data;
+  const returnFeesData = store.returnFeesData;
   return returnFeesData[creator] || {};
 };
