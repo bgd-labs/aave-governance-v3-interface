@@ -51,8 +51,8 @@ export function ReturnFeesModalItem({
           minHeight: 75,
         },
       }}>
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ display: 'flex', flex: 2, flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', flex: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ typography: 'headline', mb: 2 }}>{title}</Box>
           <Box sx={{ display: 'inline-flex' }}>
             <Link

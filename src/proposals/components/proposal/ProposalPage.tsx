@@ -32,6 +32,7 @@ import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
 import { ProposalVoteInfo } from './ProposalVoteInfo';
 import { ProposalVotingPower } from './ProposalVotingPower';
+import { ReturnFeesButton } from './ReturnFeesButton';
 import { RightPanelWrapper } from './RightPanelWrapper';
 
 interface ProposalPageProps {
@@ -202,9 +203,13 @@ export function ProposalPage({
             [theme.breakpoints.up('sm')]: { display: 'none' },
           }}>
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
-              {ipfsData?.title || proposalData.proposal.data.title}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+              <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
+                {ipfsData?.title || proposalData.proposal.data.title}
+              </Box>
+              <ReturnFeesButton proposal={proposalData} />
             </Box>
+
             <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
           </Box>
         </Box>
@@ -379,14 +384,23 @@ export function ProposalPage({
                 [theme.breakpoints.up('sm')]: { display: 'block' },
               }}>
               <Box
-                component="h2"
                 sx={{
-                  typography: 'h1',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
                   mb: 18,
-                  [theme.breakpoints.up('lg')]: { typography: 'h1', mb: 24 },
+                  [theme.breakpoints.up('lg')]: { mb: 24 },
                 }}>
-                {ipfsData?.title || proposalData.proposal.data.title}
+                <Box
+                  component="h2"
+                  sx={{
+                    typography: 'h1',
+                  }}>
+                  {ipfsData?.title || proposalData.proposal.data.title}
+                </Box>
+                <ReturnFeesButton proposal={proposalData} />
               </Box>
+
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 48 }}>
                 <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
               </Box>

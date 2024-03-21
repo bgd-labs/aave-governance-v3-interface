@@ -1,5 +1,4 @@
-// TODO: need add loading state
-// TODO: need add no data state
+// TODO: need add no data styles
 
 import { ReturnFeeState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
@@ -20,6 +19,7 @@ import { selectReturnsFeesDataByCreator } from '../../store/returnFeesSelectors'
 import { AccountAddressInfo } from './AccountAddressInfo';
 import { BlockTitleWithTooltip } from './BlockTitleWithTooltip';
 import { ReturnFeesModalItem } from './ReturnFeesModalItem';
+import { ReturnFeesModalItemLoading } from './ReturnFeesModalItemLoading';
 import { ReturnFeesTxModal } from './ReturnFeesTxModal';
 
 interface ReturnFeesModalProps {
@@ -202,7 +202,14 @@ export function ReturnFeesModal({
         </Box>
 
         <Box sx={{ mt: 24 }}>
-          {!!totalItemsCount ? (
+          {returnFeesProposalsCountOnRequest === -1 ? (
+            <>
+              <ReturnFeesModalItemLoading />
+              <ReturnFeesModalItemLoading />
+              <ReturnFeesModalItemLoading />
+              <ReturnFeesModalItemLoading />
+            </>
+          ) : !!totalItemsCount ? (
             Object.values(dataByCreator)
               .sort((a, b) => b.proposalId - a.proposalId)
               .slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -217,7 +224,18 @@ export function ReturnFeesModal({
                 />
               ))
           ) : (
-            <h1>No data</h1>
+            <Box
+              sx={{
+                minHeight: 200,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Box sx={{ typography: 'headline' }}>
+                You haven't created any proposals yet
+              </Box>
+            </Box>
           )}
         </Box>
 

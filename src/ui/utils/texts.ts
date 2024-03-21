@@ -254,7 +254,7 @@ export const texts = {
     representations: 'Manage representations',
     returnFees: 'Return fees',
     returnFeesDescription:
-      'TODO: Here should be something about return canceling fees',
+      'TODO: When an proposal is created, the creator pays a fee to cancel the proposal. On this window, the creator can see for which proposals he can already refund the cancellation fee.',
     returnAll: 'Return all',
     returnFeeTxInfo: (count: number) =>
       count > 1
