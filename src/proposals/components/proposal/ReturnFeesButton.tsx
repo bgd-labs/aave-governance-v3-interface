@@ -19,13 +19,9 @@ interface ReturnFeesButtonProps {
 
 export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
   const store = useStore();
-  const {
-    activeWallet,
-    returnFees,
-    setIsReturnFeesTxModalOpen,
-    isReturnFeesTxModalOpen,
-  } = store;
+  const { activeWallet, returnFees } = store;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [timestampTx] = useState(dayjs().unix());
 
   const {
@@ -48,8 +44,7 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
   });
 
   const handleReturnFees = async () => {
-    setIsReturnFeesTxModalOpen(true);
-
+    setIsModalOpen(true);
     await executeTxWithLocalStatuses({
       callbackFunction: async () =>
         await returnFees(
@@ -83,8 +78,8 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
           </Box>
 
           <ReturnFeesTxModal
-            isOpen={isReturnFeesTxModalOpen}
-            setIsOpen={setIsReturnFeesTxModalOpen}
+            isOpen={isModalOpen}
+            setIsOpen={setIsModalOpen}
             setFullTxErrorMessage={setFullTxErrorMessage}
             isTxStart={isTxStart}
             setIsTxStart={setIsTxStart}

@@ -1,5 +1,4 @@
 import { Box, useTheme } from '@mui/system';
-import makeBlockie from 'ethereum-blockies-base64';
 import React from 'react';
 
 import DelegationIcon from '/public/images/icons/delegationIcon.svg';
@@ -11,15 +10,13 @@ import {
   AllTransactions,
   TxType,
 } from '../../../transactions/store/transactionsSlice';
-import { Divider, Image, Link } from '../../../ui';
-import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
+import { Divider, Link } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { ROUTES } from '../../../ui/utils/routes';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
-import { getScanLink } from '../../../utils/getScanLink';
 import { AccountAddressInfo } from './AccountAddressInfo';
 import { CurrentPowers } from './CurrentPowers';
 import { RepresentingForm } from './RepresentingForm';

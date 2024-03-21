@@ -1,7 +1,7 @@
 // TODO: need add no data styles
 
 import { ReturnFeeState } from '@bgd-labs/aave-governance-ui-helpers';
-import { Box, useTheme } from '@mui/system';
+import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
@@ -38,7 +38,6 @@ export function ReturnFeesModal({
   isAvatarExists,
 }: ReturnFeesModalProps) {
   const store = useStore();
-  const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
   const {
