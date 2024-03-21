@@ -203,7 +203,12 @@ export function ProposalPage({
             [theme.breakpoints.up('sm')]: { display: 'none' },
           }}>
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+              }}>
               <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
                 {ipfsData?.title || proposalData.proposal.data.title}
               </Box>
@@ -389,7 +394,8 @@ export function ProposalPage({
                   alignItems: 'flex-start',
                   justifyContent: 'space-between',
                   mb: 18,
-                  [theme.breakpoints.up('lg')]: { mb: 24 },
+                  minHeight: 28,
+                  [theme.breakpoints.up('lg')]: { mb: 24, minHeight: 32 },
                 }}>
                 <Box
                   component="h2"

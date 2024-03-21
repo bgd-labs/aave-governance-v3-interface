@@ -2,10 +2,16 @@ import {
   ReturnFee,
   ReturnFeeState,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
 import { ProposalStatus } from '../../../proposals/components/ProposalStatus';
+import { useStore } from '../../../store';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
 import { BoxWith3D, Link, SmallButton } from '../../../ui';
 import { ROUTES } from '../../../ui/utils/routes';
 import { texts } from '../../../ui/utils/texts';
@@ -25,9 +31,23 @@ export function ReturnFeesModalItem({
   setSelectedProposalIds,
   txLoading,
 }: ReturnFeesModalItemProps) {
+  const store = useStore();
+  const { activeWallet } = store;
   const theme = useTheme();
 
   const { title, ipfsHash, status, proposalId, proposalStatus } = data;
+
+  const txFromPool =
+    activeWallet &&
+    selectLastTxByTypeAndPayload<TransactionUnion>(
+      store,
+      activeWallet.address,
+      TxType.returnFees,
+      {
+        creator: activeWallet?.address,
+        proposalIds: [proposalId],
+      },
+    );
 
   return (
     <BoxWith3D
@@ -110,7 +130,10 @@ export function ReturnFeesModalItem({
         }}>
         {status === ReturnFeeState.AVAILABLE ? (
           <SmallButton
-            loading={txLoading && selectedProposalIds.includes(proposalId)}
+            loading={
+              txFromPool?.pending ||
+              (txLoading && selectedProposalIds.includes(proposalId))
+            }
             onClick={() => {
               setSelectedProposalIds([proposalId]);
             }}>

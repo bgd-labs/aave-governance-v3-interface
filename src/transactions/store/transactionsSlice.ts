@@ -159,7 +159,6 @@ type ReturnFeesTx = BaseTx & {
   payload: {
     creator: Address;
     proposalIds: number[];
-    timestamp: number;
   };
 };
 
@@ -290,11 +289,10 @@ export const createTransactionsSlice: StoreSlice<
             data.payload.creator,
             data.payload.proposalIds,
           );
-          await Promise.all(
-            data.payload.proposalIds.map(
-              async (id) => await updateProposalData(id),
-            ),
-          );
+          await get().getDetailedProposalsData({
+            ids: data.payload.proposalIds,
+            fullData: true,
+          });
           break;
       }
     },

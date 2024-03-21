@@ -1,8 +1,5 @@
-// TODO: need add no data styles
-
 import { ReturnFeeState } from '@bgd-labs/aave-governance-ui-helpers';
-import { Box } from '@mui/system';
-import dayjs from 'dayjs';
+import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
@@ -10,6 +7,7 @@ import { useStore } from '../../../store';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { BackButton3D, BasicModal, BigButton, Pagination } from '../../../ui';
+import NoSSR from '../../../ui/primitives/NoSSR';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
@@ -38,6 +36,7 @@ export function ReturnFeesModal({
   isAvatarExists,
 }: ReturnFeesModalProps) {
   const store = useStore();
+  const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
   const {
@@ -105,7 +104,6 @@ export function ReturnFeesModal({
 
   // tx logic
   const [selectedProposalIds, setSelectedProposalIds] = useState<number[]>([]);
-  const [timestampTx] = useState(dayjs().unix());
 
   const {
     error,
@@ -122,7 +120,6 @@ export function ReturnFeesModal({
     payload: {
       creator: activeWallet?.address,
       proposalIds: selectedProposalIds,
-      timestamp: timestampTx,
     },
   });
 
@@ -134,7 +131,6 @@ export function ReturnFeesModal({
           await returnFees(
             activeWallet?.address || zeroAddress,
             selectedProposalIds,
-            timestampTx,
           ),
       });
     }
@@ -231,6 +227,27 @@ export function ReturnFeesModal({
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
+              <Box sx={{ maxWidth: 444, m: '0 auto' }}>
+                <NoSSR>
+                  {theme.palette.mode === 'dark' ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      width="100%"
+                      height="auto"
+                      src="/images/Light_No fees.svg"
+                      alt="You haven't created any proposals yet"
+                    />
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      width="100%"
+                      height="auto"
+                      src="/images/Light_No fees.svg"
+                      alt="You haven't created any proposals yet"
+                    />
+                  )}
+                </NoSSR>
+              </Box>
               <Box sx={{ typography: 'headline' }}>
                 You haven't created any proposals yet
               </Box>

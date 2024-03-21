@@ -1,23 +1,14 @@
-import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book';
 import {
-  BasicProposal,
-  CachedDetails,
-  CombineProposalState,
-  getProposalState,
-  getVotingMachineProposalState,
-  Payload,
+  ProposalState,
   ReturnFee,
   ReturnFeeState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { Address, getContract } from 'viem';
+import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
-import {
-  AppClient,
-  IRpcSwitcherSlice,
-} from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import {
   TransactionsSlice,
   TxType,
@@ -25,86 +16,11 @@ import {
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
 import {
-  cachedDetailsPath,
   cachedReturnFeesPath,
   githubStartUrl,
 } from '../../utils/cacheGithubLinks';
 import { selectReturnsFeesDataByCreator } from './returnFeesSelectors';
 import { IWeb3Slice } from './web3Slice';
-
-async function getPayloads(
-  appClients: Record<number, AppClient>,
-  proposal: BasicProposal,
-  payloadsData: Record<string, Payload>,
-) {
-  return await Promise.all(
-    proposal.initialPayloads.map(async (payload) => {
-      const dataFromStore =
-        payloadsData[`${payload.payloadsController}_${payload.id}`];
-
-      if (dataFromStore) {
-        return dataFromStore;
-      } else {
-        const contract = getContract({
-          abi: IPayloadsControllerCore_ABI,
-          client: appClients[payload.chainId].instance,
-          address: payload.payloadsController as Address,
-        });
-
-        const payloadData = await contract.read.getPayloadById([payload.id]);
-
-        return {
-          id: payload.id,
-          chainId: payload.chainId,
-          payloadsController: payload.payloadsController,
-          ...payloadData,
-        };
-      }
-    }),
-  );
-}
-
-async function getProposalPayloads(
-  appClients: Record<number, AppClient>,
-  proposal: BasicProposal,
-  payloadsData: Record<string, Payload>,
-) {
-  const resCachedDetails = await fetch(
-    `${githubStartUrl}${cachedDetailsPath(proposal.id)}`,
-  );
-
-  let finalProposalPayloadsData: Payload[] = [];
-  if (resCachedDetails.ok) {
-    const proposalCacheData = (await resCachedDetails.json()) as CachedDetails;
-    if (proposalCacheData.proposal.isFinished) {
-      finalProposalPayloadsData = proposalCacheData.payloads;
-    } else {
-      finalProposalPayloadsData = await getPayloads(
-        appClients,
-        proposal,
-        payloadsData,
-      );
-    }
-  } else {
-    finalProposalPayloadsData = await getPayloads(
-      appClients,
-      proposal,
-      payloadsData,
-    );
-  }
-
-  // maximum delay from all payloads in proposal for finished timestamp
-  const executionDelay = Math.max.apply(
-    0,
-    finalProposalPayloadsData.map((payload) => payload?.delay || 0),
-  );
-  return {
-    proposalPayloadsData: finalProposalPayloadsData.filter(
-      (payload) => typeof payload !== 'undefined',
-    ),
-    executionDelay,
-  };
-}
 
 export interface IReturnFeesSlice {
   returnFeesProposalsCountOnRequest: number;
@@ -118,11 +34,7 @@ export interface IReturnFeesSlice {
   dataByCreatorLength: Record<Address, number>;
   setDataByCreatorLength: (creator: Address, length: number) => void;
 
-  returnFees: (
-    creator: Address,
-    proposalIds: number[],
-    timestamp: number,
-  ) => Promise<void>;
+  returnFees: (creator: Address, proposalIds: number[]) => Promise<void>;
 }
 
 export const createReturnFeesSlice: StoreSlice<
@@ -206,49 +118,19 @@ export const createReturnFeesSlice: StoreSlice<
           );
 
           if (proposal) {
-            const proposalConfig = govCoreConfigs.configs.filter(
-              (config) => config.accessLevel === proposal.accessLevel,
-            )[0];
-
-            const { proposalPayloadsData, executionDelay } =
-              await getProposalPayloads(
-                get().appClients,
-                proposal,
-                get().detailedPayloadsData,
-              );
-
-            const formattedProposalData = {
-              ...proposal,
-              payloads: proposalPayloadsData,
-              title: data.title || `Proposal ${proposal.id}`,
-              votingMachineState: getVotingMachineProposalState(proposal),
-            };
-
-            const proposalState = getProposalState({
-              proposalData: formattedProposalData,
-              quorum: proposalConfig.quorum,
-              differential: proposalConfig.differential,
-              precisionDivider:
-                govCoreConfigs.contractsConstants.precisionDivider,
-              cooldownPeriod: govCoreConfigs.contractsConstants.cooldownPeriod,
-              executionDelay,
-            });
-
             let status = ReturnFeeState.LATER;
-            if (
-              proposalState === CombineProposalState.Executed &&
+            if (proposal.state === ProposalState.Cancelled) {
+              status = ReturnFeeState.NOT_AVAILABLE;
+            } else if (
+              proposal.state >= ProposalState.Executed &&
               proposal.cancellationFee > 0
             ) {
               status = ReturnFeeState.AVAILABLE;
             } else if (
-              proposalState === CombineProposalState.Executed &&
+              proposal.state >= ProposalState.Executed &&
               proposal.cancellationFee <= 0
             ) {
               status = ReturnFeeState.RETURNED;
-            } else if (proposalState > CombineProposalState.Executed) {
-              status = ReturnFeeState.NOT_AVAILABLE;
-            } else {
-              status = ReturnFeeState.LATER;
             }
 
             return {
@@ -287,7 +169,7 @@ export const createReturnFeesSlice: StoreSlice<
     }
   },
 
-  returnFees: async (creator, proposalIds, timestamp) => {
+  returnFees: async (creator, proposalIds) => {
     await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
     const govDataService = get().govDataService;
     const activeAddress = get().activeWallet?.address;
@@ -301,7 +183,7 @@ export const createReturnFeesSlice: StoreSlice<
         params: {
           type: TxType.returnFees,
           desiredChainID: appConfig.govCoreChainId,
-          payload: { creator, proposalIds, timestamp },
+          payload: { creator, proposalIds },
         },
       });
     }

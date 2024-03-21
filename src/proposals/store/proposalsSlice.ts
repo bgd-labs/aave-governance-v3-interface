@@ -591,7 +591,7 @@ export const createProposalsSlice: StoreSlice<
           });
 
       const isUpdateOnlyVotingPower = fullData
-        ? !![].length
+        ? false
         : !!ids.filter((id) => {
             return !get().detailedProposalsData[id]
               ? false
@@ -600,7 +600,7 @@ export const createProposalsSlice: StoreSlice<
           }).length;
 
       let proposalsData: BasicProposal[] = [];
-      if (!!filteredIds.length && isProposalNotInCache) {
+      if (!!filteredIds.length && (isProposalNotInCache || fullData)) {
         const fr = Math.max.apply(
           null,
           filteredIds.map((id) => id),

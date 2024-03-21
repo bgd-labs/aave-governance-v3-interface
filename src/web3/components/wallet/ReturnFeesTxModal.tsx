@@ -53,7 +53,7 @@ export function ReturnFeesTxModal({
         <Box>
           {texts.walletConnect.returnFeeTxInfo(proposalIds.length)}{' '}
           {proposalIds.map((id) => (
-            <b>{id}</b>
+            <b key={id}>{id}</b>
           ))}
         </Box>
       }
@@ -84,6 +84,7 @@ export function ReturnFeesTxModal({
             }}>
             {proposalIds.map((id) => (
               <Box
+                key={id}
                 className="ReturnFeesTxModal__text"
                 component="p"
                 sx={{ display: 'inline-block' }}>

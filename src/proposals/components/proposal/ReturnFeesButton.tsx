@@ -1,15 +1,18 @@
 import {
-  CombineProposalState,
+  ProposalState,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
-import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { zeroAddress } from 'viem';
 
 import { useStore } from '../../../store';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
-import { TxType } from '../../../transactions/store/transactionsSlice';
+import {
+  TransactionUnion,
+  TxType,
+} from '../../../transactions/store/transactionsSlice';
 import { SmallButton } from '../../../ui';
 import { ReturnFeesTxModal } from '../../../web3/components/wallet/ReturnFeesTxModal';
 
@@ -22,7 +25,6 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
   const { activeWallet, returnFees } = store;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [timestampTx] = useState(dayjs().unix());
 
   const {
     error,
@@ -39,7 +41,6 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
     payload: {
       creator: activeWallet?.address,
       proposalIds: [proposal.proposal.data.id],
-      timestamp: timestampTx,
     },
   });
 
@@ -47,13 +48,23 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
     setIsModalOpen(true);
     await executeTxWithLocalStatuses({
       callbackFunction: async () =>
-        await returnFees(
-          activeWallet?.address || zeroAddress,
-          [proposal.proposal.data.id],
-          timestampTx,
-        ),
+        await returnFees(activeWallet?.address || zeroAddress, [
+          proposal.proposal.data.id,
+        ]),
     });
   };
+
+  const txFromPool =
+    activeWallet &&
+    selectLastTxByTypeAndPayload<TransactionUnion>(
+      store,
+      activeWallet.address,
+      TxType.returnFees,
+      {
+        creator: activeWallet?.address,
+        proposalIds: [proposal.proposal.data.id],
+      },
+    );
 
   if (!activeWallet) return null;
 
@@ -65,12 +76,9 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
           <Box sx={{ ml: 8 }}>
             {proposal.proposal.data.isFinished &&
               proposal.proposal.data.cancellationFee > 0 &&
-              (proposal.proposal.combineState ===
-                CombineProposalState.Executed ||
-                proposal.proposal.combineState ===
-                  CombineProposalState.Failed) && (
+              proposal.proposal.data.state !== ProposalState.Cancelled && (
                 <SmallButton
-                  loading={loading || tx.pending}
+                  loading={txFromPool?.pending || loading || tx.pending}
                   onClick={handleReturnFees}>
                   Return fee
                 </SmallButton>
