@@ -143,7 +143,7 @@ export function ProposalStatusDetails({
       tx.type !== TxType.createPayload &&
       tx.type !== TxType.cancelProposal &&
       tx.type !== TxType.representations &&
-      tx.type !== TxType.returnFees &&
+      tx.type !== TxType.claimFees &&
       tx.type === type &&
       tx.payload.proposalId === proposalId &&
       tx.pending;
@@ -155,7 +155,7 @@ export function ProposalStatusDetails({
       tx.type !== TxType.createPayload &&
       tx.type !== TxType.cancelProposal &&
       tx.type !== TxType.representations &&
-      tx.type !== TxType.returnFees &&
+      tx.type !== TxType.claimFees &&
       tx.type === type &&
       tx.payload.proposalId === proposalId &&
       tx.status === TransactionStatus.Success;

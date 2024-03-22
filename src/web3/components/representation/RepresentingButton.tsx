@@ -12,7 +12,7 @@ import { texts } from '../../../ui/utils/texts';
 import { getScanLink } from '../../../utils/getScanLink';
 import { ENSDataExists, selectENSAvatar } from '../../store/ensSelectors';
 import { ENSProperty } from '../../store/ensSlice';
-import { ChainsIcons } from './ChainsIcons';
+import { ChainsIcons } from '../ChainsIcons';
 import { RepresentingButtonChainsIcon } from './RepresentingButtonChainsIcon';
 
 export function RepresentingButton() {

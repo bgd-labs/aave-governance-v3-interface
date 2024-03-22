@@ -25,8 +25,8 @@ import {
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { gelatoApiKeys } from '../../utils/appConfig';
+import { ICreationFeesSlice } from '../../web3/store/creationFeesSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
-import { IReturnFeesSlice } from '../../web3/store/returnFeesSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
 export enum TxType {
@@ -43,7 +43,7 @@ export enum TxType {
   test = 'test',
   cancelProposal = 'cancelProposal',
   representations = 'representations',
-  returnFees = 'returnFees',
+  claimFees = 'claimFees',
 }
 
 type BaseTx = BT & {
@@ -155,7 +155,7 @@ type RepresentationsTx = BaseTx & {
 };
 
 type ReturnFeesTx = BaseTx & {
-  type: TxType.returnFees;
+  type: TxType.claimFees;
   payload: {
     creator: Address;
     proposalIds: number[];
@@ -205,7 +205,7 @@ export const createTransactionsSlice: StoreSlice<
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice &
-    IReturnFeesSlice
+    ICreationFeesSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
@@ -284,8 +284,8 @@ export const createTransactionsSlice: StoreSlice<
         case TxType.cancelProposal:
           await updateProposalData(data.payload.proposalId);
           break;
-        case TxType.returnFees:
-          await get().updateReturnFeesDataByCreator(
+        case TxType.claimFees:
+          await get().updateCreationFeesDataByCreator(
             data.payload.creator,
             data.payload.proposalIds,
           );

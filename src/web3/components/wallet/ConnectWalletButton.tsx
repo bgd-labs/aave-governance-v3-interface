@@ -23,7 +23,7 @@ import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
 import { getLocalStorageLastConnectedWallet } from '../../../utils/localStorage';
-import { RepresentingButton } from './RepresentingButton';
+import { RepresentingButton } from '../representation/RepresentingButton';
 
 interface ConnectWalletButtonProps {
   onClick: () => void;

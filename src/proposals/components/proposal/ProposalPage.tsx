@@ -24,6 +24,7 @@ import { VoteModal } from '../actionModals/VoteModal';
 import { BlockWrapper } from '../BlockWrapper';
 import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
 import { Timeline } from '../timeline/Timeline';
+import { ClaimFeesButton } from './ClaimFeesButton';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
@@ -32,7 +33,6 @@ import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
 import { ProposalVoteInfo } from './ProposalVoteInfo';
 import { ProposalVotingPower } from './ProposalVotingPower';
-import { ReturnFeesButton } from './ReturnFeesButton';
 import { RightPanelWrapper } from './RightPanelWrapper';
 
 interface ProposalPageProps {
@@ -212,7 +212,7 @@ export function ProposalPage({
               <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
                 {ipfsData?.title || proposalData.proposal.data.title}
               </Box>
-              <ReturnFeesButton proposal={proposalData} />
+              <ClaimFeesButton proposal={proposalData} />
             </Box>
 
             <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
@@ -404,7 +404,7 @@ export function ProposalPage({
                   }}>
                   {ipfsData?.title || proposalData.proposal.data.title}
                 </Box>
-                <ReturnFeesButton proposal={proposalData} />
+                <ClaimFeesButton proposal={proposalData} />
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 48 }}>

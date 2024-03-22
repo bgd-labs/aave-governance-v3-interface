@@ -14,15 +14,16 @@ import {
   TxType,
 } from '../../../transactions/store/transactionsSlice';
 import { SmallButton } from '../../../ui';
-import { ReturnFeesTxModal } from '../../../web3/components/wallet/ReturnFeesTxModal';
+import { texts } from '../../../ui/utils/texts';
+import { CreationFeesTxModal } from '../../../web3/components/creationFee/CreationFeesTxModal';
 
-interface ReturnFeesButtonProps {
+interface ClaimFeesButtonProps {
   proposal: ProposalWithLoadings;
 }
 
-export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
+export function ClaimFeesButton({ proposal }: ClaimFeesButtonProps) {
   const store = useStore();
-  const { activeWallet, returnFees } = store;
+  const { activeWallet, redeemCancellationFee } = store;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,7 +38,7 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
     executeTxWithLocalStatuses,
     tx,
   } = useLastTxLocalStatus({
-    type: TxType.returnFees,
+    type: TxType.claimFees,
     payload: {
       creator: activeWallet?.address,
       proposalIds: [proposal.proposal.data.id],
@@ -48,7 +49,7 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
     setIsModalOpen(true);
     await executeTxWithLocalStatuses({
       callbackFunction: async () =>
-        await returnFees(activeWallet?.address || zeroAddress, [
+        await redeemCancellationFee(activeWallet?.address || zeroAddress, [
           proposal.proposal.data.id,
         ]),
     });
@@ -59,7 +60,7 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
     selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
       activeWallet.address,
-      TxType.returnFees,
+      TxType.claimFees,
       {
         creator: activeWallet?.address,
         proposalIds: [proposal.proposal.data.id],
@@ -73,19 +74,19 @@ export function ReturnFeesButton({ proposal }: ReturnFeesButtonProps) {
       {activeWallet.address.toLowerCase() ===
         proposal.proposal.data.creator.toLowerCase() && (
         <>
-          <Box sx={{ ml: 8 }}>
+          <Box sx={{ ml: 8, '.SmallButton': { minWidth: '132px !important' } }}>
             {proposal.proposal.data.isFinished &&
               proposal.proposal.data.cancellationFee > 0 &&
               proposal.proposal.data.state !== ProposalState.Cancelled && (
                 <SmallButton
                   loading={txFromPool?.pending || loading || tx.pending}
                   onClick={handleReturnFees}>
-                  Return fee
+                  {texts.creationFee.title}
                 </SmallButton>
               )}
           </Box>
 
-          <ReturnFeesTxModal
+          <CreationFeesTxModal
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
             setFullTxErrorMessage={setFullTxErrorMessage}

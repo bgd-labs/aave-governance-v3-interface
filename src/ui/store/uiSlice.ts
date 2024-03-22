@@ -92,9 +92,6 @@ export interface IUISlice {
   powersInfoModalOpen: boolean;
   setPowersInfoModalOpen: (value: boolean) => void;
 
-  returnsFeeModalOpen: boolean;
-  setReturnsFeeModalOpen: (value: boolean) => void;
-
   isCreatePayloadModalOpen: boolean;
   setIsCreatePayloadModalOpen: (value: boolean) => void;
 
@@ -204,8 +201,8 @@ export interface IUISlice {
   isRepresentationInfoModalOpen: boolean;
   setIsRepresentationInfoModalOpen: (value: boolean) => void;
 
-  isReturnFeesTxModalOpen: boolean;
-  setIsReturnFeesTxModalOpen: (value: boolean) => void;
+  isCreationFeeModalOpen: boolean;
+  setIsCreationFeeModalOpen: (value: boolean) => void;
 
   closeHelpModals: () => void;
 }
@@ -439,11 +436,6 @@ export const createUISlice: StoreSlice<
   powersInfoModalOpen: false,
   setPowersInfoModalOpen: (value) => {
     set({ isModalOpen: value, powersInfoModalOpen: value });
-  },
-
-  returnsFeeModalOpen: false,
-  setReturnsFeeModalOpen: (value) => {
-    set({ isModalOpen: value, returnsFeeModalOpen: value });
   },
 
   isActivateVotingModalOpen: false,
@@ -751,8 +743,8 @@ export const createUISlice: StoreSlice<
     set({ isModalOpen: value, isRepresentationInfoModalOpen: value });
   },
 
-  isReturnFeesTxModalOpen: false,
-  setIsReturnFeesTxModalOpen: (value) => {
-    set({ isModalOpen: value, isReturnFeesTxModalOpen: value });
+  isCreationFeeModalOpen: false,
+  setIsCreationFeeModalOpen: (value) => {
+    set({ isModalOpen: value, isCreationFeeModalOpen: value });
   },
 });

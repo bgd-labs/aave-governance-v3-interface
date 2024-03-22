@@ -11,7 +11,7 @@ import {
 } from '../../../transactions/components/BasicActionModal';
 import { texts } from '../../../ui/utils/texts';
 
-export function ReturnFeesTxModal({
+export function CreationFeesTxModal({
   isOpen,
   setIsOpen,
   isTxStart,
@@ -51,7 +51,7 @@ export function ReturnFeesTxModal({
       tx={tx}
       successElement={
         <Box>
-          {texts.walletConnect.returnFeeTxInfo(proposalIds.length)}{' '}
+          {texts.creationFee.claimGuaranteeTxInfo(proposalIds.length)}{' '}
           {proposalIds.map((id) => (
             <b key={id}>{id}</b>
           ))}
@@ -61,14 +61,14 @@ export function ReturnFeesTxModal({
         <ActionModalTitle
           title={
             tx?.isSuccess && isTxStart
-              ? 'Fees returned'
-              : texts.walletConnect.returnFees
+              ? 'Guarantees claimed'
+              : texts.creationFee.title
           }
         />
       }>
       <ActionModalContentWrapper>
         <Box>
-          {texts.walletConnect.returnFeePreTxInfo(proposalIds.length)}{' '}
+          {texts.creationFee.claimGuaranteePreTxInfo(proposalIds.length)}{' '}
           <Box
             sx={{
               '.ReturnFeesTxModal__text': {

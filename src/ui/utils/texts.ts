@@ -252,18 +252,6 @@ export const texts = {
   walletConnect: {
     delegations: 'Manage delegations',
     representations: 'Manage representations',
-    returnFees: 'Return fees',
-    returnFeesDescription:
-      'TODO: When an proposal is created, the creator pays a fee to cancel the proposal. On this window, the creator can see for which proposals he can already refund the cancellation fee.',
-    returnAll: 'Return all',
-    returnFeeTxInfo: (count: number) =>
-      count > 1
-        ? 'You have returned the fee for canceling the proposals ids:'
-        : 'You have returned the fee for canceling the proposal id',
-    returnFeePreTxInfo: (count: number) =>
-      count > 1
-        ? 'You get back the fee for canceling proposals ids:'
-        : 'You get back the fee for canceling proposals id',
     disconnect: 'Disconnect',
     allTransactions: 'View all',
     transactions: 'Transactions',
@@ -302,6 +290,22 @@ export const texts = {
     appModeDefault: 'Default',
     appModeDev: 'Dev',
     appModeExpert: 'Expert',
+  },
+  creationFee: {
+    title: 'Claim creation fees',
+    description:
+      'When you create a governance proposal, a small ETH guarantee is included to protect against spam. You can claim this guarantee here, once the proposal has finished without being cancelled',
+    claimAll: 'Claim all',
+    claimGuaranteeTxInfo: (count: number) =>
+      count > 1
+        ? 'You have claimed the guarantee for canceling the proposals ids:'
+        : 'You have claimed the guarantee for canceling the proposal id',
+    claimGuaranteePreTxInfo: (count: number) =>
+      count > 1
+        ? 'You claim the guarantee for canceling proposals ids:'
+        : 'You claim the guarantee for canceling proposals id',
+    claim: 'Claim',
+    noData: "You haven't created any proposals yet",
   },
   other: {
     backButtonTitle: 'Back',
@@ -359,7 +363,6 @@ export const texts = {
     noPayloadsInController:
       'There are no payloads created in this payloads controller yet',
     details: 'Details',
-    returns: 'Return',
   },
   terms: {
     description:

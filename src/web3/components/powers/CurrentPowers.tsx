@@ -18,7 +18,7 @@ import {
   selectCurrentPowers,
   selectCurrentPowersForActiveWallet,
 } from '../../store/web3Selectors';
-import { BlockTitleWithTooltip } from './BlockTitleWithTooltip';
+import { BlockTitleWithTooltip } from '../BlockTitleWithTooltip';
 import { CurrentPowerItem } from './CurrentPowerItem';
 
 export function CurrentPowers() {

@@ -1,4 +1,4 @@
-import { ReturnFeeState } from '@bgd-labs/aave-governance-ui-helpers';
+import { CreationFeeState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
@@ -13,50 +13,50 @@ import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
 import { appConfig } from '../../../utils/appConfig';
-import { selectReturnsFeesDataByCreator } from '../../store/returnFeesSelectors';
-import { AccountAddressInfo } from './AccountAddressInfo';
-import { BlockTitleWithTooltip } from './BlockTitleWithTooltip';
-import { ReturnFeesModalItem } from './ReturnFeesModalItem';
-import { ReturnFeesModalItemLoading } from './ReturnFeesModalItemLoading';
-import { ReturnFeesTxModal } from './ReturnFeesTxModal';
+import { selectCreationFeesDataByCreator } from '../../store/creationFeesSelectors';
+import { BlockTitleWithTooltip } from '../BlockTitleWithTooltip';
+import { AccountAddressInfo } from '../wallet/AccountAddressInfo';
+import { CreationFeesModalItem } from './CreationFeesModalItem';
+import { CreationFeesModalItemLoading } from './CreationFeesModalItemLoading';
+import { CreationFeesTxModal } from './CreationFeesTxModal';
 
-interface ReturnFeesModalProps {
+interface CreationFeesModalProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   ensName?: string;
   ensAvatar?: string;
   isAvatarExists?: boolean;
+  onDisconnectButtonClick: () => void;
 }
 
-export function ReturnFeesModal({
+export function CreationFeesModal({
   isOpen,
   setIsOpen,
   ensName,
   ensAvatar,
   isAvatarExists,
-}: ReturnFeesModalProps) {
+  onDisconnectButtonClick,
+}: CreationFeesModalProps) {
   const store = useStore();
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
   const {
-    returnFeesProposalsCountOnRequest,
+    creationFeesProposalsCountOnRequest,
     activeWallet,
     setAccountInfoModalOpen,
-    returnFeesData,
-    getReturnFeesData,
-    updateReturnFeesDataByCreator,
+    creationFeesData,
+    getCreationFeesData,
+    updateCreationFeesDataByCreator,
     totalProposalCount,
     dataByCreatorLength,
     setDataByCreatorLength,
-    returnFees,
-    isReturnFeesTxModalOpen,
-    setIsReturnFeesTxModalOpen,
+    redeemCancellationFee,
   } = store;
 
   // get data logic
   const [currentPage, setCurrentPage] = useState(1);
-  const dataByCreator = selectReturnsFeesDataByCreator(
+  const dataByCreator = selectCreationFeesDataByCreator(
     store,
     activeWallet?.address || zeroAddress,
   );
@@ -68,31 +68,31 @@ export function ReturnFeesModal({
 
   useEffect(() => {
     if (isOpen && activeWallet) {
-      if (totalProposalCount > returnFeesProposalsCountOnRequest) {
-        getReturnFeesData();
-      } else if (!Object.keys(returnFeesData).length) {
-        getReturnFeesData();
+      if (totalProposalCount > creationFeesProposalsCountOnRequest) {
+        getCreationFeesData();
+      } else if (!Object.keys(creationFeesData).length) {
+        getCreationFeesData();
       }
     }
   }, [activeWallet?.address, isOpen]);
 
   useEffect(() => {
-    if (isOpen && activeWallet && !!returnFeesData[activeWallet.address]) {
+    if (isOpen && activeWallet && !!creationFeesData[activeWallet.address]) {
       setDataByCreatorLength(
         activeWallet.address,
-        Object.keys(returnFeesData[activeWallet.address]).length,
+        Object.keys(creationFeesData[activeWallet.address]).length,
       );
     }
   }, [
     isOpen,
     activeWallet?.address,
-    Object.keys(returnFeesData[activeWallet?.address || zeroAddress] || {})
+    Object.keys(creationFeesData[activeWallet?.address || zeroAddress] || {})
       .length,
   ]);
 
   useEffect(() => {
     if (isOpen && activeWallet && !!dataByCreatorLength[activeWallet.address]) {
-      updateReturnFeesDataByCreator(activeWallet.address);
+      updateCreationFeesDataByCreator(activeWallet.address);
     }
   }, [activeWallet?.address, dataByCreatorLength]);
 
@@ -103,6 +103,7 @@ export function ReturnFeesModal({
     : undefined;
 
   // tx logic
+  const [isTxModalOpen, setIsTxModalOpen] = useState(false);
   const [selectedProposalIds, setSelectedProposalIds] = useState<number[]>([]);
 
   const {
@@ -116,19 +117,19 @@ export function ReturnFeesModal({
     executeTxWithLocalStatuses,
     tx,
   } = useLastTxLocalStatus({
-    type: TxType.returnFees,
+    type: TxType.claimFees,
     payload: {
       creator: activeWallet?.address,
       proposalIds: selectedProposalIds,
     },
   });
 
-  const handleReturnFees = async () => {
-    setIsReturnFeesTxModalOpen(true);
+  const handleClaim = async () => {
+    setIsTxModalOpen(true);
     if (!!selectedProposalIds.length) {
       await executeTxWithLocalStatuses({
         callbackFunction: async () =>
-          await returnFees(
+          await redeemCancellationFee(
             activeWallet?.address || zeroAddress,
             selectedProposalIds,
           ),
@@ -138,7 +139,7 @@ export function ReturnFeesModal({
 
   useEffect(() => {
     if (!!selectedProposalIds.length) {
-      handleReturnFees();
+      handleClaim();
     }
   }, [selectedProposalIds]);
 
@@ -148,7 +149,7 @@ export function ReturnFeesModal({
   const pageCount =
     pageSize < totalItemsCount ? Math.ceil(totalItemsCount / pageSize) : 0;
   const filteredDataByCreator = Object.values(dataByCreator).filter(
-    (value) => value.status === ReturnFeeState.AVAILABLE,
+    (value) => value.status === CreationFeeState.AVAILABLE,
   );
 
   // random
@@ -156,7 +157,8 @@ export function ReturnFeesModal({
 
   return (
     <BasicModal
-      withoutOverlap={isReturnFeesTxModalOpen}
+      contentCss={{ mt: 12 }}
+      withoutOverlap={isTxModalOpen}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       maxWidth={690}
@@ -169,6 +171,7 @@ export function ReturnFeesModal({
           ensAvatar={ensAvatar}
           forTest={false}
           isAvatarExists={isAvatarExists}
+          onDisconnectButtonClick={onDisconnectButtonClick}
         />
 
         <Box
@@ -180,8 +183,8 @@ export function ReturnFeesModal({
             zIndex: 11,
           }}>
           <BlockTitleWithTooltip
-            title={texts.walletConnect.returnFees}
-            description={texts.walletConnect.returnFeesDescription}
+            title={texts.creationFee.title}
+            description={texts.creationFee.description}
           />
 
           <BackButton3D
@@ -197,19 +200,19 @@ export function ReturnFeesModal({
         </Box>
 
         <Box sx={{ mt: 24 }}>
-          {returnFeesProposalsCountOnRequest === -1 ? (
+          {creationFeesProposalsCountOnRequest === -1 ? (
             <>
-              <ReturnFeesModalItemLoading />
-              <ReturnFeesModalItemLoading />
-              <ReturnFeesModalItemLoading />
-              <ReturnFeesModalItemLoading />
+              <CreationFeesModalItemLoading />
+              <CreationFeesModalItemLoading />
+              <CreationFeesModalItemLoading />
+              <CreationFeesModalItemLoading />
             </>
           ) : !!totalItemsCount ? (
             Object.values(dataByCreator)
               .sort((a, b) => b.proposalId - a.proposalId)
               .slice((currentPage - 1) * pageSize, currentPage * pageSize)
               .map((data) => (
-                <ReturnFeesModalItem
+                <CreationFeesModalItem
                   data={data}
                   setIsOpen={setIsOpen}
                   selectedProposalIds={selectedProposalIds}
@@ -234,22 +237,22 @@ export function ReturnFeesModal({
                     <img
                       width="100%"
                       height="auto"
-                      src="/images/Light_No fees.svg"
-                      alt="You haven't created any proposals yet"
+                      src="/images/DarkNoFees.svg"
+                      alt={texts.creationFee.noData}
                     />
                   ) : (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       width="100%"
                       height="auto"
-                      src="/images/Light_No fees.svg"
+                      src="/images/LightNoFees.svg"
                       alt="You haven't created any proposals yet"
                     />
                   )}
                 </NoSSR>
               </Box>
               <Box sx={{ typography: 'headline' }}>
-                You haven't created any proposals yet
+                {texts.creationFee.noData}
               </Box>
             </Box>
           )}
@@ -285,15 +288,15 @@ export function ReturnFeesModal({
                   ),
                 );
               }}>
-              {texts.walletConnect.returnAll}
+              {texts.creationFee.claimAll}
             </BigButton>
           )}
         </Box>
 
         {!!selectedProposalIds.length && (
-          <ReturnFeesTxModal
-            isOpen={isReturnFeesTxModalOpen}
-            setIsOpen={setIsReturnFeesTxModalOpen}
+          <CreationFeesTxModal
+            isOpen={isTxModalOpen}
+            setIsOpen={setIsTxModalOpen}
             setFullTxErrorMessage={setFullTxErrorMessage}
             isTxStart={isTxStart}
             setIsTxStart={setIsTxStart}

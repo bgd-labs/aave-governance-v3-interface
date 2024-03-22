@@ -1,7 +1,7 @@
 import {
+  CreationFee,
+  CreationFeeState,
   ProposalState,
-  ReturnFee,
-  ReturnFeeState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
@@ -16,17 +16,17 @@ import {
 import { IUISlice } from '../../ui/store/uiSlice';
 import { appConfig } from '../../utils/appConfig';
 import {
-  cachedReturnFeesPath,
+  cachedCreationFeesPath,
   githubStartUrl,
 } from '../../utils/cacheGithubLinks';
-import { selectReturnsFeesDataByCreator } from './returnFeesSelectors';
+import { selectCreationFeesDataByCreator } from './creationFeesSelectors';
 import { IWeb3Slice } from './web3Slice';
 
-export interface IReturnFeesSlice {
-  returnFeesProposalsCountOnRequest: number;
-  returnFeesData: Record<Address, Record<number, ReturnFee>>;
-  getReturnFeesData: () => Promise<void>;
-  updateReturnFeesDataByCreator: (
+export interface ICreationFeesSlice {
+  creationFeesProposalsCountOnRequest: number;
+  creationFeesData: Record<Address, Record<number, CreationFee>>;
+  getCreationFeesData: () => Promise<void>;
+  updateCreationFeesDataByCreator: (
     creator: Address,
     ids?: number[],
   ) => Promise<void>;
@@ -34,28 +34,31 @@ export interface IReturnFeesSlice {
   dataByCreatorLength: Record<Address, number>;
   setDataByCreatorLength: (creator: Address, length: number) => void;
 
-  returnFees: (creator: Address, proposalIds: number[]) => Promise<void>;
+  redeemCancellationFee: (
+    creator: Address,
+    proposalIds: number[],
+  ) => Promise<void>;
 }
 
-export const createReturnFeesSlice: StoreSlice<
-  IReturnFeesSlice,
+export const creationFeesSlice: StoreSlice<
+  ICreationFeesSlice,
   IWeb3Slice &
     IProposalsSlice &
     IRpcSwitcherSlice &
     TransactionsSlice &
     IUISlice
 > = (set, get) => ({
-  returnFeesProposalsCountOnRequest: -1,
+  creationFeesProposalsCountOnRequest: -1,
 
-  returnFeesData: {},
-  getReturnFeesData: async () => {
-    const returnFeesResult = await fetch(
-      `${githubStartUrl}/${cachedReturnFeesPath}`,
+  creationFeesData: {},
+  getCreationFeesData: async () => {
+    const creationFeesResponse = await fetch(
+      `${githubStartUrl}/${cachedCreationFeesPath}`,
     );
 
-    if (returnFeesResult.ok) {
-      const returnFeesData = (await returnFeesResult.json()) as {
-        data: Record<Address, Record<number, ReturnFee>>;
+    if (creationFeesResponse.ok) {
+      const creationFeesData = (await creationFeesResponse.json()) as {
+        data: Record<Address, Record<number, CreationFee>>;
       };
 
       const count =
@@ -65,17 +68,17 @@ export const createReturnFeesSlice: StoreSlice<
 
       set((state) =>
         produce(state, (draft) => {
-          draft.returnFeesProposalsCountOnRequest = count;
-          draft.returnFeesData = {
-            ...returnFeesData.data,
-            ...draft.returnFeesData,
+          draft.creationFeesProposalsCountOnRequest = count;
+          draft.creationFeesData = {
+            ...creationFeesData.data,
+            ...draft.creationFeesData,
           };
         }),
       );
     }
   },
 
-  updateReturnFeesDataByCreator: async (creator, ids) => {
+  updateCreationFeesDataByCreator: async (creator, ids) => {
     const govCoreConfigs = !!get().configs.length
       ? {
           contractsConstants: get().contractsConstants,
@@ -88,14 +91,11 @@ export const createReturnFeesSlice: StoreSlice<
         ? get().totalProposalCount
         : await get().govDataService.getTotalProposalsCount();
 
-    const creatorReturnFeesData = selectReturnsFeesDataByCreator(
-      get(),
-      creator,
-    );
+    const creatorData = selectCreationFeesDataByCreator(get(), creator);
 
-    if (creatorReturnFeesData) {
-      const filteredData = Object.values(creatorReturnFeesData)
-        .filter((data) => data.status < ReturnFeeState.RETURNED)
+    if (creatorData) {
+      const filteredData = Object.values(creatorData)
+        .filter((data) => data.status < CreationFeeState.RETURNED)
         .filter((data) => (!!ids ? ids.includes(data.proposalId) : true));
 
       const from = Math.max(...filteredData.map((data) => data.proposalId));
@@ -118,19 +118,19 @@ export const createReturnFeesSlice: StoreSlice<
           );
 
           if (proposal) {
-            let status = ReturnFeeState.LATER;
+            let status = CreationFeeState.LATER;
             if (proposal.state === ProposalState.Cancelled) {
-              status = ReturnFeeState.NOT_AVAILABLE;
+              status = CreationFeeState.NOT_AVAILABLE;
             } else if (
               proposal.state >= ProposalState.Executed &&
               proposal.cancellationFee > 0
             ) {
-              status = ReturnFeeState.AVAILABLE;
+              status = CreationFeeState.AVAILABLE;
             } else if (
               proposal.state >= ProposalState.Executed &&
               proposal.cancellationFee <= 0
             ) {
-              status = ReturnFeeState.RETURNED;
+              status = CreationFeeState.RETURNED;
             }
 
             return {
@@ -145,8 +145,8 @@ export const createReturnFeesSlice: StoreSlice<
         if (!!data) {
           set((state) =>
             produce(state, (draft) => {
-              draft.returnFeesData[creator] = {
-                ...draft.returnFeesData[creator],
+              draft.creationFeesData[creator] = {
+                ...draft.creationFeesData[creator],
                 [data.proposalId]: {
                   ...data,
                 },
@@ -169,7 +169,7 @@ export const createReturnFeesSlice: StoreSlice<
     }
   },
 
-  returnFees: async (creator, proposalIds) => {
+  redeemCancellationFee: async (creator, proposalIds) => {
     await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
     const govDataService = get().govDataService;
     const activeAddress = get().activeWallet?.address;
@@ -178,10 +178,10 @@ export const createReturnFeesSlice: StoreSlice<
       await get().executeTx({
         body: () => {
           get().setModalOpen(true);
-          return govDataService.returnFees(proposalIds);
+          return govDataService.redeemCancellationFee(proposalIds);
         },
         params: {
-          type: TxType.returnFees,
+          type: TxType.claimFees,
           desiredChainID: appConfig.govCoreChainId,
           payload: { creator, proposalIds },
         },

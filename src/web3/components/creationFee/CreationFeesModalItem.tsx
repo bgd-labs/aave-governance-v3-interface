@@ -1,6 +1,6 @@
 import {
-  ReturnFee,
-  ReturnFeeState,
+  CreationFee,
+  CreationFeeState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
@@ -16,21 +16,21 @@ import { BoxWith3D, Link, SmallButton } from '../../../ui';
 import { ROUTES } from '../../../ui/utils/routes';
 import { texts } from '../../../ui/utils/texts';
 
-interface ReturnFeesModalItemProps {
-  data: ReturnFee;
+interface CreationFeesModalItemProps {
+  data: CreationFee;
   setIsOpen: (value: boolean) => void;
   selectedProposalIds: number[];
   setSelectedProposalIds: (value: number[]) => void;
   txLoading: boolean;
 }
 
-export function ReturnFeesModalItem({
+export function CreationFeesModalItem({
   data,
   setIsOpen,
   selectedProposalIds,
   setSelectedProposalIds,
   txLoading,
-}: ReturnFeesModalItemProps) {
+}: CreationFeesModalItemProps) {
   const store = useStore();
   const { activeWallet } = store;
   const theme = useTheme();
@@ -42,7 +42,7 @@ export function ReturnFeesModalItem({
     selectLastTxByTypeAndPayload<TransactionUnion>(
       store,
       activeWallet.address,
-      TxType.returnFees,
+      TxType.claimFees,
       {
         creator: activeWallet?.address,
         proposalIds: [proposalId],
@@ -128,7 +128,7 @@ export function ReturnFeesModalItem({
           justifyContent: 'flex-end',
           flex: 1,
         }}>
-        {status === ReturnFeeState.AVAILABLE ? (
+        {status === CreationFeeState.AVAILABLE ? (
           <SmallButton
             loading={
               txFromPool?.pending ||
@@ -137,17 +137,17 @@ export function ReturnFeesModalItem({
             onClick={() => {
               setSelectedProposalIds([proposalId]);
             }}>
-            {texts.other.returns}
+            {texts.creationFee.claim}
           </SmallButton>
         ) : (
           <Box
             sx={{
               color:
-                status === ReturnFeeState.LATER ? '$text' : '$textDisabled',
+                status === CreationFeeState.LATER ? '$text' : '$textDisabled',
             }}>
-            {status === ReturnFeeState.NOT_AVAILABLE && 'Nothing to Return'}
-            {status === ReturnFeeState.LATER && 'Return later'}
-            {status === ReturnFeeState.RETURNED && 'Returned'}
+            {status === CreationFeeState.NOT_AVAILABLE && 'Nothing to claim'}
+            {status === CreationFeeState.LATER && 'In progress'}
+            {status === CreationFeeState.RETURNED && 'Claimed'}
           </Box>
         )}
       </Box>

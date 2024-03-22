@@ -5,11 +5,11 @@ import { getRepresentedAddresses } from '../../../representations/utils/getRepre
 import { useStore } from '../../../store';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
 import { selectENSAvatar } from '../../store/ensSelectors';
+import { CreationFeesModal } from '../creationFee/CreationFeesModal';
+import { PowersInfoModal } from '../powers/PowersInfoModal';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
-import { PowersInfoModal } from './PowersInfoModal';
-import { ReturnFeesModal } from './ReturnFeesModal';
 
 export function WalletWidget() {
   const store = useStore();
@@ -28,8 +28,10 @@ export function WalletWidget() {
     fetchEnsNameByAddress,
     powersInfoModalOpen,
     setPowersInfoModalOpen,
-    returnsFeeModalOpen,
-    setReturnsFeeModalOpen,
+    isCreationFeeModalOpen,
+    setIsCreationFeeModalOpen,
+    disconnectActiveWallet,
+    setModalOpen,
   } = store;
 
   const activeAddress = activeWallet?.address || '';
@@ -76,6 +78,13 @@ export function WalletWidget() {
     }
   };
 
+  const handleDisconnectClick = async () => {
+    await disconnectActiveWallet();
+    setAccountInfoModalOpen(false);
+    setIsCreationFeeModalOpen(false);
+    setModalOpen(false);
+  };
+
   return (
     <>
       <ConnectWalletButton
@@ -98,6 +107,7 @@ export function WalletWidget() {
         setIsOpen={setAccountInfoModalOpen}
         setAllTransactionModalOpen={setAllTransactionModalOpen}
         representedAddresses={representedAddresses}
+        onDisconnectButtonClick={handleDisconnectClick}
       />
 
       {allTransactionModalOpen && (
@@ -113,12 +123,13 @@ export function WalletWidget() {
         />
       )}
 
-      <ReturnFeesModal
-        isOpen={returnsFeeModalOpen}
-        setIsOpen={setReturnsFeeModalOpen}
+      <CreationFeesModal
+        isOpen={isCreationFeeModalOpen}
+        setIsOpen={setIsCreationFeeModalOpen}
         ensName={shownUserName}
         ensAvatar={shownAvatar}
         isAvatarExists={isAvatarExists}
+        onDisconnectButtonClick={handleDisconnectClick}
       />
     </>
   );

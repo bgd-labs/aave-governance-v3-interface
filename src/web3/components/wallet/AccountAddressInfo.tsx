@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Divider, Image } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
+import { texts } from '../../../ui/utils/texts';
 import { getScanLink } from '../../../utils/getScanLink';
 
 interface AccountAddressInfoProps {
@@ -13,6 +14,7 @@ interface AccountAddressInfoProps {
   ensAvatar?: string;
   isAvatarExists?: boolean;
   forTest?: boolean;
+  onDisconnectButtonClick: () => void;
 }
 
 export function AccountAddressInfo({
@@ -22,6 +24,7 @@ export function AccountAddressInfo({
   ensAvatar,
   ensNameAbbreviated,
   chainId,
+  onDisconnectButtonClick,
 }: AccountAddressInfoProps) {
   const theme = useTheme();
 
@@ -56,6 +59,18 @@ export function AccountAddressInfo({
               sx={{ '.CopyAndExternalIconsSet__copy': { mx: 8 } }}
             />
           </Box>
+        </Box>
+
+        <Box
+          onClick={onDisconnectButtonClick}
+          sx={{
+            color: '$textSecondary',
+            cursor: 'pointer',
+            lineHeight: 1,
+            transition: 'all 0.2s ease',
+            hover: { color: theme.palette.$text },
+          }}>
+          <Box component="p">{texts.walletConnect.disconnect}</Box>
         </Box>
       </Box>
 

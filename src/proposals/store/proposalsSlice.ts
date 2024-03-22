@@ -39,9 +39,9 @@ import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { ipfsGateway } from '../../utils/configs';
 import { PAGE_SIZE } from '../../web3/services/govDataService';
+import { ICreationFeesSlice } from '../../web3/store/creationFeesSlice';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
-import { IReturnFeesSlice } from '../../web3/store/returnFeesSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 import {
   assetsBalanceSlots,
@@ -230,7 +230,7 @@ export const createProposalsSlice: StoreSlice<
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice &
-    IReturnFeesSlice
+    ICreationFeesSlice
 > = (set, get) => ({
   isInitialLoading: true,
 

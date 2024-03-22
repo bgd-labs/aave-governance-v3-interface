@@ -4,7 +4,7 @@ import React from 'react';
 import { BoxWith3D } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 
-export function ReturnFeesModalItemLoading() {
+export function CreationFeesModalItemLoading() {
   const theme = useTheme();
 
   return (

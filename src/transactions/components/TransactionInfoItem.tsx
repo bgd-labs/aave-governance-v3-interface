@@ -196,9 +196,9 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
               on <NetworkIconWitchChainN />
             </>
           )}
-          {tx.type === TxType.returnFees && tx.payload && (
+          {tx.type === TxType.claimFees && tx.payload && (
             <>
-              {texts.walletConnect.returnFeeTxInfo(
+              {texts.creationFee.claimGuaranteeTxInfo(
                 tx.payload.proposalIds.length,
               )}{' '}
               {tx.payload.proposalIds.map((id) => (

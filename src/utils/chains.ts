@@ -8,7 +8,6 @@ import {
   bsc,
   bscTestnet,
   gnosis,
-  goerli,
   mainnet,
   metis,
   optimism,

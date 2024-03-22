@@ -1,6 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
+import ClaimFeeIcon from '/public/images/icons/claimFee.svg';
 import DelegationIcon from '/public/images/icons/delegationIcon.svg';
 import RepresentationIcon from '/public/images/representation/representationVotingPower.svg';
 
@@ -17,9 +18,9 @@ import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
+import { CurrentPowers } from '../powers/CurrentPowers';
+import { RepresentingForm } from '../representation/RepresentingForm';
 import { AccountAddressInfo } from './AccountAddressInfo';
-import { CurrentPowers } from './CurrentPowers';
-import { RepresentingForm } from './RepresentingForm';
 
 interface AccountInfoModalContentProps {
   activeAddress: string;
@@ -41,9 +42,9 @@ interface AccountInfoModalContentProps {
 type internalLink = {
   forTest?: boolean;
   onClick: () => void;
-  route: string;
+  route?: string;
   title: string;
-  iconType?: 'delegate' | 'representation';
+  iconType?: 'delegate' | 'representation' | 'creationFee';
 };
 
 function InternalLink({
@@ -106,14 +107,16 @@ function InternalLink({
         }}>
         {!!iconType && iconType === 'delegate' ? (
           <DelegationIcon />
-        ) : !!iconType ? (
+        ) : !!iconType && iconType === 'representation' ? (
           <RepresentationIcon />
+        ) : !!iconType && iconType === 'creationFee' ? (
+          <ClaimFeeIcon />
         ) : (
           <></>
         )}
       </IconBox>
 
-      {!forTest ? (
+      {!forTest && !!route ? (
         <Link href={route} css={{ lineHeight: 1 }} onClick={onClick}>
           <Box component="p" sx={{ typography: 'headline' }}>
             {title}
@@ -123,6 +126,7 @@ function InternalLink({
         <Box
           component="p"
           sx={{
+            color: theme.palette.$textSecondary,
             whiteSpace: 'nowrap',
             typography: 'headline',
             cursor: 'pointer',
@@ -181,6 +185,7 @@ export function AccountInfoModalContent({
           ensAvatar={ensAvatar}
           forTest={forTest}
           isAvatarExists={isAvatarExists}
+          onDisconnectButtonClick={onDisconnectButtonClick}
         />
 
         <Box
@@ -218,36 +223,13 @@ export function AccountInfoModalContent({
             />
 
             {!!onReturnFeeButtonClick && (
-              <Box
+              <InternalLink
                 onClick={onReturnFeeButtonClick}
-                sx={{
-                  color: '$textSecondary',
-                  cursor: 'pointer',
-                  lineHeight: 1,
-                  transition: 'all 0.2s ease',
-                  hover: { color: theme.palette.$text },
-                  mb: 14,
-                  [`@media only screen and (min-width: 590px)`]: {
-                    mb: 0,
-                  },
-                }}>
-                <Box component="p" sx={{ typography: 'headline' }}>
-                  {texts.walletConnect.returnFees}
-                </Box>
-              </Box>
+                forTest
+                title={texts.creationFee.title}
+                iconType="creationFee"
+              />
             )}
-          </Box>
-
-          <Box
-            onClick={onDisconnectButtonClick}
-            sx={{
-              color: '$textSecondary',
-              cursor: 'pointer',
-              lineHeight: 1,
-              transition: 'all 0.2s ease',
-              hover: { color: theme.palette.$text },
-            }}>
-            <Box component="p">{texts.walletConnect.disconnect}</Box>
           </Box>
         </Box>
       </Box>

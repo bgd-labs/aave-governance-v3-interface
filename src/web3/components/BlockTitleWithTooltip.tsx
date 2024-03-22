@@ -4,7 +4,7 @@ import React from 'react';
 
 import InfoIcon from '/public/images/icons/info.svg';
 
-import { IconBox } from '../../../ui/primitives/IconBox';
+import { IconBox } from '../../ui/primitives/IconBox';
 
 interface BlockTitleWithTooltipProps {
   title: string;
