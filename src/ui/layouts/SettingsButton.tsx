@@ -14,6 +14,7 @@ import { IconBox } from '../primitives/IconBox';
 import { ROUTES } from '../utils/routes';
 import { textCenterEllipsis } from '../utils/text-center-ellipsis';
 import { texts } from '../utils/texts';
+import { AppModeSwitcher } from './AppModeSwitcher';
 
 export function SettingsButton() {
   const theme = useTheme();
@@ -268,6 +269,9 @@ export function SettingsButton() {
                     )}
                   </Box>
                 </Link>
+
+                <AppModeSwitcher />
+
                 <Box
                   component="p"
                   sx={{

@@ -14,6 +14,7 @@ import { ConnectWalletModal } from './ConnectWalletModal';
 export function WalletWidget() {
   const store = useStore();
   const {
+    appMode,
     activeWallet,
     connectWalletModalOpen,
     setConnectWalletModalOpen,
@@ -123,14 +124,16 @@ export function WalletWidget() {
         />
       )}
 
-      <CreationFeesModal
-        isOpen={isCreationFeeModalOpen}
-        setIsOpen={setIsCreationFeeModalOpen}
-        ensName={shownUserName}
-        ensAvatar={shownAvatar}
-        isAvatarExists={isAvatarExists}
-        onDisconnectButtonClick={handleDisconnectClick}
-      />
+      {appMode === 'expert' && (
+        <CreationFeesModal
+          isOpen={isCreationFeeModalOpen}
+          setIsOpen={setIsCreationFeeModalOpen}
+          ensName={shownUserName}
+          ensAvatar={shownAvatar}
+          isAvatarExists={isAvatarExists}
+          onDisconnectButtonClick={handleDisconnectClick}
+        />
+      )}
     </>
   );
 }

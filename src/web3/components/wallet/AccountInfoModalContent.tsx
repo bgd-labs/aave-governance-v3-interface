@@ -6,6 +6,7 @@ import DelegationIcon from '/public/images/icons/delegationIcon.svg';
 import RepresentationIcon from '/public/images/representation/representationVotingPower.svg';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
+import { useStore } from '../../../store';
 import { TransactionInfoItem } from '../../../transactions/components/TransactionInfoItem';
 import {
   AllTransactions,
@@ -158,6 +159,7 @@ export function AccountInfoModalContent({
 }: AccountInfoModalContentProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
+  const appMode = useStore((store) => store.appMode);
 
   const ensNameAbbreviated = ensName
     ? ensName.length > 30
@@ -222,7 +224,7 @@ export function AccountInfoModalContent({
               iconType="representation"
             />
 
-            {!!onReturnFeeButtonClick && (
+            {!!onReturnFeeButtonClick && appMode === 'expert' && (
               <InternalLink
                 onClick={onReturnFeeButtonClick}
                 forTest
