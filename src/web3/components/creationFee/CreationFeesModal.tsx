@@ -102,6 +102,15 @@ export function CreationFeesModal({
       : ensName
     : undefined;
 
+  // logic for pagination in UI
+  const pageSize = 5;
+  const totalItemsCount = Object.values(dataByCreator).length;
+  const pageCount =
+    pageSize < totalItemsCount ? Math.ceil(totalItemsCount / pageSize) : 0;
+  const filteredDataByCreator = Object.values(dataByCreator).filter(
+    (value) => value.status === CreationFeeState.AVAILABLE,
+  );
+
   // tx logic
   const [isTxModalOpen, setIsTxModalOpen] = useState(false);
   const [selectedProposalIds, setSelectedProposalIds] = useState<number[]>([]);
@@ -143,16 +152,6 @@ export function CreationFeesModal({
     }
   }, [selectedProposalIds]);
 
-  // logic for pagination in UI
-  const pageSize = 5;
-  const totalItemsCount = Object.values(dataByCreator).length;
-  const pageCount =
-    pageSize < totalItemsCount ? Math.ceil(totalItemsCount / pageSize) : 0;
-  const filteredDataByCreator = Object.values(dataByCreator).filter(
-    (value) => value.status === CreationFeeState.AVAILABLE,
-  );
-
-  // random
   const txLoading = loading || tx.pending;
 
   return (

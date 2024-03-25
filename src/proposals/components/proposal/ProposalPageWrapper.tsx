@@ -165,6 +165,7 @@ export function ProposalPageWrapper({
 
   useEffect(() => {
     if (
+      store.appMode === 'expert' &&
       proposalData?.proposal.data.isFinished &&
       proposalData?.proposal.data.cancellationFee > 0
     ) {
@@ -177,7 +178,7 @@ export function ProposalPageWrapper({
         1,
       );
     }
-  }, [id, proposalData?.loading]);
+  }, [id, proposalData?.loading, store.appMode]);
 
   useEffect(() => {
     if (!!cachedProposalEvents) {

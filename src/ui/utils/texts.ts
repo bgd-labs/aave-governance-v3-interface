@@ -248,7 +248,6 @@ export const texts = {
     cancelProposalTx: 'You cancel the proposal',
     cancelPayloadTx: 'You cancel the payload',
   },
-  // TODO: need fix texts connected to return fees
   walletConnect: {
     delegations: 'Manage delegations',
     representations: 'Manage representations',
