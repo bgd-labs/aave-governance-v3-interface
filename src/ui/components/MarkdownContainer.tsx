@@ -1,11 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import Markdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import {
-  materialLight,
-  materialOceanic,
-} from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Prism } from 'react-syntax-highlighter';
 import remarkGemoji from 'remark-gemoji';
 import remarkGfm from 'remark-gfm';
 
@@ -154,15 +150,17 @@ export function MarkdownContainer({
             const match = /language-(\w+)/.exec(className || '');
             return match ? (
               // @ts-ignore
-              <SyntaxHighlighter
+              <Prism
                 {...rest}
                 PreTag="div"
                 children={String(children).replace(/\n$/, '')}
                 language={match[1]}
                 style={
                   theme.palette.mode === 'dark'
-                    ? materialOceanic
-                    : materialLight
+                    ? require('react-syntax-highlighter/dist/esm/styles/prism')
+                        .materialOceanic
+                    : require('react-syntax-highlighter/dist/esm/styles/prism')
+                        .materialLight
                 }
               />
             ) : (

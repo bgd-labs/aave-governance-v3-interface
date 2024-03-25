@@ -8,6 +8,7 @@ import { Draft, produce } from 'immer';
 import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
+import { generateSeatbeltLink } from '../../proposals/utils/formatPayloadData';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
@@ -213,11 +214,11 @@ export const createProposalCreateOverviewSlice: StoreSlice<
         Object.values(formattedPayloadsData).map(async (payload) => {
           if (!payload.seatbeltMD) {
             const preLink =
-              'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads';
+              'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads/';
 
             try {
               const response = await fetch(
-                `${preLink}/${payload.chainId}/${payload.payloadsController}/${payload.id}.md`,
+                generateSeatbeltLink(payload, preLink),
               );
 
               if (response.ok) {

@@ -4,12 +4,26 @@ import {
   ProposalHistoryItem,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import dayjs from 'dayjs';
+import { metis, scroll } from 'viem/chains';
 
 import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { getHistoryId } from '../components/proposalHistory/helpers';
 
 export const seatbeltStartLink =
   'https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads/';
+
+export const generateSeatbeltLink = (
+  payload: NewPayload,
+  startLink?: string,
+) => {
+  let isForgeReport = false;
+  if (payload.chainId === metis.id) {
+    isForgeReport = true;
+  } else if (payload.chainId === scroll.id) {
+    isForgeReport = true;
+  }
+  return `${startLink || seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}${isForgeReport ? '_forge' : ''}.md`;
+};
 
 function getTxHashFromHistory({
   payload,
