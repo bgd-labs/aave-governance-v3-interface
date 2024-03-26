@@ -6,13 +6,12 @@ import {
 import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Address, toHex } from 'viem';
-import { metis } from 'viem/chains';
 
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
 import { PayloadCreator } from '../../proposals/components/proposal/PayloadCreator';
 import {
   formatPayloadData,
-  seatbeltStartLink,
+  generateSeatbeltLink,
 } from '../../proposals/utils/formatPayloadData';
 import { useStore } from '../../store';
 import {
@@ -152,16 +151,14 @@ export function PayloadItemDetailsModal({
         />
 
         <Box>
-          {payload.chainId !== metis.id && (
-            <Link
-              href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
-              inNewWindow
-              css={{ display: 'block', mt: 4 }}>
-              <SmallButton>
-                {texts.proposals.payloadsDetails.seatbelt}
-              </SmallButton>
-            </Link>
-          )}
+          <Link
+            href={generateSeatbeltLink(payload)}
+            inNewWindow
+            css={{ display: 'block', mt: 4 }}>
+            <SmallButton>
+              {texts.proposals.payloadsDetails.seatbelt}
+            </SmallButton>
+          </Link>
         </Box>
 
         <Box>
