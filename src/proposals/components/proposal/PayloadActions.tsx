@@ -1,6 +1,5 @@
 import { Box } from '@mui/system';
 import React from 'react';
-import { metis } from 'viem/chains';
 
 import { NewPayload } from '../../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { Link, SmallButton } from '../../../ui';
@@ -8,7 +7,7 @@ import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalI
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { getScanLink } from '../../../utils/getScanLink';
-import { seatbeltStartLink } from '../../utils/formatPayloadData';
+import { generateSeatbeltLink } from '../../utils/formatPayloadData';
 
 interface PayloadActionsProps {
   payload: NewPayload;
@@ -119,26 +118,22 @@ export function PayloadActions({
       )}
 
       {withLink && !report && !forCreate ? (
-        <>
-          {payload.chainId !== metis.id && (
-            <Link
-              href={`${seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`}
-              inNewWindow
-              css={{
-                display: 'flex',
-                alignItems: 'center',
-                mt: 4,
-                outline: 'none !important',
-              }}>
-              <SmallButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}>
-                {texts.proposals.payloadsDetails.seatbelt}
-              </SmallButton>
-            </Link>
-          )}
-        </>
+        <Link
+          href={generateSeatbeltLink(payload)}
+          inNewWindow
+          css={{
+            display: 'flex',
+            alignItems: 'center',
+            mt: 4,
+            outline: 'none !important',
+          }}>
+          <SmallButton
+            onClick={(e) => {
+              e.stopPropagation();
+            }}>
+            {texts.proposals.payloadsDetails.seatbelt}
+          </SmallButton>
+        </Link>
       ) : (
         withLink &&
         !!setIsSeatbeltModalOpen &&
