@@ -290,6 +290,22 @@ export const texts = {
     appModeDev: 'Dev',
     appModeExpert: 'Expert',
   },
+  creationFee: {
+    title: 'Claim creation fees',
+    description:
+      'When you create a governance proposal, a small ETH guarantee is included to protect against spam. You can claim this guarantee here, once the proposal has finished without being cancelled',
+    claimAll: 'Claim all',
+    claimGuaranteeTxInfo: (count: number) =>
+      count > 1
+        ? 'You have claimed the guarantee for canceling the proposals ids:'
+        : 'You have claimed the guarantee for canceling the proposal id',
+    claimGuaranteePreTxInfo: (count: number) =>
+      count > 1
+        ? 'You claim the guarantee for canceling proposals ids:'
+        : 'You claim the guarantee for canceling proposals id',
+    claim: 'Claim',
+    noData: "You haven't created any proposals yet",
+  },
   other: {
     backButtonTitle: 'Back',
     paginationNext: 'Next',
@@ -345,6 +361,7 @@ export const texts = {
     voted: 'Voted',
     noPayloadsInController:
       'There are no payloads created in this payloads controller yet',
+    details: 'Details',
   },
   terms: {
     description:

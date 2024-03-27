@@ -8,7 +8,7 @@ import {
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
 import { IDelegationSlice } from '../../delegate/store/delegationSlice';
 import { DelegateData, DelegateItem } from '../../delegate/types';
@@ -25,6 +25,7 @@ import {
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { gelatoApiKeys } from '../../utils/appConfig';
+import { ICreationFeesSlice } from '../../web3/store/creationFeesSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
@@ -42,6 +43,7 @@ export enum TxType {
   test = 'test',
   cancelProposal = 'cancelProposal',
   representations = 'representations',
+  claimFees = 'claimFees',
 }
 
 type BaseTx = BT & {
@@ -152,6 +154,14 @@ type RepresentationsTx = BaseTx & {
   };
 };
 
+type ReturnFeesTx = BaseTx & {
+  type: TxType.claimFees;
+  payload: {
+    creator: Address;
+    proposalIds: number[];
+  };
+};
+
 export type TransactionUnion =
   | CreatePayloadTx
   | CreateProposalTx
@@ -165,7 +175,8 @@ export type TransactionUnion =
   | DelegateTx
   | TestTx
   | CancelProposalTx
-  | RepresentationsTx;
+  | RepresentationsTx
+  | ReturnFeesTx;
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion> & {
   isGelatoAvailableChains: Record<number, boolean>;
@@ -193,7 +204,8 @@ export const createTransactionsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
-    IPayloadsExplorerSlice
+    IPayloadsExplorerSlice &
+    ICreationFeesSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {
@@ -271,6 +283,16 @@ export const createTransactionsSlice: StoreSlice<
           break;
         case TxType.cancelProposal:
           await updateProposalData(data.payload.proposalId);
+          break;
+        case TxType.claimFees:
+          await get().updateCreationFeesDataByCreator(
+            data.payload.creator,
+            data.payload.proposalIds,
+          );
+          await get().getDetailedProposalsData({
+            ids: data.payload.proposalIds,
+            fullData: true,
+          });
           break;
       }
     },

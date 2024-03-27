@@ -39,6 +39,7 @@ import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
 import { ipfsGateway } from '../../utils/configs';
 import { PAGE_SIZE } from '../../web3/services/govDataService';
+import { ICreationFeesSlice } from '../../web3/store/creationFeesSlice';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
 import { ENSProperty, IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
@@ -228,7 +229,8 @@ export const createProposalsSlice: StoreSlice<
     IEnsSlice &
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
-    IPayloadsExplorerSlice
+    IPayloadsExplorerSlice &
+    ICreationFeesSlice
 > = (set, get) => ({
   isInitialLoading: true,
 
@@ -589,7 +591,7 @@ export const createProposalsSlice: StoreSlice<
           });
 
       const isUpdateOnlyVotingPower = fullData
-        ? !![].length
+        ? false
         : !!ids.filter((id) => {
             return !get().detailedProposalsData[id]
               ? false
@@ -598,7 +600,7 @@ export const createProposalsSlice: StoreSlice<
           }).length;
 
       let proposalsData: BasicProposal[] = [];
-      if (!!filteredIds.length && isProposalNotInCache) {
+      if (!!filteredIds.length && (isProposalNotInCache || fullData)) {
         const fr = Math.max.apply(
           null,
           filteredIds.map((id) => id),

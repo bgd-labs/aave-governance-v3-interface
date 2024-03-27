@@ -12,6 +12,8 @@ export interface PaginationProps {
   onPageChange: (value: number) => void;
   forcePage?: number;
   withoutQuery?: boolean;
+  borderSize?: number;
+  isSmall?: boolean;
 }
 
 export function Pagination({
@@ -19,6 +21,8 @@ export function Pagination({
   onPageChange,
   forcePage,
   withoutQuery,
+  borderSize = 10,
+  isSmall,
 }: PaginationProps) {
   const theme = useTheme();
   const router = useRouter();
@@ -40,7 +44,8 @@ export function Pagination({
 
   return (
     <BoxWith3D
-      borderSize={10}
+      className="Pagination"
+      borderSize={borderSize}
       contentColor="$mainLight"
       wrapperCss={{
         margin: '32px auto 0',
@@ -55,8 +60,8 @@ export function Pagination({
         pb: 5,
         pt: 10,
         [theme.breakpoints.up('sm')]: {
-          pb: 10,
-          pt: 20,
+          pb: isSmall ? 8 : 10,
+          pt: isSmall ? 15 : 20,
         },
         '.pagination': {
           display: 'flex',
@@ -188,10 +193,10 @@ export function Pagination({
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             [theme.breakpoints.up('sm')]: {
-              width: 75,
+              width: isSmall ? 48 : 75,
             },
             [theme.breakpoints.up('lg')]: {
-              width: 92,
+              width: isSmall ? 54 : 92,
             },
             span: {
               display: 'inline-flex',

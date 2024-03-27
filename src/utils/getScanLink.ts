@@ -12,6 +12,7 @@ export function getScanLink({
   address: Address | string;
   type?: 'address' | 'tx';
 }) {
-  return `${chainInfoHelper.getChainParameters(chainId).blockExplorers?.default
-    .url}/${type}/${address}`;
+  return `${
+    chainInfoHelper.getChainParameters(chainId).blockExplorers?.default.url
+  }/${type}/${address}`;
 }

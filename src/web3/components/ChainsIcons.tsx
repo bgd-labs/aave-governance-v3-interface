@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { NetworkIcon } from '../../../ui/components/NetworkIcon';
+import { NetworkIcon } from '../../ui/components/NetworkIcon';
 
 interface ChainsIconsProps {
   chains: number[];

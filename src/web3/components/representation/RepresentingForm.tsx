@@ -23,7 +23,7 @@ import { appConfig } from '../../../utils/appConfig';
 import { getScanLink } from '../../../utils/getScanLink';
 import { ENSDataExists } from '../../store/ensSelectors';
 import { ENSProperty } from '../../store/ensSlice';
-import { ChainsIcons } from './ChainsIcons';
+import { ChainsIcons } from '../ChainsIcons';
 
 interface RepresentingFormProps {
   representedAddresses: RepresentedAddress[];

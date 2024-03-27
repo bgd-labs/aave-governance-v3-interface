@@ -50,22 +50,27 @@ export function ProposalPageWrapper({
   );
 
   useEffect(() => {
+    setProposalData(proposalDataSSR || proposalDataFromStore);
+  }, [id]);
+
+  useEffect(() => {
     if (!!store.cachedProposals.length) {
       setCachedProposalsIdsLocal(
         store.cachedProposals.map((proposal) => proposal.id),
       );
     }
-  }, [store.cachedProposals.length]);
+  }, [id, store.cachedProposals.length]);
 
   useEffect(() => {
     store.setDetailedProposalsDataLoadings(id);
-  }, [store.representative.address, store.activeWallet?.address]);
+  }, [id, store.representative.address, store.activeWallet?.address]);
 
   useEffect(() => {
     if (!!proposalDataFromStore) {
       setProposalData(getProposalDataById(store, id));
     }
   }, [
+    id,
     store.isRendered,
     proposalDataFromStore?.proposal.data.votingMachineData.votedInfo,
     store.detailedProposalsDataLoading,
@@ -156,7 +161,24 @@ export function ProposalPageWrapper({
     if (votesData) {
       setProposalDetailsVoters(store, votesData.votes);
     }
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (
+      store.appMode === 'expert' &&
+      proposalData?.proposal.data.isFinished &&
+      proposalData?.proposal.data.cancellationFee > 0
+    ) {
+      setTimeout(
+        () =>
+          store.getDetailedProposalsData({
+            ids: [id],
+            fullData: true,
+          }),
+        1,
+      );
+    }
+  }, [id, proposalData?.loading, store.appMode]);
 
   useEffect(() => {
     if (!!cachedProposalEvents) {

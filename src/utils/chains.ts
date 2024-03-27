@@ -8,7 +8,6 @@ import {
   bsc,
   bscTestnet,
   gnosis,
-  goerli,
   mainnet,
   metis,
   optimism,
@@ -86,18 +85,15 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://scroll-mainnet.public.blastapi.io',
   ],
   // testnets
-  [goerli.id]: [
-    'https://ethereum-goerli.publicnode.com',
-    'https://goerli.blockpi.network/v1/rpc/public',
-    'https://eth-goerli.public.blastapi.io',
-  ],
   [sepolia.id]: [
+    'https://eth-sepolia.public.blastapi.io',
     'https://endpoints.omniatech.io/v1/eth/sepolia/public',
     'https://ethereum-sepolia.blockpi.network/v1/rpc/public',
     'https://ethereum-sepolia.publicnode.com',
   ],
   [polygonMumbai.id]: ['https://rpc.ankr.com/polygon_mumbai'],
   [avalancheFuji.id]: [
+    'https://avalanche-fuji.blockpi.network/v1/rpc/public',
     'https://api.avax-test.network/ext/bc/C/rpc',
     'https://avalanche-fuji-c-chain.publicnode.com',
     'https://rpc.ankr.com/avalanche_fuji',
@@ -137,7 +133,6 @@ export const CHAINS: Record<number, Chain> = {
   [gnosis.id]: setChain(gnosis),
   [scroll.id]: setChain(scroll),
   // testnets
-  [goerli.id]: setChain(goerli),
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
   [avalancheFuji.id]: setChain(avalancheFuji),

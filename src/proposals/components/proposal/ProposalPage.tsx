@@ -24,6 +24,7 @@ import { VoteModal } from '../actionModals/VoteModal';
 import { BlockWrapper } from '../BlockWrapper';
 import { ProposalHistoryModal } from '../proposalHistory/ProposalHistoryModal';
 import { Timeline } from '../timeline/Timeline';
+import { ClaimFeesButton } from './ClaimFeesButton';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
@@ -202,9 +203,18 @@ export function ProposalPage({
             [theme.breakpoints.up('sm')]: { display: 'none' },
           }}>
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
-              {ipfsData?.title || proposalData.proposal.data.title}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+              }}>
+              <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
+                {ipfsData?.title || proposalData.proposal.data.title}
+              </Box>
+              <ClaimFeesButton proposal={proposalData} />
             </Box>
+
             <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
           </Box>
         </Box>
@@ -379,14 +389,24 @@ export function ProposalPage({
                 [theme.breakpoints.up('sm')]: { display: 'block' },
               }}>
               <Box
-                component="h2"
                 sx={{
-                  typography: 'h1',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
                   mb: 18,
-                  [theme.breakpoints.up('lg')]: { typography: 'h1', mb: 24 },
+                  minHeight: 28,
+                  [theme.breakpoints.up('lg')]: { mb: 24, minHeight: 32 },
                 }}>
-                {ipfsData?.title || proposalData.proposal.data.title}
+                <Box
+                  component="h2"
+                  sx={{
+                    typography: 'h1',
+                  }}>
+                  {ipfsData?.title || proposalData.proposal.data.title}
+                </Box>
+                <ClaimFeesButton proposal={proposalData} />
               </Box>
+
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 48 }}>
                 <DetailsShareLinks ipfs={ipfsData} ipfsError={ipfsDataError} />
               </Box>

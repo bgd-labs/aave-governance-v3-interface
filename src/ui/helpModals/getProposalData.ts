@@ -59,6 +59,7 @@ export function getProposalData() {
           hasRequiredRoots: true,
         },
         votingMachineState: 1,
+        cancellationFee: 0,
         payloads: [
           {
             creator: zeroAddress,

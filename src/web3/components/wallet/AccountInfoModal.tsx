@@ -16,6 +16,7 @@ interface AccountInfoModalProps {
   ensAvatar?: string;
   isAvatarExists?: boolean;
   representedAddresses?: RepresentedAddress[];
+  onDisconnectButtonClick: () => void;
 }
 
 export function AccountInfoModal({
@@ -26,14 +27,14 @@ export function AccountInfoModal({
   ensAvatar,
   isAvatarExists,
   representedAddresses,
+  onDisconnectButtonClick,
 }: AccountInfoModalProps) {
   const store = useStore();
   const {
     activeWallet,
-    disconnectActiveWallet,
-    setModalOpen,
     representative,
     getCurrentPowers,
+    setIsCreationFeeModalOpen,
   } = store;
 
   const allTransactions = activeWallet
@@ -42,12 +43,6 @@ export function AccountInfoModal({
         activeWallet.address,
       )
     : [];
-
-  const handleDisconnectClick = async () => {
-    await disconnectActiveWallet();
-    setIsOpen(false);
-    setModalOpen(false);
-  };
 
   useEffect(() => {
     if (isOpen) {
@@ -61,6 +56,7 @@ export function AccountInfoModal({
 
   return (
     <BasicModal
+      contentCss={{ marginTop: 12 }}
       isOpen={isOpen}
       setIsOpen={(value) => setTimeout(() => setIsOpen(value), 1)}
       withCloseButton
@@ -77,7 +73,11 @@ export function AccountInfoModal({
         )}
         onDelegateButtonClick={() => setIsOpen(false)}
         onRepresentationsButtonClick={() => setIsOpen(false)}
-        onDisconnectButtonClick={handleDisconnectClick}
+        onReturnFeeButtonClick={() => {
+          setIsOpen(false);
+          setIsCreationFeeModalOpen(true);
+        }}
+        onDisconnectButtonClick={onDisconnectButtonClick}
         onAllTransactionButtonClick={() => {
           setIsOpen(false);
           setAllTransactionModalOpen(true);

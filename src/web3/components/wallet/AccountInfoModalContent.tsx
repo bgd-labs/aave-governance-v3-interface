@@ -1,27 +1,27 @@
 import { Box, useTheme } from '@mui/system';
-import makeBlockie from 'ethereum-blockies-base64';
 import React from 'react';
 
+import ClaimFeeIcon from '/public/images/icons/claimFee.svg';
 import DelegationIcon from '/public/images/icons/delegationIcon.svg';
 import RepresentationIcon from '/public/images/representation/representationVotingPower.svg';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
+import { useStore } from '../../../store';
 import { TransactionInfoItem } from '../../../transactions/components/TransactionInfoItem';
 import {
   AllTransactions,
   TxType,
 } from '../../../transactions/store/transactionsSlice';
-import { Divider, Image, Link } from '../../../ui';
-import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
+import { Divider, Link } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { ROUTES } from '../../../ui/utils/routes';
 import { textCenterEllipsis } from '../../../ui/utils/text-center-ellipsis';
 import { texts } from '../../../ui/utils/texts';
 import { media } from '../../../ui/utils/themeMUI';
 import { useMediaQuery } from '../../../ui/utils/useMediaQuery';
-import { getScanLink } from '../../../utils/getScanLink';
-import { CurrentPowers } from './CurrentPowers';
-import { RepresentingForm } from './RepresentingForm';
+import { CurrentPowers } from '../powers/CurrentPowers';
+import { RepresentingForm } from '../representation/RepresentingForm';
+import { AccountAddressInfo } from './AccountAddressInfo';
 
 interface AccountInfoModalContentProps {
   activeAddress: string;
@@ -32,6 +32,7 @@ interface AccountInfoModalContentProps {
   onDisconnectButtonClick: () => void;
   onDelegateButtonClick: () => void;
   onRepresentationsButtonClick: () => void;
+  onReturnFeeButtonClick?: () => void;
   ensName?: string;
   ensAvatar?: string;
   isAvatarExists?: boolean;
@@ -42,9 +43,9 @@ interface AccountInfoModalContentProps {
 type internalLink = {
   forTest?: boolean;
   onClick: () => void;
-  route: string;
+  route?: string;
   title: string;
-  iconType: 'delegate' | 'representation';
+  iconType?: 'delegate' | 'representation' | 'creationFee';
 };
 
 function InternalLink({
@@ -62,7 +63,7 @@ function InternalLink({
         display: 'flex',
         alignItems: 'center',
         mb: 14,
-        [`@media only screen and (min-width: 470px)`]: {
+        [`@media only screen and (min-width: 590px)`]: {
           mb: 0,
           mr: 14,
         },
@@ -105,10 +106,18 @@ function InternalLink({
             height: 16,
           },
         }}>
-        {iconType === 'delegate' ? <DelegationIcon /> : <RepresentationIcon />}
+        {!!iconType && iconType === 'delegate' ? (
+          <DelegationIcon />
+        ) : !!iconType && iconType === 'representation' ? (
+          <RepresentationIcon />
+        ) : !!iconType && iconType === 'creationFee' ? (
+          <ClaimFeeIcon />
+        ) : (
+          <></>
+        )}
       </IconBox>
 
-      {!forTest ? (
+      {!forTest && !!route ? (
         <Link href={route} css={{ lineHeight: 1 }} onClick={onClick}>
           <Box component="p" sx={{ typography: 'headline' }}>
             {title}
@@ -118,6 +127,7 @@ function InternalLink({
         <Box
           component="p"
           sx={{
+            color: theme.palette.$textSecondary,
             whiteSpace: 'nowrap',
             typography: 'headline',
             cursor: 'pointer',
@@ -140,6 +150,7 @@ export function AccountInfoModalContent({
   onDisconnectButtonClick,
   onDelegateButtonClick,
   onRepresentationsButtonClick,
+  onReturnFeeButtonClick,
   forTest,
   ensName,
   ensAvatar,
@@ -148,6 +159,7 @@ export function AccountInfoModalContent({
 }: AccountInfoModalContentProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
+  const appMode = useStore((store) => store.appMode);
 
   const ensNameAbbreviated = ensName
     ? ensName.length > 30
@@ -168,49 +180,21 @@ export function AccountInfoModalContent({
   return (
     <>
       <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Image
-              src={
-                !isAvatarExists || forTest
-                  ? makeBlockie(
-                      activeAddress !== '' ? activeAddress : 'default',
-                    )
-                  : ensAvatar
-              }
-              alt=""
-              sx={{ width: 34, height: 34, borderRadius: '50%' }}
-            />
-
-            <Box sx={{ display: 'flex', ml: 10, alignItems: 'center' }}>
-              <Box component="h2" sx={{ typography: 'h1' }}>
-                {ensNameAbbreviated}
-              </Box>
-
-              <CopyAndExternalIconsSet
-                iconSize={16}
-                copyText={activeAddress}
-                externalLink={getScanLink({ chainId, address: activeAddress })}
-                sx={{ '.CopyAndExternalIconsSet__copy': { mx: 8 } }}
-              />
-            </Box>
-          </Box>
-        </Box>
-
-        <Divider
-          sx={{ my: 14, borderBottomColor: theme.palette.$secondaryBorder }}
+        <AccountAddressInfo
+          activeAddress={activeAddress}
+          chainId={chainId}
+          ensNameAbbreviated={ensNameAbbreviated}
+          ensAvatar={ensAvatar}
+          forTest={forTest}
+          isAvatarExists={isAvatarExists}
+          onDisconnectButtonClick={onDisconnectButtonClick}
         />
 
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            [`@media only screen and (min-width: 470px)`]: {
+            [`@media only screen and (min-width: 590px)`]: {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -220,7 +204,7 @@ export function AccountInfoModalContent({
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              [`@media only screen and (min-width: 470px)`]: {
+              [`@media only screen and (min-width: 590px)`]: {
                 flexDirection: 'row',
               },
             }}>
@@ -239,18 +223,15 @@ export function AccountInfoModalContent({
               title={texts.walletConnect.representations}
               iconType="representation"
             />
-          </Box>
 
-          <Box
-            onClick={onDisconnectButtonClick}
-            sx={{
-              color: '$textSecondary',
-              cursor: 'pointer',
-              lineHeight: 1,
-              transition: 'all 0.2s ease',
-              hover: { color: theme.palette.$text },
-            }}>
-            <Box component="p">{texts.walletConnect.disconnect}</Box>
+            {!!onReturnFeeButtonClick && appMode === 'expert' && (
+              <InternalLink
+                onClick={onReturnFeeButtonClick}
+                forTest
+                title={texts.creationFee.title}
+                iconType="creationFee"
+              />
+            )}
           </Box>
         </Box>
       </Box>

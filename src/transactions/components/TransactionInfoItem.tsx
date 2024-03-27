@@ -196,6 +196,17 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
               on <NetworkIconWitchChainN />
             </>
           )}
+          {tx.type === TxType.claimFees && tx.payload && (
+            <>
+              {texts.creationFee.claimGuaranteeTxInfo(
+                tx.payload.proposalIds.length,
+              )}{' '}
+              {tx.payload.proposalIds.map((id) => (
+                <b>{id}</b>
+              ))}{' '}
+              on <NetworkIconWitchChainN />
+            </>
+          )}
         </Box>
 
         <Box

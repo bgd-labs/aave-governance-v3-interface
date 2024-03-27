@@ -184,6 +184,7 @@ export function SmallButton({
 
   return (
     <Box
+      className="SmallButton"
       component="button"
       type={type}
       disabled={disabled || loading}

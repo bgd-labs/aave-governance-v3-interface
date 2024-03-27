@@ -22,6 +22,7 @@ import { media } from '../utils/themeMUI';
 import { useClickOutside } from '../utils/useClickOutside';
 import { useMediaQuery } from '../utils/useMediaQuery';
 import { useScrollDirection } from '../utils/useScrollDirection';
+import { AppModeSwitcher } from './AppModeSwitcher';
 import { SettingsButton } from './SettingsButton';
 
 const headerNavItems = [
@@ -607,6 +608,9 @@ export function AppHeader() {
                   </Box>
                 </Box>
               )}
+
+              <AppModeSwitcher />
+
               <Box
                 sx={{
                   color: '$textLight',

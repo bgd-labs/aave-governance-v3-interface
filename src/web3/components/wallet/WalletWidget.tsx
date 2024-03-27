@@ -5,14 +5,16 @@ import { getRepresentedAddresses } from '../../../representations/utils/getRepre
 import { useStore } from '../../../store';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
 import { selectENSAvatar } from '../../store/ensSelectors';
+import { CreationFeesModal } from '../creationFee/CreationFeesModal';
+import { PowersInfoModal } from '../powers/PowersInfoModal';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
-import { PowersInfoModal } from './PowersInfoModal';
 
 export function WalletWidget() {
   const store = useStore();
   const {
+    appMode,
     activeWallet,
     connectWalletModalOpen,
     setConnectWalletModalOpen,
@@ -27,6 +29,10 @@ export function WalletWidget() {
     fetchEnsNameByAddress,
     powersInfoModalOpen,
     setPowersInfoModalOpen,
+    isCreationFeeModalOpen,
+    setIsCreationFeeModalOpen,
+    disconnectActiveWallet,
+    setModalOpen,
   } = store;
 
   const activeAddress = activeWallet?.address || '';
@@ -73,6 +79,13 @@ export function WalletWidget() {
     }
   };
 
+  const handleDisconnectClick = async () => {
+    await disconnectActiveWallet();
+    setAccountInfoModalOpen(false);
+    setIsCreationFeeModalOpen(false);
+    setModalOpen(false);
+  };
+
   return (
     <>
       <ConnectWalletButton
@@ -95,15 +108,32 @@ export function WalletWidget() {
         setIsOpen={setAccountInfoModalOpen}
         setAllTransactionModalOpen={setAllTransactionModalOpen}
         representedAddresses={representedAddresses}
+        onDisconnectButtonClick={handleDisconnectClick}
       />
-      <TransactionsModal
-        isOpen={allTransactionModalOpen}
-        setIsOpen={setAllTransactionModalOpen}
-      />
-      <PowersInfoModal
-        isOpen={powersInfoModalOpen}
-        setIsOpen={setPowersInfoModalOpen}
-      />
+
+      {allTransactionModalOpen && (
+        <TransactionsModal
+          isOpen={allTransactionModalOpen}
+          setIsOpen={setAllTransactionModalOpen}
+        />
+      )}
+      {powersInfoModalOpen && (
+        <PowersInfoModal
+          isOpen={powersInfoModalOpen}
+          setIsOpen={setPowersInfoModalOpen}
+        />
+      )}
+
+      {appMode === 'expert' && (
+        <CreationFeesModal
+          isOpen={isCreationFeeModalOpen}
+          setIsOpen={setIsCreationFeeModalOpen}
+          ensName={shownUserName}
+          ensAvatar={shownAvatar}
+          isAvatarExists={isAvatarExists}
+          onDisconnectButtonClick={handleDisconnectClick}
+        />
+      )}
     </>
   );
 }
