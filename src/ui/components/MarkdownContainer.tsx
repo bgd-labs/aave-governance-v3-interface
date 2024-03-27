@@ -47,6 +47,9 @@ export function MarkdownContainer({
           p: 4,
           font: '12px Monaco,Consolas,"Andale  Mono","DejaVu Sans Mono",monospace',
         },
+        hr: {
+          my: 18,
+        },
       }}>
       <Markdown
         remarkPlugins={[remarkGfm, remarkGemoji]}
