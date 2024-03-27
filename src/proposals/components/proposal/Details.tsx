@@ -94,28 +94,16 @@ export function Details({
 
   return (
     <>
-      <Box
-        sx={(theme) => ({
-          mb: 18,
-          [theme.breakpoints.up('lg')]: {
-            mb: 24,
-          },
-        })}>
-        <Box component="p" sx={{ typography: 'h2', mb: 12 }}>
+      <Box sx={{ mb: '1.5em' }}>
+        <Box component="p" sx={{ typography: 'h2', mb: '4px' }}>
           {texts.proposals.author}
         </Box>
         <Box component="p">{ipfs?.author}</Box>
       </Box>
 
       {proposalCreator && (
-        <Box
-          sx={(theme) => ({
-            mb: 18,
-            [theme.breakpoints.up('lg')]: {
-              mb: 24,
-            },
-          })}>
-          <Box component="p" sx={{ typography: 'headline', mb: 12 }}>
+        <Box sx={{ mb: '1.5em' }}>
+          <Box component="p" sx={{ typography: 'h2', mb: '4px' }}>
             {texts.proposals.creator}
           </Box>
 
