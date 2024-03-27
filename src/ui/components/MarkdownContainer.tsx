@@ -2,6 +2,7 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import Markdown from 'react-markdown';
 import { Prism } from 'react-syntax-highlighter';
+import remarkBreaks from 'remark-breaks';
 import remarkGemoji from 'remark-gemoji';
 import remarkGfm from 'remark-gfm';
 
@@ -49,7 +50,7 @@ export function MarkdownContainer({
         },
       }}>
       <Markdown
-        remarkPlugins={[remarkGfm, remarkGemoji]}
+        remarkPlugins={[remarkGfm, remarkGemoji, remarkBreaks]}
         components={{
           img({ src: _src, alt }) {
             if (!_src) return null;
