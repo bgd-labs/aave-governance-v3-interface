@@ -205,31 +205,5 @@ export const createProposalCreateOverviewSlice: StoreSlice<
       });
       get().setCreatePayloadsData(formattedPayloadsData);
     }
-
-    if (
-      initialData.some(
-        (payload) => (payload && !payload?.seatbeltMD) || !payload,
-      )
-    ) {
-      const payloadsDataWithReports = await Promise.all(
-        Object.values(formattedPayloadsData).map(async (payload) => {
-          if (!payload.seatbeltMD) {
-            const seatbeltMD = await get().getPayloadSeatbeltMD(payload);
-            return {
-              seatbeltMD,
-              ...payload,
-            } as NewPayload;
-          } else {
-            return payload;
-          }
-        }),
-      );
-
-      payloadsDataWithReports.forEach((payload) => {
-        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
-          payload;
-      });
-      get().setCreatePayloadsData(formattedPayloadsData);
-    }
   },
 });
