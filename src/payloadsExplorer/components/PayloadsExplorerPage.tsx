@@ -113,8 +113,8 @@ export function PayloadsExplorerPage() {
     startDetailedPayloadsExplorerDataPolling,
     stopDetailedPayloadsExplorerDataPolling,
     setIsPayloadExplorerItemDetailsModalOpen,
-    getProposalPayloadsData,
-    proposalsPayloadsData,
+    getCachedProposalPayloadsData,
+    cachedProposalsPayloadsData,
   } = useStore();
 
   const [isColumns, setIsColumns] = useState(false);
@@ -132,7 +132,7 @@ export function PayloadsExplorerPage() {
 
   useEffect(() => {
     setIsColumns(getLocalStoragePayloadsExplorerView() === 'column');
-    getProposalPayloadsData();
+    getCachedProposalPayloadsData();
   }, []);
 
   useEffect(() => {
@@ -190,7 +190,7 @@ export function PayloadsExplorerPage() {
     getPayloadsExploreData(chainId, controllerAddress, 0);
     stopDetailedPayloadsExplorerDataPolling();
     startDetailedPayloadsExplorerDataPolling(chainId, controllerAddress, 0);
-  }, [controllerAddress, Object.keys(proposalsPayloadsData).length]);
+  }, [controllerAddress, Object.keys(cachedProposalsPayloadsData).length]);
 
   useEffect(() => {
     stopDetailedPayloadsExplorerDataPolling();

@@ -8,8 +8,8 @@ import { Draft, produce } from 'immer';
 import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
-import { generateSeatbeltLink } from '../../proposals/utils/formatPayloadData';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { IPayloadsHelperSlice } from '../../store/payloadsHelperSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
@@ -40,7 +40,8 @@ export const createProposalCreateOverviewSlice: StoreSlice<
     IProposalsSlice &
     IUISlice &
     IEnsSlice &
-    IRpcSwitcherSlice
+    IRpcSwitcherSlice &
+    IPayloadsHelperSlice
 > = (set, get) => ({
   createPayloadsData: {},
   createPayloadsErrors: {},
@@ -213,33 +214,11 @@ export const createProposalCreateOverviewSlice: StoreSlice<
       const payloadsDataWithReports = await Promise.all(
         Object.values(formattedPayloadsData).map(async (payload) => {
           if (!payload.seatbeltMD) {
-            const preLink =
-              'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads/';
-
-            try {
-              const response = await fetch(
-                generateSeatbeltLink(payload, preLink),
-              );
-
-              if (response.ok) {
-                const reportMD: string = await response.text();
-
-                return {
-                  seatbeltMD: reportMD,
-                  ...payload,
-                } as NewPayload;
-              } else {
-                return {
-                  seatbeltMD: undefined,
-                  ...payload,
-                } as NewPayload;
-              }
-            } catch {
-              return {
-                seatbeltMD: undefined,
-                ...payload,
-              } as NewPayload;
-            }
+            const seatbeltMD = await get().getPayloadSeatbeltMD(payload);
+            return {
+              seatbeltMD,
+              ...payload,
+            } as NewPayload;
           } else {
             return payload;
           }

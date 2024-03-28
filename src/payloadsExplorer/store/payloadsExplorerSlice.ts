@@ -1,20 +1,13 @@
-import {
-  InitialPayload,
-  Payload,
-  PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers';
+import { Payload, PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { IPayloadsHelperSlice } from '../../store/payloadsHelperSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
-import {
-  cachedProposalsPayloadsPath,
-  githubStartUrl,
-} from '../../utils/cacheGithubLinks';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
@@ -33,9 +26,6 @@ export interface IPayloadsExplorerSlice {
     Address,
     { activePage: number; pageCount: number; currentIds: number[] }
   >;
-
-  proposalsPayloadsData: Record<number, InitialPayload[]>;
-  getProposalPayloadsData: () => Promise<void>;
 
   setPaginationDetails: (
     chainId: number,
@@ -79,27 +69,9 @@ export const createPayloadsExplorerSlice: StoreSlice<
     IProposalsSlice &
     IUISlice &
     IEnsSlice &
-    IRpcSwitcherSlice
+    IRpcSwitcherSlice &
+    IPayloadsHelperSlice
 > = (set, get) => ({
-  proposalsPayloadsData: {},
-  getProposalPayloadsData: async () => {
-    if (!Object.keys(get().proposalsPayloadsData).length) {
-      const proposalsPayloadsResponse = await fetch(
-        `${githubStartUrl}/${cachedProposalsPayloadsPath}`,
-      );
-      if (proposalsPayloadsResponse.ok) {
-        const proposalsPayloads = (await proposalsPayloadsResponse.json()) as {
-          data: Record<number, InitialPayload[]>;
-        };
-        set((state) =>
-          produce(state, (draft) => {
-            draft.proposalsPayloadsData = proposalsPayloads.data;
-          }),
-        );
-      }
-    }
-  },
-
   totalPayloadsCountByAddress: {},
   payloadsExplorePagination: {},
 
@@ -211,9 +183,8 @@ export const createPayloadsExplorerSlice: StoreSlice<
   getPayloadsExploreData: async (chainId, address, activePage) => {
     const { totalPayloadsCount, idsForRequest } =
       await get().setPaginationDetails(chainId, address, activePage);
-    const proposalPayloadsData = Object.entries(get().proposalsPayloadsData);
 
-    if (totalPayloadsCount >= 1 && !!proposalPayloadsData.length) {
+    if (totalPayloadsCount >= 1) {
       if (!!idsForRequest.length) {
         const payloadsData: Payload[] = await get().govDataService.getPayloads(
           chainId,
@@ -225,27 +196,18 @@ export const createPayloadsExplorerSlice: StoreSlice<
           string,
           Draft<Payload & { proposalId?: number }>
         > = {};
-        payloadsData.forEach((payload) => {
-          if (payload) {
-            const proposalIdConnectedToPayload = proposalPayloadsData.find(
-              (data) =>
-                data[1].find(
-                  (proposalPayload) =>
-                    proposalPayload.id === payload.id &&
-                    proposalPayload.chainId === payload.chainId,
-                ),
-            );
-
-            formattedPayloadsData[
-              `${payload.payloadsController}_${payload.id}`
-            ] = {
-              ...(payload as Draft<Payload>),
-              proposalId: !!proposalIdConnectedToPayload?.length
-                ? Number(proposalIdConnectedToPayload[0])
-                : undefined,
-            };
-          }
-        });
+        await Promise.all(
+          payloadsData.map(async (payload) => {
+            if (payload) {
+              formattedPayloadsData[
+                `${payload.payloadsController}_${payload.id}`
+              ] = {
+                ...(payload as Draft<Payload>),
+                proposalId: await get().getPayloadProposalId(payload, true),
+              };
+            }
+          }),
+        );
 
         set((state) =>
           produce(state, (draft) => {
@@ -265,7 +227,6 @@ export const createPayloadsExplorerSlice: StoreSlice<
   getPayloadsExploreDataById: async (chainId, address, payloadId) => {
     await get().setPaginationDetails(chainId, address);
 
-    const proposalPayloadsData = Object.entries(get().proposalsPayloadsData);
     const payloadsData: Payload[] = await get().govDataService.getPayloads(
       chainId,
       address,
@@ -276,24 +237,17 @@ export const createPayloadsExplorerSlice: StoreSlice<
       string,
       Draft<Payload & { proposalId?: number }>
     > = {};
-    payloadsData.forEach((payload) => {
-      if (payload) {
-        const proposalIdConnectedToPayload = proposalPayloadsData.find((data) =>
-          data[1].find(
-            (proposalPayload) =>
-              proposalPayload.id === payload.id &&
-              proposalPayload.chainId === payload.chainId,
-          ),
-        );
-
-        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] = {
-          ...(payload as Draft<Payload>),
-          proposalId: !!proposalIdConnectedToPayload?.length
-            ? Number(proposalIdConnectedToPayload[0])
-            : undefined,
-        };
-      }
-    });
+    await Promise.all(
+      payloadsData.map(async (payload) => {
+        if (payload) {
+          formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+            {
+              ...(payload as Draft<Payload>),
+              proposalId: await get().getPayloadProposalId(payload, true),
+            };
+        }
+      }),
+    );
 
     set((state) =>
       produce(state, (draft) => {
