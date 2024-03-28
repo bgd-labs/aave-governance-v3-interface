@@ -1,6 +1,5 @@
 import {
   InitialPayload,
-  Payload,
   PayloadState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import {
@@ -162,7 +161,7 @@ function PayloadItem({
   creator?: Hex;
   createTransactionHash?: string;
   report?: string;
-  payload: Payload;
+  payload: NewPayload;
   payloadCount: number;
   totalPayloadsCount: number;
   isFullView?: boolean;
@@ -351,6 +350,23 @@ function PayloadItem({
           </Box>
 
           <Box sx={{ pl: 18, mt: 4 }}>
+            {forCreate &&
+              (!!payload.proposalId || payload.proposalId === 0) && (
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    typography: 'descriptorAccent',
+                  }}>
+                  Proposal id: {payload.proposalId}{' '}
+                  <CopyAndExternalIconsSet
+                    externalLink={`/proposal?proposalId=${payload.proposalId}`}
+                    iconSize={12}
+                    sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
+                  />
+                </Box>
+              )}
+
             {forCreate && (
               <>
                 <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>

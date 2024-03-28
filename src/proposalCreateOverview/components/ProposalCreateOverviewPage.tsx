@@ -46,10 +46,12 @@ export function ProposalCreateOverviewPage({
     setIsCreateProposalModalOpen,
     createProposal,
     setIpfsDataErrors,
+    getCachedProposalPayloadsData,
   } = useStore();
 
   useEffect(() => {
     getTotalProposalCount();
+    getCachedProposalPayloadsData();
   }, []);
 
   const newProposalId = initialParams.proposalId || totalProposalCount + 1;

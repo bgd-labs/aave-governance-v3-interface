@@ -20,6 +20,7 @@ export type NewPayload = Payload & {
   seatbeltMD?: string;
   creator?: Address;
   transactionHash?: string;
+  proposalId?: number;
 };
 
 export interface IProposalCreateOverviewSlice {
@@ -199,10 +200,15 @@ export const createProposalCreateOverviewSlice: StoreSlice<
         }),
       );
 
-      updatedPayloadsData.forEach((payload) => {
-        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
-          payload;
-      });
+      await Promise.all(
+        updatedPayloadsData.map(async (payload) => {
+          formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+            {
+              ...payload,
+              proposalId: await get().getPayloadProposalId(payload),
+            };
+        }),
+      );
       get().setCreatePayloadsData(formattedPayloadsData);
     }
   },
