@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.0...v2.3.1) (2024-03-28)
+
+
+### Bug Fixes
+
+* hr spacing in markdown ([1cc1a5c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/1cc1a5c4f39fb26e3851621425757ee792a94be6))
+* markdown error ([c814ddb](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c814ddb5b2f24843369faf21bbd7531ee3165c88))
+* seatbelt links and markdown render ([#79](https://github.com/bgd-labs/aave-governance-v3-interface/issues/79)) ([26c720e](https://github.com/bgd-labs/aave-governance-v3-interface/commit/26c720ec50340d7c6ff7af42231af46cafd71853))
+* update packages ([91c6c8e](https://github.com/bgd-labs/aave-governance-v3-interface/commit/91c6c8e0d3be6ee26e60f6f892f698c296f93f52))
+* update packages ([d469104](https://github.com/bgd-labs/aave-governance-v3-interface/commit/d469104b11358cef68eee2c8c3867e9324077f5c))
+* update packages and fix markdown styles ([4af33c7](https://github.com/bgd-labs/aave-governance-v3-interface/commit/4af33c7797b395b92b30a6d92a7124dd728132e7))
+* updated helpers package ([83ba768](https://github.com/bgd-labs/aave-governance-v3-interface/commit/83ba768a0d3e515dac7dc100522b23f951003aba))
+
 ## [2.3.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.2.1...v2.3.0) (2024-03-04)
 
 
