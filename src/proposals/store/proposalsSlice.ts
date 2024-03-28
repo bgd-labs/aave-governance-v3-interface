@@ -30,6 +30,7 @@ import { IPayloadsExplorerSlice } from '../../payloadsExplorer/store/payloadsExp
 import { IProposalCreateOverviewSlice } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { IRepresentationsSlice } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { IPayloadsHelperSlice } from '../../store/payloadsHelperSlice';
 import {
   TransactionsSlice,
   TxType,
@@ -230,7 +231,8 @@ export const createProposalsSlice: StoreSlice<
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice &
-    ICreationFeesSlice
+    ICreationFeesSlice &
+    IPayloadsHelperSlice
 > = (set, get) => ({
   isInitialLoading: true,
 

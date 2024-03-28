@@ -7,18 +7,16 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import { Address, toHex } from 'viem';
 
+import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
 import { PayloadCreator } from '../../proposals/components/proposal/PayloadCreator';
-import {
-  formatPayloadData,
-  generateSeatbeltLink,
-} from '../../proposals/utils/formatPayloadData';
+import { formatPayloadData } from '../../proposals/utils/formatPayloadData';
 import { useStore } from '../../store';
 import {
   TransactionUnion,
   TxType,
 } from '../../transactions/store/transactionsSlice';
-import { BoxWith3D, Link, SmallButton } from '../../ui';
+import { BoxWith3D, SmallButton } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { texts } from '../../ui/utils/texts';
@@ -31,8 +29,11 @@ export function PayloadExploreItem({
   setSelectedPayloadForExecute,
   setSelectedPayloadForDetailsModal,
   isColumns,
+  handleReportClick,
+  isSeatbeltModalOpen,
+  isSeatbeltReportLoading,
 }: {
-  payload: Payload;
+  payload: Payload & { proposalId?: number };
   setSelectedPayloadForExecute: ({
     chainId,
     payloadsController,
@@ -44,6 +45,9 @@ export function PayloadExploreItem({
     id,
   }: InitialPayload) => void;
   isColumns: boolean;
+  handleReportClick: (payload: NewPayload) => Promise<void>;
+  isSeatbeltReportLoading: Record<string, boolean>;
+  isSeatbeltModalOpen: Record<string, boolean>;
 }) {
   const theme = useTheme();
   const store = useStore();
@@ -154,6 +158,22 @@ export function PayloadExploreItem({
             </Box>
           </Box>
         </Box>
+        {(!!payload.proposalId || payload.proposalId === 0) && (
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              typography: isColumns && xsm ? 'descriptorAccent' : 'headline',
+              mb: 4,
+            }}>
+            Proposal id: {payload.proposalId}{' '}
+            <CopyAndExternalIconsSet
+              externalLink={`/proposal?proposalId=${payload.proposalId}`}
+              iconSize={12}
+              sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
+            />
+          </Box>
+        )}
 
         <Box
           sx={{
@@ -275,17 +295,21 @@ export function PayloadExploreItem({
         </Box>
 
         <Box>
-          <Link
-            href={generateSeatbeltLink(payload)}
-            inNewWindow
-            css={{ display: 'flex', alignItems: 'center' }}>
-            <SmallButton
-              onClick={(e) => {
-                e.stopPropagation();
-              }}>
-              {texts.proposals.payloadsDetails.seatbelt}
-            </SmallButton>
-          </Link>
+          <SmallButton
+            disabled={
+              isSeatbeltModalOpen[`${payload.payloadsController}_${payload.id}`]
+            }
+            loading={
+              isSeatbeltReportLoading[
+                `${payload.payloadsController}_${payload.id}`
+              ]
+            }
+            onClick={async (e) => {
+              e.stopPropagation();
+              await handleReportClick(payload);
+            }}>
+            {texts.proposals.payloadsDetails.seatbelt}
+          </SmallButton>
 
           {isPayloadReadyForExecution &&
             !isFinalStatus &&

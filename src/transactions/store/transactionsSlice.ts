@@ -23,6 +23,7 @@ import {
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { IPayloadsHelperSlice } from '../../store/payloadsHelperSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { gelatoApiKeys } from '../../utils/appConfig';
 import { ICreationFeesSlice } from '../../web3/store/creationFeesSlice';
@@ -205,7 +206,8 @@ export const createTransactionsSlice: StoreSlice<
     IRpcSwitcherSlice &
     IProposalCreateOverviewSlice &
     IPayloadsExplorerSlice &
-    ICreationFeesSlice
+    ICreationFeesSlice &
+    IPayloadsHelperSlice
 > = (set, get) => ({
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async (data) => {

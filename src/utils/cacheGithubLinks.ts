@@ -5,6 +5,7 @@ export const githubStartUrl = `https://raw.githubusercontent.com/bgd-labs/aave-g
 export const listViewPath = '/list_view_proposals.json';
 export const cachedProposalsIdsPath = '/cached_proposals_ids.json';
 export const cachedCreationFeesPath = '/creation_fees.json';
+export const cachedProposalsPayloadsPath = '/proposals_payloads.json';
 
 export const cachedDetailsPath = (id: number) =>
   `/proposals/proposal_${id}.json`;

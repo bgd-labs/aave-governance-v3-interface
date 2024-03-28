@@ -1,6 +1,5 @@
 import {
   InitialPayload,
-  Payload,
   PayloadState,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import {
@@ -29,7 +28,10 @@ import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
 import { getScanLink } from '../../../utils/getScanLink';
-import { formatPayloadData } from '../../utils/formatPayloadData';
+import {
+  formatPayloadData,
+  generateSeatbeltLink,
+} from '../../utils/formatPayloadData';
 import { PayloadActions } from './PayloadActions';
 import { PayloadCreator } from './PayloadCreator';
 
@@ -159,7 +161,7 @@ function PayloadItem({
   creator?: Hex;
   createTransactionHash?: string;
   report?: string;
-  payload: Payload;
+  payload: NewPayload;
   payloadCount: number;
   totalPayloadsCount: number;
   isFullView?: boolean;
@@ -170,6 +172,28 @@ function PayloadItem({
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
+  const [finalReport, setFinalReport] = useState(report);
+
+  useEffect(() => {
+    if (!report) {
+      const reportFromStore =
+        store.payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
+          ?.seatbeltMD;
+      if (reportFromStore) {
+        setFinalReport(reportFromStore);
+      } else {
+        store.getPayloadSeatbeltMD(payload);
+        const reportFromStoreNew =
+          store.payloadsHelperData[
+            `${payload.payloadsController}_${payload.id}`
+          ]?.seatbeltMD;
+        setFinalReport(reportFromStoreNew);
+      }
+    }
+  }, [
+    report,
+    store.payloadsHelperData[`${payload.payloadsController}_${payload.id}`],
+  ]);
 
   useEffect(() => {
     if (forCreate) {
@@ -218,11 +242,12 @@ function PayloadItem({
 
   return (
     <>
-      {!!report && (
+      {!!finalReport && (
         <SeatBeltReportModal
           isOpen={isSeatbeltModalOpen}
           setIsOpen={setIsSeatbeltModalOpen}
-          report={report}
+          report={finalReport}
+          link={generateSeatbeltLink(payload)}
         />
       )}
 
@@ -325,6 +350,23 @@ function PayloadItem({
           </Box>
 
           <Box sx={{ pl: 18, mt: 4 }}>
+            {forCreate &&
+              (!!payload.proposalId || payload.proposalId === 0) && (
+                <Box
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    typography: 'descriptorAccent',
+                  }}>
+                  Proposal id: {payload.proposalId}{' '}
+                  <CopyAndExternalIconsSet
+                    externalLink={`/proposal?proposalId=${payload.proposalId}`}
+                    iconSize={12}
+                    sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
+                  />
+                </Box>
+              )}
+
             {forCreate && (
               <>
                 <Box sx={{ display: 'flex', flexDirection: 'column', mb: 4 }}>
@@ -484,7 +526,7 @@ function PayloadItem({
               forCreate={forCreate}
               withLink
               setIsSeatbeltModalOpen={setIsSeatbeltModalOpen}
-              report={report}
+              report={finalReport}
             />
           </Box>
         )}

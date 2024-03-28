@@ -19,6 +19,7 @@ import {
   TxType,
 } from '../../transactions/store/transactionsSlice';
 import { BasicModal, Link, SmallButton } from '../../ui';
+import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { texts } from '../../ui/utils/texts';
 import { selectPayloadExploreById } from '../store/payloadsExplorerSelectors';
@@ -118,6 +119,23 @@ export function PayloadItemDetailsModal({
         <Box sx={{ mb: 12, typography: 'headline' }}>
           Id(Hex): {toHex(payload.id)}
         </Box>
+
+        {(!!payload.proposalId || payload.proposalId === 0) && (
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              mb: 12,
+              typography: 'headline',
+            }}>
+            Proposal id: {payload.proposalId}{' '}
+            <CopyAndExternalIconsSet
+              externalLink={`/proposal?proposalId=${payload.proposalId}`}
+              iconSize={14}
+              sx={{ '.CopyAndExternalIconsSet__link': { ml: 6 } }}
+            />
+          </Box>
+        )}
 
         <Box sx={{ mb: 12, typography: 'headline' }}>
           {texts.proposals.payloadsDetails.accessLevel}:{' '}

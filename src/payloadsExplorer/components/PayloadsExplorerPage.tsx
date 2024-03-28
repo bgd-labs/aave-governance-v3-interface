@@ -9,7 +9,10 @@ import { Hex } from 'viem';
 import ColumnsIcon from '/public/images/icons/columnsIcon.svg';
 import RowIcon from '/public/images/icons/rowIcon.svg';
 
+import { SeatBeltReportModal } from '../../proposalCreateOverview/components/SeatBeltReportModal';
+import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { ExecutePayloadModal } from '../../proposals/components/actionModals/ExecutePayloadModal';
+import { generateSeatbeltLink } from '../../proposals/utils/formatPayloadData';
 import { useStore } from '../../store';
 import { BackButton3D, Container, NoSSR, Pagination } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
@@ -113,7 +116,22 @@ export function PayloadsExplorerPage() {
     startDetailedPayloadsExplorerDataPolling,
     stopDetailedPayloadsExplorerDataPolling,
     setIsPayloadExplorerItemDetailsModalOpen,
+    getCachedProposalPayloadsData,
+    cachedProposalsPayloadsData,
+    payloadsHelperData,
+    getPayloadSeatbeltMD,
   } = useStore();
+
+  const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState<
+    Record<string, boolean>
+  >({});
+  const [isSeatbeltReportLoading, setIsSeatbeltReportLoadingOpen] = useState<
+    Record<string, boolean>
+  >({});
+  const [finalReport, setFinalReport] = useState<string | undefined>(undefined);
+  const [reportPayload, setReportPayload] = useState<NewPayload | undefined>(
+    undefined,
+  );
 
   const [isColumns, setIsColumns] = useState(false);
   const [chainId, setChainId] = useState<number>(
@@ -130,6 +148,7 @@ export function PayloadsExplorerPage() {
 
   useEffect(() => {
     setIsColumns(getLocalStoragePayloadsExplorerView() === 'column');
+    getCachedProposalPayloadsData();
   }, []);
 
   useEffect(() => {
@@ -187,7 +206,7 @@ export function PayloadsExplorerPage() {
     getPayloadsExploreData(chainId, controllerAddress, 0);
     stopDetailedPayloadsExplorerDataPolling();
     startDetailedPayloadsExplorerDataPolling(chainId, controllerAddress, 0);
-  }, [controllerAddress]);
+  }, [controllerAddress, Object.keys(cachedProposalsPayloadsData).length]);
 
   useEffect(() => {
     stopDetailedPayloadsExplorerDataPolling();
@@ -216,6 +235,45 @@ export function PayloadsExplorerPage() {
       (id) => id === payload.id,
     ),
   );
+
+  const handleReportClick = async (payload: NewPayload) => {
+    setReportPayload(payload);
+    setIsSeatbeltReportLoadingOpen({
+      ...isSeatbeltReportLoading,
+      [`${payload.payloadsController}_${payload.id}`]: true,
+    });
+    const reportFromStore =
+      payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
+        ?.seatbeltMD;
+    if (!!reportFromStore) {
+      setFinalReport(reportFromStore);
+      setIsSeatbeltModalOpen({
+        ...isSeatbeltModalOpen,
+        [`${payload.payloadsController}_${payload.id}`]: true,
+      });
+    } else {
+      const report = await getPayloadSeatbeltMD(payload);
+      setFinalReport(report);
+      setIsSeatbeltModalOpen({
+        ...isSeatbeltModalOpen,
+        [`${payload.payloadsController}_${payload.id}`]: true,
+      });
+    }
+    setIsSeatbeltReportLoadingOpen({
+      ...isSeatbeltReportLoading,
+      [`${payload.payloadsController}_${payload.id}`]: false,
+    });
+  };
+
+  const handleSeatbeltModalOpen = (value: boolean) => {
+    if (reportPayload) {
+      setFinalReport(undefined);
+      setIsSeatbeltModalOpen({
+        ...isSeatbeltModalOpen,
+        [`${reportPayload.payloadsController}_${reportPayload.id}`]: value,
+      });
+    }
+  };
 
   return (
     <>
@@ -376,6 +434,9 @@ export function PayloadsExplorerPage() {
                         setSelectedPayloadForDetailsModal
                       }
                       isColumns={isColumns}
+                      handleReportClick={handleReportClick}
+                      isSeatbeltReportLoading={isSeatbeltReportLoading}
+                      isSeatbeltModalOpen={isSeatbeltModalOpen}
                     />
                   ))}
               </>
@@ -424,6 +485,19 @@ export function PayloadsExplorerPage() {
         <PayloadItemDetailsModal
           initialPayload={selectedPayloadForDetailsModal}
           setSelectedPayloadForExecute={setSelectedPayloadForExecute}
+        />
+      )}
+
+      {finalReport && !!reportPayload && (
+        <SeatBeltReportModal
+          isOpen={
+            isSeatbeltModalOpen[
+              `${reportPayload.payloadsController}_${reportPayload.id}`
+            ]
+          }
+          setIsOpen={handleSeatbeltModalOpen}
+          report={finalReport}
+          link={generateSeatbeltLink(reportPayload)}
         />
       )}
     </>

@@ -5,12 +5,16 @@ import { Address } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
+import { IPayloadsHelperSlice } from '../../store/payloadsHelperSlice';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { IEnsSlice } from '../../web3/store/ensSlice';
 import { IWeb3Slice } from '../../web3/store/web3Slice';
 
-type PayloadsData = Record<number, Record<Address, Record<string, Payload>>>;
+type PayloadsData = Record<
+  number,
+  Record<Address, Record<string, Payload & { proposalId?: number }>>
+>;
 export interface IPayloadsExplorerSlice {
   totalPayloadsCountByAddress: Record<Address, number>;
   setPayloadsExploreActivePage: (
@@ -65,7 +69,8 @@ export const createPayloadsExplorerSlice: StoreSlice<
     IProposalsSlice &
     IUISlice &
     IEnsSlice &
-    IRpcSwitcherSlice
+    IRpcSwitcherSlice &
+    IPayloadsHelperSlice
 > = (set, get) => ({
   totalPayloadsCountByAddress: {},
   payloadsExplorePagination: {},
@@ -187,14 +192,22 @@ export const createPayloadsExplorerSlice: StoreSlice<
           idsForRequest,
         );
 
-        const formattedPayloadsData: Record<string, Draft<Payload>> = {};
-        payloadsData.forEach((payload) => {
-          if (payload) {
-            formattedPayloadsData[
-              `${payload.payloadsController}_${payload.id}`
-            ] = payload as Draft<Payload>;
-          }
-        });
+        const formattedPayloadsData: Record<
+          string,
+          Draft<Payload & { proposalId?: number }>
+        > = {};
+        await Promise.all(
+          payloadsData.map(async (payload) => {
+            if (payload) {
+              formattedPayloadsData[
+                `${payload.payloadsController}_${payload.id}`
+              ] = {
+                ...(payload as Draft<Payload>),
+                proposalId: await get().getPayloadProposalId(payload, true),
+              };
+            }
+          }),
+        );
 
         set((state) =>
           produce(state, (draft) => {
@@ -220,13 +233,21 @@ export const createPayloadsExplorerSlice: StoreSlice<
       [payloadId],
     );
 
-    const formattedPayloadsData: Record<string, Draft<Payload>> = {};
-    payloadsData.forEach((payload) => {
-      if (payload) {
-        formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
-          payload as Draft<Payload>;
-      }
-    });
+    const formattedPayloadsData: Record<
+      string,
+      Draft<Payload & { proposalId?: number }>
+    > = {};
+    await Promise.all(
+      payloadsData.map(async (payload) => {
+        if (payload) {
+          formattedPayloadsData[`${payload.payloadsController}_${payload.id}`] =
+            {
+              ...(payload as Draft<Payload>),
+              proposalId: await get().getPayloadProposalId(payload, true),
+            };
+        }
+      }),
+    );
 
     set((state) =>
       produce(state, (draft) => {
