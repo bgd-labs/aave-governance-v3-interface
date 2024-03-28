@@ -29,7 +29,10 @@ import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
 import { getScanLink } from '../../../utils/getScanLink';
-import { formatPayloadData } from '../../utils/formatPayloadData';
+import {
+  formatPayloadData,
+  generateSeatbeltLink,
+} from '../../utils/formatPayloadData';
 import { PayloadActions } from './PayloadActions';
 import { PayloadCreator } from './PayloadCreator';
 
@@ -170,6 +173,28 @@ function PayloadItem({
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
+  const [finalReport, setFinalReport] = useState(report);
+
+  useEffect(() => {
+    if (!report) {
+      const reportFromStore =
+        store.payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
+          ?.seatbeltMD;
+      if (reportFromStore) {
+        setFinalReport(reportFromStore);
+      } else {
+        store.getPayloadSeatbeltMD(payload);
+        const reportFromStoreNew =
+          store.payloadsHelperData[
+            `${payload.payloadsController}_${payload.id}`
+          ]?.seatbeltMD;
+        setFinalReport(reportFromStoreNew);
+      }
+    }
+  }, [
+    report,
+    store.payloadsHelperData[`${payload.payloadsController}_${payload.id}`],
+  ]);
 
   useEffect(() => {
     if (forCreate) {
@@ -218,11 +243,12 @@ function PayloadItem({
 
   return (
     <>
-      {!!report && (
+      {!!finalReport && (
         <SeatBeltReportModal
           isOpen={isSeatbeltModalOpen}
           setIsOpen={setIsSeatbeltModalOpen}
-          report={report}
+          report={finalReport}
+          link={generateSeatbeltLink(payload)}
         />
       )}
 
@@ -484,7 +510,7 @@ function PayloadItem({
               forCreate={forCreate}
               withLink
               setIsSeatbeltModalOpen={setIsSeatbeltModalOpen}
-              report={report}
+              report={finalReport}
             />
           </Box>
         )}

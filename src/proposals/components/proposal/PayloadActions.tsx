@@ -137,8 +137,7 @@ export function PayloadActions({
       ) : (
         withLink &&
         !!setIsSeatbeltModalOpen &&
-        !!report &&
-        forCreate && (
+        !!report && (
           <Box sx={{ mt: 4 }}>
             <SmallButton
               onClick={(e) => {
