@@ -55,12 +55,16 @@ export function AppModeSwitcher() {
                   mb: 12,
                   display: 'block',
                   color: '$textLight',
+                  cursor: appMode === mode.mode ? 'default' : 'pointer',
                   transition: 'all 0.2s ease',
                   [theme.breakpoints.up('sm')]: {
                     color: '$textDisabled',
                   },
                   hover: {
-                    color: theme.palette.$textWhite,
+                    color:
+                      appMode === mode.mode
+                        ? theme.palette.$textDisabled
+                        : theme.palette.$textWhite,
                   },
                 }}>
                 <Box

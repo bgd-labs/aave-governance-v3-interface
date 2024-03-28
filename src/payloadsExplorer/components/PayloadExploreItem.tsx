@@ -32,7 +32,7 @@ export function PayloadExploreItem({
   setSelectedPayloadForDetailsModal,
   isColumns,
 }: {
-  payload: Payload;
+  payload: Payload & { proposalId?: number };
   setSelectedPayloadForExecute: ({
     chainId,
     payloadsController,
@@ -154,6 +154,22 @@ export function PayloadExploreItem({
             </Box>
           </Box>
         </Box>
+        {(!!payload.proposalId || payload.proposalId === 0) && (
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              typography: isColumns && xsm ? 'descriptorAccent' : 'headline',
+              mb: 4,
+            }}>
+            Proposal id: {payload.proposalId}{' '}
+            <CopyAndExternalIconsSet
+              externalLink={`/proposal?proposalId=${payload.proposalId}`}
+              iconSize={12}
+              sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
+            />
+          </Box>
+        )}
 
         <Box
           sx={{
