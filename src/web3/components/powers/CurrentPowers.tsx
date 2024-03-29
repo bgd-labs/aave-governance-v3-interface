@@ -22,17 +22,22 @@ import { BlockTitleWithTooltip } from '../BlockTitleWithTooltip';
 import { CurrentPowerItem } from './CurrentPowerItem';
 
 export function CurrentPowers() {
-  const store = useStore();
-  const {
-    representative,
-    activeWallet,
-    setPowersInfoModalOpen,
-    setAccountInfoModalOpen,
-  } = store;
-  const theme = useTheme();
+  const representative = useStore((store) => store.representative);
+  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setPowersInfoModalOpen = useStore(
+    (store) => store.setPowersInfoModalOpen,
+  );
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
 
-  const currentPowersAll = selectCurrentPowers(store);
-  const currentPowersActiveWallet = selectCurrentPowersForActiveWallet(store);
+  const currentPowersAll = useStore((store) => selectCurrentPowers(store));
+  const currentPowersActiveWallet = useStore((store) =>
+    selectCurrentPowersForActiveWallet(store),
+  );
+
+  const theme = useTheme();
 
   const [startAnim, setStartAnim] = useState(false);
   const [isInfoClicked, setClicked] = useState(
@@ -113,7 +118,7 @@ export function CurrentPowers() {
                 onClick={() => {
                   setStartAnim(true);
                   setTimeout(() => setStartAnim(false), 500);
-                  store.getCurrentPowers(
+                  getCurrentPowers(
                     !!representative.address
                       ? representative.address
                       : activeWallet?.address || zeroAddress,

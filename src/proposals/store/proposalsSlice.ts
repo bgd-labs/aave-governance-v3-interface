@@ -991,7 +991,11 @@ export const createProposalsSlice: StoreSlice<
         votersData.forEach((vote) => {
           draft.voters[vote.transactionHash] = {
             ...vote,
-            ensName: ENSDataExists(get(), vote.address, ENSProperty.NAME)
+            ensName: ENSDataExists(
+              get().ensData,
+              vote.address,
+              ENSProperty.NAME,
+            )
               ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
               : vote.ensName,
           };
@@ -1027,7 +1031,11 @@ export const createProposalsSlice: StoreSlice<
         topVotersByProposalIdWithENS.forEach((vote) => {
           draft.voters[vote.transactionHash] = {
             ...vote,
-            ensName: ENSDataExists(get(), vote.address, ENSProperty.NAME)
+            ensName: ENSDataExists(
+              get().ensData,
+              vote.address,
+              ENSProperty.NAME,
+            )
               ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
               : vote.ensName,
           };

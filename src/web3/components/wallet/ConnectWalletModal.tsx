@@ -54,7 +54,11 @@ export function ConnectWalletModal({
   isOpen,
   setIsOpen,
 }: ConnectWalletModalProps) {
-  const { walletActivating, walletConnectionError, setModalOpen } = useStore();
+  const walletActivating = useStore((store) => store.walletActivating);
+  const walletConnectionError = useStore(
+    (store) => store.walletConnectionError,
+  );
+  const setModalOpen = useStore((store) => store.setModalOpen);
 
   const [impersonatedFormOpen, setImpersonatedFormOpen] = useState(false);
 

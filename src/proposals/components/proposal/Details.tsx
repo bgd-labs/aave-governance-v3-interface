@@ -26,13 +26,15 @@ export function Details({
   ipfsError,
   onClick,
 }: DetailsProps) {
-  const store = useStore();
-  const { ensData, fetchEnsNameByAddress } = store;
+  const ensData = useStore((store) => store.ensData);
+  const fetchEnsNameByAddress = useStore(
+    (store) => store.fetchEnsNameByAddress,
+  );
 
   useEffect(() => {
     if (
       proposalCreator &&
-      !ENSDataExists(store, proposalCreator as Hex, ENSProperty.NAME)
+      !ENSDataExists(ensData, proposalCreator as Hex, ENSProperty.NAME)
     ) {
       fetchEnsNameByAddress(proposalCreator as Hex);
     }

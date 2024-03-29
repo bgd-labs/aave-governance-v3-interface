@@ -3,17 +3,16 @@ import { Address, isAddress } from 'viem';
 
 import { RootState } from '../../store';
 import { ENS_TTL, isEnsName } from '../utils/ensHelpers';
-import { ENSProperty, IEnsSlice } from './ensSlice';
+import { EnsDataItem, ENSProperty, IEnsSlice } from './ensSlice';
 
 export const ENSDataExists = (
-  store: IEnsSlice,
+  ensData: Record<`0x${string}`, EnsDataItem>,
   address: Address | string,
   property: ENSProperty,
 ) => {
   const lowercasedAddress = address.toLocaleLowerCase() as Address;
   return Boolean(
-    store.ensData[lowercasedAddress] &&
-      store.ensData[lowercasedAddress][property],
+    ensData[lowercasedAddress] && ensData[lowercasedAddress][property],
   );
 };
 
@@ -43,23 +42,30 @@ export const getAddressByENSNameIfExists = (store: IEnsSlice, name: string) => {
   );
 };
 
-export const selectENSAvatar = (
-  store: IEnsSlice,
-  address: Address,
-  setAvatar: (value: string | undefined) => void,
-  setIsAvatarExists: (value: boolean | undefined) => void,
-) => {
+export const selectENSAvatar = ({
+  fetchEnsAvatarByAddress,
+  ensData,
+  address,
+  setAvatar,
+  setIsAvatarExists,
+}: {
+  fetchEnsAvatarByAddress: (address: Address, name?: string) => Promise<void>;
+  ensData: Record<`0x${string}`, EnsDataItem>;
+  address: Address;
+  setAvatar: (value: string | undefined) => void;
+  setIsAvatarExists: (value: boolean | undefined) => void;
+}) => {
   const lowercasedAddress = address.toLocaleLowerCase() as Address;
-  const ENSData = store.ensData[lowercasedAddress];
+  const ENSData = ensData[lowercasedAddress];
 
   if (ENSData && ENSData.name) {
-    store.fetchEnsAvatarByAddress(address, ENSData.name).then(() => {
+    fetchEnsAvatarByAddress(address, ENSData.name).then(() => {
       setAvatar(
-        ENSDataExists(store, address, ENSProperty.AVATAR)
-          ? store.ensData[lowercasedAddress].avatar?.url
+        ENSDataExists(ensData, address, ENSProperty.AVATAR)
+          ? ensData[lowercasedAddress].avatar?.url
           : undefined,
       );
-      setIsAvatarExists(store.ensData[lowercasedAddress].avatar?.isExists);
+      setIsAvatarExists(ensData[lowercasedAddress].avatar?.isExists);
     });
   } else {
     setAvatar(undefined);

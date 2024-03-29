@@ -7,6 +7,7 @@ import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import makeBlockie from 'ethereum-blockies-base64';
 import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 import SuccessIcon from '/public/images/icons/check.svg';
 import ErrorIcon from '/public/images/icons/cross.svg';
@@ -40,19 +41,28 @@ export function ConnectWalletButton({
   isAvatarExists,
   representative,
 }: ConnectWalletButtonProps) {
-  const store = useStore();
-  const { walletActivating, activeWallet, walletConnectedTimeLock } = store;
+  const walletActivating = useStore((store) => store.walletActivating);
+  const walletConnectedTimeLock = useStore(
+    (store) => store.walletConnectedTimeLock,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
 
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
-  const [loading, setLoading] = useState(true);
 
   const isActive = activeWallet?.isActive;
   const activeAddress = activeWallet?.address || '';
 
-  const allTransactions = !!activeAddress
-    ? selectAllTransactionsByWallet(store, activeAddress)
-    : [];
+  const allTxsFromStore = useStore((store) =>
+    selectAllTransactionsByWallet(store, activeAddress || zeroAddress),
+  );
+  const pendingTxsFromStore = useStore((store) =>
+    selectPendingTransactionByWallet(store, activeAddress || zeroAddress),
+  );
+
+  const [loading, setLoading] = useState(true);
+
+  const allTransactions = !!activeAddress ? allTxsFromStore : [];
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName
@@ -85,9 +95,7 @@ export function ConnectWalletButton({
   }, [lastConnectedWallet]);
 
   // get all pending tx's from connected wallet
-  const allPendingTransactions = activeAddress
-    ? selectPendingTransactionByWallet(store, activeAddress)
-    : [];
+  const allPendingTransactions = activeAddress ? pendingTxsFromStore : [];
   // filtered pending tx's, if now > tx.timestamp + 30 min, than remove tx from pending array to not show loading spinner in connect wallet button
   const filteredPendingTx = allPendingTransactions.filter(
     (tx) => dayjs().unix() <= dayjs.unix(tx.localTimestamp).unix() + 1800,

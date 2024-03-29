@@ -1,9 +1,9 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
 import React, { useEffect } from 'react';
+import { zeroAddress } from 'viem';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
 import { useStore } from '../../../store';
-import { TransactionUnion } from '../../../transactions/store/transactionsSlice';
 import { BasicModal } from '../../../ui';
 import { appConfig } from '../../../utils/appConfig';
 import { AccountInfoModalContent } from './AccountInfoModalContent';
@@ -29,20 +29,18 @@ export function AccountInfoModal({
   representedAddresses,
   onDisconnectButtonClick,
 }: AccountInfoModalProps) {
-  const store = useStore();
-  const {
-    activeWallet,
-    representative,
-    getCurrentPowers,
-    setIsCreationFeeModalOpen,
-  } = store;
+  const representative = useStore((store) => store.representative);
+  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setIsCreationFeeModalOpen = useStore(
+    (store) => store.setIsCreationFeeModalOpen,
+  );
 
-  const allTransactions = activeWallet
-    ? selectAllTransactionsByWallet<TransactionUnion>(
-        store,
-        activeWallet.address,
-      )
-    : [];
+  const allTxsFromStore = useStore((store) =>
+    selectAllTransactionsByWallet(store, activeWallet?.address || zeroAddress),
+  );
+
+  const allTransactions = activeWallet ? allTxsFromStore : [];
 
   useEffect(() => {
     if (isOpen) {

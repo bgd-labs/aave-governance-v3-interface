@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Address } from 'viem';
 
-import { RootState, useStore } from '../../store';
+import { useStore } from '../../store';
 import { Link } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
@@ -11,7 +11,7 @@ import { texts } from '../../ui/utils/texts';
 import { getAssetName } from '../../utils/getAssetName';
 import { getScanLink } from '../../utils/getScanLink';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
-import { ENSProperty } from '../../web3/store/ensSlice';
+import { EnsDataItem, ENSProperty } from '../../web3/store/ensSlice';
 import { isEnsName } from '../../web3/utils/ensHelpers';
 import { DelegateData, DelegateItem, TxDelegateData } from '../types';
 
@@ -70,17 +70,17 @@ function getFirstText({
 }
 
 function getFormattedAddress({
-  store,
+  ensData,
   address,
 }: {
-  store: RootState;
+  ensData: Record<`0x${string}`, EnsDataItem>;
   address: Address | string;
 }) {
   if (isEnsName(address)) {
     return address;
   } else {
-    if (address && ENSDataExists(store, address, ENSProperty.NAME)) {
-      return store.ensData[address.toLowerCase() as Address].name;
+    if (address && ENSDataExists(ensData, address, ENSProperty.NAME)) {
+      return ensData[address.toLowerCase() as Address].name;
     } else {
       return address;
     }
@@ -151,8 +151,8 @@ export function DelegatedText({
   formDelegateData,
   isBeforeTx,
 }: DelegatedTextProps) {
-  const store = useStore();
-  const { activeWallet } = store;
+  const activeWallet = useStore((store) => store.activeWallet);
+  const ensData = useStore((store) => store.ensData);
   const activeAddress = activeWallet?.address;
 
   const delegatedData: TxDelegateData[] = [];
@@ -230,15 +230,15 @@ export function DelegatedText({
         });
 
         const formattedBothAddresses = getFormattedAddress({
-          store,
+          ensData,
           address: data.bothAddresses || '',
         });
         const formattedVotingToAddress = getFormattedAddress({
-          store,
+          ensData,
           address: data.votingToAddress || '',
         });
         const formattedPropositionToAddress = getFormattedAddress({
-          store,
+          ensData,
           address: data.propositionToAddress || '',
         });
 

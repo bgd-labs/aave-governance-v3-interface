@@ -15,7 +15,9 @@ import { CHAINS } from '../../utils/chains';
 const queryClient = new QueryClient();
 
 export default function WagmiProvider() {
-  const { getImpersonatedAddress } = useStore();
+  const getImpersonatedAddress = useStore(
+    (store) => store.getImpersonatedAddress,
+  );
 
   const config = useMemo(() => {
     return createWagmiConfig({

@@ -43,9 +43,14 @@ export function RepresentingForm({
 }: RepresentingFormProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
-  const store = useStore();
-  const { setRepresentativeAddress, activeWallet, representative, ensData } =
-    store;
+
+  const setRepresentativeAddress = useStore(
+    (store) => store.setRepresentativeAddress,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const ensData = useStore((store) => store.ensData);
+
   const [localAddress, setLocalAddress] = useState(
     isForTest ? testInitialAddress : representative,
   );
@@ -159,7 +164,7 @@ export function RepresentingForm({
                       {localAddress.address === ''
                         ? texts.other.yourself
                         : ENSDataExists(
-                              store,
+                              ensData,
                               localAddress.address,
                               ENSProperty.NAME,
                             )
@@ -252,7 +257,7 @@ export function RepresentingForm({
                           {option.address === ''
                             ? texts.other.yourself
                             : ENSDataExists(
-                                  store,
+                                  ensData,
                                   option.address,
                                   ENSProperty.NAME,
                                 )
