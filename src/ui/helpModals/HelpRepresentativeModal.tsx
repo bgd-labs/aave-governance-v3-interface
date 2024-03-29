@@ -50,13 +50,21 @@ export function HelpRepresentativeModal() {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const {
-    isHelpRepresentativeModalOpen,
-    setIsHelpRepresentativeModalOpen,
-    setIsHelpNavigationModalOpen,
-    setIsHelpDelegateModalOpen,
-    setIsHelpRepresentationModalOpen,
-  } = useStore();
+  const isHelpRepresentativeModalOpen = useStore(
+    (store) => store.isHelpRepresentativeModalOpen,
+  );
+  const setIsHelpRepresentativeModalOpen = useStore(
+    (store) => store.setIsHelpRepresentativeModalOpen,
+  );
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const setIsHelpDelegateModalOpen = useStore(
+    (store) => store.setIsHelpDelegateModalOpen,
+  );
+  const setIsHelpRepresentationModalOpen = useStore(
+    (store) => store.setIsHelpRepresentationModalOpen,
+  );
 
   const [isFirstStepOnMobile, setIsFirstStepOnMobile] = useState(true);
 

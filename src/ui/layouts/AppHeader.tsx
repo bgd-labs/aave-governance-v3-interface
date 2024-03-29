@@ -43,27 +43,27 @@ const headerNavItems = [
 export function AppHeader() {
   const theme = useTheme();
   const path = usePathname();
-  const store = useStore();
 
   const sm = useMediaQuery(media.sm);
   const wrapperRef = useRef(null);
 
-  const {
-    isRendered,
-    setIsHelpModalOpen,
-    setActivePage,
-    activeWallet,
-    checkAppMode,
-    appMode,
-    isModalOpen,
-    isAppBlockedByTerms,
-    isClickedOnStartButtonOnHelpModal,
-    setIsTermModalOpen,
-    setIsRepresentationInfoModalOpen,
-    closeHelpModals,
-  } = store;
-
-  const isRpcHasError = selectIsRpcAppHasErrors(store);
+  const isRendered = useStore((store) => store.isRendered);
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
+  const setActivePage = useStore((store) => store.setActivePage);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const checkAppMode = useStore((store) => store.checkAppMode);
+  const appMode = useStore((store) => store.appMode);
+  const isModalOpen = useStore((store) => store.isModalOpen);
+  const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
+  const isClickedOnStartButtonOnHelpModal = useStore(
+    (store) => store.isClickedOnStartButtonOnHelpModal,
+  );
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const setIsRepresentationInfoModalOpen = useStore(
+    (store) => store.setIsRepresentationInfoModalOpen,
+  );
+  const closeHelpModals = useStore((store) => store.closeHelpModals);
+  const isRpcHasError = useStore((store) => selectIsRpcAppHasErrors(store));
 
   const { scrollDirection } = useScrollDirection();
 

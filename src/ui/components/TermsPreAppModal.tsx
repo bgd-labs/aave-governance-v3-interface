@@ -10,8 +10,11 @@ import { CheckBox } from './CheckBox';
 
 export function TermsPreAppModal() {
   const theme = useTheme();
-  const { isAppBlockedByTerms, setIsTermsAccept, setIsTermModalOpen } =
-    useStore();
+
+  const setIsTermsAccept = useStore((store) => store.setIsTermsAccept);
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
+
   const initialFocusRef = useRef(null);
 
   const [isCheckBoxClicked, setIsCheckBoxClicked] = useState(false);

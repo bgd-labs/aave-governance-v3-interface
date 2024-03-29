@@ -85,7 +85,7 @@ function BoxWith3D({
   css,
   className,
 }: BoxWith3DProps) {
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
   const theme = useTheme();
 
   const contentColorWithRender = isRendered

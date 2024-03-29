@@ -220,7 +220,7 @@ export function BoxWith3D({
   className,
   anySize,
 }: BoxWith3DProps) {
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
   const theme = useTheme();
   const isDisabled = disabled;
 

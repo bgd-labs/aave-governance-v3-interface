@@ -28,18 +28,30 @@ export function HelpVotingModal() {
   const [isFirstStepOnMobile, setIsFirstStepOnMobile] = useState(true);
   const [isFirstStepOnTxMobile, setIsFirstStepOnTxMobile] = useState(true);
 
-  const {
-    isHelpModalClosed,
-    setIsHelpNavigationModalOpen,
-    isHelpVotingModalOpen,
-    setIsHelpVotingModalOpen,
-    setIsHelpWalletModalOpen,
-    setIsHelpStatusesModalOpen,
-    setIsHelpVotingPowerModalOpen,
-    setIsHelpVotingBarsModalOpen,
-    helpProposalData,
-    getHelpProposalData,
-  } = useStore();
+  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const isHelpVotingModalOpen = useStore(
+    (store) => store.isHelpVotingModalOpen,
+  );
+  const setIsHelpVotingModalOpen = useStore(
+    (store) => store.setIsHelpVotingModalOpen,
+  );
+  const setIsHelpWalletModalOpen = useStore(
+    (store) => store.setIsHelpWalletModalOpen,
+  );
+  const setIsHelpStatusesModalOpen = useStore(
+    (store) => store.setIsHelpStatusesModalOpen,
+  );
+  const setIsHelpVotingPowerModalOpen = useStore(
+    (store) => store.setIsHelpVotingPowerModalOpen,
+  );
+  const setIsHelpVotingBarsModalOpen = useStore(
+    (store) => store.setIsHelpVotingBarsModalOpen,
+  );
+  const helpProposalData = useStore((store) => store.helpProposalData);
+  const getHelpProposalData = useStore((store) => store.getHelpProposalData);
 
   useEffect(() => {
     getHelpProposalData();

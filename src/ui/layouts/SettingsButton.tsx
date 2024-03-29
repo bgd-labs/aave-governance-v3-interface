@@ -18,10 +18,10 @@ import { AppModeSwitcher } from './AppModeSwitcher';
 
 export function SettingsButton() {
   const theme = useTheme();
-  const store = useStore();
-  const { setIsTermModalOpen, rpcAppErrors } = store;
 
-  const isRpcHasError = selectIsRpcAppHasErrors(store);
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const rpcAppErrors = useStore((store) => store.rpcAppErrors);
+  const isRpcHasError = useStore((store) => selectIsRpcAppHasErrors(store));
 
   const filteredAppErrors = Object.values(rpcAppErrors).filter(
     (error) => error.error,

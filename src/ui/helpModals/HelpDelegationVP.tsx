@@ -12,11 +12,15 @@ import { HelpModalText } from './HelpModalText';
 export function HelpDelegationVP() {
   const theme = useTheme();
 
-  const {
-    isHelpDelegationVotingPowerModalOpen,
-    setIsHelpDelegationVotingPowerModalOpen,
-    setIsHelpDelegateModalOpen,
-  } = useStore();
+  const isHelpDelegationVotingPowerModalOpen = useStore(
+    (store) => store.isHelpDelegationVotingPowerModalOpen,
+  );
+  const setIsHelpDelegationVotingPowerModalOpen = useStore(
+    (store) => store.setIsHelpDelegationVotingPowerModalOpen,
+  );
+  const setIsHelpDelegateModalOpen = useStore(
+    (store) => store.setIsHelpDelegateModalOpen,
+  );
 
   const handleClick = () => {
     setIsHelpDelegationVotingPowerModalOpen(false);

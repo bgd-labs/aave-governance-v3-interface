@@ -58,12 +58,18 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
     finishedTimestamp: dayjs().unix() + 60 * 8,
   };
 
-  const {
-    isHelpStatusesModalOpen,
-    setIsHelpStatusesModalOpen,
-    setIsHelpNavigationModalOpen,
-    setIsHelpVotingModalOpen,
-  } = useStore();
+  const isHelpStatusesModalOpen = useStore(
+    (store) => store.isHelpStatusesModalOpen,
+  );
+  const setIsHelpStatusesModalOpen = useStore(
+    (store) => store.setIsHelpStatusesModalOpen,
+  );
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const setIsHelpVotingModalOpen = useStore(
+    (store) => store.setIsHelpVotingModalOpen,
+  );
 
   const [now, setNow] = useState(dayjs().unix());
   const [currentStep, setCurrentStep] = useState(0);

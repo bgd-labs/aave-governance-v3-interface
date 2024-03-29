@@ -12,7 +12,7 @@ export function CustomSkeleton({
   variant = 'default',
   ...rest
 }: CustomSkeletonProps) {
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
 
   return (
     <Box

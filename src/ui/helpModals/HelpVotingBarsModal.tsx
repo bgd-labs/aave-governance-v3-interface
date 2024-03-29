@@ -12,12 +12,16 @@ import { HelpModalText } from './HelpModalText';
 export function HelpVotingBarsModal() {
   const theme = useTheme();
 
-  const {
-    isHelpVotingBarsModalOpen,
-    setIsHelpVotingBarsModalOpen,
-    setIsHelpVotingModalOpen,
-  } = useStore();
-  const config = useStore((state) => selectConfigByAccessLevel(state, 1));
+  const isHelpVotingBarsModalOpen = useStore(
+    (store) => store.isHelpVotingBarsModalOpen,
+  );
+  const setIsHelpVotingBarsModalOpen = useStore(
+    (store) => store.setIsHelpVotingBarsModalOpen,
+  );
+  const setIsHelpVotingModalOpen = useStore(
+    (store) => store.setIsHelpVotingModalOpen,
+  );
+  const config = useStore((store) => selectConfigByAccessLevel(store, 1));
 
   if (!config) return null;
 

@@ -28,7 +28,8 @@ export function BackButton3D({
   alwaysVisible,
 }: BackButton3DProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+
+  const isRendered = useStore((store) => store.isRendered);
 
   if (typeof window !== 'undefined') {
     if (window.history.length <= 1 && !alwaysVisible) {

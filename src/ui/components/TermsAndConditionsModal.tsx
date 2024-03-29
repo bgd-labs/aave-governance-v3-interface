@@ -25,7 +25,8 @@ const Text = ({
 };
 
 export function TermsAndConditionsModal() {
-  const { isTermModalOpen, setIsTermModalOpen } = useStore();
+  const isTermModalOpen = useStore((store) => store.isTermModalOpen);
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
   const initialFocusRef = useRef(null);
 
   return (

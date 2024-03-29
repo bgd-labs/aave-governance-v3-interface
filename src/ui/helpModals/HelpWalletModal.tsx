@@ -27,17 +27,29 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const {
-    isHelpWalletModalOpen,
-    setIsHelpWalletModalOpen,
-    setIsHelpDelegateModalOpen,
-    isHelpModalClosed,
-    setIsHelpVotingModalOpen,
-    setIsHelpNavigationModalOpen,
-    resetTestTransactionsPool,
-    addTestTransaction,
-    setIsHelpRepresentationModalOpen,
-  } = useStore();
+  const isHelpWalletModalOpen = useStore(
+    (store) => store.isHelpWalletModalOpen,
+  );
+  const setIsHelpWalletModalOpen = useStore(
+    (store) => store.setIsHelpWalletModalOpen,
+  );
+  const setIsHelpDelegateModalOpen = useStore(
+    (store) => store.setIsHelpDelegateModalOpen,
+  );
+  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
+  const setIsHelpVotingModalOpen = useStore(
+    (store) => store.setIsHelpVotingModalOpen,
+  );
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const resetTestTransactionsPool = useStore(
+    (store) => store.resetTestTransactionsPool,
+  );
+  const addTestTransaction = useStore((store) => store.addTestTransaction);
+  const setIsHelpRepresentationModalOpen = useStore(
+    (store) => store.setIsHelpRepresentationModalOpen,
+  );
 
   const allTestTransaction = useStore((state) =>
     selectAllTestTransactions(state),

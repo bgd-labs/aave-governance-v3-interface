@@ -30,7 +30,8 @@ export function TableText({
   errorMessage,
   withoutHover,
 }: TableTextProps) {
-  const store = useStore();
+  const activeWallet = useStore((store) => store.activeWallet);
+
   const sm = useMediaQuery(media.sm);
   const [isClick, setIsClick] = useState(false);
 
@@ -78,7 +79,7 @@ export function TableText({
       {value &&
       isAddress(value) &&
       topText &&
-      (value === zeroAddress || value === store.activeWallet?.address) ? (
+      (value === zeroAddress || value === activeWallet?.address) ? (
         topText
       ) : (
         <>

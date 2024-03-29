@@ -19,15 +19,22 @@ import { texts } from '../utils/texts';
 export function CreateProposalPage() {
   const theme = useTheme();
   const router = useRouter();
-  const {
-    activeWallet,
-    setConnectWalletModalOpen,
-    appMode,
-    getDetailedProposalsData,
-    totalProposalCount,
-    getTotalPayloadsCount,
-    getTotalProposalCount,
-  } = useStore();
+
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setConnectWalletModalOpen = useStore(
+    (store) => store.setConnectWalletModalOpen,
+  );
+  const appMode = useStore((store) => store.appMode);
+  const getDetailedProposalsData = useStore(
+    (store) => store.getDetailedProposalsData,
+  );
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const getTotalPayloadsCount = useStore(
+    (store) => store.getTotalPayloadsCount,
+  );
+  const getTotalProposalCount = useStore(
+    (store) => store.getTotalProposalCount,
+  );
 
   useEffect(() => {
     getTotalProposalCount();

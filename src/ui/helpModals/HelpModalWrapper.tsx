@@ -19,7 +19,8 @@ export function HelpModalWrapper({
   setIsOpen,
   onBackButtonClick,
 }: HelpModalWrapperProps) {
-  const { isHelpModalOpen, setIsHelpModalOpen } = useStore();
+  const isHelpModalOpen = useStore((store) => store.isHelpModalOpen);
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
 
   return (
     <BasicModal

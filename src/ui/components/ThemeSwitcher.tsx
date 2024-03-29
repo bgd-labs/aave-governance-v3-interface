@@ -12,14 +12,15 @@ import { IconBox } from '../primitives/IconBox';
 export function ThemeSwitcher() {
   const themeMUI = useTheme();
   const { theme, setTheme } = useThemeNext();
-  const store = useStore();
+
+  const setIsThemeSwitched = useStore((store) => store.setIsThemeSwitched);
 
   return (
     <Box
       component="button"
       type="button"
       onClick={() => {
-        store.setIsThemeSwitched();
+        setIsThemeSwitched();
         setTimeout(() => setTheme(theme === 'light' ? 'dark' : 'light'), 10);
       }}
       sx={{

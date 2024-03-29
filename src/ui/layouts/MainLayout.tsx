@@ -14,11 +14,16 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  const store = useStore();
   const theme = useTheme();
 
+  const setGovCoreConfigs = useStore((store) => store.setGovCoreConfigs);
+  const isThemeSwitched = useStore((store) => store.isThemeSwitched);
+  const loadingListCache = useStore((store) => store.loadingListCache);
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+
   useEffect(() => {
-    store.setGovCoreConfigs();
+    setGovCoreConfigs();
   }, []);
 
   return (
@@ -35,9 +40,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       <NoSSR>
         <Box
           sx={{
-            opacity: store.isThemeSwitched ? 0 : 1,
+            opacity: isThemeSwitched ? 0 : 1,
             display:
-              theme.palette.mode === 'dark' && !store.isThemeSwitched
+              theme.palette.mode === 'dark' && !isThemeSwitched
                 ? 'block'
                 : 'none',
             position: 'fixed',
@@ -54,9 +59,9 @@ export function MainLayout({ children }: MainLayoutProps) {
         />
         <Box
           sx={{
-            opacity: store.isThemeSwitched ? 0 : 1,
+            opacity: isThemeSwitched ? 0 : 1,
             display:
-              theme.palette.mode !== 'dark' && !store.isThemeSwitched
+              theme.palette.mode !== 'dark' && !isThemeSwitched
                 ? 'block'
                 : 'none',
             position: 'fixed',
@@ -73,12 +78,11 @@ export function MainLayout({ children }: MainLayoutProps) {
       <AppHeader />
 
       <Box component="main" sx={{ position: 'relative', zIndex: 3 }}>
-        {store.loadingListCache && !isForIPFS ? (
+        {loadingListCache && !isForIPFS ? (
           children
         ) : (
           <>
-            {!!store.configs.length &&
-            store.contractsConstants.expirationTime > 0 ? (
+            {!!configs.length && contractsConstants.expirationTime > 0 ? (
               children
             ) : (
               <AppLoading />

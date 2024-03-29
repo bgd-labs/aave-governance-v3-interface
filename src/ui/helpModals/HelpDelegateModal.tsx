@@ -38,19 +38,31 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
   const [isDelegateChangedView, setIsDelegateChangedView] = useState(false);
   const [formDelegateData, setFormDelegateData] = useState<DelegateData[]>([]);
 
-  const {
-    isHelpModalClosed,
-    isHelpDelegateModalOpen,
-    setIsHelpDelegateModalOpen,
-    setIsHelpNavigationModalOpen,
-    setIsHelpWalletModalOpen,
-    helpDelegateData,
-    getHelpDelegateData,
-    setIsHelpDelegationVotingPowerModalOpen,
-    setIsHelpDelegationPropositionPowerModalOpen,
-    setHelpDelegateData,
-    setIsHelpRepresentativeModalOpen,
-  } = useStore();
+  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
+  const isHelpDelegateModalOpen = useStore(
+    (store) => store.isHelpDelegateModalOpen,
+  );
+  const setIsHelpDelegateModalOpen = useStore(
+    (store) => store.setIsHelpDelegateModalOpen,
+  );
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const setIsHelpWalletModalOpen = useStore(
+    (store) => store.setIsHelpWalletModalOpen,
+  );
+  const helpDelegateData = useStore((store) => store.helpDelegateData);
+  const getHelpDelegateData = useStore((store) => store.getHelpDelegateData);
+  const setIsHelpDelegationVotingPowerModalOpen = useStore(
+    (store) => store.setIsHelpDelegationVotingPowerModalOpen,
+  );
+  const setIsHelpDelegationPropositionPowerModalOpen = useStore(
+    (store) => store.setIsHelpDelegationPropositionPowerModalOpen,
+  );
+  const setHelpDelegateData = useStore((store) => store.setHelpDelegateData);
+  const setIsHelpRepresentativeModalOpen = useStore(
+    (store) => store.setIsHelpRepresentativeModalOpen,
+  );
 
   useEffect(() => {
     getHelpDelegateData();

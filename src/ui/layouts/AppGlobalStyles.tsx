@@ -17,7 +17,7 @@ export function AppGlobalStyles({
   children: ReactNode;
   emotionCache?: EmotionCache;
 }) {
-  const { setIsRendered } = useStore();
+  const setIsRendered = useStore((store) => store.setIsRendered);
   useEffect(() => setIsRendered(), []);
 
   return (
