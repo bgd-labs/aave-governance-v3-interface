@@ -27,23 +27,48 @@ type FormProperties = {
 };
 
 export function CreateProposalForm() {
-  const store = useStore();
-  const {
-    createProposal,
-    totalPayloadsCount,
-    totalProposalCount,
-    isCreateProposalModalOpen,
-    setIsCreateProposalModalOpen,
-  } = store;
+  const createProposal = useStore((store) => store.createProposal);
+  const totalPayloadsCount = useStore((store) => store.totalPayloadsCount);
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const isCreateProposalModalOpen = useStore(
+    (store) => store.isCreateProposalModalOpen,
+  );
+  const setIsCreateProposalModalOpen = useStore(
+    (store) => store.setIsCreateProposalModalOpen,
+  );
+  const detailedProposalsData = useStore(
+    (store) => store.detailedProposalsData,
+  );
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
+    (store) => store.representativeLoading,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const blockHashBalanceLoadings = useStore(
+    (store) => store.blockHashBalanceLoadings,
+  );
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const availableIdsInit = appConfig.payloadsControllerChainIds
     .map((chainId) => {
       return appConfig.payloadsControllerConfig[chainId].contractAddresses.map(
         (controller) => {
-          const availablePayloadsIds = selectAvailablePayloadsIdsByChainId(
-            store,
-            controller,
-          );
+          const availablePayloadsIds = selectAvailablePayloadsIdsByChainId({
+            totalProposalCount,
+            totalPayloadsCount,
+            payloadsController: controller,
+            detailedProposalsData,
+            configs,
+            contractsConstants,
+            representativeLoading,
+            activeWallet,
+            representative,
+            blockHashBalanceLoadings,
+            blockHashBalance,
+            proposalId: 0,
+          });
           return {
             [controller]: availablePayloadsIds,
           };
@@ -128,10 +153,20 @@ export function CreateProposalForm() {
     const selectedIds = Object.values(selectedPayloads)
       .filter((payload) => payload.payloadsController === payloadsController)
       .map((payload) => payload.id);
-    const availablePayloadsIds = selectAvailablePayloadsIdsByChainId(
-      store,
+    const availablePayloadsIds = selectAvailablePayloadsIdsByChainId({
+      totalProposalCount,
+      totalPayloadsCount,
       payloadsController,
-    );
+      detailedProposalsData,
+      configs,
+      contractsConstants,
+      representativeLoading,
+      activeWallet,
+      representative,
+      blockHashBalanceLoadings,
+      blockHashBalance,
+      proposalId: 0,
+    });
     setAvailableIds({
       [payloadsController]: availablePayloadsIds.filter(
         (id) => selectedIds.indexOf(id) === -1,
@@ -149,10 +184,20 @@ export function CreateProposalForm() {
             .filter((payload) => payload.payloadsController === controller)
             .map((payload) => payload.id);
 
-          const availablePayloadsIds = selectAvailablePayloadsIdsByChainId(
-            store,
-            controller,
-          );
+          const availablePayloadsIds = selectAvailablePayloadsIdsByChainId({
+            totalProposalCount,
+            totalPayloadsCount,
+            payloadsController: controller,
+            detailedProposalsData,
+            configs,
+            contractsConstants,
+            representativeLoading,
+            activeWallet,
+            representative,
+            blockHashBalanceLoadings,
+            blockHashBalance,
+            proposalId: 0,
+          });
           return {
             [controller]: availablePayloadsIds.filter(
               (id) => selectedIds.indexOf(id) === -1,

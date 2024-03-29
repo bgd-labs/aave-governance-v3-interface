@@ -84,15 +84,22 @@ export function DelegateTableItemAddress({
   addressTo,
   forHelp,
 }: DelegateTableItemAddressProps) {
-  const store = useStore();
-  const {
-    fetchEnsNameByAddress,
-    fetchAddressByEnsName,
-    ensData,
-    addDelegationIncorrectToField,
-    removeDelegationIncorrectToField,
-    clearDelegationIncorrectToFields,
-  } = store;
+  const fetchEnsNameByAddress = useStore(
+    (store) => store.fetchEnsNameByAddress,
+  );
+  const fetchAddressByEnsName = useStore(
+    (store) => store.fetchAddressByEnsName,
+  );
+  const ensData = useStore((store) => store.ensData);
+  const addDelegationIncorrectToField = useStore(
+    (store) => store.addDelegationIncorrectToField,
+  );
+  const removeDelegationIncorrectToField = useStore(
+    (store) => store.removeDelegationIncorrectToField,
+  );
+  const clearDelegationIncorrectToFields = useStore(
+    (store) => store.clearDelegationIncorrectToFields,
+  );
 
   const [hoveredAddressTo, setHoveredAddressTo] = React.useState<
     string | undefined
@@ -124,7 +131,10 @@ export function DelegateTableItemAddress({
           );
         });
       } else if (isEnsName(address)) {
-        const addressFromEnsName = getAddressByENSNameIfExists(store, address);
+        const addressFromEnsName = getAddressByENSNameIfExists(
+          ensData,
+          address,
+        );
         setShownAddress(address);
         if (addressFromEnsName) {
           setFormattedAddress(addressFromEnsName);

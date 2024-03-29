@@ -97,7 +97,11 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
     const lowercasedAddress = address.toLocaleLowerCase() as Address;
     // check if already exist or pending
     if (
-      ENSDataHasBeenFetched(get(), lowercasedAddress, ENSProperty.NAME) ||
+      ENSDataHasBeenFetched(
+        get().ensData,
+        lowercasedAddress,
+        ENSProperty.NAME,
+      ) ||
       get().addressesNameInProgress[lowercasedAddress]
     ) {
       return;
@@ -123,7 +127,11 @@ export const createEnsSlice: StoreSlice<IEnsSlice> = (set, get) => ({
     const lowercasedAddress = address.toLocaleLowerCase() as Address;
     // check if already exist or pending
     if (
-      ENSDataHasBeenFetched(get(), lowercasedAddress, ENSProperty.AVATAR) ||
+      ENSDataHasBeenFetched(
+        get().ensData,
+        lowercasedAddress,
+        ENSProperty.AVATAR,
+      ) ||
       get().addressesAvatarInProgress[lowercasedAddress] ||
       !name
     ) {

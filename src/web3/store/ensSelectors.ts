@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { Address, isAddress } from 'viem';
 
-import { RootState } from '../../store';
 import { ENS_TTL, isEnsName } from '../utils/ensHelpers';
 import { EnsDataItem, ENSProperty, IEnsSlice } from './ensSlice';
 
@@ -17,28 +16,30 @@ export const ENSDataExists = (
 };
 
 export const ENSDataHasBeenFetched = (
-  store: IEnsSlice,
+  ensData: Record<`0x${string}`, EnsDataItem>,
   address: Address,
   property: ENSProperty,
 ) => {
   const currentTime = dayjs().unix();
-  const fetchTime = store.ensData[address]?.fetched?.[property];
+  const fetchTime = ensData[address]?.fetched?.[property];
   if (!fetchTime) return false;
 
   return currentTime - fetchTime <= ENS_TTL;
 };
 
 export const checkIsGetAddressByENSNamePending = (
-  store: IEnsSlice,
+  addressesNameInProgress: Record<string, boolean>,
   name: string,
 ) => {
-  return store.addressesNameInProgress[name] || false;
+  return addressesNameInProgress[name] || false;
 };
 
-export const getAddressByENSNameIfExists = (store: IEnsSlice, name: string) => {
-  return Object.keys(store.ensData).find(
-    (address) =>
-      store.ensData[address.toLocaleLowerCase() as Address].name === name,
+export const getAddressByENSNameIfExists = (
+  ensData: Record<`0x${string}`, EnsDataItem>,
+  name: string,
+) => {
+  return Object.keys(ensData).find(
+    (address) => ensData[address.toLocaleLowerCase() as Address].name === name,
   );
 };
 
@@ -101,7 +102,7 @@ export const selectInputToAddress = async ({
 };
 
 export const checkIfAddressENS = (
-  store: RootState,
+  ensData: Record<`0x${string}`, EnsDataItem>,
   activeWalletAddress: Address,
   address?: Address | string,
 ) => {
@@ -111,7 +112,7 @@ export const checkIfAddressENS = (
   ) {
     return '';
   } else if (isEnsName(address)) {
-    const addressFromENS = getAddressByENSNameIfExists(store, address);
+    const addressFromENS = getAddressByENSNameIfExists(ensData, address);
     if (addressFromENS) {
       if (addressFromENS?.toLowerCase() === activeWalletAddress.toLowerCase()) {
         return '';

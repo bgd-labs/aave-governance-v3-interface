@@ -70,15 +70,35 @@ export function VoteModal({
   const setIsRepresentationInfoModalOpen = useStore(
     (store) => store.setIsRepresentationInfoModalOpen,
   );
+  const detailedProposalsData = useStore(
+    (store) => store.detailedProposalsData,
+  );
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
+    (store) => store.representativeLoading,
+  );
+  const blockHashBalanceLoadings = useStore(
+    (store) => store.blockHashBalanceLoadings,
+  );
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const [localVotingTokens, setLocalVotingTokens] = useState<Balance[]>([]);
   const [isEditVotingTokensOpen, setEditVotingTokens] = useState(false);
   const [isVotingModesInfoOpen, setIsVotingModesInfoOpen] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
 
-  const proposalData = useStore((store) =>
-    getProposalDataById(store, proposalId),
-  );
+  const proposalData = getProposalDataById({
+    detailedProposalsData,
+    configs,
+    contractsConstants,
+    representativeLoading,
+    activeWallet,
+    representative,
+    blockHashBalanceLoadings,
+    blockHashBalance,
+    proposalId,
+  });
 
   useEffect(() => {
     if (proposalData) {

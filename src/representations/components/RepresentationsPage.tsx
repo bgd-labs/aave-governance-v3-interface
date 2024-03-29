@@ -33,19 +33,34 @@ export function RepresentationsPage() {
   const theme = useTheme();
   const router = useRouter();
 
-  const store = useStore();
-  const {
-    setConnectWalletModalOpen,
-    activeWallet,
-    setIsRepresentationsChangedView,
-    isRepresentationsChangedView,
-    representationData,
-    updateRepresentatives,
-    isRepresentationsModalOpen,
-    setRepresentationsModalOpen,
-    resetL1Balances,
-    incorrectRepresentationFields,
-  } = store;
+  const setConnectWalletModalOpen = useStore(
+    (store) => store.setConnectWalletModalOpen,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const addressesNameInProgress = useStore(
+    (store) => store.addressesNameInProgress,
+  );
+  const ensData = useStore((store) => store.ensData);
+  const setIsRepresentationsChangedView = useStore(
+    (store) => store.setIsRepresentationsChangedView,
+  );
+  const isRepresentationsChangedView = useStore(
+    (store) => store.isRepresentationsChangedView,
+  );
+  const representationData = useStore((store) => store.representationData);
+  const updateRepresentatives = useStore(
+    (store) => store.updateRepresentatives,
+  );
+  const isRepresentationsModalOpen = useStore(
+    (store) => store.isRepresentationsModalOpen,
+  );
+  const setRepresentationsModalOpen = useStore(
+    (store) => store.setRepresentationsModalOpen,
+  );
+  const resetL1Balances = useStore((store) => store.resetL1Balances);
+  const incorrectRepresentationFields = useStore(
+    (store) => store.incorrectRepresentationFields,
+  );
 
   const [loadingData, setLoadingData] = useState(true);
   const [formData, setFormData] = useState<RepresentationFormData[]>([]);
@@ -180,7 +195,7 @@ export function RepresentationsPage() {
                     incorrectRepresentationFields.length > 0 ||
                     formData.some((data) =>
                       checkIsGetAddressByENSNamePending(
-                        store,
+                        addressesNameInProgress,
                         data.representative,
                       ),
                     )
@@ -223,7 +238,7 @@ export function RepresentationsPage() {
                             return {
                               chainId: data.chainId,
                               representative: checkIfAddressENS(
-                                store,
+                                ensData,
                                 activeWallet.address,
                                 data.representative,
                               ),
@@ -233,7 +248,7 @@ export function RepresentationsPage() {
                             return {
                               chainId: data.chainId,
                               representative: checkIfAddressENS(
-                                store,
+                                ensData,
                                 activeWallet.address,
                                 data.representative,
                               ),

@@ -52,7 +52,9 @@ interface VotersModalProps {
 }
 
 function ListItemAddress({ vote }: { vote: VotersData }) {
-  const { activeWallet, representative } = useStore();
+  const representative = useStore((store) => store.representative);
+  const activeWallet = useStore((store) => store.activeWallet);
+
   const sm = useMediaQuery(media.sm);
 
   return (

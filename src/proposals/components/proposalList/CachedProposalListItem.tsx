@@ -16,7 +16,8 @@ export function CachedProposalListItem({
   proposalData,
 }: CachedProposalListItemProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+
+  const isRendered = useStore((state) => state.isRendered);
   const proposal = proposalData.proposal;
 
   const [isClicked, setIsClicked] = useState(false);

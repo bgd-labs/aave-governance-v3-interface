@@ -27,7 +27,7 @@ interface TimelineProps {
 
 export function Timeline({ proposal, loading }: TimelineProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
 
   const now = dayjs().unix();
 

@@ -30,14 +30,18 @@ type FormProperties = {
 };
 
 export function CreatePayloadForm() {
-  const {
-    createPayload,
-    initialPayloadsCount,
-    getTotalPayloadsCount,
-    isCreatePayloadModalOpen,
-    setIsCreatePayloadModalOpen,
-    configs,
-  } = useStore();
+  const createPayload = useStore((store) => store.createPayload);
+  const initialPayloadsCount = useStore((store) => store.initialPayloadsCount);
+  const getTotalPayloadsCount = useStore(
+    (store) => store.getTotalPayloadsCount,
+  );
+  const isCreatePayloadModalOpen = useStore(
+    (store) => store.isCreatePayloadModalOpen,
+  );
+  const setIsCreatePayloadModalOpen = useStore(
+    (store) => store.setIsCreatePayloadModalOpen,
+  );
+  const configs = useStore((store) => store.configs);
 
   const defaultPayloadsController =
     appConfig.payloadsControllerConfig[appConfig.payloadsControllerChainIds[0]]

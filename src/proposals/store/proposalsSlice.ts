@@ -854,7 +854,7 @@ export const createProposalsSlice: StoreSlice<
           get().contractsConstants.expirationTime > 0
         ) {
           const proposalConfig = selectConfigByAccessLevel(
-            get(),
+            get().configs,
             proposalData.accessLevel,
           );
 
@@ -1004,8 +1004,8 @@ export const createProposalsSlice: StoreSlice<
     );
 
     const topVotersByProposalIdWithENS = await Promise.all(
-      selectVotersByProposalId(get(), proposalId)
-        .voters.sort((a, b) => b.votingPower - a.votingPower)
+      selectVotersByProposalId(get().voters, proposalId)
+        .votersLocal.sort((a, b) => b.votingPower - a.votingPower)
         .slice(0, 5)
         .map(async (vote) => {
           if (vote.ensName) {

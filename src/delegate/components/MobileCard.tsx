@@ -24,7 +24,7 @@ export function MobileCard({
   forHelp,
 }: TableItemProps) {
   const theme = useTheme();
-  const { delegateDataLoading } = useStore();
+  const delegateDataLoading = useStore((store) => store.delegateDataLoading);
 
   const { formVotingToAddress, formPropositionToAddress } = getFormDelegateData(
     {

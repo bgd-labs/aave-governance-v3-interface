@@ -47,7 +47,9 @@ export function TimelineContent({
 }: TimelineContentProps) {
   const theme = useTheme();
   const mobileScrollingWrapper = useRef(null);
-  const { setIsProposalHistoryOpen } = useStore();
+  const setIsProposalHistoryOpen = useStore(
+    (store) => store.setIsProposalHistoryOpen,
+  );
   const isWrapperWithScroll = useMediaQuery('(max-width: 900px)');
 
   const now = dayjs().unix();

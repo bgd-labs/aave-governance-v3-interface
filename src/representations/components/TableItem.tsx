@@ -31,7 +31,11 @@ export function TableItem({
   forHelp,
 }: TableItemProps) {
   const theme = useTheme();
-  const { representationDataLoading } = useStore();
+
+  const representationDataLoading = useStore(
+    (store) => store.representationDataLoading,
+  );
+
   const formRepresentativeAddress = getFormRepresentationsData({
     chainId: chainId || 0,
     representativeAddress,

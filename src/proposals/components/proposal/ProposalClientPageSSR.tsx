@@ -46,28 +46,34 @@ export function ProposalClientPageSSR({
   cachedProposalEvents,
 }: ProposalClientPageSSRProps) {
   const id = Number(idSSR);
-  const store = useStore();
+  const setSSRGovCoreConfigs = useStore((store) => store.setSSRGovCoreConfigs);
+  const setTotalProposalCount = useStore(
+    (store) => store.setTotalProposalCount,
+  );
+  const cachedProposalsIds = useStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useStore(
+    (store) => store.setCachedProposalsIds,
+  );
+  const setIpfsData = useStore((store) => store.setIpfsData);
 
   useEffect(() => {
-    store.setSSRGovCoreConfigs(govCoreConfigs, contractsConstants);
-    store.setTotalProposalCount(proposalCount);
+    setSSRGovCoreConfigs(govCoreConfigs, contractsConstants);
+    setTotalProposalCount(proposalCount);
   }, []);
 
   useEffect(() => {
     if (
-      !store.cachedProposalsIds.length ||
-      store.cachedProposalsIds.length <
+      !cachedProposalsIds.length ||
+      cachedProposalsIds.length <
         (cachedProposalsIdsData?.cachedProposalsIds.length || 0)
     ) {
-      store.setCachedProposalsIds(
-        cachedProposalsIdsData?.cachedProposalsIds || [],
-      );
+      setCachedProposalsIds(cachedProposalsIdsData?.cachedProposalsIds || []);
     }
   }, []);
 
   useEffect(() => {
     if (ipfsDataSSR) {
-      store.setIpfsData(ipfsDataSSR.originalIpfsHash, ipfsDataSSR);
+      setIpfsData(ipfsDataSSR.originalIpfsHash, ipfsDataSSR);
     }
   }, [ipfsDataSSR]);
 

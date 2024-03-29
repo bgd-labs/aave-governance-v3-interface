@@ -40,19 +40,28 @@ export function DelegatePage() {
   const theme = useTheme();
   const router = useRouter();
 
-  const store = useStore();
-  const {
-    activeWallet,
-    delegateData,
-    getDelegateData,
-    isDelegateModalOpen,
-    setDelegateModalOpen,
-    setConnectWalletModalOpen,
-    isDelegateChangedView,
-    setIsDelegateChangedView,
-    delegate,
-    incorrectDelegationToFields,
-  } = store;
+  const activeWallet = useStore((store) => store.activeWallet);
+  const ensData = useStore((store) => store.ensData);
+  const addressesNameInProgress = useStore(
+    (store) => store.addressesNameInProgress,
+  );
+  const delegateData = useStore((store) => store.delegateData);
+  const getDelegateData = useStore((store) => store.getDelegateData);
+  const isDelegateModalOpen = useStore((store) => store.isDelegateModalOpen);
+  const setDelegateModalOpen = useStore((store) => store.setDelegateModalOpen);
+  const setConnectWalletModalOpen = useStore(
+    (store) => store.setConnectWalletModalOpen,
+  );
+  const isDelegateChangedView = useStore(
+    (store) => store.isDelegateChangedView,
+  );
+  const setIsDelegateChangedView = useStore(
+    (store) => store.setIsDelegateChangedView,
+  );
+  const delegate = useStore((store) => store.delegate);
+  const incorrectDelegationToFields = useStore(
+    (store) => store.incorrectDelegationToFields,
+  );
 
   const [isEdit, setIsEdit] = useState(false);
   const [formDelegateData, setFormDelegateData] = useState<DelegateData[]>([]);
@@ -119,12 +128,12 @@ export function DelegatePage() {
       return {
         underlyingAsset: data.underlyingAsset,
         votingToAddress: checkIfAddressENS(
-          store,
+          ensData,
           activeWallet?.address || zeroAddress,
           data.votingToAddress,
         ),
         propositionToAddress: checkIfAddressENS(
-          store,
+          ensData,
           activeWallet?.address || zeroAddress,
           data.propositionToAddress,
         ),
@@ -252,11 +261,11 @@ export function DelegatePage() {
                     formDelegateData.some(
                       (data) =>
                         checkIsGetAddressByENSNamePending(
-                          store,
+                          addressesNameInProgress,
                           data.votingToAddress,
                         ) ||
                         checkIsGetAddressByENSNamePending(
-                          store,
+                          addressesNameInProgress,
                           data.propositionToAddress,
                         ),
                     )
@@ -314,12 +323,12 @@ export function DelegatePage() {
                             return {
                               underlyingAsset: data.underlyingAsset,
                               votingToAddress: checkIfAddressENS(
-                                store,
+                                ensData,
                                 activeWallet.address,
                                 data.votingToAddress,
                               ),
                               propositionToAddress: checkIfAddressENS(
-                                store,
+                                ensData,
                                 activeWallet.address,
                                 data.propositionToAddress,
                               ),

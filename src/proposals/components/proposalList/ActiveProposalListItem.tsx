@@ -38,7 +38,9 @@ export function ActiveProposalListItem({
   isForHelpModal,
 }: ActiveProposalListItemProps) {
   const theme = useTheme();
-  const { isRendered, appClients } = useStore();
+
+  const isRendered = useStore((state) => state.isRendered);
+  const appClients = useStore((state) => state.appClients);
   let activeWallet = useStore((state) => state.activeWallet);
 
   const [isClicked, setIsClicked] = useState(false);

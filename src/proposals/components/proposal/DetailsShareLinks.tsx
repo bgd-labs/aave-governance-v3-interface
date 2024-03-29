@@ -35,7 +35,7 @@ export function DetailsShareLinks({
   ipfsError,
   forCreate,
 }: DetailsShareLinksProps) {
-  const store = useStore();
+  const isRendered = useStore((store) => store.isRendered);
   const sm = useMediaQuery(media.sm);
 
   if (!ipfs && !ipfsError)
@@ -58,7 +58,7 @@ export function DetailsShareLinks({
 
   if (!ipfs && ipfsError) return null;
 
-  if (!store.isRendered) {
+  if (!isRendered) {
     return (
       <>
         <Box

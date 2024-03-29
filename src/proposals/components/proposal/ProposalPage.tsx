@@ -50,29 +50,44 @@ export function ProposalPage({
 }: ProposalPageProps) {
   const theme = useTheme();
   const router = useRouter();
-  const store = useStore();
-  const {
-    getProposalCreatorBalance,
-    creatorBalance,
-    isVoteModalOpen,
-    setIsVoteModalOpen,
-    getVoters,
-    startVotersPolling,
-    stopVotersPolling,
-    isProposalHistoryModalOpen,
-    setIsProposalHistoryOpen,
-    isActivateVotingOnVotingMachineModalOpen,
-    setIsActivateVotingOnVotingMachineModalOpen,
-    isExecutePayloadModalOpen,
-    setExecutePayloadModalOpen,
-    detailedProposalsDataLoadings,
-    getVotersLoading,
-  } = store;
+
+  const getProposalCreatorBalance = useStore(
+    (store) => store.getProposalCreatorBalance,
+  );
+  const creatorBalance = useStore((store) => store.creatorBalance);
+  const isVoteModalOpen = useStore((store) => store.isVoteModalOpen);
+  const setIsVoteModalOpen = useStore((store) => store.setIsVoteModalOpen);
+  const getVoters = useStore((store) => store.getVoters);
+  const startVotersPolling = useStore((store) => store.startVotersPolling);
+  const stopVotersPolling = useStore((store) => store.stopVotersPolling);
+  const isProposalHistoryModalOpen = useStore(
+    (store) => store.isProposalHistoryModalOpen,
+  );
+  const setIsProposalHistoryOpen = useStore(
+    (store) => store.setIsProposalHistoryOpen,
+  );
+  const isActivateVotingOnVotingMachineModalOpen = useStore(
+    (store) => store.isActivateVotingOnVotingMachineModalOpen,
+  );
+  const setIsActivateVotingOnVotingMachineModalOpen = useStore(
+    (store) => store.setIsActivateVotingOnVotingMachineModalOpen,
+  );
+  const isExecutePayloadModalOpen = useStore(
+    (store) => store.isExecutePayloadModalOpen,
+  );
+  const setExecutePayloadModalOpen = useStore(
+    (store) => store.setExecutePayloadModalOpen,
+  );
+  const detailedProposalsDataLoadings = useStore(
+    (store) => store.detailedProposalsDataLoadings,
+  );
+  const getVotersLoading = useStore((store) => store.getVotersLoading);
+  const votersFromStore = useStore((store) => store.voters);
 
   const {
     lastBlockNumber: lastVoteBlockNumber,
-    voters: votersForCurrentProposal,
-  } = selectVotersByProposalId(store, id);
+    votersLocal: votersForCurrentProposal,
+  } = selectVotersByProposalId(votersFromStore, id);
 
   const [isCreatorBalanceWarningVisible, setCreatorBalanceWarningVisible] =
     useState(false);

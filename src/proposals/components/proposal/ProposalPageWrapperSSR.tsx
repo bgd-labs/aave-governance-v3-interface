@@ -31,7 +31,14 @@ export function ProposalPageWrapperSSR({
   cachedProposalsIds,
   cachedProposalEvents,
 }: ProposalPageWrapperSSRProps) {
-  const store = useStore();
+  const setDetailedPayloadsData = useStore(
+    (store) => store.setDetailedPayloadsData,
+  );
+  const setIpfsData = useStore((store) => store.setIpfsData);
+  const setDetailedProposalsData = useStore(
+    (store) => store.setDetailedProposalsData,
+  );
+  const setVoters = useStore((store) => store.setVoters);
 
   useEffect(() => {
     const detailedProposalsData: Record<number, ProposalData> = {};
@@ -47,20 +54,20 @@ export function ProposalPageWrapperSSR({
 
       detailsData.payloads.forEach((payload) => {
         if (payload) {
-          store.setDetailedPayloadsData(
+          setDetailedPayloadsData(
             `${payload.payloadsController}_${payload.id}`,
             payload,
           );
         }
       });
-      store.setIpfsData(detailsData.proposal.ipfsHash, detailsData.ipfs);
-      store.setDetailedProposalsData(id, detailedProposalsData[id]);
+      setIpfsData(detailsData.proposal.ipfsHash, detailsData.ipfs);
+      setDetailedProposalsData(id, detailedProposalsData[id]);
     }
   }, []);
 
   useEffect(() => {
     if (votesData) {
-      setProposalDetailsVoters(store, votesData.votes);
+      setProposalDetailsVoters(setVoters, votesData.votes);
     }
   }, []);
 

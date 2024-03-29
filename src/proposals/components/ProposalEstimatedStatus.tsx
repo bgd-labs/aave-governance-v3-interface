@@ -27,7 +27,9 @@ export function ProposalEstimatedStatus({
   isForModal,
   isForHelpModal,
 }: ProposalEstimatedStatusProps) {
-  const { getDetailedProposalsData } = useStore();
+  const getDetailedProposalsData = useStore(
+    (store) => store.getDetailedProposalsData,
+  );
 
   const statusTextStringArray = estimatedStatus.split(' ');
   statusTextStringArray.splice(

@@ -72,7 +72,9 @@ export function RpcSwitcherTableItemField({
 }: RpcSwitcherTableItemAddressProps) {
   const isRpcUrlToVisible = rpcUrl !== rpcUrlTo;
 
-  const { checkRpcUrl, rpcFormErrors, rpcAppErrors } = useStore();
+  const checkRpcUrl = useStore((store) => store.checkRpcUrl);
+  const rpcFormErrors = useStore((store) => store.rpcFormErrors);
+  const rpcAppErrors = useStore((store) => store.rpcAppErrors);
 
   useEffect(() => {
     if (rpcUrlTo && rpcUrlTo !== rpcUrl && chainId) {

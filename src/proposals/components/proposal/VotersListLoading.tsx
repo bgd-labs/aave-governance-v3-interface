@@ -26,7 +26,8 @@ export function VotersListLoading({
   isStarted,
   setIsVotersModalOpen,
 }: VotersLoadingProps) {
-  const { activeWallet, representative } = useStore();
+  const representative = useStore((store) => store.representative);
+  const activeWallet = useStore((store) => store.activeWallet);
 
   if (!isStarted) return null;
   if (!voters?.length) return null;

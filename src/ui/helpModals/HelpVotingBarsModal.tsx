@@ -21,7 +21,9 @@ export function HelpVotingBarsModal() {
   const setIsHelpVotingModalOpen = useStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
-  const config = useStore((store) => selectConfigByAccessLevel(store, 1));
+  const config = useStore((store) =>
+    selectConfigByAccessLevel(store.configs, 1),
+  );
 
   if (!config) return null;
 

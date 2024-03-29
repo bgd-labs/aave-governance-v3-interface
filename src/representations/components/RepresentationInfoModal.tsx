@@ -9,11 +9,16 @@ import { texts } from '../../ui/utils/texts';
 export function RepresentationInfoModal() {
   const theme = useTheme();
 
-  const {
-    isRepresentationInfoModalOpen,
-    setIsRepresentationInfoModalOpen,
-    setAccountInfoModalOpen,
-  } = useStore();
+  const isRepresentationInfoModalOpen = useStore(
+    (store) => store.isRepresentationInfoModalOpen,
+  );
+  const setIsRepresentationInfoModalOpen = useStore(
+    (store) => store.setIsRepresentationInfoModalOpen,
+  );
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
+
   const initialFocusRef = useRef(null);
 
   return (
