@@ -50,7 +50,7 @@ export function ActionModalContent({
   tx,
 }: ActionModalContentProps) {
   const theme = useTheme();
-  const state = useStore();
+  const transactionsPool = useStore((store) => store.transactionsPool);
 
   const rocketSize = 77;
 
@@ -194,7 +194,7 @@ export function ActionModalContent({
                     }}>
                     <Link
                       href={selectTxExplorerLink(
-                        state,
+                        transactionsPool,
                         chainInfoHelper.getChainParameters,
                         tx.hash,
                       )}
@@ -254,7 +254,7 @@ export function ActionModalContent({
                     {tx.chainId && (
                       <Link
                         href={selectTxExplorerLink(
-                          state,
+                          transactionsPool,
                           chainInfoHelper.getChainParameters,
                           tx.hash,
                           tx.replacedTxHash,

@@ -22,7 +22,7 @@ export function DetailsLinks({
   snapshot,
   prerender,
 }: DetailsLinksProps) {
-  const store = useStore();
+  const isRendered = useStore((store) => store.isRendered);
   const theme = useTheme();
 
   const links = [];
@@ -47,7 +47,7 @@ export function DetailsLinks({
     });
   }
 
-  if (!store.isRendered) {
+  if (!isRendered) {
     return (
       <Box
         sx={{

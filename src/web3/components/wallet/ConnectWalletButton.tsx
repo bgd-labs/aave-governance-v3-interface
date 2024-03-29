@@ -54,10 +54,16 @@ export function ConnectWalletButton({
   const activeAddress = activeWallet?.address || '';
 
   const allTxsFromStore = useStore((store) =>
-    selectAllTransactionsByWallet(store, activeAddress || zeroAddress),
+    selectAllTransactionsByWallet(
+      store.transactionsPool,
+      activeAddress || zeroAddress,
+    ),
   );
   const pendingTxsFromStore = useStore((store) =>
-    selectPendingTransactionByWallet(store, activeAddress || zeroAddress),
+    selectPendingTransactionByWallet(
+      store.transactionsPool,
+      activeAddress || zeroAddress,
+    ),
   );
 
   const [loading, setLoading] = useState(true);

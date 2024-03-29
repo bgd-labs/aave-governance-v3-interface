@@ -105,22 +105,40 @@ export function PayloadsExplorerPage() {
     [searchParams],
   );
 
-  const {
-    getPayloadsExploreData,
-    payloadsExploreData,
-    payloadsExplorePagination,
-    setPayloadsExploreActivePage,
-    isExecutePayloadModalOpen,
-    setExecutePayloadModalOpen,
-    isRendered,
-    startDetailedPayloadsExplorerDataPolling,
-    stopDetailedPayloadsExplorerDataPolling,
-    setIsPayloadExplorerItemDetailsModalOpen,
-    getCachedProposalPayloadsData,
-    cachedProposalsPayloadsData,
-    payloadsHelperData,
-    getPayloadSeatbeltMD,
-  } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
+  const getPayloadsExploreData = useStore(
+    (store) => store.getPayloadsExploreData,
+  );
+  const payloadsExploreData = useStore((store) => store.payloadsExploreData);
+  const payloadsExplorePagination = useStore(
+    (store) => store.payloadsExplorePagination,
+  );
+  const setPayloadsExploreActivePage = useStore(
+    (store) => store.setPayloadsExploreActivePage,
+  );
+  const isExecutePayloadModalOpen = useStore(
+    (store) => store.isExecutePayloadModalOpen,
+  );
+  const setExecutePayloadModalOpen = useStore(
+    (store) => store.setExecutePayloadModalOpen,
+  );
+  const startDetailedPayloadsExplorerDataPolling = useStore(
+    (store) => store.startDetailedPayloadsExplorerDataPolling,
+  );
+  const stopDetailedPayloadsExplorerDataPolling = useStore(
+    (store) => store.stopDetailedPayloadsExplorerDataPolling,
+  );
+  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
+    (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
+  );
+  const getCachedProposalPayloadsData = useStore(
+    (store) => store.getCachedProposalPayloadsData,
+  );
+  const cachedProposalsPayloadsData = useStore(
+    (store) => store.cachedProposalsPayloadsData,
+  );
+  const payloadsHelperData = useStore((store) => store.payloadsHelperData);
+  const getPayloadSeatbeltMD = useStore((store) => store.getPayloadSeatbeltMD);
 
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState<
     Record<string, boolean>

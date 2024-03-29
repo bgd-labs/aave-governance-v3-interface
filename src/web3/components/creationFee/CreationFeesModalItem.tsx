@@ -39,7 +39,7 @@ export function CreationFeesModalItem({
     (store) =>
       store.activeWallet &&
       selectLastTxByTypeAndPayload<TransactionUnion>(
-        store,
+        store.transactionsPool,
         store.activeWallet.address,
         TxType.claimFees,
         {

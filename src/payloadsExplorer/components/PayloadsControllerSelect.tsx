@@ -30,7 +30,7 @@ export function PayloadsControllerSelect({
   setControllerAddress,
 }: PayloadsControllerSelectProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
 
   const selectOptions =
     appConfig.payloadsControllerConfig[chainId].contractAddresses;

@@ -22,8 +22,11 @@ interface ClaimFeesButtonProps {
 }
 
 export function ClaimFeesButton({ proposal }: ClaimFeesButtonProps) {
-  const store = useStore();
-  const { activeWallet, redeemCancellationFee } = store;
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const redeemCancellationFee = useStore(
+    (store) => store.redeemCancellationFee,
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -58,7 +61,7 @@ export function ClaimFeesButton({ proposal }: ClaimFeesButtonProps) {
   const txFromPool =
     activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
+      transactionsPool,
       activeWallet.address,
       TxType.claimFees,
       {

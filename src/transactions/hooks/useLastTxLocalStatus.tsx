@@ -10,11 +10,12 @@ export function useLastTxLocalStatus({
   type,
   payload,
 }: Pick<TransactionUnion, 'type' | 'payload'>) {
-  const state = useStore();
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
 
   return baseUseTxLocalStatus<TransactionUnion>({
-    state,
-    activeAddress: state.activeWallet?.address || zeroAddress,
+    transactionsPool,
+    activeAddress: activeWallet?.address || zeroAddress,
     type,
     payload,
   });

@@ -37,7 +37,10 @@ export function AccountInfoModal({
   );
 
   const allTxsFromStore = useStore((store) =>
-    selectAllTransactionsByWallet(store, activeWallet?.address || zeroAddress),
+    selectAllTransactionsByWallet(
+      store.transactionsPool,
+      activeWallet?.address || zeroAddress,
+    ),
   );
 
   const allTransactions = activeWallet ? allTxsFromStore : [];

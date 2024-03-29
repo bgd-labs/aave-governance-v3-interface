@@ -50,8 +50,16 @@ export function PayloadExploreItem({
   isSeatbeltModalOpen: Record<string, boolean>;
 }) {
   const theme = useTheme();
-  const store = useStore();
   const xsm = useMediaQuery(media.xs);
+
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setExecutePayloadModalOpen = useStore(
+    (store) => store.setExecutePayloadModalOpen,
+  );
+  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
+    (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
+  );
 
   const {
     isPayloadOnInitialState,
@@ -81,10 +89,10 @@ export function PayloadExploreItem({
           : '$disabled';
 
   const tx =
-    store.activeWallet &&
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
-      store.activeWallet.address,
+      transactionsPool,
+      activeWallet.address,
       TxType.executePayload,
       {
         proposalId: 0,
@@ -100,7 +108,7 @@ export function PayloadExploreItem({
       payloadsController: payload.payloadsController as Address,
       id: payload.id,
     });
-    store.setIsPayloadExplorerItemDetailsModalOpen(true);
+    setIsPayloadExplorerItemDetailsModalOpen(true);
   };
 
   return (
@@ -313,7 +321,7 @@ export function PayloadExploreItem({
 
           {isPayloadReadyForExecution &&
             !isFinalStatus &&
-            store.activeWallet?.isActive && (
+            activeWallet?.isActive && (
               <Box sx={{ mt: 4 }}>
                 <SmallButton
                   disabled={tx?.status === TransactionStatus.Success}
@@ -328,7 +336,7 @@ export function PayloadExploreItem({
                         id: payload.id,
                       });
                     }
-                    store.setExecutePayloadModalOpen(true);
+                    setExecutePayloadModalOpen(true);
                   }}>
                   {texts.proposals.payloadsDetails.execute}
                 </SmallButton>

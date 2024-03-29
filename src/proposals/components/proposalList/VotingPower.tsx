@@ -30,10 +30,15 @@ export function VotingPower({
   isForHelpModal,
 }: VotingPowerProps) {
   const theme = useTheme();
-  const store = useStore();
   const sm = useMediaQuery(media.sm);
 
-  const disabled = !checkIsVotingAvailable(store, votingChainId);
+  const representative = useStore((store) => store.representative);
+  const setIsRepresentationInfoModalOpen = useStore(
+    (store) => store.setIsRepresentationInfoModalOpen,
+  );
+  const disabled = !useStore((store) =>
+    checkIsVotingAvailable(store.representative, votingChainId),
+  );
 
   return (
     <Box
@@ -66,7 +71,7 @@ export function VotingPower({
             if (disabled && !isForHelpModal) {
               e.stopPropagation();
               e.preventDefault();
-              store.setIsRepresentationInfoModalOpen(true);
+              setIsRepresentationInfoModalOpen(true);
               disablePageLoader();
             }
           }}
@@ -77,7 +82,7 @@ export function VotingPower({
           }}>
           {!isForHelpModal && (
             <RepresentationIcon
-              address={store.representative.address}
+              address={representative.address}
               disabled={disabled}
             />
           )}
