@@ -203,7 +203,7 @@ export const createRepresentationsSlice: StoreSlice<
         chainId: bigint;
       }[] = [];
       for await (const item of formData) {
-        let representative = item.representative;
+        let representative = item.representative || '';
 
         // get previous representative data for current chain id
         const initialRepresentativeItem: RepresentationFormData =
@@ -218,7 +218,9 @@ export const createRepresentationsSlice: StoreSlice<
 
           formattedData.push({
             representative:
-              representative === '' || representative === activeAddress
+              representative === '' ||
+              representative === activeAddress ||
+              !item.representative
                 ? zeroAddress
                 : (representative as Address),
             chainId: BigInt(item.chainId),

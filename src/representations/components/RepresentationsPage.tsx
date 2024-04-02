@@ -82,6 +82,9 @@ export function RepresentationsPage() {
 
   useEffect(() => {
     setIsEdit(false);
+    setFormData([]);
+    setSubmittedFormData([]);
+    setStateInitialData([]);
     setIsRepresentationsChangedView(false);
   }, [activeWallet?.address]);
 
