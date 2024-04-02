@@ -5,7 +5,7 @@ import React, { useRef } from 'react';
 import Scrollbars, { positionValues } from 'react-custom-scrollbars-2';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { BasicModal, Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
@@ -52,8 +52,8 @@ interface VotersModalProps {
 }
 
 function ListItemAddress({ vote }: { vote: VotersData }) {
-  const representative = useStore((store) => store.representative);
-  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useRootStore((store) => store.representative);
+  const activeWallet = useRootStore((store) => store.activeWallet);
 
   const sm = useMediaQuery(media.sm);
 

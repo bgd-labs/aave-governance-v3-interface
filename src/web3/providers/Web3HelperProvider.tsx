@@ -1,24 +1,24 @@
 import { useEffect } from 'react';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { appUsedNetworks } from '../../utils/appConfig';
 import { chainInfoHelper } from '../../utils/configs';
 
 function Child() {
-  const activeWallet = useStore((state) => state.activeWallet);
-  const resetL1Balances = useStore((state) => state.resetL1Balances);
-  const fullClearSupportObject = useStore(
+  const activeWallet = useRootStore((state) => state.activeWallet);
+  const resetL1Balances = useRootStore((state) => state.resetL1Balances);
+  const fullClearSupportObject = useRootStore(
     (state) => state.fullClearSupportObject,
   );
-  const getRepresentingAddress = useStore(
+  const getRepresentingAddress = useRootStore(
     (state) => state.getRepresentingAddress,
   );
-  const representationData = useStore((state) => state.representationData);
-  const getRepresentationData = useStore(
+  const representationData = useRootStore((state) => state.representationData);
+  const getRepresentationData = useRootStore(
     (state) => state.getRepresentationData,
   );
-  const initEns = useStore((state) => state.initEns);
-  const initClients = useStore((state) => state.initClients);
+  const initEns = useRootStore((state) => state.initEns);
+  const initClients = useRootStore((state) => state.initClients);
 
   useEffect(() => {
     initEns();

@@ -5,7 +5,7 @@ import { Hex } from 'viem';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { Image, Link, Tooltip } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
@@ -18,17 +18,17 @@ import { RepresentingButtonChainsIcon } from './RepresentingButtonChainsIcon';
 export function RepresentingButton() {
   const theme = useTheme();
 
-  const setAccountInfoModalOpen = useStore(
+  const setAccountInfoModalOpen = useRootStore(
     (store) => store.setAccountInfoModalOpen,
   );
-  const representative = useStore((store) => store.representative);
-  const fetchEnsNameByAddress = useStore(
+  const representative = useRootStore((store) => store.representative);
+  const fetchEnsNameByAddress = useRootStore(
     (store) => store.fetchEnsNameByAddress,
   );
-  const fetchEnsAvatarByAddress = useStore(
+  const fetchEnsAvatarByAddress = useRootStore(
     (store) => store.fetchEnsAvatarByAddress,
   );
-  const ensData = useStore((store) => store.ensData);
+  const ensData = useRootStore((store) => store.ensData);
 
   const isENSDataExists = ENSDataExists(
     ensData,

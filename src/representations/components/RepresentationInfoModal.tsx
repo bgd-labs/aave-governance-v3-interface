@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React, { useRef } from 'react';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BasicModal, BigButton } from '../../ui';
 import { setRelativePath } from '../../ui/utils/relativePath';
 import { texts } from '../../ui/utils/texts';
@@ -9,13 +9,13 @@ import { texts } from '../../ui/utils/texts';
 export function RepresentationInfoModal() {
   const theme = useTheme();
 
-  const isRepresentationInfoModalOpen = useStore(
+  const isRepresentationInfoModalOpen = useRootStore(
     (store) => store.isRepresentationInfoModalOpen,
   );
-  const setIsRepresentationInfoModalOpen = useStore(
+  const setIsRepresentationInfoModalOpen = useRootStore(
     (store) => store.setIsRepresentationInfoModalOpen,
   );
-  const setAccountInfoModalOpen = useStore(
+  const setAccountInfoModalOpen = useRootStore(
     (store) => store.setAccountInfoModalOpen,
   );
 

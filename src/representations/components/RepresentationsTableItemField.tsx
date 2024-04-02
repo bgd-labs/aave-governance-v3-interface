@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Field } from 'react-final-form';
 import { Address, isAddress, zeroAddress } from 'viem';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
@@ -84,21 +84,21 @@ export function RepresentationsTableItemField({
   addressTo,
   forHelp,
 }: RepresentationsTableItemFieldProps) {
-  const activeWallet = useStore((store) => store.activeWallet);
-  const fetchEnsNameByAddress = useStore(
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const fetchEnsNameByAddress = useRootStore(
     (store) => store.fetchEnsNameByAddress,
   );
-  const fetchAddressByEnsName = useStore(
+  const fetchAddressByEnsName = useRootStore(
     (store) => store.fetchAddressByEnsName,
   );
-  const ensData = useStore((store) => store.ensData);
-  const addIncorrectRepresentationField = useStore(
+  const ensData = useRootStore((store) => store.ensData);
+  const addIncorrectRepresentationField = useRootStore(
     (store) => store.addIncorrectRepresentationField,
   );
-  const removeIncorrectRepresentationField = useStore(
+  const removeIncorrectRepresentationField = useRootStore(
     (store) => store.removeIncorrectRepresentationField,
   );
-  const clearIncorrectRepresentationFields = useStore(
+  const clearIncorrectRepresentationFields = useRootStore(
     (store) => store.clearIncorrectRepresentationFields,
   );
 

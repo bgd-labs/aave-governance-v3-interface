@@ -4,7 +4,7 @@ import React from 'react';
 
 import InfoIcon from '/public/images/icons/info.svg';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { Timer, Tooltip } from '../../ui';
 import { IconBox } from '../../ui/primitives/IconBox';
 
@@ -27,7 +27,7 @@ export function ProposalEstimatedStatus({
   isForModal,
   isForHelpModal,
 }: ProposalEstimatedStatusProps) {
-  const getDetailedProposalsData = useStore(
+  const getDetailedProposalsData = useRootStore(
     (store) => store.getDetailedProposalsData,
   );
 

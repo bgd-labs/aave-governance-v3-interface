@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React, { useRef, useState } from 'react';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
 import { BasicModal } from './BasicModal';
@@ -11,9 +11,11 @@ import { CheckBox } from './CheckBox';
 export function TermsPreAppModal() {
   const theme = useTheme();
 
-  const setIsTermsAccept = useStore((store) => store.setIsTermsAccept);
-  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
-  const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
+  const setIsTermsAccept = useRootStore((store) => store.setIsTermsAccept);
+  const setIsTermModalOpen = useRootStore((store) => store.setIsTermModalOpen);
+  const isAppBlockedByTerms = useRootStore(
+    (store) => store.isAppBlockedByTerms,
+  );
 
   const initialFocusRef = useRef(null);
 

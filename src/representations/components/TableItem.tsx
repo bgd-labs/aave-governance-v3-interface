@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
@@ -32,7 +32,7 @@ export function TableItem({
 }: TableItemProps) {
   const theme = useTheme();
 
-  const representationDataLoading = useStore(
+  const representationDataLoading = useRootStore(
     (store) => store.representationDataLoading,
   );
 

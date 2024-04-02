@@ -4,7 +4,7 @@ import { zeroAddress } from 'viem';
 import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { AccountInfoModalContent } from '../../web3/components/wallet/AccountInfoModalContent';
 import { BasicModal, BigButton, BoxWith3D } from '../';
 import { setRelativePath } from '../utils/relativePath';
@@ -50,19 +50,19 @@ export function HelpRepresentativeModal() {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const isHelpRepresentativeModalOpen = useStore(
+  const isHelpRepresentativeModalOpen = useRootStore(
     (store) => store.isHelpRepresentativeModalOpen,
   );
-  const setIsHelpRepresentativeModalOpen = useStore(
+  const setIsHelpRepresentativeModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentativeModalOpen,
   );
-  const setIsHelpNavigationModalOpen = useStore(
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const setIsHelpDelegateModalOpen = useStore(
+  const setIsHelpDelegateModalOpen = useRootStore(
     (store) => store.setIsHelpDelegateModalOpen,
   );
-  const setIsHelpRepresentationModalOpen = useStore(
+  const setIsHelpRepresentationModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentationModalOpen,
   );
 

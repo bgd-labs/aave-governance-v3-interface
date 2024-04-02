@@ -10,7 +10,7 @@ import RocketError from '/public/images/rocketError.svg';
 import RocketReplaced from '/public/images/rocketReplaced.svg';
 import RocketSuccess from '/public/images/rocketSuccess.svg';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BigButton, Link } from '../../ui';
 import { RocketLoader } from '../../ui/components/RocketLoader';
 import { IconBox } from '../../ui/primitives/IconBox';
@@ -50,7 +50,7 @@ export function ActionModalContent({
   tx,
 }: ActionModalContentProps) {
   const theme = useTheme();
-  const transactionsPool = useStore((store) => store.transactionsPool);
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
 
   const rocketSize = 77;
 

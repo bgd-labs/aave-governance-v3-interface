@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
@@ -16,7 +16,7 @@ export function ExecuteProposalModal({
   setIsOpen,
   proposalId,
 }: ActionModalBasicTypes) {
-  const executeProposal = useStore((state) => state.executeProposal);
+  const executeProposal = useRootStore((state) => state.executeProposal);
 
   return (
     <ActionModal

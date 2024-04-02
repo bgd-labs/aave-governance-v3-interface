@@ -13,7 +13,7 @@ import {
   formatPayloadData,
   generateSeatbeltLink,
 } from '../../proposals/utils/formatPayloadData';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import {
   TransactionUnion,
   TxType,
@@ -38,22 +38,22 @@ export function PayloadItemDetailsModal({
   initialPayload,
   setSelectedPayloadForExecute,
 }: PayloadItemDetailsModalProps) {
-  const transactionsPool = useStore((store) => store.transactionsPool);
-  const activeWallet = useStore((store) => store.activeWallet);
-  const isPayloadExplorerItemDetailsModalOpen = useStore(
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const isPayloadExplorerItemDetailsModalOpen = useRootStore(
     (store) => store.isPayloadExplorerItemDetailsModalOpen,
   );
-  const getPayloadsExploreDataById = useStore(
+  const getPayloadsExploreDataById = useRootStore(
     (store) => store.getPayloadsExploreDataById,
   );
-  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
+  const setIsPayloadExplorerItemDetailsModalOpen = useRootStore(
     (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
   );
-  const setExecutePayloadModalOpen = useStore(
+  const setExecutePayloadModalOpen = useRootStore(
     (store) => store.setExecutePayloadModalOpen,
   );
 
-  const payload = useStore((store) =>
+  const payload = useRootStore((store) =>
     selectPayloadExploreById(
       store,
       initialPayload.chainId,

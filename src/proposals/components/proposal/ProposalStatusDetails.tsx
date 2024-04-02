@@ -13,7 +13,7 @@ import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useEffect } from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import {
   TransactionUnion,
   TxType,
@@ -71,66 +71,66 @@ export function ProposalStatusDetails({
 }: ProposalStatusDetailsProps) {
   const theme = useTheme();
 
-  const transactionsPool = useStore((store) => store.transactionsPool);
-  const activeWallet = useStore((store) => store.activeWallet);
-  const isActivateVotingModalOpen = useStore(
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const isActivateVotingModalOpen = useRootStore(
     (store) => store.isActivateVotingModalOpen,
   );
-  const setIsActivateVotingModalOpen = useStore(
+  const setIsActivateVotingModalOpen = useRootStore(
     (store) => store.setIsActivateVotingModalOpen,
   );
-  const isSendAAAVEProofModalOpen = useStore(
+  const isSendAAAVEProofModalOpen = useRootStore(
     (store) => store.isSendAAAVEProofModalOpen,
   );
-  const setIsSendAAAVEProofModalOpen = useStore(
+  const setIsSendAAAVEProofModalOpen = useRootStore(
     (store) => store.setIsSendAAAVEProofModalOpen,
   );
-  const isSendAAVEProofModalOpen = useStore(
+  const isSendAAVEProofModalOpen = useRootStore(
     (store) => store.isSendAAVEProofModalOpen,
   );
-  const setIsSendAAVEProofModalOpen = useStore(
+  const setIsSendAAVEProofModalOpen = useRootStore(
     (store) => store.setIsSendAAVEProofModalOpen,
   );
-  const isSendSTKAAVEProofModalOpen = useStore(
+  const isSendSTKAAVEProofModalOpen = useRootStore(
     (store) => store.isSendSTKAAVEProofModalOpen,
   );
-  const setIsSendSTKAAVEProofModalOpen = useStore(
+  const setIsSendSTKAAVEProofModalOpen = useRootStore(
     (store) => store.setIsSendSTKAAVEProofModalOpen,
   );
-  const isSendSTKAAVESlotModalOpen = useStore(
+  const isSendSTKAAVESlotModalOpen = useRootStore(
     (store) => store.isSendSTKAAVESlotModalOpen,
   );
-  const setIsSendSTKAAVESlotModalOpen = useStore(
+  const setIsSendSTKAAVESlotModalOpen = useRootStore(
     (store) => store.setIsSendSTKAAVESlotModalOpen,
   );
-  const isSendRepresentationsProofModalOpen = useStore(
+  const isSendRepresentationsProofModalOpen = useRootStore(
     (store) => store.isSendRepresentationsProofModalOpen,
   );
-  const setIsSendRepresentationsProofModalOpen = useStore(
+  const setIsSendRepresentationsProofModalOpen = useRootStore(
     (store) => store.setIsSendRepresentationsProofModalOpen,
   );
-  const setIsActivateVotingOnVotingMachineModalOpen = useStore(
+  const setIsActivateVotingOnVotingMachineModalOpen = useRootStore(
     (store) => store.setIsActivateVotingOnVotingMachineModalOpen,
   );
-  const isCloseVotingModalOpen = useStore(
+  const isCloseVotingModalOpen = useRootStore(
     (store) => store.isCloseVotingModalOpen,
   );
-  const setCloseVotingModalOpen = useStore(
+  const setCloseVotingModalOpen = useRootStore(
     (store) => store.setCloseVotingModalOpen,
   );
-  const isExecuteProposalModalOpen = useStore(
+  const isExecuteProposalModalOpen = useRootStore(
     (store) => store.isExecuteProposalModalOpen,
   );
-  const setExecuteProposalModalOpen = useStore(
+  const setExecuteProposalModalOpen = useRootStore(
     (store) => store.setExecuteProposalModalOpen,
   );
-  const setConnectWalletModalOpen = useStore(
+  const setConnectWalletModalOpen = useRootStore(
     (store) => store.setConnectWalletModalOpen,
   );
-  const getProposalDataWithIpfsById = useStore(
+  const getProposalDataWithIpfsById = useRootStore(
     (store) => store.getProposalDataWithIpfsById,
   );
-  const appMode = useStore((store) => store.appMode);
+  const appMode = useRootStore((store) => store.appMode);
 
   useEffect(() => {
     return () => {

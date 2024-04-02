@@ -2,7 +2,7 @@ import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
@@ -22,7 +22,7 @@ export function ExecutePayloadModal({
   payload: InitialPayload;
   withController?: boolean;
 }) {
-  const executePayload = useStore((state) => state.executePayload);
+  const executePayload = useRootStore((state) => state.executePayload);
 
   return (
     <ActionModal

@@ -6,7 +6,7 @@ import { Form } from 'react-final-form';
 
 import { DelegateTableWrapper } from '../../delegate/components/DelegateTableWrapper';
 import { DelegateData } from '../../delegate/types';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
 import { setRelativePath } from '../utils/relativePath';
@@ -38,29 +38,33 @@ export function HelpDelegateModal({ infoType }: HelpDelegateModalProps) {
   const [isDelegateChangedView, setIsDelegateChangedView] = useState(false);
   const [formDelegateData, setFormDelegateData] = useState<DelegateData[]>([]);
 
-  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
-  const isHelpDelegateModalOpen = useStore(
+  const isHelpModalClosed = useRootStore((store) => store.isHelpModalClosed);
+  const isHelpDelegateModalOpen = useRootStore(
     (store) => store.isHelpDelegateModalOpen,
   );
-  const setIsHelpDelegateModalOpen = useStore(
+  const setIsHelpDelegateModalOpen = useRootStore(
     (store) => store.setIsHelpDelegateModalOpen,
   );
-  const setIsHelpNavigationModalOpen = useStore(
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const setIsHelpWalletModalOpen = useStore(
+  const setIsHelpWalletModalOpen = useRootStore(
     (store) => store.setIsHelpWalletModalOpen,
   );
-  const helpDelegateData = useStore((store) => store.helpDelegateData);
-  const getHelpDelegateData = useStore((store) => store.getHelpDelegateData);
-  const setIsHelpDelegationVotingPowerModalOpen = useStore(
+  const helpDelegateData = useRootStore((store) => store.helpDelegateData);
+  const getHelpDelegateData = useRootStore(
+    (store) => store.getHelpDelegateData,
+  );
+  const setIsHelpDelegationVotingPowerModalOpen = useRootStore(
     (store) => store.setIsHelpDelegationVotingPowerModalOpen,
   );
-  const setIsHelpDelegationPropositionPowerModalOpen = useStore(
+  const setIsHelpDelegationPropositionPowerModalOpen = useRootStore(
     (store) => store.setIsHelpDelegationPropositionPowerModalOpen,
   );
-  const setHelpDelegateData = useStore((store) => store.setHelpDelegateData);
-  const setIsHelpRepresentativeModalOpen = useStore(
+  const setHelpDelegateData = useRootStore(
+    (store) => store.setHelpDelegateData,
+  );
+  const setIsHelpRepresentativeModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentativeModalOpen,
   );
 

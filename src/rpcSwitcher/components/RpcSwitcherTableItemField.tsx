@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Field } from 'react-final-form';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
@@ -72,9 +72,9 @@ export function RpcSwitcherTableItemField({
 }: RpcSwitcherTableItemAddressProps) {
   const isRpcUrlToVisible = rpcUrl !== rpcUrlTo;
 
-  const checkRpcUrl = useStore((store) => store.checkRpcUrl);
-  const rpcFormErrors = useStore((store) => store.rpcFormErrors);
-  const rpcAppErrors = useStore((store) => store.rpcAppErrors);
+  const checkRpcUrl = useRootStore((store) => store.checkRpcUrl);
+  const rpcFormErrors = useRootStore((store) => store.rpcFormErrors);
+  const rpcAppErrors = useRootStore((store) => store.rpcAppErrors);
 
   useEffect(() => {
     if (rpcUrlTo && rpcUrlTo !== rpcUrl && chainId) {

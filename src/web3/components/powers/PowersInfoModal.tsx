@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { BackButton3D, BasicModal } from '../../../ui';
 import { GovernancePowerType } from '../../services/delegationService';
 import {
@@ -16,13 +16,13 @@ interface PowersInfoModalProps {
 }
 
 export function PowersInfoModal({ isOpen, setIsOpen }: PowersInfoModalProps) {
-  const representative = useStore((store) => store.representative);
-  const setAccountInfoModalOpen = useStore(
+  const representative = useRootStore((store) => store.representative);
+  const setAccountInfoModalOpen = useRootStore(
     (store) => store.setAccountInfoModalOpen,
   );
 
-  const currentPowersAll = useStore((store) => selectCurrentPowers(store));
-  const currentPowersActiveWallet = useStore((store) =>
+  const currentPowersAll = useRootStore((store) => selectCurrentPowers(store));
+  const currentPowersActiveWallet = useRootStore((store) =>
     selectCurrentPowersForActiveWallet(store),
   );
 

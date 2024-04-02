@@ -6,7 +6,7 @@ import { Form } from 'react-final-form';
 
 import { RepresentationsTableWrapper } from '../../representations/components/RepresentationsTableWrapper';
 import { RepresentationFormData } from '../../representations/store/representationsSlice';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BasicModal } from '../components/BasicModal';
 import { BigButton } from '../components/BigButton';
 import { setRelativePath } from '../utils/relativePath';
@@ -35,29 +35,29 @@ export function HelpRepresentationModal({
   const [isRepresentationsChangedView, setIsRepresentationsChangedView] =
     useState(false);
 
-  const helpRepresentationsData = useStore(
+  const helpRepresentationsData = useRootStore(
     (store) => store.helpRepresentationsData,
   );
-  const getHelpRepresentationsData = useStore(
+  const getHelpRepresentationsData = useRootStore(
     (store) => store.getHelpRepresentationsData,
   );
-  const setHelpRepresentationsData = useStore(
+  const setHelpRepresentationsData = useRootStore(
     (store) => store.setHelpRepresentationsData,
   );
-  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
-  const setIsHelpNavigationModalOpen = useStore(
+  const isHelpModalClosed = useRootStore((store) => store.isHelpModalClosed);
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const setIsHelpWalletModalOpen = useStore(
+  const setIsHelpWalletModalOpen = useRootStore(
     (store) => store.setIsHelpWalletModalOpen,
   );
-  const setIsHelpRepresentationModalOpen = useStore(
+  const setIsHelpRepresentationModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentationModalOpen,
   );
-  const isHelpRepresentationModalOpen = useStore(
+  const isHelpRepresentationModalOpen = useRootStore(
     (store) => store.isHelpRepresentationModalOpen,
   );
-  const setIsHelpRepresentativeModalOpen = useStore(
+  const setIsHelpRepresentativeModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentativeModalOpen,
   );
 

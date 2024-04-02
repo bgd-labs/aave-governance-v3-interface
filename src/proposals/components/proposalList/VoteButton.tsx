@@ -6,7 +6,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import {
   TransactionUnion,
   TxType,
@@ -33,10 +33,10 @@ export function VoteButton({
   onClick,
   isForHelpModal,
 }: VoteButtonProps) {
-  const transactionsPool = useStore((store) => store.transactionsPool);
-  const activeWallet = useStore((store) => store.activeWallet);
-  const representative = useStore((store) => store.representative);
-  const supportObject = useStore((store) => store.supportObject);
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const representative = useRootStore((store) => store.representative);
+  const supportObject = useRootStore((store) => store.supportObject);
 
   const activeAddress = activeWallet?.address;
 
@@ -61,7 +61,7 @@ export function VoteButton({
     tx.chainId === votingChainId &&
     (tx.pending || tx.status === TransactionStatus.Success);
 
-  const disabled = !useStore((store) =>
+  const disabled = !useRootStore((store) =>
     checkIsVotingAvailable(store.representative, votingChainId),
   );
 

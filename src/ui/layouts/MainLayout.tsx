@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode, useEffect } from 'react';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { isForIPFS } from '../../utils/appConfig';
 import { AppLoading } from '../components/AppLoading';
 import { Branding } from '../components/Branding';
@@ -16,11 +16,11 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const theme = useTheme();
 
-  const setGovCoreConfigs = useStore((store) => store.setGovCoreConfigs);
-  const isThemeSwitched = useStore((store) => store.isThemeSwitched);
-  const loadingListCache = useStore((store) => store.loadingListCache);
-  const configs = useStore((store) => store.configs);
-  const contractsConstants = useStore((store) => store.contractsConstants);
+  const setGovCoreConfigs = useRootStore((store) => store.setGovCoreConfigs);
+  const isThemeSwitched = useRootStore((store) => store.isThemeSwitched);
+  const loadingListCache = useRootStore((store) => store.loadingListCache);
+  const configs = useRootStore((store) => store.configs);
+  const contractsConstants = useRootStore((store) => store.contractsConstants);
 
   useEffect(() => {
     setGovCoreConfigs();

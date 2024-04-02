@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 
 import { selectConfigByAccessLevel } from '../../proposals/store/proposalsSelectors';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BasicModal, BigButton } from '../';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -12,16 +12,16 @@ import { HelpModalText } from './HelpModalText';
 export function HelpVotingBarsModal() {
   const theme = useTheme();
 
-  const isHelpVotingBarsModalOpen = useStore(
+  const isHelpVotingBarsModalOpen = useRootStore(
     (store) => store.isHelpVotingBarsModalOpen,
   );
-  const setIsHelpVotingBarsModalOpen = useStore(
+  const setIsHelpVotingBarsModalOpen = useRootStore(
     (store) => store.setIsHelpVotingBarsModalOpen,
   );
-  const setIsHelpVotingModalOpen = useStore(
+  const setIsHelpVotingModalOpen = useRootStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
-  const config = useStore((store) =>
+  const config = useRootStore((store) =>
     selectConfigByAccessLevel(store.configs, 1),
   );
 

@@ -3,7 +3,7 @@ import React from 'react';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { Link, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { IconBox } from '../../../ui/primitives/IconBox';
@@ -22,7 +22,7 @@ export function DetailsLinks({
   snapshot,
   prerender,
 }: DetailsLinksProps) {
-  const isRendered = useStore((store) => store.isRendered);
+  const isRendered = useRootStore((store) => store.isRendered);
   const theme = useTheme();
 
   const links = [];

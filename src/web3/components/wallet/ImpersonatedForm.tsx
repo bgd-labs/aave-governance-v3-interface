@@ -3,15 +3,15 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { BigButton, Input } from '../../../ui';
 import { texts } from '../../../ui/utils/texts';
 import { appConfig } from '../../../utils/appConfig';
 
 export function ImpersonatedForm() {
-  const impersonated = useStore((store) => store.impersonated);
-  const setImpersonated = useStore((store) => store.setImpersonated);
-  const connectWallet = useStore((store) => store.connectWallet);
+  const impersonated = useRootStore((store) => store.impersonated);
+  const setImpersonated = useRootStore((store) => store.setImpersonated);
+  const connectWallet = useRootStore((store) => store.connectWallet);
 
   const handleFormSubmit = async ({
     impersonatedAddress,

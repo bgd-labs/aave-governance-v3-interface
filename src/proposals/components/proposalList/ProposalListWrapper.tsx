@@ -2,7 +2,7 @@ import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpe
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect } from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { isForIPFS } from '../../../utils/appConfig';
 import {
   selectPaginatedProposalsData,
@@ -26,37 +26,39 @@ export default function ProposalListWrapper({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const activePageFromStore = useStore((state) => state.activePage);
-  const filteredStateFromStore = useStore((state) => state.filteredState);
-  const loadingListCache = useStore((state) => state.loadingListCache);
-  const representativeLoading = useStore(
+  const activePageFromStore = useRootStore((state) => state.activePage);
+  const filteredStateFromStore = useRootStore((state) => state.filteredState);
+  const loadingListCache = useRootStore((state) => state.loadingListCache);
+  const representativeLoading = useRootStore(
     (state) => state.representativeLoading,
   );
-  const getPaginatedProposalsData = useStore(
+  const getPaginatedProposalsData = useRootStore(
     (state) => state.getPaginatedProposalsData,
   );
-  const getPaginatedProposalsDataWithoutIpfs = useStore(
+  const getPaginatedProposalsDataWithoutIpfs = useRootStore(
     (state) => state.getPaginatedProposalsDataWithoutIpfs,
   );
-  const activeWallet = useStore((state) => state.activeWallet);
-  const representative = useStore((state) => state.representative);
-  const isInitialLoading = useStore((state) => state.isInitialLoading);
-  const startNewProposalsPolling = useStore(
+  const activeWallet = useRootStore((state) => state.activeWallet);
+  const representative = useRootStore((state) => state.representative);
+  const isInitialLoading = useRootStore((state) => state.isInitialLoading);
+  const startNewProposalsPolling = useRootStore(
     (state) => state.startNewProposalsPolling,
   );
-  const startDetailedProposalDataPolling = useStore(
+  const startDetailedProposalDataPolling = useRootStore(
     (state) => state.startDetailedProposalDataPolling,
   );
-  const stopNewProposalsPolling = useStore(
+  const stopNewProposalsPolling = useRootStore(
     (state) => state.stopNewProposalsPolling,
   );
-  const stopDetailedProposalDataPolling = useStore(
+  const stopDetailedProposalDataPolling = useRootStore(
     (state) => state.stopDetailedProposalDataPolling,
   );
-  const setActivePage = useStore((state) => state.setActivePage);
-  const setFilteredState = useStore((state) => state.setFilteredState);
+  const setActivePage = useRootStore((state) => state.setActivePage);
+  const setFilteredState = useRootStore((state) => state.setFilteredState);
 
-  const totalPages = useStore((store) => selectProposalsPages(store)).length;
+  const totalPages = useRootStore((store) =>
+    selectProposalsPages(store),
+  ).length;
   const totalStatuses = proposalStatuses.length;
 
   const isActivePageWrong =
@@ -170,7 +172,9 @@ export default function ProposalListWrapper({
     }
   }, [isInitialLoading, loadingListCache]);
 
-  const proposalData = useStore((store) => selectPaginatedProposalsData(store));
+  const proposalData = useRootStore((store) =>
+    selectPaginatedProposalsData(store),
+  );
 
   return (
     <ProposalsList

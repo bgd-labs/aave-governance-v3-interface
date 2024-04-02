@@ -1,7 +1,7 @@
 import { Box, SxProps, useTheme } from '@mui/system';
 import React, { MouseEventHandler, ReactNode } from 'react';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { Spinner } from './Spinner';
 
 const borderSize = 3;
@@ -85,7 +85,7 @@ function BoxWith3D({
   css,
   className,
 }: BoxWith3DProps) {
-  const isRendered = useStore((store) => store.isRendered);
+  const isRendered = useRootStore((store) => store.isRendered);
   const theme = useTheme();
 
   const contentColorWithRender = isRendered

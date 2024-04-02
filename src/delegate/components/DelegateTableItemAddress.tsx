@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Field } from 'react-final-form';
 import { Address, isAddress } from 'viem';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
@@ -84,20 +84,20 @@ export function DelegateTableItemAddress({
   addressTo,
   forHelp,
 }: DelegateTableItemAddressProps) {
-  const fetchEnsNameByAddress = useStore(
+  const fetchEnsNameByAddress = useRootStore(
     (store) => store.fetchEnsNameByAddress,
   );
-  const fetchAddressByEnsName = useStore(
+  const fetchAddressByEnsName = useRootStore(
     (store) => store.fetchAddressByEnsName,
   );
-  const ensData = useStore((store) => store.ensData);
-  const addDelegationIncorrectToField = useStore(
+  const ensData = useRootStore((store) => store.ensData);
+  const addDelegationIncorrectToField = useRootStore(
     (store) => store.addDelegationIncorrectToField,
   );
-  const removeDelegationIncorrectToField = useStore(
+  const removeDelegationIncorrectToField = useRootStore(
     (store) => store.removeDelegationIncorrectToField,
   );
-  const clearDelegationIncorrectToFields = useStore(
+  const clearDelegationIncorrectToFields = useRootStore(
     (store) => store.clearDelegationIncorrectToFields,
   );
 

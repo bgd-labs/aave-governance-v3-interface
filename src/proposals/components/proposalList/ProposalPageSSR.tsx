@@ -8,7 +8,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect } from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { Container } from '../../../ui';
 import ProposalListWrapper from './ProposalListWrapper';
 
@@ -29,7 +29,22 @@ export function ProposalPageSSR({
   contractsConstants,
   cachedActiveIds,
 }: ProposalPageSSRProps) {
-  const store = useStore();
+  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
+  const setLoadingListCache = useRootStore(
+    (store) => store.setLoadingListCache,
+  );
+  const setTotalProposalCount = useRootStore(
+    (store) => store.setTotalProposalCount,
+  );
+  const cachedProposalsIds = useRootStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useRootStore(
+    (store) => store.setCachedProposalsIds,
+  );
+  const setSSRGovCoreConfigs = useRootStore(
+    (store) => store.setSSRGovCoreConfigs,
+  );
+  const setCachedProposals = useRootStore((store) => store.setCachedProposals);
+  const storeCachedProposals = useRootStore((store) => store.cachedProposals);
 
   const data = {
     totalProposalCount: cachedTotalProposalCount,
@@ -37,12 +52,12 @@ export function ProposalPageSSR({
   };
 
   useEffect(() => {
-    store.setSSRGovCoreConfigs(govCoreConfigs, contractsConstants);
+    setSSRGovCoreConfigs(govCoreConfigs, contractsConstants);
   }, []);
 
   useEffect(() => {
     if (!!data.proposals.length) {
-      store.setLoadingListCache(false);
+      setLoadingListCache(false);
       const proposalListCachedData = {
         totalProposalCount: data?.totalProposalCount || -1,
         cachedProposalsIds:
@@ -50,31 +65,27 @@ export function ProposalPageSSR({
         cachedProposals: data?.proposals || [],
       };
 
-      if (store.totalProposalCount < 0) {
-        store.setTotalProposalCount(
-          proposalListCachedData.totalProposalCount || 0,
-        );
+      if (totalProposalCount < 0) {
+        setTotalProposalCount(proposalListCachedData.totalProposalCount || 0);
       }
 
       if (
-        !store.cachedProposalsIds.length ||
-        store.cachedProposalsIds.length <
+        !cachedProposalsIds.length ||
+        cachedProposalsIds.length <
           (proposalListCachedData.cachedProposalsIds?.length || 0)
       ) {
-        store.setCachedProposalsIds(
-          proposalListCachedData.cachedProposalsIds || [],
-        );
+        setCachedProposalsIds(proposalListCachedData.cachedProposalsIds || []);
       }
 
       if (
-        !store.cachedProposals.length ||
-        store.cachedProposals.length <
+        !storeCachedProposals.length ||
+        storeCachedProposals.length <
           (proposalListCachedData.cachedProposals?.length || 0)
       ) {
-        store.setCachedProposals(proposalListCachedData.cachedProposals || []);
+        setCachedProposals(proposalListCachedData.cachedProposals || []);
       }
     } else {
-      store.setLoadingListCache(false);
+      setLoadingListCache(false);
     }
   }, [data.proposals.length]);
 

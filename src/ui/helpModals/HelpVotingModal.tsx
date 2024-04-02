@@ -2,7 +2,7 @@ import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 
 import { ActiveProposalListItem } from '../../proposals/components/proposalList/ActiveProposalListItem';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
 import { setRelativePath } from '../utils/relativePath';
@@ -28,30 +28,32 @@ export function HelpVotingModal() {
   const [isFirstStepOnMobile, setIsFirstStepOnMobile] = useState(true);
   const [isFirstStepOnTxMobile, setIsFirstStepOnTxMobile] = useState(true);
 
-  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
-  const setIsHelpNavigationModalOpen = useStore(
+  const isHelpModalClosed = useRootStore((store) => store.isHelpModalClosed);
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const isHelpVotingModalOpen = useStore(
+  const isHelpVotingModalOpen = useRootStore(
     (store) => store.isHelpVotingModalOpen,
   );
-  const setIsHelpVotingModalOpen = useStore(
+  const setIsHelpVotingModalOpen = useRootStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
-  const setIsHelpWalletModalOpen = useStore(
+  const setIsHelpWalletModalOpen = useRootStore(
     (store) => store.setIsHelpWalletModalOpen,
   );
-  const setIsHelpStatusesModalOpen = useStore(
+  const setIsHelpStatusesModalOpen = useRootStore(
     (store) => store.setIsHelpStatusesModalOpen,
   );
-  const setIsHelpVotingPowerModalOpen = useStore(
+  const setIsHelpVotingPowerModalOpen = useRootStore(
     (store) => store.setIsHelpVotingPowerModalOpen,
   );
-  const setIsHelpVotingBarsModalOpen = useStore(
+  const setIsHelpVotingBarsModalOpen = useRootStore(
     (store) => store.setIsHelpVotingBarsModalOpen,
   );
-  const helpProposalData = useStore((store) => store.helpProposalData);
-  const getHelpProposalData = useStore((store) => store.getHelpProposalData);
+  const helpProposalData = useRootStore((store) => store.helpProposalData);
+  const getHelpProposalData = useRootStore(
+    (store) => store.getHelpProposalData,
+  );
 
   useEffect(() => {
     getHelpProposalData();

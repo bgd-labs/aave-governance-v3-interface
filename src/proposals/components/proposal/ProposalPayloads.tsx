@@ -17,7 +17,7 @@ import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import { SeatBeltReportModal } from '../../../proposalCreateOverview/components/SeatBeltReportModal';
 import { NewPayload } from '../../../proposalCreateOverview/store/proposalCreateOverviewSlice';
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import {
   TransactionUnion,
   TxType,
@@ -169,14 +169,16 @@ function PayloadItem({
 }) {
   const theme = useTheme();
 
-  const transactionsPool = useStore((store) => store.transactionsPool);
-  const activeWallet = useStore((store) => store.activeWallet);
-  const setExecutePayloadModalOpen = useStore(
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const setExecutePayloadModalOpen = useRootStore(
     (store) => store.setExecutePayloadModalOpen,
   );
-  const payloadsHelperData = useStore((store) => store.payloadsHelperData);
-  const getPayloadSeatbeltMD = useStore((store) => store.getPayloadSeatbeltMD);
-  const proposalHistory = useStore((store) => store.proposalHistory);
+  const payloadsHelperData = useRootStore((store) => store.payloadsHelperData);
+  const getPayloadSeatbeltMD = useRootStore(
+    (store) => store.getPayloadSeatbeltMD,
+  );
+  const proposalHistory = useRootStore((store) => store.proposalHistory);
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
@@ -551,7 +553,10 @@ export function ProposalPayloads({
   forCreate,
 }: ProposalPayloadsProps) {
   const theme = useTheme();
-  const { createPayloadsErrors } = useStore();
+
+  const createPayloadsErrors = useRootStore(
+    (store) => store.createPayloadsErrors,
+  );
 
   const [isFullView, setFullView] = useState(!!forCreate);
 

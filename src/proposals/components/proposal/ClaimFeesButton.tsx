@@ -7,7 +7,7 @@ import { Box } from '@mui/system';
 import React, { useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
 import {
   TransactionUnion,
@@ -22,9 +22,9 @@ interface ClaimFeesButtonProps {
 }
 
 export function ClaimFeesButton({ proposal }: ClaimFeesButtonProps) {
-  const transactionsPool = useStore((store) => store.transactionsPool);
-  const activeWallet = useStore((store) => store.activeWallet);
-  const redeemCancellationFee = useStore(
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const redeemCancellationFee = useRootStore(
     (store) => store.redeemCancellationFee,
   );
 

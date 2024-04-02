@@ -4,7 +4,7 @@ import React from 'react';
 import InfoIcon from '/public/images/icons/info.svg';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { IconBox } from '../../../ui/primitives/IconBox';
@@ -32,11 +32,11 @@ export function VotingPower({
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const representative = useStore((store) => store.representative);
-  const setIsRepresentationInfoModalOpen = useStore(
+  const representative = useRootStore((store) => store.representative);
+  const setIsRepresentationInfoModalOpen = useRootStore(
     (store) => store.setIsRepresentationInfoModalOpen,
   );
-  const disabled = !useStore((store) =>
+  const disabled = !useRootStore((store) =>
     checkIsVotingAvailable(store.representative, votingChainId),
   );
 

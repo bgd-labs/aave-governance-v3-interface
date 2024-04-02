@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { TransactionsModalContent } from '../../transactions/components/TransactionsModalContent';
 import { AccountInfoModalContent } from '../../web3/components/wallet/AccountInfoModalContent';
 import { wallets } from '../../web3/components/wallet/ConnectWalletModal';
@@ -27,31 +27,31 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const isHelpWalletModalOpen = useStore(
+  const isHelpWalletModalOpen = useRootStore(
     (store) => store.isHelpWalletModalOpen,
   );
-  const setIsHelpWalletModalOpen = useStore(
+  const setIsHelpWalletModalOpen = useRootStore(
     (store) => store.setIsHelpWalletModalOpen,
   );
-  const setIsHelpDelegateModalOpen = useStore(
+  const setIsHelpDelegateModalOpen = useRootStore(
     (store) => store.setIsHelpDelegateModalOpen,
   );
-  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
-  const setIsHelpVotingModalOpen = useStore(
+  const isHelpModalClosed = useRootStore((store) => store.isHelpModalClosed);
+  const setIsHelpVotingModalOpen = useRootStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
-  const setIsHelpNavigationModalOpen = useStore(
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const resetTestTransactionsPool = useStore(
+  const resetTestTransactionsPool = useRootStore(
     (store) => store.resetTestTransactionsPool,
   );
-  const addTestTransaction = useStore((store) => store.addTestTransaction);
-  const setIsHelpRepresentationModalOpen = useStore(
+  const addTestTransaction = useRootStore((store) => store.addTestTransaction);
+  const setIsHelpRepresentationModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentationModalOpen,
   );
 
-  const allTestTransaction = useStore((state) =>
+  const allTestTransaction = useRootStore((state) =>
     selectAllTestTransactions(state),
   );
 

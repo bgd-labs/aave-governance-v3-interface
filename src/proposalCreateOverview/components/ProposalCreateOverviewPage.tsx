@@ -12,7 +12,7 @@ import { DetailsShareLinks } from '../../proposals/components/proposal/DetailsSh
 import { LeftPanelWrapper } from '../../proposals/components/proposal/LeftPanelWrapper';
 import { ProposalPayloads } from '../../proposals/components/proposal/ProposalPayloads';
 import { RightPanelWrapper } from '../../proposals/components/proposal/RightPanelWrapper';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import { BackButton3D, BigButton, Container, NoSSR } from '../../ui';
@@ -33,27 +33,29 @@ export function ProposalCreateOverviewPage({
   const router = useRouter();
   const theme = useTheme();
 
-  const getTotalProposalCount = useStore(
+  const getTotalProposalCount = useRootStore(
     (store) => store.getTotalProposalCount,
   );
-  const totalProposalCount = useStore((store) => store.totalProposalCount);
-  const getIpfsData = useStore((store) => store.getIpfsData);
-  const ipfsData = useStore((store) => store.ipfsData);
-  const ipfsDataErrors = useStore((store) => store.ipfsDataErrors);
-  const createPayloadsData = useStore((store) => store.createPayloadsData);
-  const getCreatePayloadsData = useStore(
+  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
+  const getIpfsData = useRootStore((store) => store.getIpfsData);
+  const ipfsData = useRootStore((store) => store.ipfsData);
+  const ipfsDataErrors = useRootStore((store) => store.ipfsDataErrors);
+  const createPayloadsData = useRootStore((store) => store.createPayloadsData);
+  const getCreatePayloadsData = useRootStore(
     (store) => store.getCreatePayloadsData,
   );
-  const createPayloadsErrors = useStore((store) => store.createPayloadsErrors);
-  const isCreateProposalModalOpen = useStore(
+  const createPayloadsErrors = useRootStore(
+    (store) => store.createPayloadsErrors,
+  );
+  const isCreateProposalModalOpen = useRootStore(
     (store) => store.isCreateProposalModalOpen,
   );
-  const setIsCreateProposalModalOpen = useStore(
+  const setIsCreateProposalModalOpen = useRootStore(
     (store) => store.setIsCreateProposalModalOpen,
   );
-  const createProposal = useStore((store) => store.createProposal);
-  const setIpfsDataErrors = useStore((store) => store.setIpfsDataErrors);
-  const getCachedProposalPayloadsData = useStore(
+  const createProposal = useRootStore((store) => store.createProposal);
+  const setIpfsDataErrors = useRootStore((store) => store.setIpfsDataErrors);
+  const getCachedProposalPayloadsData = useRootStore(
     (store) => store.getCachedProposalPayloadsData,
   );
 

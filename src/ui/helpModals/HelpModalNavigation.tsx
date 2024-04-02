@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import RightArrow from '/public/images/icons/arrowToRightThin.svg';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BasicModal, BoxWith3D } from '..';
 import { IconBox } from '../primitives/IconBox';
 import { setRelativePath } from '../utils/relativePath';
@@ -49,28 +49,30 @@ interface HelpModalNavigationProps {
 export function HelpModalNavigation({ setInfoType }: HelpModalNavigationProps) {
   const theme = useTheme();
 
-  const isHelpNavigationModalOpen = useStore(
+  const isHelpNavigationModalOpen = useRootStore(
     (store) => store.isHelpNavigationModalOpen,
   );
-  const setIsHelpNavigationModalOpen = useStore(
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const setIsHelpWalletModalOpen = useStore(
+  const setIsHelpWalletModalOpen = useRootStore(
     (store) => store.setIsHelpWalletModalOpen,
   );
-  const setIsHelpVotingModalOpen = useStore(
+  const setIsHelpVotingModalOpen = useRootStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
-  const setIsHelpDelegateModalOpen = useStore(
+  const setIsHelpDelegateModalOpen = useRootStore(
     (store) => store.setIsHelpDelegateModalOpen,
   );
-  const setIsHelpStatusesModalOpen = useStore(
+  const setIsHelpStatusesModalOpen = useRootStore(
     (store) => store.setIsHelpStatusesModalOpen,
   );
-  const setIsHelpRepresentativeModalOpen = useStore(
+  const setIsHelpRepresentativeModalOpen = useRootStore(
     (store) => store.setIsHelpRepresentativeModalOpen,
   );
-  const setHelpProposalData = useStore((store) => store.setHelpProposalData);
+  const setHelpProposalData = useRootStore(
+    (store) => store.setHelpProposalData,
+  );
 
   useEffect(() => {
     const proposalData = getProposalData();

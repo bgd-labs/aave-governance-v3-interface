@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
 import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
 import { ToTopButton } from '../../../ui/components/ToTopButton';
@@ -51,38 +51,38 @@ export function ProposalPage({
   const theme = useTheme();
   const router = useRouter();
 
-  const getProposalCreatorBalance = useStore(
+  const getProposalCreatorBalance = useRootStore(
     (store) => store.getProposalCreatorBalance,
   );
-  const creatorBalance = useStore((store) => store.creatorBalance);
-  const isVoteModalOpen = useStore((store) => store.isVoteModalOpen);
-  const setIsVoteModalOpen = useStore((store) => store.setIsVoteModalOpen);
-  const getVoters = useStore((store) => store.getVoters);
-  const startVotersPolling = useStore((store) => store.startVotersPolling);
-  const stopVotersPolling = useStore((store) => store.stopVotersPolling);
-  const isProposalHistoryModalOpen = useStore(
+  const creatorBalance = useRootStore((store) => store.creatorBalance);
+  const isVoteModalOpen = useRootStore((store) => store.isVoteModalOpen);
+  const setIsVoteModalOpen = useRootStore((store) => store.setIsVoteModalOpen);
+  const getVoters = useRootStore((store) => store.getVoters);
+  const startVotersPolling = useRootStore((store) => store.startVotersPolling);
+  const stopVotersPolling = useRootStore((store) => store.stopVotersPolling);
+  const isProposalHistoryModalOpen = useRootStore(
     (store) => store.isProposalHistoryModalOpen,
   );
-  const setIsProposalHistoryOpen = useStore(
+  const setIsProposalHistoryOpen = useRootStore(
     (store) => store.setIsProposalHistoryOpen,
   );
-  const isActivateVotingOnVotingMachineModalOpen = useStore(
+  const isActivateVotingOnVotingMachineModalOpen = useRootStore(
     (store) => store.isActivateVotingOnVotingMachineModalOpen,
   );
-  const setIsActivateVotingOnVotingMachineModalOpen = useStore(
+  const setIsActivateVotingOnVotingMachineModalOpen = useRootStore(
     (store) => store.setIsActivateVotingOnVotingMachineModalOpen,
   );
-  const isExecutePayloadModalOpen = useStore(
+  const isExecutePayloadModalOpen = useRootStore(
     (store) => store.isExecutePayloadModalOpen,
   );
-  const setExecutePayloadModalOpen = useStore(
+  const setExecutePayloadModalOpen = useRootStore(
     (store) => store.setExecutePayloadModalOpen,
   );
-  const detailedProposalsDataLoadings = useStore(
+  const detailedProposalsDataLoadings = useRootStore(
     (store) => store.detailedProposalsDataLoadings,
   );
-  const getVotersLoading = useStore((store) => store.getVotersLoading);
-  const votersFromStore = useStore((store) => store.voters);
+  const getVotersLoading = useRootStore((store) => store.getVotersLoading);
+  const votersFromStore = useRootStore((store) => store.voters);
 
   const {
     lastBlockNumber: lastVoteBlockNumber,

@@ -7,7 +7,7 @@ import BackArrow from '/public/images/icons/arrowToLeft.svg';
 import NextArrow from '/public/images/icons/arrowToRight.svg';
 
 import { TimelineContent } from '../../proposals/components/timeline/TimelineContent';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { BigButton } from '../';
 import { BasicModal } from '../components/BasicModal';
 import { IconBox } from '../primitives/IconBox';
@@ -58,16 +58,16 @@ export function HelpStatusesModal({ infoType }: HelpStatusesModalProps) {
     finishedTimestamp: dayjs().unix() + 60 * 8,
   };
 
-  const isHelpStatusesModalOpen = useStore(
+  const isHelpStatusesModalOpen = useRootStore(
     (store) => store.isHelpStatusesModalOpen,
   );
-  const setIsHelpStatusesModalOpen = useStore(
+  const setIsHelpStatusesModalOpen = useRootStore(
     (store) => store.setIsHelpStatusesModalOpen,
   );
-  const setIsHelpNavigationModalOpen = useStore(
+  const setIsHelpNavigationModalOpen = useRootStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const setIsHelpVotingModalOpen = useStore(
+  const setIsHelpVotingModalOpen = useRootStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
 

@@ -11,7 +11,7 @@ import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOve
 import { PayloadActions } from '../../proposals/components/proposal/PayloadActions';
 import { PayloadCreator } from '../../proposals/components/proposal/PayloadCreator';
 import { formatPayloadData } from '../../proposals/utils/formatPayloadData';
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import {
   TransactionUnion,
   TxType,
@@ -52,12 +52,12 @@ export function PayloadExploreItem({
   const theme = useTheme();
   const xsm = useMediaQuery(media.xs);
 
-  const transactionsPool = useStore((store) => store.transactionsPool);
-  const activeWallet = useStore((store) => store.activeWallet);
-  const setExecutePayloadModalOpen = useStore(
+  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const setExecutePayloadModalOpen = useRootStore(
     (store) => store.setExecutePayloadModalOpen,
   );
-  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
+  const setIsPayloadExplorerItemDetailsModalOpen = useRootStore(
     (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
   );
 

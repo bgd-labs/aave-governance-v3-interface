@@ -3,7 +3,7 @@
 import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { Container } from '../../../ui';
 import { getProposalListCacheFromGithub } from '../../../utils/githubCacheRequests';
 import { Loading } from './Loading';
@@ -11,12 +11,24 @@ import { ProposalListItemWrapper } from './ProposalListItemWrapper';
 import ProposalListWrapper from './ProposalListWrapper';
 
 export function ProposalPage() {
-  const store = useStore();
+  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
+  const setLoadingListCache = useRootStore(
+    (store) => store.setLoadingListCache,
+  );
+  const setTotalProposalCount = useRootStore(
+    (store) => store.setTotalProposalCount,
+  );
+  const cachedProposalsIds = useRootStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useRootStore(
+    (store) => store.setCachedProposalsIds,
+  );
+  const cachedProposals = useRootStore((store) => store.cachedProposals);
+  const setCachedProposals = useRootStore((store) => store.setCachedProposals);
 
   const { loading, data, error } = useRequest(getProposalListCacheFromGithub);
 
   useEffect(() => {
-    store.setLoadingListCache(loading);
+    setLoadingListCache(loading);
     if (!loading && !error) {
       const proposalListCachedData = {
         totalProposalCount: data?.totalProposalCount || -1,
@@ -25,28 +37,24 @@ export function ProposalPage() {
         cachedProposals: data?.proposals || [],
       };
 
-      if (store.totalProposalCount < 0) {
-        store.setTotalProposalCount(
-          proposalListCachedData.totalProposalCount || 0,
-        );
+      if (totalProposalCount < 0) {
+        setTotalProposalCount(proposalListCachedData.totalProposalCount || 0);
       }
 
       if (
-        !store.cachedProposalsIds.length ||
-        store.cachedProposalsIds.length <
+        !cachedProposalsIds.length ||
+        cachedProposalsIds.length <
           (proposalListCachedData.cachedProposalsIds?.length || 0)
       ) {
-        store.setCachedProposalsIds(
-          proposalListCachedData.cachedProposalsIds || [],
-        );
+        setCachedProposalsIds(proposalListCachedData.cachedProposalsIds || []);
       }
 
       if (
-        !store.cachedProposals.length ||
-        store.cachedProposals.length <
+        !cachedProposals.length ||
+        cachedProposals.length <
           (proposalListCachedData.cachedProposals?.length || 0)
       ) {
-        store.setCachedProposals(proposalListCachedData.cachedProposals || []);
+        setCachedProposals(proposalListCachedData.cachedProposals || []);
       }
     }
   }, [loading, error]);

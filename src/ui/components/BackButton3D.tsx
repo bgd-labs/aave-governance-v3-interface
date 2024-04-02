@@ -3,7 +3,7 @@ import React from 'react';
 
 import BackArrow from '/public/images/icons/backArrow.svg';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { IconBox } from '../primitives/IconBox';
 import { texts } from '../utils/texts';
 import { BoxWith3D } from './BoxWith3D';
@@ -29,7 +29,7 @@ export function BackButton3D({
 }: BackButton3DProps) {
   const theme = useTheme();
 
-  const isRendered = useStore((store) => store.isRendered);
+  const isRendered = useRootStore((store) => store.isRendered);
 
   if (typeof window !== 'undefined') {
     if (window.history.length <= 1 && !alwaysVisible) {

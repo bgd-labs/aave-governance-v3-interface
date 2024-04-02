@@ -3,7 +3,7 @@ import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { BackButton3D, BasicModal, BigButton, Pagination } from '../../../ui';
@@ -40,27 +40,31 @@ export function CreationFeesModal({
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const creationFeesProposalsCountOnRequest = useStore(
+  const creationFeesProposalsCountOnRequest = useRootStore(
     (store) => store.creationFeesProposalsCountOnRequest,
   );
-  const activeWallet = useStore((store) => store.activeWallet);
-  const setAccountInfoModalOpen = useStore(
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const setAccountInfoModalOpen = useRootStore(
     (store) => store.setAccountInfoModalOpen,
   );
-  const creationFeesData = useStore((store) => store.creationFeesData);
-  const getCreationFeesData = useStore((store) => store.getCreationFeesData);
-  const updateCreationFeesDataByCreator = useStore(
+  const creationFeesData = useRootStore((store) => store.creationFeesData);
+  const getCreationFeesData = useRootStore(
+    (store) => store.getCreationFeesData,
+  );
+  const updateCreationFeesDataByCreator = useRootStore(
     (store) => store.updateCreationFeesDataByCreator,
   );
-  const totalProposalCount = useStore((store) => store.totalProposalCount);
-  const dataByCreatorLength = useStore((store) => store.dataByCreatorLength);
-  const setDataByCreatorLength = useStore(
+  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
+  const dataByCreatorLength = useRootStore(
+    (store) => store.dataByCreatorLength,
+  );
+  const setDataByCreatorLength = useRootStore(
     (store) => store.setDataByCreatorLength,
   );
-  const redeemCancellationFee = useStore(
+  const redeemCancellationFee = useRootStore(
     (store) => store.redeemCancellationFee,
   );
-  const dataByCreator = useStore((store) =>
+  const dataByCreator = useRootStore((store) =>
     selectCreationFeesDataByCreator(
       store,
       activeWallet?.address || zeroAddress,

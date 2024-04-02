@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 import { Address } from 'viem';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import { BackButton3D, BigButton, Container } from '../../ui';
@@ -33,32 +33,32 @@ export function RepresentationsPage() {
   const theme = useTheme();
   const router = useRouter();
 
-  const setConnectWalletModalOpen = useStore(
+  const setConnectWalletModalOpen = useRootStore(
     (store) => store.setConnectWalletModalOpen,
   );
-  const activeWallet = useStore((store) => store.activeWallet);
-  const addressesNameInProgress = useStore(
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const addressesNameInProgress = useRootStore(
     (store) => store.addressesNameInProgress,
   );
-  const ensData = useStore((store) => store.ensData);
-  const setIsRepresentationsChangedView = useStore(
+  const ensData = useRootStore((store) => store.ensData);
+  const setIsRepresentationsChangedView = useRootStore(
     (store) => store.setIsRepresentationsChangedView,
   );
-  const isRepresentationsChangedView = useStore(
+  const isRepresentationsChangedView = useRootStore(
     (store) => store.isRepresentationsChangedView,
   );
-  const representationData = useStore((store) => store.representationData);
-  const updateRepresentatives = useStore(
+  const representationData = useRootStore((store) => store.representationData);
+  const updateRepresentatives = useRootStore(
     (store) => store.updateRepresentatives,
   );
-  const isRepresentationsModalOpen = useStore(
+  const isRepresentationsModalOpen = useRootStore(
     (store) => store.isRepresentationsModalOpen,
   );
-  const setRepresentationsModalOpen = useStore(
+  const setRepresentationsModalOpen = useRootStore(
     (store) => store.setRepresentationsModalOpen,
   );
-  const resetL1Balances = useStore((store) => store.resetL1Balances);
-  const incorrectRepresentationFields = useStore(
+  const resetL1Balances = useRootStore((store) => store.resetL1Balances);
+  const incorrectRepresentationFields = useRootStore(
     (store) => store.incorrectRepresentationFields,
   );
 

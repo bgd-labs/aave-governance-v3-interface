@@ -6,7 +6,7 @@ import { Hex } from 'viem';
 import ArrowToBottom from '/public/images/icons/arrowToBottom.svg';
 import ArrowToTop from '/public/images/icons/arrowToTop.svg';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { NoSSR } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
@@ -30,7 +30,7 @@ export function PayloadsControllerSelect({
   setControllerAddress,
 }: PayloadsControllerSelectProps) {
   const theme = useTheme();
-  const isRendered = useStore((store) => store.isRendered);
+  const isRendered = useRootStore((store) => store.isRendered);
 
   const selectOptions =
     appConfig.payloadsControllerConfig[chainId].contractAddresses;

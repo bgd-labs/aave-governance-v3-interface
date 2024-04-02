@@ -3,7 +3,7 @@ import React, { ReactNode, useState } from 'react';
 import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 import { isAddress, zeroAddress } from 'viem';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { texts } from '../utils/texts';
 import { media } from '../utils/themeMUI';
 import { useMediaQuery } from '../utils/useMediaQuery';
@@ -30,7 +30,7 @@ export function TableText({
   errorMessage,
   withoutHover,
 }: TableTextProps) {
-  const activeWallet = useStore((store) => store.activeWallet);
+  const activeWallet = useRootStore((store) => store.activeWallet);
 
   const sm = useMediaQuery(media.sm);
   const [isClick, setIsClick] = useState(false);

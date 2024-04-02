@@ -12,7 +12,7 @@ import { zeroAddress } from 'viem';
 
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import {
@@ -40,26 +40,30 @@ export function DelegatePage() {
   const theme = useTheme();
   const router = useRouter();
 
-  const activeWallet = useStore((store) => store.activeWallet);
-  const ensData = useStore((store) => store.ensData);
-  const addressesNameInProgress = useStore(
+  const activeWallet = useRootStore((store) => store.activeWallet);
+  const ensData = useRootStore((store) => store.ensData);
+  const addressesNameInProgress = useRootStore(
     (store) => store.addressesNameInProgress,
   );
-  const delegateData = useStore((store) => store.delegateData);
-  const getDelegateData = useStore((store) => store.getDelegateData);
-  const isDelegateModalOpen = useStore((store) => store.isDelegateModalOpen);
-  const setDelegateModalOpen = useStore((store) => store.setDelegateModalOpen);
-  const setConnectWalletModalOpen = useStore(
+  const delegateData = useRootStore((store) => store.delegateData);
+  const getDelegateData = useRootStore((store) => store.getDelegateData);
+  const isDelegateModalOpen = useRootStore(
+    (store) => store.isDelegateModalOpen,
+  );
+  const setDelegateModalOpen = useRootStore(
+    (store) => store.setDelegateModalOpen,
+  );
+  const setConnectWalletModalOpen = useRootStore(
     (store) => store.setConnectWalletModalOpen,
   );
-  const isDelegateChangedView = useStore(
+  const isDelegateChangedView = useRootStore(
     (store) => store.isDelegateChangedView,
   );
-  const setIsDelegateChangedView = useStore(
+  const setIsDelegateChangedView = useRootStore(
     (store) => store.setIsDelegateChangedView,
   );
-  const delegate = useStore((store) => store.delegate);
-  const incorrectDelegationToFields = useStore(
+  const delegate = useRootStore((store) => store.delegate);
+  const incorrectDelegationToFields = useRootStore(
     (store) => store.incorrectDelegationToFields,
   );
 

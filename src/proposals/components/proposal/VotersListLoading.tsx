@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import {
   votersCountForViewAll,
@@ -26,8 +26,8 @@ export function VotersListLoading({
   isStarted,
   setIsVotersModalOpen,
 }: VotersLoadingProps) {
-  const representative = useStore((store) => store.representative);
-  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useRootStore((store) => store.representative);
+  const activeWallet = useRootStore((store) => store.activeWallet);
 
   if (!isStarted) return null;
   if (!voters?.length) return null;

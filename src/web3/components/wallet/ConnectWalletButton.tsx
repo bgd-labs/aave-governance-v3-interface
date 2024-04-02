@@ -13,7 +13,7 @@ import SuccessIcon from '/public/images/icons/check.svg';
 import ErrorIcon from '/public/images/icons/cross.svg';
 
 import { RepresentativeAddress } from '../../../representations/store/representationsSlice';
-import { useStore } from '../../../store';
+import { useRootStore } from '../../../store/storeProvider';
 import { Image, Spinner } from '../../../ui';
 import { ChainNameWithIcon } from '../../../ui/components/ChainNameWithIcon';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
@@ -41,11 +41,11 @@ export function ConnectWalletButton({
   isAvatarExists,
   representative,
 }: ConnectWalletButtonProps) {
-  const walletActivating = useStore((store) => store.walletActivating);
-  const walletConnectedTimeLock = useStore(
+  const walletActivating = useRootStore((store) => store.walletActivating);
+  const walletConnectedTimeLock = useRootStore(
     (store) => store.walletConnectedTimeLock,
   );
-  const activeWallet = useStore((store) => store.activeWallet);
+  const activeWallet = useRootStore((store) => store.activeWallet);
 
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
@@ -53,13 +53,13 @@ export function ConnectWalletButton({
   const isActive = activeWallet?.isActive;
   const activeAddress = activeWallet?.address || '';
 
-  const allTxsFromStore = useStore((store) =>
+  const allTxsFromStore = useRootStore((store) =>
     selectAllTransactionsByWallet(
       store.transactionsPool,
       activeAddress || zeroAddress,
     ),
   );
-  const pendingTxsFromStore = useStore((store) =>
+  const pendingTxsFromStore = useRootStore((store) =>
     selectPendingTransactionByWallet(
       store.transactionsPool,
       activeAddress || zeroAddress,

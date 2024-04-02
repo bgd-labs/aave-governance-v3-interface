@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 
-import { useStore } from '../../store';
+import { useRootStore } from '../../store/storeProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Input } from '../../ui';
@@ -30,18 +30,20 @@ type FormProperties = {
 };
 
 export function CreatePayloadForm() {
-  const createPayload = useStore((store) => store.createPayload);
-  const initialPayloadsCount = useStore((store) => store.initialPayloadsCount);
-  const getTotalPayloadsCount = useStore(
+  const createPayload = useRootStore((store) => store.createPayload);
+  const initialPayloadsCount = useRootStore(
+    (store) => store.initialPayloadsCount,
+  );
+  const getTotalPayloadsCount = useRootStore(
     (store) => store.getTotalPayloadsCount,
   );
-  const isCreatePayloadModalOpen = useStore(
+  const isCreatePayloadModalOpen = useRootStore(
     (store) => store.isCreatePayloadModalOpen,
   );
-  const setIsCreatePayloadModalOpen = useStore(
+  const setIsCreatePayloadModalOpen = useRootStore(
     (store) => store.setIsCreatePayloadModalOpen,
   );
-  const configs = useStore((store) => store.configs);
+  const configs = useRootStore((store) => store.configs);
 
   const defaultPayloadsController =
     appConfig.payloadsControllerConfig[appConfig.payloadsControllerChainIds[0]]
