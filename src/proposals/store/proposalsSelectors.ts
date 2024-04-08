@@ -239,6 +239,7 @@ const selectFilteredProposalIds = (store: RootState) => {
   const fuse = new Fuse(detailedData, {
     keys: ['proposal.data.title'],
     threshold: 0.3,
+    distance: 1000,
   });
 
   return store.filteredState === null && store.titleSearchValue === undefined
