@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';
@@ -30,7 +30,7 @@ export function SendProofsModal({
   baseBalanceSlotRaw,
   withSlot,
 }: SendProofsModalProps) {
-  const sendProofs = useRootStore((state) => state.sendProofs);
+  const sendProofs = useStore((state) => state.sendProofs);
 
   return (
     <ActionModal

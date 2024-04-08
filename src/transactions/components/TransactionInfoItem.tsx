@@ -13,7 +13,7 @@ import ReplacedIcon from '/public/images/icons/replacedIcon.svg';
 
 import { DelegatedText } from '../../delegate/components/DelegatedText';
 import { TxText } from '../../representations/components/TxText';
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Link, Spinner } from '../../ui';
 import { ChainNameWithIcon } from '../../ui/components/ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
@@ -33,8 +33,8 @@ interface TransactionInfoItemProps {
 export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
   const theme = useTheme();
 
-  const transactionsPool = useRootStore((store) => store.transactionsPool);
-  const activeWallet = useRootStore((store) => store.activeWallet);
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
 
   const NetworkIconWitchChainN = () => {
     return (

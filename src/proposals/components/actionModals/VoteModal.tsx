@@ -20,7 +20,7 @@ import gelatoIcon from '/public/images/icons/gelato.svg?url';
 import InfoIcon from '/public/images/icons/info.svg';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BasicActionModal } from '../../../transactions/components/BasicActionModal';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../../transactions/store/transactionsSlice';
@@ -46,42 +46,42 @@ export function VoteModal({
 }: ActionModalBasicTypes) {
   const theme = useTheme();
 
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const vote = useRootStore((store) => store.vote);
-  const supportObject = useRootStore((store) => store.supportObject);
-  const setSupportObject = useRootStore((store) => store.setSupportObject);
-  const checkIsGelatoAvailableWithApiKey = useRootStore(
+  const activeWallet = useStore((store) => store.activeWallet);
+  const vote = useStore((store) => store.vote);
+  const supportObject = useStore((store) => store.supportObject);
+  const setSupportObject = useStore((store) => store.setSupportObject);
+  const checkIsGelatoAvailableWithApiKey = useStore(
     (store) => store.checkIsGelatoAvailableWithApiKey,
   );
-  const representative = useRootStore((store) => store.representative);
-  const clearSupportObject = useRootStore((store) => store.clearSupportObject);
-  const isGelatoAvailableChains = useRootStore(
+  const representative = useStore((store) => store.representative);
+  const clearSupportObject = useStore((store) => store.clearSupportObject);
+  const isGelatoAvailableChains = useStore(
     (store) => store.isGelatoAvailableChains,
   );
-  const isGaslessVote = useRootStore((store) => store.isGaslessVote);
-  const setIsGaslessVote = useRootStore((store) => store.setIsGaslessVote);
-  const checkIsGaslessVote = useRootStore((store) => store.checkIsGaslessVote);
-  const startDetailedProposalDataPolling = useRootStore(
+  const isGaslessVote = useStore((store) => store.isGaslessVote);
+  const setIsGaslessVote = useStore((store) => store.setIsGaslessVote);
+  const checkIsGaslessVote = useStore((store) => store.checkIsGaslessVote);
+  const startDetailedProposalDataPolling = useStore(
     (store) => store.startDetailedProposalDataPolling,
   );
-  const stopDetailedProposalDataPolling = useRootStore(
+  const stopDetailedProposalDataPolling = useStore(
     (store) => store.stopDetailedProposalDataPolling,
   );
-  const setIsRepresentationInfoModalOpen = useRootStore(
+  const setIsRepresentationInfoModalOpen = useStore(
     (store) => store.setIsRepresentationInfoModalOpen,
   );
-  const detailedProposalsData = useRootStore(
+  const detailedProposalsData = useStore(
     (store) => store.detailedProposalsData,
   );
-  const configs = useRootStore((store) => store.configs);
-  const contractsConstants = useRootStore((store) => store.contractsConstants);
-  const representativeLoading = useRootStore(
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
     (store) => store.representativeLoading,
   );
-  const blockHashBalanceLoadings = useRootStore(
+  const blockHashBalanceLoadings = useStore(
     (store) => store.blockHashBalanceLoadings,
   );
-  const blockHashBalance = useRootStore((store) => store.blockHashBalance);
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const [localVotingTokens, setLocalVotingTokens] = useState<Balance[]>([]);
   const [isEditVotingTokensOpen, setEditVotingTokens] = useState(false);

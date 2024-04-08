@@ -12,7 +12,7 @@ import {
   RepresentedAddress,
 } from '../../../representations/store/representationsSlice';
 import { formatRepresentedAddresses } from '../../../representations/utils/getRepresentedAddresses';
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Divider } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { IconBox } from '../../../ui/primitives/IconBox';
@@ -44,12 +44,12 @@ export function RepresentingForm({
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const setRepresentativeAddress = useRootStore(
+  const setRepresentativeAddress = useStore(
     (store) => store.setRepresentativeAddress,
   );
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const representative = useRootStore((store) => store.representative);
-  const ensData = useRootStore((store) => store.ensData);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const ensData = useStore((store) => store.ensData);
 
   const [localAddress, setLocalAddress] = useState(
     isForTest ? testInitialAddress : representative,

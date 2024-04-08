@@ -5,7 +5,7 @@ import React from 'react';
 import DarkThemeIcon from '/public/images/icons/darkTheme.svg';
 import LightThemeIcon from '/public/images/icons/lightTheme.svg';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { NoSSR } from '..';
 import { IconBox } from '../primitives/IconBox';
 
@@ -13,7 +13,7 @@ export function ThemeSwitcher() {
   const themeMUI = useTheme();
   const { theme, setTheme } = useThemeNext();
 
-  const setIsThemeSwitched = useRootStore((store) => store.setIsThemeSwitched);
+  const setIsThemeSwitched = useStore((store) => store.setIsThemeSwitched);
 
   return (
     <Box

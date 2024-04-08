@@ -7,7 +7,7 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
 import { ProposalStatus } from '../../../proposals/components/ProposalStatus';
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import {
   TransactionUnion,
   TxType,
@@ -35,7 +35,7 @@ export function CreationFeesModalItem({
 
   const { title, ipfsHash, status, proposalId, proposalStatus } = data;
 
-  const txFromPool = useRootStore(
+  const txFromPool = useStore(
     (store) =>
       store.activeWallet &&
       selectLastTxByTypeAndPayload<TransactionUnion>(

@@ -8,7 +8,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { setProposalDetailsVoters } from '../../store/proposalsSelectors';
 import { ProposalPageWrapper } from './ProposalPageWrapper';
 
@@ -31,14 +31,14 @@ export function ProposalPageWrapperSSR({
   cachedProposalsIds,
   cachedProposalEvents,
 }: ProposalPageWrapperSSRProps) {
-  const setDetailedPayloadsData = useRootStore(
+  const setDetailedPayloadsData = useStore(
     (store) => store.setDetailedPayloadsData,
   );
-  const setIpfsData = useRootStore((store) => store.setIpfsData);
-  const setDetailedProposalsData = useRootStore(
+  const setIpfsData = useStore((store) => store.setIpfsData);
+  const setDetailedProposalsData = useStore(
     (store) => store.setDetailedProposalsData,
   );
-  const setVoters = useRootStore((store) => store.setVoters);
+  const setVoters = useStore((store) => store.setVoters);
 
   useEffect(() => {
     const detailedProposalsData: Record<number, ProposalData> = {};

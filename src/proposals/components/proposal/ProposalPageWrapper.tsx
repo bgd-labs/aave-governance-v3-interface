@@ -7,7 +7,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect, useState } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { appConfig, isForIPFS } from '../../../utils/appConfig';
 import {
   getProposalDataById,
@@ -37,50 +37,48 @@ export function ProposalPageWrapper({
   votesData,
   cachedProposalEvents,
 }: ProposalPageWrapperProps) {
-  const cachedProposals = useRootStore((store) => store.cachedProposals);
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const configs = useRootStore((store) => store.configs);
-  const ipfsDataErrors = useRootStore((store) => store.ipfsDataErrors);
-  const getL1Balances = useRootStore((store) => store.getL1Balances);
-  const contractsConstants = useRootStore((store) => store.contractsConstants);
-  const setDetailedProposalsDataLoadings = useRootStore(
+  const cachedProposals = useStore((store) => store.cachedProposals);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const configs = useStore((store) => store.configs);
+  const ipfsDataErrors = useStore((store) => store.ipfsDataErrors);
+  const getL1Balances = useStore((store) => store.getL1Balances);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const setDetailedProposalsDataLoadings = useStore(
     (store) => store.setDetailedProposalsDataLoadings,
   );
-  const ipfsDataFromStoreInit = useRootStore((store) => store.ipfsData);
-  const representative = useRootStore((store) => store.representative);
-  const isRendered = useRootStore((store) => store.isRendered);
-  const rpcAppErrors = useRootStore((store) => store.rpcAppErrors);
-  const setVoters = useRootStore((store) => store.setVoters);
-  const initProposalHistory = useRootStore(
-    (store) => store.initProposalHistory,
-  );
-  const startDetailedProposalDataPolling = useRootStore(
+  const ipfsDataFromStoreInit = useStore((store) => store.ipfsData);
+  const representative = useStore((store) => store.representative);
+  const isRendered = useStore((store) => store.isRendered);
+  const rpcAppErrors = useStore((store) => store.rpcAppErrors);
+  const setVoters = useStore((store) => store.setVoters);
+  const initProposalHistory = useStore((store) => store.initProposalHistory);
+  const startDetailedProposalDataPolling = useStore(
     (store) => store.startDetailedProposalDataPolling,
   );
-  const detailedProposalsData = useRootStore(
+  const detailedProposalsData = useStore(
     (store) => store.detailedProposalsData,
   );
-  const stopDetailedProposalDataPolling = useRootStore(
+  const stopDetailedProposalDataPolling = useStore(
     (store) => store.stopDetailedProposalDataPolling,
   );
-  const detailedProposalsDataLoading = useRootStore(
+  const detailedProposalsDataLoading = useStore(
     (store) => store.detailedProposalsDataLoading,
   );
-  const blockHashBalance = useRootStore((store) => store.blockHashBalance);
-  const getProposalDataWithIpfsById = useRootStore(
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
+  const getProposalDataWithIpfsById = useStore(
     (store) => store.getProposalDataWithIpfsById,
   );
-  const totalProposalCountLoading = useRootStore(
+  const totalProposalCountLoading = useStore(
     (store) => store.totalProposalCountLoading,
   );
-  const representativeLoading = useRootStore(
+  const representativeLoading = useStore(
     (store) => store.representativeLoading,
   );
-  const blockHashBalanceLoadings = useRootStore(
+  const blockHashBalanceLoadings = useStore(
     (store) => store.blockHashBalanceLoadings,
   );
-  const appMode = useRootStore((store) => store.appMode);
-  const getDetailedProposalsData = useRootStore(
+  const appMode = useStore((store) => store.appMode);
+  const getDetailedProposalsData = useStore(
     (store) => store.getDetailedProposalsData,
   );
 

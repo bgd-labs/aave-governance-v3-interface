@@ -6,7 +6,7 @@ import WarningIcon from '/public/images/icons/warningIcon.svg';
 import Logo from '/public/images/logo.svg';
 
 import { selectIsRpcAppHasErrors } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { WalletWidget } from '../../web3/components/wallet/WalletWidget';
 import { BoxWith3D } from '../components/BoxWith3D';
@@ -47,25 +47,23 @@ export function AppHeader() {
   const sm = useMediaQuery(media.sm);
   const wrapperRef = useRef(null);
 
-  const isRendered = useRootStore((store) => store.isRendered);
-  const setIsHelpModalOpen = useRootStore((store) => store.setIsHelpModalOpen);
-  const setActivePage = useRootStore((store) => store.setActivePage);
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const checkAppMode = useRootStore((store) => store.checkAppMode);
-  const appMode = useRootStore((store) => store.appMode);
-  const isModalOpen = useRootStore((store) => store.isModalOpen);
-  const isAppBlockedByTerms = useRootStore(
-    (store) => store.isAppBlockedByTerms,
-  );
-  const isClickedOnStartButtonOnHelpModal = useRootStore(
+  const isRendered = useStore((store) => store.isRendered);
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
+  const setActivePage = useStore((store) => store.setActivePage);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const checkAppMode = useStore((store) => store.checkAppMode);
+  const appMode = useStore((store) => store.appMode);
+  const isModalOpen = useStore((store) => store.isModalOpen);
+  const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
+  const isClickedOnStartButtonOnHelpModal = useStore(
     (store) => store.isClickedOnStartButtonOnHelpModal,
   );
-  const setIsTermModalOpen = useRootStore((store) => store.setIsTermModalOpen);
-  const setIsRepresentationInfoModalOpen = useRootStore(
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const setIsRepresentationInfoModalOpen = useStore(
     (store) => store.setIsRepresentationInfoModalOpen,
   );
-  const closeHelpModals = useRootStore((store) => store.closeHelpModals);
-  const isRpcHasError = useRootStore((store) => selectIsRpcAppHasErrors(store));
+  const closeHelpModals = useStore((store) => store.closeHelpModals);
+  const isRpcHasError = useStore((store) => selectIsRpcAppHasErrors(store));
 
   const { scrollDirection } = useScrollDirection();
 

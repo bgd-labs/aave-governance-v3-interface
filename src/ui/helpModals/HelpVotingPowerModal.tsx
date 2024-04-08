@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal, BigButton } from '../';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -12,13 +12,13 @@ import { HelpModalText } from './HelpModalText';
 export function HelpVotingPowerModal() {
   const theme = useTheme();
 
-  const isHelpVotingPowerModalOpen = useRootStore(
+  const isHelpVotingPowerModalOpen = useStore(
     (store) => store.isHelpVotingPowerModalOpen,
   );
-  const setIsHelpVotingPowerModalOpen = useRootStore(
+  const setIsHelpVotingPowerModalOpen = useStore(
     (store) => store.setIsHelpVotingPowerModalOpen,
   );
-  const setIsHelpVotingModalOpen = useRootStore(
+  const setIsHelpVotingModalOpen = useStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
 

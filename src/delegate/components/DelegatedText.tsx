@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Address } from 'viem';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Link } from '../../ui';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
@@ -151,8 +151,8 @@ export function DelegatedText({
   formDelegateData,
   isBeforeTx,
 }: DelegatedTextProps) {
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const ensData = useRootStore((store) => store.ensData);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const ensData = useStore((store) => store.ensData);
   const activeAddress = activeWallet?.address;
 
   const delegatedData: TxDelegateData[] = [];

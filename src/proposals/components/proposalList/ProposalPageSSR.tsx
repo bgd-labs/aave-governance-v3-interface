@@ -8,7 +8,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Container } from '../../../ui';
 import ProposalListWrapper from './ProposalListWrapper';
 
@@ -29,22 +29,18 @@ export function ProposalPageSSR({
   contractsConstants,
   cachedActiveIds,
 }: ProposalPageSSRProps) {
-  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
-  const setLoadingListCache = useRootStore(
-    (store) => store.setLoadingListCache,
-  );
-  const setTotalProposalCount = useRootStore(
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const setLoadingListCache = useStore((store) => store.setLoadingListCache);
+  const setTotalProposalCount = useStore(
     (store) => store.setTotalProposalCount,
   );
-  const cachedProposalsIds = useRootStore((store) => store.cachedProposalsIds);
-  const setCachedProposalsIds = useRootStore(
+  const cachedProposalsIds = useStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useStore(
     (store) => store.setCachedProposalsIds,
   );
-  const setSSRGovCoreConfigs = useRootStore(
-    (store) => store.setSSRGovCoreConfigs,
-  );
-  const setCachedProposals = useRootStore((store) => store.setCachedProposals);
-  const storeCachedProposals = useRootStore((store) => store.cachedProposals);
+  const setSSRGovCoreConfigs = useStore((store) => store.setSSRGovCoreConfigs);
+  const setCachedProposals = useStore((store) => store.setCachedProposals);
+  const storeCachedProposals = useStore((store) => store.cachedProposals);
 
   const data = {
     totalProposalCount: cachedTotalProposalCount,

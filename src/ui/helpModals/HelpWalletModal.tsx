@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { TransactionsModalContent } from '../../transactions/components/TransactionsModalContent';
 import { AccountInfoModalContent } from '../../web3/components/wallet/AccountInfoModalContent';
 import { wallets } from '../../web3/components/wallet/ConnectWalletModal';
@@ -27,31 +27,31 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const isHelpWalletModalOpen = useRootStore(
+  const isHelpWalletModalOpen = useStore(
     (store) => store.isHelpWalletModalOpen,
   );
-  const setIsHelpWalletModalOpen = useRootStore(
+  const setIsHelpWalletModalOpen = useStore(
     (store) => store.setIsHelpWalletModalOpen,
   );
-  const setIsHelpDelegateModalOpen = useRootStore(
+  const setIsHelpDelegateModalOpen = useStore(
     (store) => store.setIsHelpDelegateModalOpen,
   );
-  const isHelpModalClosed = useRootStore((store) => store.isHelpModalClosed);
-  const setIsHelpVotingModalOpen = useRootStore(
+  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
+  const setIsHelpVotingModalOpen = useStore(
     (store) => store.setIsHelpVotingModalOpen,
   );
-  const setIsHelpNavigationModalOpen = useRootStore(
+  const setIsHelpNavigationModalOpen = useStore(
     (store) => store.setIsHelpNavigationModalOpen,
   );
-  const resetTestTransactionsPool = useRootStore(
+  const resetTestTransactionsPool = useStore(
     (store) => store.resetTestTransactionsPool,
   );
-  const addTestTransaction = useRootStore((store) => store.addTestTransaction);
-  const setIsHelpRepresentationModalOpen = useRootStore(
+  const addTestTransaction = useStore((store) => store.addTestTransaction);
+  const setIsHelpRepresentationModalOpen = useStore(
     (store) => store.setIsHelpRepresentationModalOpen,
   );
 
-  const allTestTransaction = useRootStore((state) =>
+  const allTestTransaction = useStore((state) =>
     selectAllTestTransactions(state),
   );
 

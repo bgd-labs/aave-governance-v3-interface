@@ -1,11 +1,11 @@
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Pagination } from '../../ui';
 import { selectProposalsPages } from '../store/proposalsSelectors';
 
 export const ProposalsPagination = () => {
-  const pages = useRootStore((state) => selectProposalsPages(state));
-  const setActivePage = useRootStore((state) => state.setActivePage);
-  const activePage = useRootStore((state) => state.activePage);
+  const pages = useStore((state) => selectProposalsPages(state));
+  const setActivePage = useStore((state) => state.setActivePage);
+  const activePage = useStore((state) => state.activePage);
 
   return (
     <Pagination

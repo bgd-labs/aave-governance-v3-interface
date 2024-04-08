@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
@@ -24,9 +24,7 @@ export function MobileCard({
   forHelp,
 }: TableItemProps) {
   const theme = useTheme();
-  const delegateDataLoading = useRootStore(
-    (store) => store.delegateDataLoading,
-  );
+  const delegateDataLoading = useStore((store) => store.delegateDataLoading);
 
   const { formVotingToAddress, formPropositionToAddress } = getFormDelegateData(
     {

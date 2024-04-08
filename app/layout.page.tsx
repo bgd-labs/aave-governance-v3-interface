@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import React from 'react';
 
-import { RootStoreProvider } from '../src/store/storeProvider';
+import { ZustandStoreProvider } from '../src/store/ZustandStoreProvider';
 import AppLayout from '../src/ui/layouts/AppLayout';
 import ThemeRegistry from '../src/ui/utils/ThemeRegistry';
 import WagmiProvider from '../src/web3/providers/WagmiProvider';
@@ -32,14 +32,14 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body>
-        <RootStoreProvider>
+        <ZustandStoreProvider>
           <WagmiProvider />
 
           <ThemeRegistry options={{ key: 'mui' }}>
             <NextTopLoader />
             <AppLayout>{children}</AppLayout>
           </ThemeRegistry>
-        </RootStoreProvider>
+        </ZustandStoreProvider>
       </body>
     </html>
   );

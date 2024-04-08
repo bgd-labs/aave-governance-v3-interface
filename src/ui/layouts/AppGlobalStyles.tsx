@@ -3,7 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import { ThemeProvider as PreferredThemeProvider } from 'next-themes';
 import React, { ReactNode, useEffect } from 'react';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { createEmotionCache } from '../utils/themeMUI';
 import { MUIThemeProvider } from './MUIThemeProvider';
 
@@ -17,7 +17,7 @@ export function AppGlobalStyles({
   children: ReactNode;
   emotionCache?: EmotionCache;
 }) {
-  const setIsRendered = useRootStore((store) => store.setIsRendered);
+  const setIsRendered = useStore((store) => store.setIsRendered);
   useEffect(() => setIsRendered(), []);
 
   return (

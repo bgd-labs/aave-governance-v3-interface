@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import NotFoundGhostImage from '/public/images/notFoundGhost.svg';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BigButton, BoxWith3D, FilterDropdown } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { SearchButton } from '../../../ui/components/SearchButton';
@@ -60,23 +60,21 @@ export function ProposalsList({
     [searchParams],
   );
 
-  const isRendered = useRootStore((state) => state.isRendered);
-  const setActivePage = useRootStore((state) => state.setActivePage);
-  const titleSearchValue = useRootStore((state) => state.titleSearchValue);
-  const setTitleSearchValue = useRootStore(
-    (state) => state.setTitleSearchValue,
-  );
-  const totalProposalCount = useRootStore((state) => state.totalProposalCount);
-  const activePage = useRootStore((state) => state.activePage);
-  const loadingListCache = useRootStore((state) => state.loadingListCache);
-  const filteredState = useRootStore((state) => state.filteredState);
-  const setFilteredState = useRootStore((state) => state.setFilteredState);
-  const ipfsDataErrors = useRootStore((state) => state.ipfsDataErrors);
-  const getPaginatedProposalsData = useRootStore(
+  const isRendered = useStore((state) => state.isRendered);
+  const setActivePage = useStore((state) => state.setActivePage);
+  const titleSearchValue = useStore((state) => state.titleSearchValue);
+  const setTitleSearchValue = useStore((state) => state.setTitleSearchValue);
+  const totalProposalCount = useStore((state) => state.totalProposalCount);
+  const activePage = useStore((state) => state.activePage);
+  const loadingListCache = useStore((state) => state.loadingListCache);
+  const filteredState = useStore((state) => state.filteredState);
+  const setFilteredState = useStore((state) => state.setFilteredState);
+  const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
+  const getPaginatedProposalsData = useStore(
     (state) => state.getPaginatedProposalsData,
   );
-  const isVoteModalOpen = useRootStore((state) => state.isVoteModalOpen);
-  const setIsVoteModalOpen = useRootStore((state) => state.setIsVoteModalOpen);
+  const isVoteModalOpen = useStore((state) => state.isVoteModalOpen);
+  const setIsVoteModalOpen = useStore((state) => state.setIsVoteModalOpen);
 
   const [proposalId, setProposalId] = useState<null | number>(null);
   const [isSearchButtonOpen, setIsSearchButtonOpen] = useState(false);

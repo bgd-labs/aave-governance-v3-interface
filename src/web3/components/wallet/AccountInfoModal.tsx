@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { zeroAddress } from 'viem';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BasicModal } from '../../../ui';
 import { appConfig } from '../../../utils/appConfig';
 import { AccountInfoModalContent } from './AccountInfoModalContent';
@@ -29,14 +29,14 @@ export function AccountInfoModal({
   representedAddresses,
   onDisconnectButtonClick,
 }: AccountInfoModalProps) {
-  const representative = useRootStore((store) => store.representative);
-  const getCurrentPowers = useRootStore((store) => store.getCurrentPowers);
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const setIsCreationFeeModalOpen = useRootStore(
+  const representative = useStore((store) => store.representative);
+  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setIsCreationFeeModalOpen = useStore(
     (store) => store.setIsCreationFeeModalOpen,
   );
 
-  const allTxsFromStore = useRootStore((store) =>
+  const allTxsFromStore = useStore((store) =>
     selectAllTransactionsByWallet(
       store.transactionsPool,
       activeWallet?.address || zeroAddress,

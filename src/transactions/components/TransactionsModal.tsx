@@ -1,7 +1,7 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
 import React from 'react';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal } from '../../ui';
 import { TransactionUnion, TxType } from '../store/transactionsSlice';
 import { TransactionsModalContent } from './TransactionsModalContent';
@@ -15,11 +15,11 @@ export function TransactionsModal({
   isOpen,
   setIsOpen,
 }: TransactionsModalProps) {
-  const setAccountInfoModalOpen = useRootStore(
+  const setAccountInfoModalOpen = useStore(
     (store) => store.setAccountInfoModalOpen,
   );
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const transactionsPool = useRootStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const transactionsPool = useStore((store) => store.transactionsPool);
 
   const allTransactions = activeWallet
     ? selectAllTransactionsByWallet<TransactionUnion>(

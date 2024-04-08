@@ -8,7 +8,7 @@ import React from 'react';
 import InfoIcon from '/public/images/icons/info.svg';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import {
   TransactionUnion,
   TxType,
@@ -74,11 +74,11 @@ export function ProposalVotingPower({
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
 
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const transactionsPool = useRootStore((store) => store.transactionsPool);
-  const supportObject = useRootStore((store) => store.supportObject);
-  const representative = useRootStore((store) => store.representative);
-  const setIsRepresentationInfoModalOpen = useRootStore(
+  const activeWallet = useStore((store) => store.activeWallet);
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const supportObject = useStore((store) => store.supportObject);
+  const representative = useStore((store) => store.representative);
+  const setIsRepresentationInfoModalOpen = useStore(
     (store) => store.setIsRepresentationInfoModalOpen,
   );
 

@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal, BigButton } from '../';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -12,13 +12,13 @@ import { HelpModalText } from './HelpModalText';
 export function HelpDelegationVP() {
   const theme = useTheme();
 
-  const isHelpDelegationVotingPowerModalOpen = useRootStore(
+  const isHelpDelegationVotingPowerModalOpen = useStore(
     (store) => store.isHelpDelegationVotingPowerModalOpen,
   );
-  const setIsHelpDelegationVotingPowerModalOpen = useRootStore(
+  const setIsHelpDelegationVotingPowerModalOpen = useStore(
     (store) => store.setIsHelpDelegationVotingPowerModalOpen,
   );
-  const setIsHelpDelegateModalOpen = useRootStore(
+  const setIsHelpDelegateModalOpen = useStore(
     (store) => store.setIsHelpDelegateModalOpen,
   );
 

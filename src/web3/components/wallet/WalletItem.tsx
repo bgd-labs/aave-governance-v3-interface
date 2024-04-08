@@ -2,7 +2,7 @@ import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../../ui';
 
 export type Wallet = {
@@ -21,7 +21,7 @@ export function WalletItem({
   onClick,
   setOpenImpersonatedForm,
 }: Wallet) {
-  const connectWallet = useRootStore((state) => state.connectWallet);
+  const connectWallet = useStore((state) => state.connectWallet);
 
   const iconSize = 28;
 

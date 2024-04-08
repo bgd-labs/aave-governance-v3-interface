@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import { BigButton, BoxWith3D, Input } from '../../ui';
@@ -27,29 +27,29 @@ type FormProperties = {
 };
 
 export function CreateProposalForm() {
-  const createProposal = useRootStore((store) => store.createProposal);
-  const totalPayloadsCount = useRootStore((store) => store.totalPayloadsCount);
-  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
-  const isCreateProposalModalOpen = useRootStore(
+  const createProposal = useStore((store) => store.createProposal);
+  const totalPayloadsCount = useStore((store) => store.totalPayloadsCount);
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const isCreateProposalModalOpen = useStore(
     (store) => store.isCreateProposalModalOpen,
   );
-  const setIsCreateProposalModalOpen = useRootStore(
+  const setIsCreateProposalModalOpen = useStore(
     (store) => store.setIsCreateProposalModalOpen,
   );
-  const detailedProposalsData = useRootStore(
+  const detailedProposalsData = useStore(
     (store) => store.detailedProposalsData,
   );
-  const configs = useRootStore((store) => store.configs);
-  const contractsConstants = useRootStore((store) => store.contractsConstants);
-  const representativeLoading = useRootStore(
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
     (store) => store.representativeLoading,
   );
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const representative = useRootStore((store) => store.representative);
-  const blockHashBalanceLoadings = useRootStore(
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const blockHashBalanceLoadings = useStore(
     (store) => store.blockHashBalanceLoadings,
   );
-  const blockHashBalance = useRootStore((store) => store.blockHashBalance);
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const availableIdsInit = appConfig.payloadsControllerChainIds
     .map((chainId) => {

@@ -5,7 +5,7 @@ import { zeroAddress } from 'viem';
 
 import ReloadIcon from '/public/images/icons/reload.svg';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Divider, Spinner } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
@@ -22,18 +22,18 @@ import { BlockTitleWithTooltip } from '../BlockTitleWithTooltip';
 import { CurrentPowerItem } from './CurrentPowerItem';
 
 export function CurrentPowers() {
-  const representative = useRootStore((store) => store.representative);
-  const getCurrentPowers = useRootStore((store) => store.getCurrentPowers);
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const setPowersInfoModalOpen = useRootStore(
+  const representative = useStore((store) => store.representative);
+  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setPowersInfoModalOpen = useStore(
     (store) => store.setPowersInfoModalOpen,
   );
-  const setAccountInfoModalOpen = useRootStore(
+  const setAccountInfoModalOpen = useStore(
     (store) => store.setAccountInfoModalOpen,
   );
 
-  const currentPowersAll = useRootStore((store) => selectCurrentPowers(store));
-  const currentPowersActiveWallet = useRootStore((store) =>
+  const currentPowersAll = useStore((store) => selectCurrentPowers(store));
+  const currentPowersActiveWallet = useStore((store) =>
     selectCurrentPowersForActiveWallet(store),
   );
 

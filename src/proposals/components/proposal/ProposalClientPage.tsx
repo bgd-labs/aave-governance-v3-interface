@@ -4,7 +4,7 @@ import { useRequest } from 'alova';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Container } from '../../../ui';
 import { NotFoundPage } from '../../../ui/pages/NotFoundPage';
 import {
@@ -20,21 +20,21 @@ export function ProposalClientPage() {
   const searchParams = useSearchParams();
   const id = Number(searchParams?.get('proposalId'));
 
-  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
-  const totalProposalCountLoading = useRootStore(
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const totalProposalCountLoading = useStore(
     (store) => store.totalProposalCountLoading,
   );
-  const detailedProposalsData = useRootStore(
+  const detailedProposalsData = useStore(
     (store) => store.detailedProposalsData,
   );
-  const getTotalProposalCount = useRootStore(
+  const getTotalProposalCount = useStore(
     (store) => store.getTotalProposalCount,
   );
-  const cachedProposalsIds = useRootStore((store) => store.cachedProposalsIds);
-  const setCachedProposalsIds = useRootStore(
+  const cachedProposalsIds = useStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useStore(
     (store) => store.setCachedProposalsIds,
   );
-  const setVoters = useRootStore((store) => store.setVoters);
+  const setVoters = useStore((store) => store.setVoters);
 
   const { loading, data, error } = useRequest(getCachedProposalsIdsFromGithub);
   const {

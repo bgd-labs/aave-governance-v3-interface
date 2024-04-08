@@ -5,7 +5,7 @@ import {
 import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { getProposalDetailsCache } from '../../../utils/githubCacheRequests';
 import { ProposalLoading } from './ProposalLoading';
 import { ProposalPageWrapper } from './ProposalPageWrapper';
@@ -17,11 +17,11 @@ interface ProposalPageWrapperWithCacheProps {
 export function ProposalPageWrapperWithCache({
   id,
 }: ProposalPageWrapperWithCacheProps) {
-  const setDetailedPayloadsData = useRootStore(
+  const setDetailedPayloadsData = useStore(
     (store) => store.setDetailedPayloadsData,
   );
-  const setIpfsData = useRootStore((store) => store.setIpfsData);
-  const setDetailedProposalsData = useRootStore(
+  const setIpfsData = useStore((store) => store.setIpfsData);
+  const setDetailedProposalsData = useStore(
     (store) => store.setDetailedProposalsData,
   );
 

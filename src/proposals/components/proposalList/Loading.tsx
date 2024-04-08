@@ -1,13 +1,13 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { VotingPowerLoading } from './VotingPowerLoading';
 
 export function Loading() {
   const theme = useTheme();
-  const activeWallet = useRootStore((state) => state.activeWallet);
+  const activeWallet = useStore((state) => state.activeWallet);
 
   return (
     <>

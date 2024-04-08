@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Hex } from 'viem';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D, NoSSR, SmallButton } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
@@ -26,8 +26,8 @@ export function Details({
   ipfsError,
   onClick,
 }: DetailsProps) {
-  const ensData = useRootStore((store) => store.ensData);
-  const fetchEnsNameByAddress = useRootStore(
+  const ensData = useStore((store) => store.ensData);
+  const fetchEnsNameByAddress = useStore(
     (store) => store.fetchEnsNameByAddress,
   );
 

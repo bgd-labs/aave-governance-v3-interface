@@ -6,7 +6,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 
-import { RootStoreProvider } from '../src/store/storeProvider';
+import { ZustandStoreProvider } from '../src/store/ZustandStoreProvider';
 import { AppGlobalStyles } from '../src/ui';
 import AppLayout from '../src/ui/layouts/AppLayout';
 import WagmiProvider from '../src/web3/providers/WagmiProvider';
@@ -35,13 +35,13 @@ function GovernanceApp({
 
   return (
     <>
-      <RootStoreProvider>
+      <ZustandStoreProvider>
         <WagmiProvider />
 
         <AppGlobalStyles emotionCache={emotionCache}>
           <AppLayout>{getLayout(<Component {...pageProps} />)}</AppLayout>
         </AppGlobalStyles>
-      </RootStoreProvider>
+      </ZustandStoreProvider>
     </>
   );
 }

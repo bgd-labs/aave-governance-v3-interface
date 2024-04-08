@@ -13,7 +13,7 @@ import { SeatBeltReportModal } from '../../proposalCreateOverview/components/Sea
 import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { ExecutePayloadModal } from '../../proposals/components/actionModals/ExecutePayloadModal';
 import { generateSeatbeltLink } from '../../proposals/utils/formatPayloadData';
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BackButton3D, Container, NoSSR, Pagination } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { InputWrapper } from '../../ui/components/InputWrapper';
@@ -105,44 +105,40 @@ export function PayloadsExplorerPage() {
     [searchParams],
   );
 
-  const isRendered = useRootStore((store) => store.isRendered);
-  const getPayloadsExploreData = useRootStore(
+  const isRendered = useStore((store) => store.isRendered);
+  const getPayloadsExploreData = useStore(
     (store) => store.getPayloadsExploreData,
   );
-  const payloadsExploreData = useRootStore(
-    (store) => store.payloadsExploreData,
-  );
-  const payloadsExplorePagination = useRootStore(
+  const payloadsExploreData = useStore((store) => store.payloadsExploreData);
+  const payloadsExplorePagination = useStore(
     (store) => store.payloadsExplorePagination,
   );
-  const setPayloadsExploreActivePage = useRootStore(
+  const setPayloadsExploreActivePage = useStore(
     (store) => store.setPayloadsExploreActivePage,
   );
-  const isExecutePayloadModalOpen = useRootStore(
+  const isExecutePayloadModalOpen = useStore(
     (store) => store.isExecutePayloadModalOpen,
   );
-  const setExecutePayloadModalOpen = useRootStore(
+  const setExecutePayloadModalOpen = useStore(
     (store) => store.setExecutePayloadModalOpen,
   );
-  const startDetailedPayloadsExplorerDataPolling = useRootStore(
+  const startDetailedPayloadsExplorerDataPolling = useStore(
     (store) => store.startDetailedPayloadsExplorerDataPolling,
   );
-  const stopDetailedPayloadsExplorerDataPolling = useRootStore(
+  const stopDetailedPayloadsExplorerDataPolling = useStore(
     (store) => store.stopDetailedPayloadsExplorerDataPolling,
   );
-  const setIsPayloadExplorerItemDetailsModalOpen = useRootStore(
+  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
     (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
   );
-  const getCachedProposalPayloadsData = useRootStore(
+  const getCachedProposalPayloadsData = useStore(
     (store) => store.getCachedProposalPayloadsData,
   );
-  const cachedProposalsPayloadsData = useRootStore(
+  const cachedProposalsPayloadsData = useStore(
     (store) => store.cachedProposalsPayloadsData,
   );
-  const payloadsHelperData = useRootStore((store) => store.payloadsHelperData);
-  const getPayloadSeatbeltMD = useRootStore(
-    (store) => store.getPayloadSeatbeltMD,
-  );
+  const payloadsHelperData = useStore((store) => store.payloadsHelperData);
+  const getPayloadSeatbeltMD = useStore((store) => store.getPayloadSeatbeltMD);
 
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState<
     Record<string, boolean>

@@ -6,7 +6,7 @@ import {
 import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { isForIPFS } from '../../../utils/appConfig';
 import { getProposalEventsCache } from '../../../utils/githubCacheRequests';
 import { getProposalDataById } from '../../store/proposalsSelectors';
@@ -105,29 +105,29 @@ function ProposalHistoryModalInit({
 }: ProposalHistoryModalProps & {
   proposalData?: ProposalWithLoadings;
 }) {
-  const proposalHistory = useRootStore((store) => store.proposalHistory);
-  const setPayloadsCreatedHistoryHash = useRootStore(
+  const proposalHistory = useStore((store) => store.proposalHistory);
+  const setPayloadsCreatedHistoryHash = useStore(
     (store) => store.setPayloadsCreatedHistoryHash,
   );
-  const setProposalCreatedHistoryHash = useRootStore(
+  const setProposalCreatedHistoryHash = useStore(
     (store) => store.setProposalCreatedHistoryHash,
   );
-  const setProposalActivatedHistoryHash = useRootStore(
+  const setProposalActivatedHistoryHash = useStore(
     (store) => store.setProposalActivatedHistoryHash,
   );
-  const setProposalActivatedOnVMHistoryHash = useRootStore(
+  const setProposalActivatedOnVMHistoryHash = useStore(
     (store) => store.setProposalActivatedOnVMHistoryHash,
   );
-  const setProposalVotingClosedHistoryHash = useRootStore(
+  const setProposalVotingClosedHistoryHash = useStore(
     (store) => store.setProposalVotingClosedHistoryHash,
   );
-  const setProposalQueuedHistoryHash = useRootStore(
+  const setProposalQueuedHistoryHash = useStore(
     (store) => store.setProposalQueuedHistoryHash,
   );
-  const setPayloadsQueuedHistoryHash = useRootStore(
+  const setPayloadsQueuedHistoryHash = useStore(
     (store) => store.setPayloadsQueuedHistoryHash,
   );
-  const setPayloadsExecutedHistoryHash = useRootStore(
+  const setPayloadsExecutedHistoryHash = useStore(
     (store) => store.setPayloadsExecutedHistoryHash,
   );
 
@@ -188,20 +188,20 @@ function ProposalHistoryModalSSR({
   setIsOpen,
   proposalId,
 }: ProposalHistoryModalProps) {
-  const detailedProposalsData = useRootStore(
+  const detailedProposalsData = useStore(
     (store) => store.detailedProposalsData,
   );
-  const configs = useRootStore((store) => store.configs);
-  const contractsConstants = useRootStore((store) => store.contractsConstants);
-  const representativeLoading = useRootStore(
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
     (store) => store.representativeLoading,
   );
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const representative = useRootStore((store) => store.representative);
-  const blockHashBalanceLoadings = useRootStore(
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const blockHashBalanceLoadings = useStore(
     (store) => store.blockHashBalanceLoadings,
   );
-  const blockHashBalance = useRootStore((store) => store.blockHashBalance);
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const proposalData = getProposalDataById({
     detailedProposalsData,
@@ -230,23 +230,21 @@ function ProposalHistoryModalIPFS({
   setIsOpen,
   proposalId,
 }: ProposalHistoryModalProps) {
-  const detailedProposalsData = useRootStore(
+  const detailedProposalsData = useStore(
     (store) => store.detailedProposalsData,
   );
-  const initProposalHistory = useRootStore(
-    (store) => store.initProposalHistory,
-  );
-  const configs = useRootStore((store) => store.configs);
-  const contractsConstants = useRootStore((store) => store.contractsConstants);
-  const representativeLoading = useRootStore(
+  const initProposalHistory = useStore((store) => store.initProposalHistory);
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
     (store) => store.representativeLoading,
   );
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const representative = useRootStore((store) => store.representative);
-  const blockHashBalanceLoadings = useRootStore(
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const blockHashBalanceLoadings = useStore(
     (store) => store.blockHashBalanceLoadings,
   );
-  const blockHashBalance = useRootStore((store) => store.blockHashBalance);
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const proposalData = getProposalDataById({
     detailedProposalsData,

@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 
 import { CreatePayloadForm } from '../../proposals/components/CreatePayloadForm';
 import { CreateProposalForm } from '../../proposals/components/CreateProposalForm';
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BackButton3D } from '../components/BackButton3D';
 import { BigButton } from '../components/BigButton';
 import { Link } from '../components/Link';
@@ -20,19 +20,19 @@ export function CreateProposalPage() {
   const theme = useTheme();
   const router = useRouter();
 
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const setConnectWalletModalOpen = useRootStore(
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setConnectWalletModalOpen = useStore(
     (store) => store.setConnectWalletModalOpen,
   );
-  const appMode = useRootStore((store) => store.appMode);
-  const getDetailedProposalsData = useRootStore(
+  const appMode = useStore((store) => store.appMode);
+  const getDetailedProposalsData = useStore(
     (store) => store.getDetailedProposalsData,
   );
-  const totalProposalCount = useRootStore((store) => store.totalProposalCount);
-  const getTotalPayloadsCount = useRootStore(
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const getTotalPayloadsCount = useStore(
     (store) => store.getTotalPayloadsCount,
   );
-  const getTotalProposalCount = useRootStore(
+  const getTotalProposalCount = useStore(
     (store) => store.getTotalProposalCount,
   );
 

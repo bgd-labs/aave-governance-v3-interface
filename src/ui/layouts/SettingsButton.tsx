@@ -7,7 +7,7 @@ import SettingsBordersIcon from '/public/images/icons/settingsBorders.svg';
 import WarningIcon from '/public/images/icons/warningIcon.svg';
 
 import { selectIsRpcAppHasErrors } from '../../rpcSwitcher/store/rpcSwitcherSelectors';
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import { BoxWith3D, Divider, Link, ThemeSwitcher } from '../';
 import { IconBox } from '../primitives/IconBox';
@@ -19,9 +19,9 @@ import { AppModeSwitcher } from './AppModeSwitcher';
 export function SettingsButton() {
   const theme = useTheme();
 
-  const setIsTermModalOpen = useRootStore((store) => store.setIsTermModalOpen);
-  const rpcAppErrors = useRootStore((store) => store.rpcAppErrors);
-  const isRpcHasError = useRootStore((store) => selectIsRpcAppHasErrors(store));
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const rpcAppErrors = useStore((store) => store.rpcAppErrors);
+  const isRpcHasError = useStore((store) => selectIsRpcAppHasErrors(store));
 
   const filteredAppErrors = Object.values(rpcAppErrors).filter(
     (error) => error.error,

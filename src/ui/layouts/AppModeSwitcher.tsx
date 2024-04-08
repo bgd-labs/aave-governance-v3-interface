@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Divider } from '../primitives/Divider';
 import { AppModeType } from '../store/uiSlice';
 import { texts } from '../utils/texts';
@@ -24,12 +24,12 @@ export const appModes: { mode: AppModeType; title: string }[] = [
 export function AppModeSwitcher() {
   const theme = useTheme();
 
-  const activeWallet = useRootStore((store) => store.activeWallet);
-  const appMode = useRootStore((store) => store.appMode);
-  const setAppMode = useRootStore((store) => store.setAppMode);
-  const closeHelpModals = useRootStore((store) => store.closeHelpModals);
-  const setIsTermModalOpen = useRootStore((store) => store.setIsTermModalOpen);
-  const setIsHelpModalOpen = useRootStore((store) => store.setIsHelpModalOpen);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const appMode = useStore((store) => store.appMode);
+  const setAppMode = useStore((store) => store.setAppMode);
+  const closeHelpModals = useStore((store) => store.closeHelpModals);
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
 
   return (
     <>

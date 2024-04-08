@@ -11,7 +11,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import React, { useEffect } from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Container } from '../../../ui';
 import { NotFoundPage } from '../../../ui/pages/NotFoundPage';
 import { ProposalPageWrapper } from './ProposalPageWrapper';
@@ -46,17 +46,15 @@ export function ProposalClientPageSSR({
   cachedProposalEvents,
 }: ProposalClientPageSSRProps) {
   const id = Number(idSSR);
-  const setSSRGovCoreConfigs = useRootStore(
-    (store) => store.setSSRGovCoreConfigs,
-  );
-  const setTotalProposalCount = useRootStore(
+  const setSSRGovCoreConfigs = useStore((store) => store.setSSRGovCoreConfigs);
+  const setTotalProposalCount = useStore(
     (store) => store.setTotalProposalCount,
   );
-  const cachedProposalsIds = useRootStore((store) => store.cachedProposalsIds);
-  const setCachedProposalsIds = useRootStore(
+  const cachedProposalsIds = useStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useStore(
     (store) => store.setCachedProposalsIds,
   );
-  const setIpfsData = useRootStore((store) => store.setIpfsData);
+  const setIpfsData = useStore((store) => store.setIpfsData);
 
   useEffect(() => {
     setSSRGovCoreConfigs(govCoreConfigs, contractsConstants);

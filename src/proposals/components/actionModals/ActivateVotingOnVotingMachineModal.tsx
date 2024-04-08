@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { getChainName } from '../../../ui/utils/getChainName';
@@ -18,7 +18,7 @@ export function ActivateVotingOnVotingMachineModal({
   setIsOpen,
   proposalId,
 }: { votingChainId: number } & ActionModalBasicTypes) {
-  const activateVotingOnVotingMachine = useRootStore(
+  const activateVotingOnVotingMachine = useStore(
     (state) => state.activateVotingOnVotingMachine,
   );
 

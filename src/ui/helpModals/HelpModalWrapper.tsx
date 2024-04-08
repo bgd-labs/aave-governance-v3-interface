@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import { ReactNode } from 'react';
 
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal } from '../components/BasicModal';
 
 interface HelpModalWrapperProps {
@@ -19,8 +19,8 @@ export function HelpModalWrapper({
   setIsOpen,
   onBackButtonClick,
 }: HelpModalWrapperProps) {
-  const isHelpModalOpen = useRootStore((store) => store.isHelpModalOpen);
-  const setIsHelpModalOpen = useRootStore((store) => store.setIsHelpModalOpen);
+  const isHelpModalOpen = useStore((store) => store.isHelpModalOpen);
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
 
   return (
     <BasicModal

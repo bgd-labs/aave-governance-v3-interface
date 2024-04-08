@@ -6,7 +6,7 @@ import DelegationIcon from '/public/images/icons/delegationIcon.svg';
 import RepresentationIcon from '/public/images/representation/representationVotingPower.svg';
 
 import { RepresentedAddress } from '../../../representations/store/representationsSlice';
-import { useRootStore } from '../../../store/storeProvider';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { TransactionInfoItem } from '../../../transactions/components/TransactionInfoItem';
 import {
   AllTransactions,
@@ -159,7 +159,7 @@ export function AccountInfoModalContent({
 }: AccountInfoModalContentProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
-  const appMode = useRootStore((store) => store.appMode);
+  const appMode = useStore((store) => store.appMode);
 
   const ensNameAbbreviated = ensName
     ? ensName.length > 30

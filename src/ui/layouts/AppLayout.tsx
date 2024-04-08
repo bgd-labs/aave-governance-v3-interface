@@ -8,7 +8,7 @@ import NProgress from 'nprogress';
 import React, { useEffect } from 'react';
 
 import { RepresentationInfoModal } from '../../representations/components/RepresentationInfoModal';
-import { useRootStore } from '../../store/storeProvider';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { isForIPFS, isTermsAndConditionsVisible } from '../../utils/appConfig';
 import Web3HelperProvider from '../../web3/providers/Web3HelperProvider';
 import { TermsAndConditionsModal } from '../components/TermsAndConditionsModal';
@@ -17,10 +17,10 @@ import { HelpModalProvider } from '../helpModals/HelpModalProvider';
 import { MainLayout } from './MainLayout';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const checkIsAppBlockedByTerms = useRootStore(
+  const checkIsAppBlockedByTerms = useStore(
     (store) => store.checkIsAppBlockedByTerms,
   );
-  const checkTutorialStartButtonClick = useRootStore(
+  const checkTutorialStartButtonClick = useStore(
     (store) => store.checkTutorialStartButtonClick,
   );
 
