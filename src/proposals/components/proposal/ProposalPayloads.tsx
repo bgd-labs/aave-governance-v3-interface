@@ -17,7 +17,7 @@ import LinkIcon from '/public/images/icons/linkIcon.svg';
 
 import { SeatBeltReportModal } from '../../../proposalCreateOverview/components/SeatBeltReportModal';
 import { NewPayload } from '../../../proposalCreateOverview/store/proposalCreateOverviewSlice';
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import {
   TransactionUnion,
   TxType,
@@ -168,7 +168,15 @@ function PayloadItem({
   inList?: boolean;
 }) {
   const theme = useTheme();
-  const store = useStore();
+
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setExecutePayloadModalOpen = useStore(
+    (store) => store.setExecutePayloadModalOpen,
+  );
+  const payloadsHelperData = useStore((store) => store.payloadsHelperData);
+  const getPayloadSeatbeltMD = useStore((store) => store.getPayloadSeatbeltMD);
+  const proposalHistory = useStore((store) => store.proposalHistory);
 
   const [isActionsOpen, setIsActionsOpen] = useState(!!forCreate);
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState(false);
@@ -177,22 +185,21 @@ function PayloadItem({
   useEffect(() => {
     if (!report) {
       const reportFromStore =
-        store.payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
+        payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
           ?.seatbeltMD;
       if (reportFromStore) {
         setFinalReport(reportFromStore);
       } else {
-        store.getPayloadSeatbeltMD(payload);
+        getPayloadSeatbeltMD(payload);
         const reportFromStoreNew =
-          store.payloadsHelperData[
-            `${payload.payloadsController}_${payload.id}`
-          ]?.seatbeltMD;
+          payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
+            ?.seatbeltMD;
         setFinalReport(reportFromStoreNew);
       }
     }
   }, [
     report,
-    store.payloadsHelperData[`${payload.payloadsController}_${payload.id}`],
+    payloadsHelperData[`${payload.payloadsController}_${payload.id}`],
   ]);
 
   useEffect(() => {
@@ -221,17 +228,17 @@ function PayloadItem({
     isProposalExecuted,
     proposalQueuingTime,
     proposalId,
-    proposalHistory: store.proposalHistory,
+    proposalHistory,
   });
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;
   const isArrowVisibleForFirstPayload = totalPayloadsCount > 1 && isFullView;
 
   const tx =
-    store.activeWallet &&
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
-      store.activeWallet.address,
+      transactionsPool,
+      activeWallet.address,
       TxType.executePayload,
       {
         proposalId,
@@ -310,7 +317,7 @@ function PayloadItem({
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               {isPayloadReadyForExecution && !isExecuted && (
                 <>
-                  {store.activeWallet?.isActive ? (
+                  {activeWallet?.isActive ? (
                     <SmallButton
                       disabled={tx?.status === TransactionStatus.Success}
                       loading={tx?.pending}
@@ -323,7 +330,7 @@ function PayloadItem({
                             id: payload.id,
                           });
                         }
-                        store.setExecutePayloadModalOpen(true);
+                        setExecutePayloadModalOpen(true);
                       }}>
                       {texts.proposals.payloadsDetails.execute}
                     </SmallButton>
@@ -544,7 +551,8 @@ export function ProposalPayloads({
   forCreate,
 }: ProposalPayloadsProps) {
   const theme = useTheme();
-  const { createPayloadsErrors } = useStore();
+
+  const createPayloadsErrors = useStore((store) => store.createPayloadsErrors);
 
   const [isFullView, setFullView] = useState(!!forCreate);
 

@@ -1,8 +1,7 @@
 'use client';
 
 import { IWalletSlice } from '@bgd-labs/frontend-web3-utils';
-import { create, StoreApi } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { StoreApi } from 'zustand';
 
 import {
   createDelegationSlice,
@@ -68,7 +67,7 @@ export type RootState = IProposalsSlice &
   ICreationFeesSlice &
   IPayloadsHelperSlice;
 
-const createRootSlice = (
+export const createRootSlice = (
   set: StoreApi<RootState>['setState'],
   get: StoreApi<RootState>['getState'],
 ) => ({
@@ -87,5 +86,3 @@ const createRootSlice = (
   ...creationFeesSlice(set, get),
   ...createPayloadsHelperSlice(set, get),
 });
-
-export const useStore = create(devtools(createRootSlice, { serialize: true }));

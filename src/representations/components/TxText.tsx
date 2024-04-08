@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import { Address, Hex } from 'viem';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Link } from '../../ui';
 import { ChainNameWithIcon } from '../../ui/components/ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
@@ -27,8 +27,9 @@ export function TxText({
   isBeforeTx,
   inTxHistory,
 }: TxTextProps) {
-  const store = useStore();
-  const { activeWallet, ensData } = store;
+  const ensData = useStore((store) => store.ensData);
+  const activeWallet = useStore((store) => store.activeWallet);
+
   const activeAddress = activeWallet?.address || '';
 
   const formattedData: { representative: Address | string; chainId: number }[] =
@@ -79,7 +80,7 @@ export function TxText({
                   {isEnsName(item.representative)
                     ? item.representative
                     : ENSDataExists(
-                          store,
+                          ensData,
                           item.representative as Hex,
                           ENSProperty.NAME,
                         )

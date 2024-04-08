@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 import Skeleton, { SkeletonProps } from 'react-loading-skeleton';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 
 interface CustomSkeletonProps extends SkeletonProps {
   variant?: 'default' | 'dark';
@@ -12,7 +12,7 @@ export function CustomSkeleton({
   variant = 'default',
   ...rest
 }: CustomSkeletonProps) {
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
 
   return (
     <Box

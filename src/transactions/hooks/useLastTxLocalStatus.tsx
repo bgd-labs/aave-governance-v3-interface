@@ -3,18 +3,19 @@
 import { useLastTxLocalStatus as baseUseTxLocalStatus } from '@bgd-labs/frontend-web3-utils';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { TransactionUnion } from '../store/transactionsSlice';
 
 export function useLastTxLocalStatus({
   type,
   payload,
 }: Pick<TransactionUnion, 'type' | 'payload'>) {
-  const state = useStore();
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
 
   return baseUseTxLocalStatus<TransactionUnion>({
-    state,
-    activeAddress: state.activeWallet?.address || zeroAddress,
+    transactionsPool,
+    activeAddress: activeWallet?.address || zeroAddress,
     type,
     payload,
   });

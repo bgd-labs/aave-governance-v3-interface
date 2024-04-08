@@ -5,7 +5,7 @@ import {
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { VoteBar } from '../VoteBar';
@@ -51,7 +51,10 @@ export function ProposalVoteInfo({
   votersLoading,
 }: ProposalVoteInfoProps) {
   const theme = useTheme();
-  const { isVotersModalOpen, setIsVotersModalOpen, isRendered } = useStore();
+
+  const isRendered = useStore((store) => store.isRendered);
+  const setIsVotersModalOpen = useStore((store) => store.setIsVotersModalOpen);
+  const isVotersModalOpen = useStore((store) => store.isVotersModalOpen);
 
   if (!isRendered) {
     return (

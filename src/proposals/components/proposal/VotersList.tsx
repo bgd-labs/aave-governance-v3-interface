@@ -3,7 +3,7 @@ import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 import { Hex, zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
 import { texts } from '../../../ui/utils/texts';
@@ -205,7 +205,8 @@ export function VotersList({
   isVotingFinished,
   isStarted,
 }: VotersListProps) {
-  const { activeWallet, representative } = useStore();
+  const representative = useStore((store) => store.representative);
+  const activeWallet = useStore((store) => store.activeWallet);
 
   if (!isStarted) return null;
 

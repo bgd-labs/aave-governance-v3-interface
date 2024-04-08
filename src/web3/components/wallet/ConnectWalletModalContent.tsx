@@ -78,7 +78,7 @@ export function ConnectWalletModalContent({
           ) : (
             <>
               {impersonatedFormOpen && !!setImpersonatedFormOpen ? (
-                <ImpersonatedForm closeClick={setImpersonatedFormOpen} />
+                <ImpersonatedForm />
               ) : (
                 <>
                   {wallets.map((wallet) => (

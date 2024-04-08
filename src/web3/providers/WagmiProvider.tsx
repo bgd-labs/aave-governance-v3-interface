@@ -8,14 +8,21 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
 import { WagmiProvider as BaseWagmiProvider } from 'wagmi';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';
 import { CHAINS } from '../../utils/chains';
 
 const queryClient = new QueryClient();
 
 export default function WagmiProvider() {
-  const { getImpersonatedAddress } = useStore();
+  const getImpersonatedAddress = useStore(
+    (store) => store.getImpersonatedAddress,
+  );
+  const setWagmiConfig = useStore((store) => store.setWagmiConfig);
+  const setDefaultChainId = useStore((store) => store.setDefaultChainId);
+  const changeActiveWalletAccount = useStore(
+    (store) => store.changeActiveWalletAccount,
+  );
 
   const config = useMemo(() => {
     return createWagmiConfig({
@@ -45,9 +52,14 @@ export default function WagmiProvider() {
     <BaseWagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <WagmiZustandSync
+          withAutoConnect
           wagmiConfig={config}
           defaultChainId={appConfig.govCoreChainId}
-          useStore={useStore}
+          store={{
+            setWagmiConfig,
+            setDefaultChainId,
+            changeActiveWalletAccount,
+          }}
         />
       </QueryClientProvider>
     </BaseWagmiProvider>

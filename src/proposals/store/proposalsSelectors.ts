@@ -1,15 +1,34 @@
 import {
   Balance,
   CachedProposalDataItemWithId,
+  ContractsConstants,
   getProposalState,
+  ProposalData,
+  ProposalMetadata,
   ProposalWithId,
   ProposalWithLoadings,
   VotersData,
+  VotingBalance,
+  VotingConfig,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import { Wallet } from '@bgd-labs/frontend-web3-utils';
 import Fuse from 'fuse.js';
 
+import { RepresentativeAddress } from '../../representations/store/representationsSlice';
 import { RootState } from '../../store';
 import { PAGE_SIZE } from '../../web3/services/govDataService';
+
+type GetProposalDataByIdParams = {
+  detailedProposalsData: Record<number, ProposalData>;
+  configs: VotingConfig[];
+  contractsConstants: ContractsConstants;
+  representativeLoading: boolean;
+  activeWallet: Wallet | undefined;
+  representative: RepresentativeAddress;
+  blockHashBalanceLoadings: Record<string, boolean>;
+  blockHashBalance: VotingBalance;
+  proposalId: number;
+};
 
 export const selectProposalIds = (store: RootState, ids: number[]) => {
   const cachedIdsFromStore = store.cachedProposalsIds;
@@ -66,35 +85,44 @@ export const getCachedProposalDataById = (store: RootState, id: number) => {
   }
 };
 
-export const getProposalDataById = (store: RootState, id: number) => {
+export const getProposalDataById = ({
+  detailedProposalsData,
+  configs,
+  contractsConstants,
+  representativeLoading,
+  activeWallet,
+  representative,
+  blockHashBalanceLoadings,
+  blockHashBalance,
+  proposalId,
+}: GetProposalDataByIdParams) => {
   let loading = true;
   let balanceLoading = true;
 
-  const proposalData = store.detailedProposalsData[id];
+  const proposalData = detailedProposalsData[proposalId];
 
   if (
     proposalData &&
     !!proposalData.payloads.length &&
-    !!store.configs.length &&
-    store.contractsConstants.expirationTime > 0
+    !!configs.length &&
+    contractsConstants.expirationTime > 0
   ) {
     loading = false;
 
     let balances: Balance[] = [];
-    if (!store.representativeLoading) {
-      const userAddress =
-        store.representative.address || store.activeWallet?.address;
+    if (!representativeLoading) {
+      const userAddress = representative.address || activeWallet?.address;
 
       if (
-        !store.blockHashBalanceLoadings[
+        !blockHashBalanceLoadings[
           `${proposalData.snapshotBlockHash}_${userAddress}`
         ]
       ) {
         balances =
-          typeof store.blockHashBalance[
+          typeof blockHashBalance[
             `${proposalData.votingMachineData.l1BlockHash}_${userAddress}`
           ] !== 'undefined'
-            ? store.blockHashBalance[
+            ? blockHashBalance[
                 `${proposalData.votingMachineData.l1BlockHash}_${userAddress}`
               ]?.map((balance) => ({ ...balance }))
             : [];
@@ -106,7 +134,7 @@ export const getProposalDataById = (store: RootState, id: number) => {
     }
 
     const proposalConfig = selectConfigByAccessLevel(
-      store,
+      configs,
       proposalData.accessLevel,
     );
 
@@ -118,12 +146,12 @@ export const getProposalDataById = (store: RootState, id: number) => {
 
     const proposalDataWithoutState = {
       data: proposalData,
-      precisionDivider: store.contractsConstants.precisionDivider,
+      precisionDivider: contractsConstants.precisionDivider,
       balances: balances || [],
       config: proposalConfig,
       timings: {
-        cooldownPeriod: store.contractsConstants.cooldownPeriod,
-        expirationTime: store.contractsConstants.expirationTime,
+        cooldownPeriod: contractsConstants.cooldownPeriod,
+        expirationTime: contractsConstants.expirationTime,
         executionDelay,
       },
     };
@@ -160,7 +188,17 @@ export const getCombineProposalDataById = (store: RootState, id: number) => {
     !!store.configs.length &&
     store.contractsConstants.expirationTime > 0
   ) {
-    return getProposalDataById(store, id);
+    return getProposalDataById({
+      detailedProposalsData: store.detailedProposalsData,
+      configs: store.configs,
+      contractsConstants: store.contractsConstants,
+      representativeLoading: store.representativeLoading,
+      activeWallet: store.activeWallet,
+      representative: store.representative,
+      blockHashBalanceLoadings: store.blockHashBalanceLoadings,
+      blockHashBalance: store.blockHashBalance,
+      proposalId: id,
+    });
   } else if (!!cachedProposalData) {
     return getCachedProposalDataById(store, id);
   }
@@ -201,6 +239,7 @@ const selectFilteredProposalIds = (store: RootState) => {
   const fuse = new Fuse(detailedData, {
     keys: ['proposal.data.title'],
     threshold: 0.3,
+    distance: 1000,
   });
 
   return store.filteredState === null && store.titleSearchValue === undefined
@@ -250,7 +289,17 @@ export const selectPaginatedProposalsData = (store: RootState) => {
     activeProposals: activeIds.map((id) => {
       return {
         id,
-        ...getProposalDataById(store, id),
+        ...getProposalDataById({
+          detailedProposalsData: store.detailedProposalsData,
+          configs: store.configs,
+          contractsConstants: store.contractsConstants,
+          representativeLoading: store.representativeLoading,
+          activeWallet: store.activeWallet,
+          representative: store.representative,
+          blockHashBalanceLoadings: store.blockHashBalanceLoadings,
+          blockHashBalance: store.blockHashBalance,
+          proposalId: id,
+        }),
       } as ProposalWithId;
     }),
     cachedProposals: cachedIds.map((id) => {
@@ -270,57 +319,90 @@ export const selectProposalsPages = (store: RootState) => {
 };
 
 export const selectConfigByAccessLevel = (
-  store: RootState,
+  configs: VotingConfig[],
   accessLevel: number,
 ) => {
-  const configs = store.configs;
   return configs.filter((config) => config.accessLevel === accessLevel)[0];
 };
 
-export const selectVotersByProposalId = (store: RootState, id: number) => {
-  const data = store.voters;
-  const voters = Object.values(data).filter((voter) => voter.proposalId === id);
+export const selectVotersByProposalId = (
+  voters: Record<`0x${string}`, VotersData>,
+  id: number,
+) => {
+  const votersLocal = Object.values(voters).filter(
+    (voter) => voter.proposalId === id,
+  );
   const lastBlockNumber = Math.max.apply(
     0,
-    voters.map((vote) => vote.blockNumber),
+    votersLocal.map((vote) => vote.blockNumber),
   );
 
   return {
-    voters,
+    votersLocal,
     lastBlockNumber,
   };
 };
 
-export const selectIpfsDataByProposalId = (store: RootState, id: number) => {
-  const proposalData = store.detailedProposalsData[id];
+export const selectIpfsDataByProposalId = (
+  detailedProposalsData: Record<number, ProposalData>,
+  ipfsData: Record<string, ProposalMetadata>,
+  id: number,
+) => {
+  const proposalData = detailedProposalsData[id];
   if (proposalData) {
-    return store.ipfsData[proposalData.ipfsHash];
+    return ipfsData[proposalData.ipfsHash];
   }
 };
 
 export const selectIpfsDataErrorByProposalId = (
-  store: RootState,
+  detailedProposalsData: Record<number, ProposalData>,
+  ipfsDataErrors: Record<string, string>,
   id: number,
 ) => {
-  const proposalData = store.detailedProposalsData[id];
+  const proposalData = detailedProposalsData[id];
   if (proposalData) {
-    return store.ipfsDataErrors[proposalData.ipfsHash];
+    return ipfsDataErrors[proposalData.ipfsHash];
   }
 };
 
-export const selectAvailablePayloadsIdsByChainId = (
-  store: RootState,
-  payloadsController: string,
-) => {
+export const selectAvailablePayloadsIdsByChainId = ({
+  totalProposalCount,
+  totalPayloadsCount,
+  payloadsController,
+  detailedProposalsData,
+  configs,
+  contractsConstants,
+  representativeLoading,
+  activeWallet,
+  representative,
+  blockHashBalanceLoadings,
+  blockHashBalance,
+}: GetProposalDataByIdParams & {
+  totalProposalCount: number;
+  totalPayloadsCount: Record<string, number>;
+  payloadsController: string;
+}) => {
   const proposalsIds =
-    store.totalProposalCount >= 0
-      ? Array.from(Array(store.totalProposalCount).keys()).sort((a, b) => b - a)
+    totalProposalCount >= 0
+      ? Array.from(Array(totalProposalCount).keys()).sort((a, b) => b - a)
       : [];
 
-  const detailedData = proposalsIds.map((id) => getProposalDataById(store, id));
+  const detailedData = proposalsIds.map((id) =>
+    getProposalDataById({
+      detailedProposalsData,
+      configs,
+      contractsConstants,
+      representativeLoading,
+      activeWallet,
+      representative,
+      blockHashBalanceLoadings,
+      blockHashBalance,
+      proposalId: id,
+    }),
+  );
 
   const allPayloadsIds = Array.from(
-    Array(store.totalPayloadsCount[payloadsController]).keys(),
+    Array(totalPayloadsCount[payloadsController]).keys(),
   ).sort((a, b) => b - a);
 
   if (!!detailedData.length) {
@@ -343,10 +425,10 @@ export const selectAvailablePayloadsIdsByChainId = (
 };
 
 export const setProposalDetailsVoters = (
-  store: RootState,
+  setVoters: (voters: VotersData[]) => void,
   voters: VotersData[],
 ) => {
   if (!!voters.length) {
-    store.setVoters(voters);
+    setVoters(voters);
   }
 };

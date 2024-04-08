@@ -13,7 +13,7 @@ import ReplacedIcon from '/public/images/icons/replacedIcon.svg';
 
 import { DelegatedText } from '../../delegate/components/DelegatedText';
 import { TxText } from '../../representations/components/TxText';
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Link, Spinner } from '../../ui';
 import { ChainNameWithIcon } from '../../ui/components/ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
@@ -32,7 +32,9 @@ interface TransactionInfoItemProps {
 
 export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
   const theme = useTheme();
-  const state = useStore();
+
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
 
   const NetworkIconWitchChainN = () => {
     return (
@@ -119,7 +121,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
             <>
               {texts.transactions.voteTx}{' '}
               <b>{tx.payload.support ? 'for' : 'against'}</b>{' '}
-              {tx.payload.voter !== state.activeWallet?.address && (
+              {tx.payload.voter !== activeWallet?.address && (
                 <>
                   {texts.transactions.voteTxAsRepresentative}{' '}
                   <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
@@ -283,7 +285,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
             }}>
             <Link
               href={selectTxExplorerLink(
-                state,
+                transactionsPool,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
               )}
@@ -321,7 +323,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
             <CopyAndExternalIconsSet
               iconSize={12}
               externalLink={selectTxExplorerLink(
-                state,
+                transactionsPool,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
               )}
@@ -385,7 +387,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
             }}>
             <Link
               href={selectTxExplorerLink(
-                state,
+                transactionsPool,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
                 tx.replacedTxHash,
@@ -418,7 +420,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
             <CopyAndExternalIconsSet
               iconSize={12}
               externalLink={selectTxExplorerLink(
-                state,
+                transactionsPool,
                 chainInfoHelper.getChainParameters,
                 tx.hash,
                 tx.replacedTxHash,

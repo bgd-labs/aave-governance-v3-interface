@@ -2,7 +2,7 @@ import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../../ui';
 
 export type Wallet = {

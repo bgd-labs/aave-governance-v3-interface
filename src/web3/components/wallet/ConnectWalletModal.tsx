@@ -4,7 +4,7 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { useEffect, useState } from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BasicModal } from '../../../ui';
 import { setRelativePath } from '../../../ui/utils/relativePath';
 import { ConnectWalletModalContent } from './ConnectWalletModalContent';
@@ -54,7 +54,11 @@ export function ConnectWalletModal({
   isOpen,
   setIsOpen,
 }: ConnectWalletModalProps) {
-  const { walletActivating, walletConnectionError, setModalOpen } = useStore();
+  const walletActivating = useStore((store) => store.walletActivating);
+  const walletConnectionError = useStore(
+    (store) => store.walletConnectionError,
+  );
+  const setModalOpen = useStore((store) => store.setModalOpen);
 
   const [impersonatedFormOpen, setImpersonatedFormOpen] = useState(false);
 

@@ -6,7 +6,7 @@ import { Form } from 'react-final-form';
 
 import { RepresentationsTableWrapper } from '../../representations/components/RepresentationsTableWrapper';
 import { RepresentationFormData } from '../../representations/store/representationsSlice';
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal } from '../components/BasicModal';
 import { BigButton } from '../components/BigButton';
 import { setRelativePath } from '../utils/relativePath';
@@ -35,17 +35,31 @@ export function HelpRepresentationModal({
   const [isRepresentationsChangedView, setIsRepresentationsChangedView] =
     useState(false);
 
-  const {
-    helpRepresentationsData,
-    getHelpRepresentationsData,
-    setHelpRepresentationsData,
-    isHelpModalClosed,
-    setIsHelpNavigationModalOpen,
-    setIsHelpWalletModalOpen,
-    setIsHelpRepresentativeModalOpen,
-    setIsHelpRepresentationModalOpen,
-    isHelpRepresentationModalOpen,
-  } = useStore();
+  const helpRepresentationsData = useStore(
+    (store) => store.helpRepresentationsData,
+  );
+  const getHelpRepresentationsData = useStore(
+    (store) => store.getHelpRepresentationsData,
+  );
+  const setHelpRepresentationsData = useStore(
+    (store) => store.setHelpRepresentationsData,
+  );
+  const isHelpModalClosed = useStore((store) => store.isHelpModalClosed);
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const setIsHelpWalletModalOpen = useStore(
+    (store) => store.setIsHelpWalletModalOpen,
+  );
+  const setIsHelpRepresentationModalOpen = useStore(
+    (store) => store.setIsHelpRepresentationModalOpen,
+  );
+  const isHelpRepresentationModalOpen = useStore(
+    (store) => store.isHelpRepresentationModalOpen,
+  );
+  const setIsHelpRepresentativeModalOpen = useStore(
+    (store) => store.setIsHelpRepresentativeModalOpen,
+  );
 
   useEffect(() => {
     getHelpRepresentationsData();

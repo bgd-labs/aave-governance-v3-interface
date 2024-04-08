@@ -5,21 +5,22 @@ import React from 'react';
 import DarkThemeIcon from '/public/images/icons/darkTheme.svg';
 import LightThemeIcon from '/public/images/icons/lightTheme.svg';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { NoSSR } from '..';
 import { IconBox } from '../primitives/IconBox';
 
 export function ThemeSwitcher() {
   const themeMUI = useTheme();
   const { theme, setTheme } = useThemeNext();
-  const store = useStore();
+
+  const setIsThemeSwitched = useStore((store) => store.setIsThemeSwitched);
 
   return (
     <Box
       component="button"
       type="button"
       onClick={() => {
-        store.setIsThemeSwitched();
+        setIsThemeSwitched();
         setTimeout(() => setTheme(theme === 'light' ? 'dark' : 'light'), 10);
       }}
       sx={{

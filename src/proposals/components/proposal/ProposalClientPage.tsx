@@ -4,7 +4,7 @@ import { useRequest } from 'alova';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Container } from '../../../ui';
 import { NotFoundPage } from '../../../ui/pages/NotFoundPage';
 import {
@@ -20,7 +20,21 @@ export function ProposalClientPage() {
   const searchParams = useSearchParams();
   const id = Number(searchParams?.get('proposalId'));
 
-  const store = useStore();
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const totalProposalCountLoading = useStore(
+    (store) => store.totalProposalCountLoading,
+  );
+  const detailedProposalsData = useStore(
+    (store) => store.detailedProposalsData,
+  );
+  const getTotalProposalCount = useStore(
+    (store) => store.getTotalProposalCount,
+  );
+  const cachedProposalsIds = useStore((store) => store.cachedProposalsIds);
+  const setCachedProposalsIds = useStore(
+    (store) => store.setCachedProposalsIds,
+  );
+  const setVoters = useStore((store) => store.setVoters);
 
   const { loading, data, error } = useRequest(getCachedProposalsIdsFromGithub);
   const {
@@ -30,18 +44,18 @@ export function ProposalClientPage() {
   } = useRequest(getProposalVotesCache(id));
 
   useEffect(() => {
-    if (store.totalProposalCount < 0 && id >= 0) {
-      store.getTotalProposalCount(true);
+    if (totalProposalCount < 0 && id >= 0) {
+      getTotalProposalCount(true);
     }
-  }, [id, store.totalProposalCount]);
+  }, [id, totalProposalCount]);
 
   useEffect(() => {
     if (!loading && !error) {
       if (
-        !store.cachedProposalsIds.length ||
-        store.cachedProposalsIds.length < (data?.cachedProposalsIds.length || 0)
+        !cachedProposalsIds.length ||
+        cachedProposalsIds.length < (data?.cachedProposalsIds.length || 0)
       ) {
-        store.setCachedProposalsIds(data?.cachedProposalsIds || []);
+        setCachedProposalsIds(data?.cachedProposalsIds || []);
       }
     }
   }, [loading, error]);
@@ -49,20 +63,20 @@ export function ProposalClientPage() {
   useEffect(() => {
     if (!votesLoading && !votesError) {
       if (votesData) {
-        setProposalDetailsVoters(store, votesData.votes);
+        setProposalDetailsVoters(setVoters, votesData.votes);
       }
     }
   }, [votesLoading, votesError, votesData]);
 
-  if ((loading && !store.cachedProposalsIds.length) || votesLoading)
+  if ((loading && !cachedProposalsIds.length) || votesLoading)
     return (
       <Container>
         <ProposalLoading />
       </Container>
     );
 
-  if (store.detailedProposalsData[id]) {
-    if (store.detailedProposalsData[id].isFinished) {
+  if (detailedProposalsData[id]) {
+    if (detailedProposalsData[id].isFinished) {
       return (
         <Container>
           <ProposalPageWrapperWithCache id={id} />
@@ -76,14 +90,14 @@ export function ProposalClientPage() {
       );
     }
   } else if (
-    (store.totalProposalCount - 1 < id && !store.totalProposalCountLoading) ||
+    (totalProposalCount - 1 < id && !totalProposalCountLoading) ||
     Number.isNaN(id) ||
     id < 0
   ) {
     return <NotFoundPage />;
   } else if (
-    !!store.cachedProposalsIds.find((proposalId) => proposalId === id) ||
-    store.cachedProposalsIds.find((proposalId) => proposalId === id) === 0
+    !!cachedProposalsIds.find((proposalId) => proposalId === id) ||
+    cachedProposalsIds.find((proposalId) => proposalId === id) === 0
   ) {
     return (
       <Container>

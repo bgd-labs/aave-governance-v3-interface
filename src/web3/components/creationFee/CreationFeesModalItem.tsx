@@ -7,7 +7,7 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
 import { ProposalStatus } from '../../../proposals/components/ProposalStatus';
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import {
   TransactionUnion,
   TxType,
@@ -31,23 +31,23 @@ export function CreationFeesModalItem({
   setSelectedProposalIds,
   txLoading,
 }: CreationFeesModalItemProps) {
-  const store = useStore();
-  const { activeWallet } = store;
   const theme = useTheme();
 
   const { title, ipfsHash, status, proposalId, proposalStatus } = data;
 
-  const txFromPool =
-    activeWallet &&
-    selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
-      activeWallet.address,
-      TxType.claimFees,
-      {
-        creator: activeWallet?.address,
-        proposalIds: [proposalId],
-      },
-    );
+  const txFromPool = useStore(
+    (store) =>
+      store.activeWallet &&
+      selectLastTxByTypeAndPayload<TransactionUnion>(
+        store.transactionsPool,
+        store.activeWallet.address,
+        TxType.claimFees,
+        {
+          creator: store.activeWallet?.address,
+          proposalIds: [proposalId],
+        },
+      ),
+  );
 
   return (
     <BoxWith3D

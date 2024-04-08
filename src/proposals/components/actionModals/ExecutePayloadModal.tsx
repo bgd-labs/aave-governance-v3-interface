@@ -2,7 +2,7 @@ import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { ActionModal } from '../../../transactions/components/ActionModal';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { texts } from '../../../ui/utils/texts';

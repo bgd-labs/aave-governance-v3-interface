@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import NotFoundGhostImage from '/public/images/notFoundGhost.svg';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BigButton, BoxWith3D, FilterDropdown } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { SearchButton } from '../../../ui/components/SearchButton';
@@ -60,20 +60,19 @@ export function ProposalsList({
     [searchParams],
   );
 
-  const {
-    isRendered,
-    setActivePage,
-    titleSearchValue,
-    setTitleSearchValue,
-    totalProposalCount,
-    activePage,
-    loadingListCache,
-    filteredState,
-    setFilteredState,
-    ipfsDataErrors,
-    getPaginatedProposalsData,
-  } = useStore();
-
+  const isRendered = useStore((state) => state.isRendered);
+  const setActivePage = useStore((state) => state.setActivePage);
+  const titleSearchValue = useStore((state) => state.titleSearchValue);
+  const setTitleSearchValue = useStore((state) => state.setTitleSearchValue);
+  const totalProposalCount = useStore((state) => state.totalProposalCount);
+  const activePage = useStore((state) => state.activePage);
+  const loadingListCache = useStore((state) => state.loadingListCache);
+  const filteredState = useStore((state) => state.filteredState);
+  const setFilteredState = useStore((state) => state.setFilteredState);
+  const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
+  const getPaginatedProposalsData = useStore(
+    (state) => state.getPaginatedProposalsData,
+  );
   const isVoteModalOpen = useStore((state) => state.isVoteModalOpen);
   const setIsVoteModalOpen = useStore((state) => state.setIsVoteModalOpen);
 

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Field } from 'react-final-form';
 import { Address, isAddress, zeroAddress } from 'viem';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { InputWithAnimation } from '../../ui/components/InputWithAnimation';
 import { InputWrapper } from '../../ui/components/InputWrapper';
 import { TableText } from '../../ui/components/TableText';
@@ -84,16 +84,23 @@ export function RepresentationsTableItemField({
   addressTo,
   forHelp,
 }: RepresentationsTableItemFieldProps) {
-  const store = useStore();
-  const {
-    activeWallet,
-    fetchEnsNameByAddress,
-    fetchAddressByEnsName,
-    ensData,
-    addIncorrectRepresentationField,
-    removeIncorrectRepresentationField,
-    clearIncorrectRepresentationFields,
-  } = store;
+  const activeWallet = useStore((store) => store.activeWallet);
+  const fetchEnsNameByAddress = useStore(
+    (store) => store.fetchEnsNameByAddress,
+  );
+  const fetchAddressByEnsName = useStore(
+    (store) => store.fetchAddressByEnsName,
+  );
+  const ensData = useStore((store) => store.ensData);
+  const addIncorrectRepresentationField = useStore(
+    (store) => store.addIncorrectRepresentationField,
+  );
+  const removeIncorrectRepresentationField = useStore(
+    (store) => store.removeIncorrectRepresentationField,
+  );
+  const clearIncorrectRepresentationFields = useStore(
+    (store) => store.clearIncorrectRepresentationFields,
+  );
 
   const [shownAddress, setShownAddress] = React.useState<string | undefined>(
     address,
@@ -167,12 +174,12 @@ export function RepresentationsTableItemField({
 
   const isAddressToVisible =
     checkIfAddressENS(
-      store,
+      ensData,
       activeWallet?.address || zeroAddress,
       address,
     ).toLowerCase() !==
     checkIfAddressENS(
-      store,
+      ensData,
       activeWallet?.address || zeroAddress,
       addressTo,
     ).toLowerCase();

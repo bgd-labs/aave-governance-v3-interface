@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import { useEffect, useState } from 'react';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BigButton } from '../components/BigButton';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -21,15 +21,19 @@ import { HelpWalletModal } from './HelpWalletModal';
 
 export function HelpModalProvider() {
   const theme = useTheme();
-  const {
-    setIsHelpModalOpen,
-    isModalOpen,
-    setIsHelpNavigationModalOpen,
-    setIsClickedOnStartButtonOnHelpModal,
 
-    closeHelpModals,
-    isClickedOnStartButtonOnHelpModal,
-  } = useStore();
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
+  const isModalOpen = useStore((store) => store.isModalOpen);
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const setIsClickedOnStartButtonOnHelpModal = useStore(
+    (store) => store.setIsClickedOnStartButtonOnHelpModal,
+  );
+  const closeHelpModals = useStore((store) => store.closeHelpModals);
+  const isClickedOnStartButtonOnHelpModal = useStore(
+    (store) => store.isClickedOnStartButtonOnHelpModal,
+  );
 
   const [infoType, setInfoType] = useState<InfoType | undefined>(undefined);
 

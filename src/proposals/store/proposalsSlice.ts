@@ -854,7 +854,7 @@ export const createProposalsSlice: StoreSlice<
           get().contractsConstants.expirationTime > 0
         ) {
           const proposalConfig = selectConfigByAccessLevel(
-            get(),
+            get().configs,
             proposalData.accessLevel,
           );
 
@@ -991,7 +991,11 @@ export const createProposalsSlice: StoreSlice<
         votersData.forEach((vote) => {
           draft.voters[vote.transactionHash] = {
             ...vote,
-            ensName: ENSDataExists(get(), vote.address, ENSProperty.NAME)
+            ensName: ENSDataExists(
+              get().ensData,
+              vote.address,
+              ENSProperty.NAME,
+            )
               ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
               : vote.ensName,
           };
@@ -1000,8 +1004,8 @@ export const createProposalsSlice: StoreSlice<
     );
 
     const topVotersByProposalIdWithENS = await Promise.all(
-      selectVotersByProposalId(get(), proposalId)
-        .voters.sort((a, b) => b.votingPower - a.votingPower)
+      selectVotersByProposalId(get().voters, proposalId)
+        .votersLocal.sort((a, b) => b.votingPower - a.votingPower)
         .slice(0, 5)
         .map(async (vote) => {
           if (vote.ensName) {
@@ -1027,7 +1031,11 @@ export const createProposalsSlice: StoreSlice<
         topVotersByProposalIdWithENS.forEach((vote) => {
           draft.voters[vote.transactionHash] = {
             ...vote,
-            ensName: ENSDataExists(get(), vote.address, ENSProperty.NAME)
+            ensName: ENSDataExists(
+              get().ensData,
+              vote.address,
+              ENSProperty.NAME,
+            )
               ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
               : vote.ensName,
           };

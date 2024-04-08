@@ -8,7 +8,7 @@ import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
 import { ChainNameWithIcon } from '../../../ui/components/ChainNameWithIcon';
 import { disablePageLoader } from '../../../ui/utils/disablePageLoader';
@@ -38,7 +38,9 @@ export function ActiveProposalListItem({
   isForHelpModal,
 }: ActiveProposalListItemProps) {
   const theme = useTheme();
-  const { isRendered, appClients } = useStore();
+
+  const isRendered = useStore((state) => state.isRendered);
+  const appClients = useStore((state) => state.appClients);
   let activeWallet = useStore((state) => state.activeWallet);
 
   const [isClicked, setIsClicked] = useState(false);

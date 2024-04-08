@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import { ReactNode, useRef } from 'react';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal } from './BasicModal';
 import { Link } from './Link';
 
@@ -25,7 +25,8 @@ const Text = ({
 };
 
 export function TermsAndConditionsModal() {
-  const { isTermModalOpen, setIsTermModalOpen } = useStore();
+  const isTermModalOpen = useStore((store) => store.isTermModalOpen);
+  const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
   const initialFocusRef = useRef(null);
 
   return (

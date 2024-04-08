@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
 import { getRepresentedAddresses } from '../../../representations/utils/getRepresentedAddresses';
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
 import { selectENSAvatar } from '../../store/ensSelectors';
 import { CreationFeesModal } from '../creationFee/CreationFeesModal';
@@ -12,28 +12,50 @@ import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
 
 export function WalletWidget() {
-  const store = useStore();
-  const {
-    appMode,
-    activeWallet,
-    connectWalletModalOpen,
-    setConnectWalletModalOpen,
-    accountInfoModalOpen,
-    setAccountInfoModalOpen,
-    allTransactionModalOpen,
-    setAllTransactionModalOpen,
-    resetWalletConnectionError,
-    representative,
-    representationData,
-    ensData,
-    fetchEnsNameByAddress,
-    powersInfoModalOpen,
-    setPowersInfoModalOpen,
-    isCreationFeeModalOpen,
-    setIsCreationFeeModalOpen,
-    disconnectActiveWallet,
-    setModalOpen,
-  } = store;
+  const appMode = useStore((store) => store.appMode);
+  const connectWalletModalOpen = useStore(
+    (store) => store.connectWalletModalOpen,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const fetchEnsAvatarByAddress = useStore(
+    (store) => store.fetchEnsAvatarByAddress,
+  );
+  const setConnectWalletModalOpen = useStore(
+    (store) => store.setConnectWalletModalOpen,
+  );
+  const accountInfoModalOpen = useStore((store) => store.accountInfoModalOpen);
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
+  const allTransactionModalOpen = useStore(
+    (store) => store.allTransactionModalOpen,
+  );
+  const setAllTransactionModalOpen = useStore(
+    (store) => store.setAllTransactionModalOpen,
+  );
+  const resetWalletConnectionError = useStore(
+    (store) => store.resetWalletConnectionError,
+  );
+  const representative = useStore((store) => store.representative);
+  const representationData = useStore((store) => store.representationData);
+  const ensData = useStore((store) => store.ensData);
+  const fetchEnsNameByAddress = useStore(
+    (store) => store.fetchEnsNameByAddress,
+  );
+  const powersInfoModalOpen = useStore((store) => store.powersInfoModalOpen);
+  const setPowersInfoModalOpen = useStore(
+    (store) => store.setPowersInfoModalOpen,
+  );
+  const isCreationFeeModalOpen = useStore(
+    (store) => store.isCreationFeeModalOpen,
+  );
+  const setIsCreationFeeModalOpen = useStore(
+    (store) => store.setIsCreationFeeModalOpen,
+  );
+  const disconnectActiveWallet = useStore(
+    (store) => store.disconnectActiveWallet,
+  );
+  const setModalOpen = useStore((store) => store.setModalOpen);
 
   const activeAddress = activeWallet?.address || '';
 
@@ -53,12 +75,13 @@ export function WalletWidget() {
         setShownUserName(
           addressData && addressData.name ? addressData.name : activeAddress,
         );
-        selectENSAvatar(
-          store,
-          activeAddress,
-          setShownAvatar,
+        selectENSAvatar({
+          ensData,
+          fetchEnsAvatarByAddress,
+          address: activeAddress,
+          setAvatar: setShownAvatar,
           setIsAvatarExists,
-        );
+        });
       });
     }
   }, [ensData, activeAddress]);

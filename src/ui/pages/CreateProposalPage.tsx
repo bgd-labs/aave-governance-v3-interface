@@ -6,7 +6,7 @@ import React, { useEffect } from 'react';
 
 import { CreatePayloadForm } from '../../proposals/components/CreatePayloadForm';
 import { CreateProposalForm } from '../../proposals/components/CreateProposalForm';
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BackButton3D } from '../components/BackButton3D';
 import { BigButton } from '../components/BigButton';
 import { Link } from '../components/Link';
@@ -19,15 +19,22 @@ import { texts } from '../utils/texts';
 export function CreateProposalPage() {
   const theme = useTheme();
   const router = useRouter();
-  const {
-    activeWallet,
-    setConnectWalletModalOpen,
-    appMode,
-    getDetailedProposalsData,
-    totalProposalCount,
-    getTotalPayloadsCount,
-    getTotalProposalCount,
-  } = useStore();
+
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setConnectWalletModalOpen = useStore(
+    (store) => store.setConnectWalletModalOpen,
+  );
+  const appMode = useStore((store) => store.appMode);
+  const getDetailedProposalsData = useStore(
+    (store) => store.getDetailedProposalsData,
+  );
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const getTotalPayloadsCount = useStore(
+    (store) => store.getTotalPayloadsCount,
+  );
+  const getTotalProposalCount = useStore(
+    (store) => store.getTotalProposalCount,
+  );
 
   useEffect(() => {
     getTotalProposalCount();

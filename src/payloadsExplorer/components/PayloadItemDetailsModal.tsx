@@ -13,7 +13,7 @@ import {
   formatPayloadData,
   generateSeatbeltLink,
 } from '../../proposals/utils/formatPayloadData';
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import {
   TransactionUnion,
   TxType,
@@ -38,12 +38,29 @@ export function PayloadItemDetailsModal({
   initialPayload,
   setSelectedPayloadForExecute,
 }: PayloadItemDetailsModalProps) {
-  const store = useStore();
-  const {
-    isPayloadExplorerItemDetailsModalOpen,
-    setIsPayloadExplorerItemDetailsModalOpen,
-    getPayloadsExploreDataById,
-  } = store;
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const isPayloadExplorerItemDetailsModalOpen = useStore(
+    (store) => store.isPayloadExplorerItemDetailsModalOpen,
+  );
+  const getPayloadsExploreDataById = useStore(
+    (store) => store.getPayloadsExploreDataById,
+  );
+  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
+    (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
+  );
+  const setExecutePayloadModalOpen = useStore(
+    (store) => store.setExecutePayloadModalOpen,
+  );
+
+  const payload = useStore((store) =>
+    selectPayloadExploreById(
+      store,
+      initialPayload.chainId,
+      initialPayload.payloadsController as Address,
+      initialPayload.id,
+    ),
+  );
 
   useEffect(() => {
     getPayloadsExploreDataById(
@@ -52,13 +69,6 @@ export function PayloadItemDetailsModal({
       initialPayload.id,
     );
   }, []);
-
-  const payload = selectPayloadExploreById(
-    store,
-    initialPayload.chainId,
-    initialPayload.payloadsController as Address,
-    initialPayload.id,
-  );
 
   if (!payload) return null;
 
@@ -78,10 +88,10 @@ export function PayloadItemDetailsModal({
   });
 
   const tx =
-    store.activeWallet &&
+    activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
-      store.activeWallet.address,
+      transactionsPool,
+      activeWallet.address,
       TxType.executePayload,
       {
         proposalId: 0,
@@ -182,7 +192,7 @@ export function PayloadItemDetailsModal({
         <Box>
           {isPayloadReadyForExecution &&
             !isFinalStatus &&
-            store.activeWallet?.isActive && (
+            activeWallet?.isActive && (
               <Box sx={{ mt: 4 }}>
                 <SmallButton
                   disabled={tx?.status === TransactionStatus.Success}
@@ -197,8 +207,8 @@ export function PayloadItemDetailsModal({
                         id: payload?.id,
                       });
                     }
-                    store.setIsPayloadExplorerItemDetailsModalOpen(false);
-                    store.setExecutePayloadModalOpen(true);
+                    setIsPayloadExplorerItemDetailsModalOpen(false);
+                    setExecutePayloadModalOpen(true);
                   }}>
                   {texts.proposals.payloadsDetails.execute}
                 </SmallButton>

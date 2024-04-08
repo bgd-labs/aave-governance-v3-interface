@@ -2,7 +2,7 @@ import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpe
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
 import { ROUTES } from '../../../ui/utils/routes';
 import { ProposalListItemFinalStatus } from './ProposalListItemFinalStatus';
@@ -16,7 +16,8 @@ export function CachedProposalListItem({
   proposalData,
 }: CachedProposalListItemProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+
+  const isRendered = useStore((state) => state.isRendered);
   const proposal = proposalData.proposal;
 
   const [isClicked, setIsClicked] = useState(false);

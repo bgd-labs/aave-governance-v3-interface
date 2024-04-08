@@ -8,7 +8,7 @@ import React from 'react';
 import InfoIcon from '/public/images/icons/info.svg';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import {
   TransactionUnion,
   TxType,
@@ -74,18 +74,18 @@ export function ProposalVotingPower({
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
 
-  const store = useStore();
-  const {
-    supportObject,
-    activeWallet,
-    representative,
-    setIsRepresentationInfoModalOpen,
-  } = store;
+  const activeWallet = useStore((store) => store.activeWallet);
+  const transactionsPool = useStore((store) => store.transactionsPool);
+  const supportObject = useStore((store) => store.supportObject);
+  const representative = useStore((store) => store.representative);
+  const setIsRepresentationInfoModalOpen = useStore(
+    (store) => store.setIsRepresentationInfoModalOpen,
+  );
 
   const tx =
     activeWallet &&
     selectLastTxByTypeAndPayload<TransactionUnion>(
-      store,
+      transactionsPool,
       activeWallet.address,
       TxType.vote,
       {
@@ -95,7 +95,7 @@ export function ProposalVotingPower({
       },
     );
 
-  const disabled = !checkIsVotingAvailable(store, votingChainId);
+  const disabled = !checkIsVotingAvailable(representative, votingChainId);
 
   if (!activeWallet?.isActive) return null;
   if (!isAnyVote && isFinished) return null;

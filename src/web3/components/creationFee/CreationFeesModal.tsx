@@ -3,7 +3,7 @@ import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../../transactions/store/transactionsSlice';
 import { BackButton3D, BasicModal, BigButton, Pagination } from '../../../ui';
@@ -37,29 +37,38 @@ export function CreationFeesModal({
   isAvatarExists,
   onDisconnectButtonClick,
 }: CreationFeesModalProps) {
-  const store = useStore();
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const {
-    creationFeesProposalsCountOnRequest,
-    activeWallet,
-    setAccountInfoModalOpen,
-    creationFeesData,
-    getCreationFeesData,
-    updateCreationFeesDataByCreator,
-    totalProposalCount,
-    dataByCreatorLength,
-    setDataByCreatorLength,
-    redeemCancellationFee,
-  } = store;
+  const creationFeesProposalsCountOnRequest = useStore(
+    (store) => store.creationFeesProposalsCountOnRequest,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
+  const creationFeesData = useStore((store) => store.creationFeesData);
+  const getCreationFeesData = useStore((store) => store.getCreationFeesData);
+  const updateCreationFeesDataByCreator = useStore(
+    (store) => store.updateCreationFeesDataByCreator,
+  );
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const dataByCreatorLength = useStore((store) => store.dataByCreatorLength);
+  const setDataByCreatorLength = useStore(
+    (store) => store.setDataByCreatorLength,
+  );
+  const redeemCancellationFee = useStore(
+    (store) => store.redeemCancellationFee,
+  );
+  const dataByCreator = useStore((store) =>
+    selectCreationFeesDataByCreator(
+      store,
+      activeWallet?.address || zeroAddress,
+    ),
+  );
 
   // get data logic
   const [currentPage, setCurrentPage] = useState(1);
-  const dataByCreator = selectCreationFeesDataByCreator(
-    store,
-    activeWallet?.address || zeroAddress,
-  );
 
   useEffect(() => {
     setSelectedProposalIds([]);

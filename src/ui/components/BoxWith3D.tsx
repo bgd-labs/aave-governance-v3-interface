@@ -1,7 +1,7 @@
 import { Box, SxProps, useTheme } from '@mui/system';
 import { ReactNode } from 'react';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 
 interface BoxWith3DProps {
   children: ReactNode;
@@ -220,7 +220,7 @@ export function BoxWith3D({
   className,
   anySize,
 }: BoxWith3DProps) {
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
   const theme = useTheme();
   const isDisabled = disabled;
 

@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Hex } from 'viem';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D, NoSSR, SmallButton } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
@@ -26,13 +26,15 @@ export function Details({
   ipfsError,
   onClick,
 }: DetailsProps) {
-  const store = useStore();
-  const { ensData, fetchEnsNameByAddress } = store;
+  const ensData = useStore((store) => store.ensData);
+  const fetchEnsNameByAddress = useStore(
+    (store) => store.fetchEnsNameByAddress,
+  );
 
   useEffect(() => {
     if (
       proposalCreator &&
-      !ENSDataExists(store, proposalCreator as Hex, ENSProperty.NAME)
+      !ENSDataExists(ensData, proposalCreator as Hex, ENSProperty.NAME)
     ) {
       fetchEnsNameByAddress(proposalCreator as Hex);
     }

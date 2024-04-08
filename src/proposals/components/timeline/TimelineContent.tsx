@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react';
 
 import Rocket from '/public/images/rocket.svg';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Timer } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
@@ -47,7 +47,9 @@ export function TimelineContent({
 }: TimelineContentProps) {
   const theme = useTheme();
   const mobileScrollingWrapper = useRef(null);
-  const { setIsProposalHistoryOpen } = useStore();
+  const setIsProposalHistoryOpen = useStore(
+    (store) => store.setIsProposalHistoryOpen,
+  );
   const isWrapperWithScroll = useMediaQuery('(max-width: 900px)');
 
   const now = dayjs().unix();

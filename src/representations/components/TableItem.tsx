@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NetworkIcon } from '../../ui/components/NetworkIcon';
@@ -31,7 +31,11 @@ export function TableItem({
   forHelp,
 }: TableItemProps) {
   const theme = useTheme();
-  const { representationDataLoading } = useStore();
+
+  const representationDataLoading = useStore(
+    (store) => store.representationDataLoading,
+  );
+
   const formRepresentativeAddress = getFormRepresentationsData({
     chainId: chainId || 0,
     representativeAddress,

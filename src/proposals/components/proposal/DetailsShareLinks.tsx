@@ -5,7 +5,7 @@ import React from 'react';
 import Download from '/public/images/icons/download.svg';
 import Twitter from '/public/images/icons/twitterX.svg';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link, NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { IconBox } from '../../../ui/primitives/IconBox';
@@ -35,7 +35,7 @@ export function DetailsShareLinks({
   ipfsError,
   forCreate,
 }: DetailsShareLinksProps) {
-  const store = useStore();
+  const isRendered = useStore((store) => store.isRendered);
   const sm = useMediaQuery(media.sm);
 
   if (!ipfs && !ipfsError)
@@ -58,7 +58,7 @@ export function DetailsShareLinks({
 
   if (!ipfs && ipfsError) return null;
 
-  if (!store.isRendered) {
+  if (!isRendered) {
     return (
       <>
         <Box

@@ -6,7 +6,7 @@ import {
 import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
-import { RootState, useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { isForIPFS } from '../../../utils/appConfig';
 import { getProposalEventsCache } from '../../../utils/githubCacheRequests';
 import { getProposalDataById } from '../../store/proposalsSelectors';
@@ -32,30 +32,59 @@ const historyTypes = [
 ];
 
 const getHistoryLinkFunc = (
-  store: RootState,
+  setPayloadsCreatedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setProposalCreatedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setProposalActivatedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setProposalActivatedOnVMHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setProposalVotingClosedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setProposalQueuedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setPayloadsQueuedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
+  setPayloadsExecutedHistoryHash: (
+    proposal: ProposalWithLoadings,
+    txInfo: TxInfo,
+  ) => void,
   type: HistoryItemType,
   txInfo: TxInfo,
   proposalData: ProposalWithLoadings,
 ) => {
   switch (type) {
     case HistoryItemType.PAYLOADS_CREATED:
-      return () => store.setPayloadsCreatedHistoryHash(proposalData, txInfo);
+      return () => setPayloadsCreatedHistoryHash(proposalData, txInfo);
     case HistoryItemType.CREATED:
-      return () => store.setProposalCreatedHistoryHash(proposalData, txInfo);
+      return () => setProposalCreatedHistoryHash(proposalData, txInfo);
     case HistoryItemType.PROPOSAL_ACTIVATE:
-      return () => store.setProposalActivatedHistoryHash(proposalData, txInfo);
+      return () => setProposalActivatedHistoryHash(proposalData, txInfo);
     case HistoryItemType.OPEN_TO_VOTE:
-      return () =>
-        store.setProposalActivatedOnVMHistoryHash(proposalData, txInfo);
+      return () => setProposalActivatedOnVMHistoryHash(proposalData, txInfo);
     case HistoryItemType.VOTING_CLOSED:
-      return () =>
-        store.setProposalVotingClosedHistoryHash(proposalData, txInfo);
+      return () => setProposalVotingClosedHistoryHash(proposalData, txInfo);
     case HistoryItemType.PROPOSAL_QUEUED:
-      return () => store.setProposalQueuedHistoryHash(proposalData, txInfo);
+      return () => setProposalQueuedHistoryHash(proposalData, txInfo);
     case HistoryItemType.PAYLOADS_QUEUED:
-      return () => store.setPayloadsQueuedHistoryHash(proposalData, txInfo);
+      return () => setPayloadsQueuedHistoryHash(proposalData, txInfo);
     case HistoryItemType.PAYLOADS_EXECUTED:
-      return () => store.setPayloadsExecutedHistoryHash(proposalData, txInfo);
+      return () => setPayloadsExecutedHistoryHash(proposalData, txInfo);
 
     default:
       return undefined;
@@ -76,7 +105,31 @@ function ProposalHistoryModalInit({
 }: ProposalHistoryModalProps & {
   proposalData?: ProposalWithLoadings;
 }) {
-  const store = useStore();
+  const proposalHistory = useStore((store) => store.proposalHistory);
+  const setPayloadsCreatedHistoryHash = useStore(
+    (store) => store.setPayloadsCreatedHistoryHash,
+  );
+  const setProposalCreatedHistoryHash = useStore(
+    (store) => store.setProposalCreatedHistoryHash,
+  );
+  const setProposalActivatedHistoryHash = useStore(
+    (store) => store.setProposalActivatedHistoryHash,
+  );
+  const setProposalActivatedOnVMHistoryHash = useStore(
+    (store) => store.setProposalActivatedOnVMHistoryHash,
+  );
+  const setProposalVotingClosedHistoryHash = useStore(
+    (store) => store.setProposalVotingClosedHistoryHash,
+  );
+  const setProposalQueuedHistoryHash = useStore(
+    (store) => store.setProposalQueuedHistoryHash,
+  );
+  const setPayloadsQueuedHistoryHash = useStore(
+    (store) => store.setPayloadsQueuedHistoryHash,
+  );
+  const setPayloadsExecutedHistoryHash = useStore(
+    (store) => store.setPayloadsExecutedHistoryHash,
+  );
 
   if (!proposalData?.proposal) return null;
 
@@ -86,7 +139,7 @@ function ProposalHistoryModalInit({
       isOpen={isOpen}
       setIsOpen={setIsOpen}>
       {historyTypes.map((type) => {
-        return Object.entries(store.proposalHistory).map((item) => {
+        return Object.entries(proposalHistory).map((item) => {
           const txInfo = item[1].txInfo;
           if (txInfo) {
             const historyId = getHistoryId({
@@ -95,7 +148,7 @@ function ProposalHistoryModalInit({
               id: txInfo.id,
               chainId: txInfo.chainId,
             });
-            const historyItem = store.proposalHistory[historyId];
+            const historyItem = proposalHistory[historyId];
 
             return (
               <React.Fragment key={item[0]}>
@@ -104,7 +157,14 @@ function ProposalHistoryModalInit({
                     proposalId={proposalId}
                     item={historyItem}
                     onClick={getHistoryLinkFunc(
-                      store,
+                      setPayloadsCreatedHistoryHash,
+                      setProposalCreatedHistoryHash,
+                      setProposalActivatedHistoryHash,
+                      setProposalActivatedOnVMHistoryHash,
+                      setProposalVotingClosedHistoryHash,
+                      setProposalQueuedHistoryHash,
+                      setPayloadsQueuedHistoryHash,
+                      setPayloadsExecutedHistoryHash,
                       type,
                       txInfo,
                       proposalData,
@@ -128,9 +188,32 @@ function ProposalHistoryModalSSR({
   setIsOpen,
   proposalId,
 }: ProposalHistoryModalProps) {
-  const store = useStore();
+  const detailedProposalsData = useStore(
+    (store) => store.detailedProposalsData,
+  );
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
+    (store) => store.representativeLoading,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const blockHashBalanceLoadings = useStore(
+    (store) => store.blockHashBalanceLoadings,
+  );
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
-  const proposalData = getProposalDataById(store, proposalId);
+  const proposalData = getProposalDataById({
+    detailedProposalsData,
+    configs,
+    contractsConstants,
+    representativeLoading,
+    activeWallet,
+    representative,
+    blockHashBalanceLoadings,
+    blockHashBalance,
+    proposalId,
+  });
 
   return (
     <ProposalHistoryModalInit
@@ -147,16 +230,41 @@ function ProposalHistoryModalIPFS({
   setIsOpen,
   proposalId,
 }: ProposalHistoryModalProps) {
-  const store = useStore();
+  const detailedProposalsData = useStore(
+    (store) => store.detailedProposalsData,
+  );
+  const initProposalHistory = useStore((store) => store.initProposalHistory);
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
+    (store) => store.representativeLoading,
+  );
+  const activeWallet = useStore((store) => store.activeWallet);
+  const representative = useStore((store) => store.representative);
+  const blockHashBalanceLoadings = useStore(
+    (store) => store.blockHashBalanceLoadings,
+  );
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
-  const proposalData = getProposalDataById(store, proposalId);
+  const proposalData = getProposalDataById({
+    detailedProposalsData,
+    configs,
+    contractsConstants,
+    representativeLoading,
+    activeWallet,
+    representative,
+    blockHashBalanceLoadings,
+    blockHashBalance,
+    proposalId,
+  });
+
   const { loading: cacheEventsLoading, data: cacheEventsData } = useRequest(
     getProposalEventsCache(proposalId),
   );
 
   useEffect(() => {
     if (proposalData?.proposal && isForIPFS) {
-      store.initProposalHistory(proposalData.proposal, cacheEventsData);
+      initProposalHistory(proposalData.proposal, cacheEventsData);
     }
   }, [isOpen, proposalId, proposalData?.loading, cacheEventsLoading]);
 

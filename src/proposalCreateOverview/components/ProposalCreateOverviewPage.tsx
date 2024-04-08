@@ -12,7 +12,7 @@ import { DetailsShareLinks } from '../../proposals/components/proposal/DetailsSh
 import { LeftPanelWrapper } from '../../proposals/components/proposal/LeftPanelWrapper';
 import { ProposalPayloads } from '../../proposals/components/proposal/ProposalPayloads';
 import { RightPanelWrapper } from '../../proposals/components/proposal/RightPanelWrapper';
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
 import { BackButton3D, BigButton, Container, NoSSR } from '../../ui';
@@ -33,21 +33,29 @@ export function ProposalCreateOverviewPage({
   const router = useRouter();
   const theme = useTheme();
 
-  const {
-    getTotalProposalCount,
-    totalProposalCount,
-    getIpfsData,
-    ipfsData,
-    ipfsDataErrors,
-    createPayloadsData,
-    getCreatePayloadsData,
-    createPayloadsErrors,
-    isCreateProposalModalOpen,
-    setIsCreateProposalModalOpen,
-    createProposal,
-    setIpfsDataErrors,
-    getCachedProposalPayloadsData,
-  } = useStore();
+  const getTotalProposalCount = useStore(
+    (store) => store.getTotalProposalCount,
+  );
+  const totalProposalCount = useStore((store) => store.totalProposalCount);
+  const getIpfsData = useStore((store) => store.getIpfsData);
+  const ipfsData = useStore((store) => store.ipfsData);
+  const ipfsDataErrors = useStore((store) => store.ipfsDataErrors);
+  const createPayloadsData = useStore((store) => store.createPayloadsData);
+  const getCreatePayloadsData = useStore(
+    (store) => store.getCreatePayloadsData,
+  );
+  const createPayloadsErrors = useStore((store) => store.createPayloadsErrors);
+  const isCreateProposalModalOpen = useStore(
+    (store) => store.isCreateProposalModalOpen,
+  );
+  const setIsCreateProposalModalOpen = useStore(
+    (store) => store.setIsCreateProposalModalOpen,
+  );
+  const createProposal = useStore((store) => store.createProposal);
+  const setIpfsDataErrors = useStore((store) => store.setIpfsDataErrors);
+  const getCachedProposalPayloadsData = useStore(
+    (store) => store.getCachedProposalPayloadsData,
+  );
 
   useEffect(() => {
     getTotalProposalCount();

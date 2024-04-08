@@ -9,7 +9,7 @@ import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { NoSSR } from '../../../ui';
 import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { proposalStatuses } from '../../utils/statuses';
@@ -27,7 +27,7 @@ interface TimelineProps {
 
 export function Timeline({ proposal, loading }: TimelineProps) {
   const theme = useTheme();
-  const { isRendered } = useStore();
+  const isRendered = useStore((store) => store.isRendered);
 
   const now = dayjs().unix();
 

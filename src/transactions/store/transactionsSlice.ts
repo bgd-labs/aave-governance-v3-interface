@@ -242,10 +242,18 @@ export const createTransactionsSlice: StoreSlice<
           await updateProposalData(data.payload.proposalId);
           break;
         case TxType.vote:
-          const proposalData = getProposalDataById(
-            get(),
-            data.payload.proposalId,
-          );
+          const proposalData = getProposalDataById({
+            detailedProposalsData: get().detailedProposalsData,
+            configs: get().configs,
+            contractsConstants: get().contractsConstants,
+            representativeLoading: get().representativeLoading,
+            activeWallet: get().activeWallet,
+            representative: get().representative,
+            blockHashBalanceLoadings: get().blockHashBalanceLoadings,
+            blockHashBalance: get().blockHashBalance,
+            proposalId: data.payload.proposalId,
+          });
+
           if (proposalData) {
             const startBlock =
               proposalData.proposal.data.votingMachineData.createdBlock;

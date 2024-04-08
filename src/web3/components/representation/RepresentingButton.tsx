@@ -5,7 +5,7 @@ import { Hex } from 'viem';
 
 import LinkIcon from '/public/images/icons/linkIcon.svg';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { Image, Link, Tooltip } from '../../../ui';
 import { IconBox } from '../../../ui/primitives/IconBox';
 import { texts } from '../../../ui/utils/texts';
@@ -17,13 +17,24 @@ import { RepresentingButtonChainsIcon } from './RepresentingButtonChainsIcon';
 
 export function RepresentingButton() {
   const theme = useTheme();
-  const store = useStore();
-  const {
-    setAccountInfoModalOpen,
-    representative,
-    fetchEnsNameByAddress,
+
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
+  const representative = useStore((store) => store.representative);
+  const fetchEnsNameByAddress = useStore(
+    (store) => store.fetchEnsNameByAddress,
+  );
+  const fetchEnsAvatarByAddress = useStore(
+    (store) => store.fetchEnsAvatarByAddress,
+  );
+  const ensData = useStore((store) => store.ensData);
+
+  const isENSDataExists = ENSDataExists(
     ensData,
-  } = store;
+    representative.address as Hex,
+    ENSProperty.NAME,
+  );
 
   const [shownAvatar, setShownAvatar] = useState<string | undefined>(undefined);
   const [isAvatarExists, setIsAvatarExists] = useState<boolean | undefined>(
@@ -35,12 +46,13 @@ export function RepresentingButton() {
     const activeAddress = representative.address;
     if (activeAddress) {
       fetchEnsNameByAddress(activeAddress).then(() => {
-        selectENSAvatar(
-          store,
-          activeAddress,
-          setShownAvatar,
+        selectENSAvatar({
+          ensData,
+          fetchEnsAvatarByAddress,
+          address: activeAddress,
+          setAvatar: setShownAvatar,
           setIsAvatarExists,
-        );
+        });
       });
     }
   }, [ensData, representative.address]);
@@ -152,11 +164,7 @@ export function RepresentingButton() {
                 address: representative.address,
               })}>
               <Box>
-                {ENSDataExists(
-                  store,
-                  representative.address as Hex,
-                  ENSProperty.NAME,
-                )
+                {isENSDataExists
                   ? ensData[representative.address.toLocaleLowerCase() as Hex]
                       .name
                   : representative.address}

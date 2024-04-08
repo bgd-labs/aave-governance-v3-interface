@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BackButton3D, BigButton, Container } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
@@ -19,15 +19,16 @@ export function RpcSwitcherPage() {
   const theme = useTheme();
   const router = useRouter();
 
-  const store = useStore();
-  const {
-    appClients,
-    appClientsForm,
-    updateClients,
-    isRpcSwitcherChangedView,
-    setIsRpcSwitcherChangedView,
-    rpcFormErrors,
-  } = store;
+  const appClients = useStore((store) => store.appClients);
+  const appClientsForm = useStore((store) => store.appClientsForm);
+  const updateClients = useStore((store) => store.updateClients);
+  const isRpcSwitcherChangedView = useStore(
+    (store) => store.isRpcSwitcherChangedView,
+  );
+  const setIsRpcSwitcherChangedView = useStore(
+    (store) => store.setIsRpcSwitcherChangedView,
+  );
+  const rpcFormErrors = useStore((store) => store.rpcFormErrors);
 
   const [isEdit, setIsEdit] = useState(false);
   const [loadingData, setLoadingData] = useState(true);

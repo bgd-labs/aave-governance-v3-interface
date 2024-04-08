@@ -2,7 +2,7 @@ import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { Address } from 'viem';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
@@ -39,7 +39,7 @@ export function TableItem({
   forHelp,
 }: TableItemProps) {
   const theme = useTheme();
-  const { delegateDataLoading } = useStore();
+  const delegateDataLoading = useStore((store) => store.delegateDataLoading);
 
   const { formVotingToAddress, formPropositionToAddress } = getFormDelegateData(
     {

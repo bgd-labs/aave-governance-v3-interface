@@ -2,7 +2,7 @@ import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpe
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect } from 'react';
 
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { isForIPFS } from '../../../utils/appConfig';
 import {
   selectPaginatedProposalsData,
@@ -22,12 +22,41 @@ export default function ProposalListWrapper({
   cachedProposalsData,
   cachedActiveIds,
 }: ProposalListWrapperProps) {
-  const store = useStore();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const totalPages = selectProposalsPages(store).length;
+  const activePageFromStore = useStore((state) => state.activePage);
+  const filteredStateFromStore = useStore((state) => state.filteredState);
+  const loadingListCache = useStore((state) => state.loadingListCache);
+  const representativeLoading = useStore(
+    (state) => state.representativeLoading,
+  );
+  const getPaginatedProposalsData = useStore(
+    (state) => state.getPaginatedProposalsData,
+  );
+  const getPaginatedProposalsDataWithoutIpfs = useStore(
+    (state) => state.getPaginatedProposalsDataWithoutIpfs,
+  );
+  const activeWallet = useStore((state) => state.activeWallet);
+  const representative = useStore((state) => state.representative);
+  const isInitialLoading = useStore((state) => state.isInitialLoading);
+  const startNewProposalsPolling = useStore(
+    (state) => state.startNewProposalsPolling,
+  );
+  const startDetailedProposalDataPolling = useStore(
+    (state) => state.startDetailedProposalDataPolling,
+  );
+  const stopNewProposalsPolling = useStore(
+    (state) => state.stopNewProposalsPolling,
+  );
+  const stopDetailedProposalDataPolling = useStore(
+    (state) => state.stopDetailedProposalDataPolling,
+  );
+  const setActivePage = useStore((state) => state.setActivePage);
+  const setFilteredState = useStore((state) => state.setFilteredState);
+
+  const totalPages = useStore((store) => selectProposalsPages(store)).length;
   const totalStatuses = proposalStatuses.length;
 
   const isActivePageWrong =
@@ -38,12 +67,12 @@ export default function ProposalListWrapper({
     isNaN(Number(searchParams?.get('filteredState')));
 
   const activePage = isForIPFS
-    ? store.activePage
+    ? activePageFromStore
     : isActivePageWrong
       ? 0
       : Number(searchParams?.get('activePage'));
   const filteredState = isForIPFS
-    ? store.filteredState
+    ? filteredStateFromStore
     : isFilteredStateWrong
       ? null
       : searchParams?.get('filteredState');
@@ -71,46 +100,46 @@ export default function ProposalListWrapper({
 
   // initial data loading
   useEffect(() => {
-    if (!store.loadingListCache && !store.representativeLoading) {
-      store.getPaginatedProposalsData();
+    if (!loadingListCache && !representativeLoading) {
+      getPaginatedProposalsData();
     }
-  }, [activePage, store.loadingListCache, store.representativeLoading]);
+  }, [activePage, loadingListCache, representativeLoading]);
 
   // reload data when wallet connected or wallet address changed
   useEffect(() => {
     if (
-      !!store.activeWallet?.isActive &&
-      !store.isInitialLoading &&
-      !store.loadingListCache &&
-      !store.representativeLoading
+      !!activeWallet?.isActive &&
+      !isInitialLoading &&
+      !loadingListCache &&
+      !representativeLoading
     ) {
-      store.getPaginatedProposalsDataWithoutIpfs();
+      getPaginatedProposalsDataWithoutIpfs();
     }
   }, [
-    store.activeWallet?.address,
-    store.isInitialLoading,
-    store.loadingListCache,
-    store.representative.address,
+    activeWallet?.address,
+    isInitialLoading,
+    loadingListCache,
+    representative.address,
   ]);
 
   // proposals data polling
   useEffect(() => {
-    store.startNewProposalsPolling();
-    store.startDetailedProposalDataPolling();
+    startNewProposalsPolling();
+    startDetailedProposalDataPolling();
     return () => {
-      store.stopNewProposalsPolling();
-      store.stopDetailedProposalDataPolling();
+      stopNewProposalsPolling();
+      stopDetailedProposalDataPolling();
     };
   }, []);
 
   useEffect(() => {
     if (isForIPFS) {
       if (!!activePage && activePage !== 0) {
-        store.setActivePage(activePage);
+        setActivePage(activePage);
       }
     } else {
       if (!!activePage && activePage !== 1) {
-        store.setActivePage(activePage - 1);
+        setActivePage(activePage - 1);
       }
       if (isActivePageWrong) {
         router.replace(
@@ -126,9 +155,9 @@ export default function ProposalListWrapper({
   useEffect(() => {
     if (!isForIPFS) {
       if (!!filteredState || filteredState === '0') {
-        store.setFilteredState(Number(filteredState));
+        setFilteredState(Number(filteredState));
       } else {
-        store.setFilteredState(null);
+        setFilteredState(null);
       }
       if (isFilteredStateWrong) {
         router.replace(
@@ -139,15 +168,15 @@ export default function ProposalListWrapper({
         );
       }
     }
-  }, [store.isInitialLoading, store.loadingListCache]);
+  }, [isInitialLoading, loadingListCache]);
 
-  const proposalData = selectPaginatedProposalsData(store);
+  const proposalData = useStore((store) => selectPaginatedProposalsData(store));
 
   return (
     <ProposalsList
       activeProposalsData={proposalData.activeProposals}
       cachedProposalData={
-        !store.loadingListCache
+        !loadingListCache
           ? proposalData.cachedProposals
           : cachedProposalsData || []
       }

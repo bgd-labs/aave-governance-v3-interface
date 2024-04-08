@@ -1,13 +1,11 @@
-import { RootState } from '../../store';
+import { RepresentativeAddress } from './representationsSlice';
 
 export const checkIsVotingAvailable = (
-  store: RootState,
+  representative: RepresentativeAddress,
   votingChainId: number,
 ) => {
-  return store.representative.address !== ''
-    ? !!store.representative.chainsIds.length &&
-        !!store.representative.chainsIds.find(
-          (chainId) => chainId === votingChainId,
-        )
+  return representative.address !== ''
+    ? !!representative.chainsIds.length &&
+        !!representative.chainsIds.find((chainId) => chainId === votingChainId)
     : true;
 };

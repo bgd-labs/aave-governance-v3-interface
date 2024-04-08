@@ -1,4 +1,4 @@
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Pagination } from '../../ui';
 import { selectProposalsPages } from '../store/proposalsSelectors';
 

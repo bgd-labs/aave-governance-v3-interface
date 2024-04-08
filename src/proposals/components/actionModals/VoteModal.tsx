@@ -20,7 +20,7 @@ import gelatoIcon from '/public/images/icons/gelato.svg?url';
 import InfoIcon from '/public/images/icons/info.svg';
 
 import { checkIsVotingAvailable } from '../../../representations/store/representationsSelectors';
-import { useStore } from '../../../store';
+import { useStore } from '../../../store/ZustandStoreProvider';
 import { BasicActionModal } from '../../../transactions/components/BasicActionModal';
 import { useLastTxLocalStatus } from '../../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../../transactions/store/transactionsSlice';
@@ -44,30 +44,61 @@ export function VoteModal({
   proposalId,
   fromList,
 }: ActionModalBasicTypes) {
-  const store = useStore();
   const theme = useTheme();
-  const {
-    vote,
-    supportObject,
-    setSupportObject,
-    activeWallet,
-    checkIsGelatoAvailableWithApiKey,
-    representative,
-    clearSupportObject,
-    isGelatoAvailableChains,
-    isGaslessVote,
-    setIsGaslessVote,
-    checkIsGaslessVote,
-  } = store;
+
+  const activeWallet = useStore((store) => store.activeWallet);
+  const vote = useStore((store) => store.vote);
+  const supportObject = useStore((store) => store.supportObject);
+  const setSupportObject = useStore((store) => store.setSupportObject);
+  const checkIsGelatoAvailableWithApiKey = useStore(
+    (store) => store.checkIsGelatoAvailableWithApiKey,
+  );
+  const representative = useStore((store) => store.representative);
+  const clearSupportObject = useStore((store) => store.clearSupportObject);
+  const isGelatoAvailableChains = useStore(
+    (store) => store.isGelatoAvailableChains,
+  );
+  const isGaslessVote = useStore((store) => store.isGaslessVote);
+  const setIsGaslessVote = useStore((store) => store.setIsGaslessVote);
+  const checkIsGaslessVote = useStore((store) => store.checkIsGaslessVote);
+  const startDetailedProposalDataPolling = useStore(
+    (store) => store.startDetailedProposalDataPolling,
+  );
+  const stopDetailedProposalDataPolling = useStore(
+    (store) => store.stopDetailedProposalDataPolling,
+  );
+  const setIsRepresentationInfoModalOpen = useStore(
+    (store) => store.setIsRepresentationInfoModalOpen,
+  );
+  const detailedProposalsData = useStore(
+    (store) => store.detailedProposalsData,
+  );
+  const configs = useStore((store) => store.configs);
+  const contractsConstants = useStore((store) => store.contractsConstants);
+  const representativeLoading = useStore(
+    (store) => store.representativeLoading,
+  );
+  const blockHashBalanceLoadings = useStore(
+    (store) => store.blockHashBalanceLoadings,
+  );
+  const blockHashBalance = useStore((store) => store.blockHashBalance);
 
   const [localVotingTokens, setLocalVotingTokens] = useState<Balance[]>([]);
   const [isEditVotingTokensOpen, setEditVotingTokens] = useState(false);
   const [isVotingModesInfoOpen, setIsVotingModesInfoOpen] = useState(false);
   const [isSwitching, setIsSwitching] = useState(false);
 
-  const proposalData = useStore((store) =>
-    getProposalDataById(store, proposalId),
-  );
+  const proposalData = getProposalDataById({
+    detailedProposalsData,
+    configs,
+    contractsConstants,
+    representativeLoading,
+    activeWallet,
+    representative,
+    blockHashBalanceLoadings,
+    blockHashBalance,
+    proposalId,
+  });
 
   useEffect(() => {
     if (proposalData) {
@@ -139,9 +170,7 @@ export function VoteModal({
 
   useEffect(() => {
     if (tx?.pending === false || tx?.isError) {
-      store.startDetailedProposalDataPolling(
-        fromList ? undefined : [proposalId],
-      );
+      startDetailedProposalDataPolling(fromList ? undefined : [proposalId]);
     }
   }, [tx?.pending, tx?.isError]);
 
@@ -222,7 +251,7 @@ export function VoteModal({
   );
 
   const handleVote = async (gelato?: boolean) => {
-    store.stopDetailedProposalDataPolling();
+    stopDetailedProposalDataPolling();
     return await executeTxWithLocalStatuses({
       callbackFunction: async () =>
         await vote({
@@ -245,7 +274,7 @@ export function VoteModal({
   }
 
   const disabled = !checkIsVotingAvailable(
-    store,
+    representative,
     proposalData.proposal.data.votingChainId,
   );
 
@@ -385,12 +414,12 @@ export function VoteModal({
             <Box
               onClick={() => {
                 if (disabled) {
-                  store.setIsRepresentationInfoModalOpen(true);
+                  setIsRepresentationInfoModalOpen(true);
                 }
               }}
               sx={{ display: 'flex', alignItems: 'center' }}>
               <RepresentationIcon
-                address={store.representative.address}
+                address={representative.address}
                 disabled={disabled}
               />
               <FormattedNumber

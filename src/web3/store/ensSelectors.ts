@@ -1,65 +1,72 @@
 import dayjs from 'dayjs';
 import { Address, isAddress } from 'viem';
 
-import { RootState } from '../../store';
 import { ENS_TTL, isEnsName } from '../utils/ensHelpers';
-import { ENSProperty, IEnsSlice } from './ensSlice';
+import { EnsDataItem, ENSProperty, IEnsSlice } from './ensSlice';
 
 export const ENSDataExists = (
-  store: IEnsSlice,
+  ensData: Record<`0x${string}`, EnsDataItem>,
   address: Address | string,
   property: ENSProperty,
 ) => {
   const lowercasedAddress = address.toLocaleLowerCase() as Address;
   return Boolean(
-    store.ensData[lowercasedAddress] &&
-      store.ensData[lowercasedAddress][property],
+    ensData[lowercasedAddress] && ensData[lowercasedAddress][property],
   );
 };
 
 export const ENSDataHasBeenFetched = (
-  store: IEnsSlice,
+  ensData: Record<`0x${string}`, EnsDataItem>,
   address: Address,
   property: ENSProperty,
 ) => {
   const currentTime = dayjs().unix();
-  const fetchTime = store.ensData[address]?.fetched?.[property];
+  const fetchTime = ensData[address]?.fetched?.[property];
   if (!fetchTime) return false;
 
   return currentTime - fetchTime <= ENS_TTL;
 };
 
 export const checkIsGetAddressByENSNamePending = (
-  store: IEnsSlice,
+  addressesNameInProgress: Record<string, boolean>,
   name: string,
 ) => {
-  return store.addressesNameInProgress[name] || false;
+  return addressesNameInProgress[name] || false;
 };
 
-export const getAddressByENSNameIfExists = (store: IEnsSlice, name: string) => {
-  return Object.keys(store.ensData).find(
-    (address) =>
-      store.ensData[address.toLocaleLowerCase() as Address].name === name,
+export const getAddressByENSNameIfExists = (
+  ensData: Record<`0x${string}`, EnsDataItem>,
+  name: string,
+) => {
+  return Object.keys(ensData).find(
+    (address) => ensData[address.toLocaleLowerCase() as Address].name === name,
   );
 };
 
-export const selectENSAvatar = (
-  store: IEnsSlice,
-  address: Address,
-  setAvatar: (value: string | undefined) => void,
-  setIsAvatarExists: (value: boolean | undefined) => void,
-) => {
+export const selectENSAvatar = ({
+  fetchEnsAvatarByAddress,
+  ensData,
+  address,
+  setAvatar,
+  setIsAvatarExists,
+}: {
+  fetchEnsAvatarByAddress: (address: Address, name?: string) => Promise<void>;
+  ensData: Record<`0x${string}`, EnsDataItem>;
+  address: Address;
+  setAvatar: (value: string | undefined) => void;
+  setIsAvatarExists: (value: boolean | undefined) => void;
+}) => {
   const lowercasedAddress = address.toLocaleLowerCase() as Address;
-  const ENSData = store.ensData[lowercasedAddress];
+  const ENSData = ensData[lowercasedAddress];
 
   if (ENSData && ENSData.name) {
-    store.fetchEnsAvatarByAddress(address, ENSData.name).then(() => {
+    fetchEnsAvatarByAddress(address, ENSData.name).then(() => {
       setAvatar(
-        ENSDataExists(store, address, ENSProperty.AVATAR)
-          ? store.ensData[lowercasedAddress].avatar?.url
+        ENSDataExists(ensData, address, ENSProperty.AVATAR)
+          ? ensData[lowercasedAddress].avatar?.url
           : undefined,
       );
-      setIsAvatarExists(store.ensData[lowercasedAddress].avatar?.isExists);
+      setIsAvatarExists(ensData[lowercasedAddress].avatar?.isExists);
     });
   } else {
     setAvatar(undefined);
@@ -95,7 +102,7 @@ export const selectInputToAddress = async ({
 };
 
 export const checkIfAddressENS = (
-  store: RootState,
+  ensData: Record<`0x${string}`, EnsDataItem>,
   activeWalletAddress: Address,
   address?: Address | string,
 ) => {
@@ -105,7 +112,7 @@ export const checkIfAddressENS = (
   ) {
     return '';
   } else if (isEnsName(address)) {
-    const addressFromENS = getAddressByENSNameIfExists(store, address);
+    const addressFromENS = getAddressByENSNameIfExists(ensData, address);
     if (addressFromENS) {
       if (addressFromENS?.toLowerCase() === activeWalletAddress.toLowerCase()) {
         return '';

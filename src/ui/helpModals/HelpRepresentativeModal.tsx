@@ -4,7 +4,7 @@ import { zeroAddress } from 'viem';
 import { avalanche, mainnet, polygon } from 'viem/chains';
 
 import { RepresentedAddress } from '../../representations/store/representationsSlice';
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { AccountInfoModalContent } from '../../web3/components/wallet/AccountInfoModalContent';
 import { BasicModal, BigButton, BoxWith3D } from '../';
 import { setRelativePath } from '../utils/relativePath';
@@ -50,13 +50,21 @@ export function HelpRepresentativeModal() {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  const {
-    isHelpRepresentativeModalOpen,
-    setIsHelpRepresentativeModalOpen,
-    setIsHelpNavigationModalOpen,
-    setIsHelpDelegateModalOpen,
-    setIsHelpRepresentationModalOpen,
-  } = useStore();
+  const isHelpRepresentativeModalOpen = useStore(
+    (store) => store.isHelpRepresentativeModalOpen,
+  );
+  const setIsHelpRepresentativeModalOpen = useStore(
+    (store) => store.setIsHelpRepresentativeModalOpen,
+  );
+  const setIsHelpNavigationModalOpen = useStore(
+    (store) => store.setIsHelpNavigationModalOpen,
+  );
+  const setIsHelpDelegateModalOpen = useStore(
+    (store) => store.setIsHelpDelegateModalOpen,
+  );
+  const setIsHelpRepresentationModalOpen = useStore(
+    (store) => store.setIsHelpRepresentationModalOpen,
+  );
 
   const [isFirstStepOnMobile, setIsFirstStepOnMobile] = useState(true);
 

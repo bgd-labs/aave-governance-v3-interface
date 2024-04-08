@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { BasicModal, BigButton } from '../';
 import { setRelativePath } from '../utils/relativePath';
 import { texts } from '../utils/texts';
@@ -12,11 +12,15 @@ import { HelpModalText } from './HelpModalText';
 export function HelpDelegationPP() {
   const theme = useTheme();
 
-  const {
-    isHelpDelegationPropositionPowerModalOpen,
-    setIsHelpDelegationPropositionPowerModalOpen,
-    setIsHelpDelegateModalOpen,
-  } = useStore();
+  const isHelpDelegationPropositionPowerModalOpen = useStore(
+    (store) => store.isHelpDelegationPropositionPowerModalOpen,
+  );
+  const setIsHelpDelegationPropositionPowerModalOpen = useStore(
+    (store) => store.setIsHelpDelegationPropositionPowerModalOpen,
+  );
+  const setIsHelpDelegateModalOpen = useStore(
+    (store) => store.setIsHelpDelegateModalOpen,
+  );
 
   const handleClick = () => {
     setIsHelpDelegationPropositionPowerModalOpen(false);

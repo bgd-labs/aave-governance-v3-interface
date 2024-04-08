@@ -1,7 +1,7 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
-import { useStore } from '../../store';
+import { useStore } from '../../store/ZustandStoreProvider';
 import { Divider } from '../primitives/Divider';
 import { AppModeType } from '../store/uiSlice';
 import { texts } from '../utils/texts';
