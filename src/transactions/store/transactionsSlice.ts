@@ -3,6 +3,7 @@ import {
   createTransactionsSlice as createBaseTransactionsSlice,
   ITransactionsSlice,
   IWalletSlice,
+  StoreSlice,
   TransactionStatus,
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
@@ -22,7 +23,6 @@ import {
   RepresentationFormData,
 } from '../../representations/store/representationsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
-import { StoreSliceWithClients } from '../../store';
 import { IPayloadsHelperSlice } from '../../store/payloadsHelperSlice';
 import { IUISlice } from '../../ui/store/uiSlice';
 import { gelatoApiKeys } from '../../utils/appConfig';
@@ -192,7 +192,7 @@ export type TxWithStatus = TransactionUnion & {
 
 export type AllTransactions = TxWithStatus[];
 
-export const createTransactionsSlice: StoreSliceWithClients<
+export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,
   IProposalsListCacheSlice &
     IWeb3Slice &

@@ -3,12 +3,12 @@ import {
   ClientsRecord,
   createWalletSlice,
   IWalletSlice,
+  StoreSlice,
 } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';
 import { Hex } from 'viem';
 
-import { StoreSliceWithClients } from '../../store';
 import { TransactionsSlice } from '../../transactions/store/transactionsSlice';
 import { DelegationService } from '../services/delegationService';
 import { GovDataService } from '../services/govDataService';
@@ -62,10 +62,10 @@ export type IWeb3Slice = IWalletSlice & {
   getCurrentPowers: (address: Hex, request?: boolean) => Promise<void>;
 };
 
-export const createWeb3Slice: StoreSliceWithClients<
-  IWeb3Slice,
-  TransactionsSlice
-> = (set, get) => ({
+export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
+  set,
+  get,
+) => ({
   ...createWalletSlice({
     walletConnected: () => {
       get().connectSigner();

@@ -76,10 +76,9 @@ export type RootState = IProposalsSlice &
 export const createRootSlice = (
   set: StoreApi<RootState>['setState'],
   get: StoreApi<RootState>['getState'],
-  clients: ClientsRecord,
 ) => ({
-  ...createWeb3Slice(set, get, clients),
-  ...createTransactionsSlice(set, get, clients),
+  ...createWeb3Slice(set, get),
+  ...createTransactionsSlice(set, get),
   ...createProposalsSlice(set, get),
   ...createProposalsListCacheSlice(set, get),
   ...createDelegationSlice(set, get),
