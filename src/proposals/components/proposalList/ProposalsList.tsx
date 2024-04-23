@@ -475,33 +475,6 @@ export function ProposalsList({
                           </ProposalListItemWrapper>
                         </div>
                       );
-                    } else if (
-                      data.proposal &&
-                      ipfsDataErrors[data.proposal.data.ipfsHash]
-                    ) {
-                      return (
-                        <div className="ProposalListItem" key={data.id}>
-                          <ProposalListItemWrapper
-                            estimatedState={ProposalEstimatedState.Failed}
-                            isFinished={false}
-                            isForHelpModal>
-                            <Box component="p" sx={{ typography: 'body' }}>
-                              {ipfsDataErrors[data.proposal.data.ipfsHash]}
-                            </Box>
-                          </ProposalListItemWrapper>
-                        </div>
-                      );
-                    } else if (
-                      data.proposal &&
-                      data.proposal.data.title === `Proposal #${data.id}`
-                    ) {
-                      return (
-                        <div className="ProposalListItem" key={data.id}>
-                          <ProposalListItemWrapper isForHelpModal>
-                            <Loading />
-                          </ProposalListItemWrapper>
-                        </div>
-                      );
                     } else {
                       return (
                         <ActiveProposalListItem

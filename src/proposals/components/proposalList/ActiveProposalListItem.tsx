@@ -11,6 +11,7 @@ import { zeroAddress } from 'viem';
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
 import { ChainNameWithIcon } from '../../../ui/components/ChainNameWithIcon';
+import { CustomSkeleton } from '../../../ui/components/CustomSkeleton';
 import { disablePageLoader } from '../../../ui/utils/disablePageLoader';
 import { ROUTES } from '../../../ui/utils/routes';
 import { texts } from '../../../ui/utils/texts';
@@ -41,6 +42,7 @@ export function ActiveProposalListItem({
 
   const isRendered = useStore((state) => state.isRendered);
   const appClients = useStore((state) => state.appClients);
+  const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
   let activeWallet = useStore((state) => state.activeWallet);
 
   const [isClicked, setIsClicked] = useState(false);
@@ -123,7 +125,11 @@ export function ActiveProposalListItem({
     <div className="ProposalListItem">
       <Box
         component={isForHelpModal ? Box : Link}
-        href={ROUTES.proposal(proposal.data.id, proposal.data.ipfsHash)}
+        href={
+          ipfsDataErrors[proposal.data.ipfsHash]
+            ? ROUTES.proposalWithoutIpfs(proposal.data.id)
+            : ROUTES.proposal(proposal.data.id, proposal.data.ipfsHash)
+        }
         onClick={() => {
           if (!isForHelpModal) {
             setIsClicked(true);
@@ -187,7 +193,14 @@ export function ActiveProposalListItem({
                           ? `${theme.palette.$text} !important`
                           : theme.palette.$text,
                       }}>
-                      {proposal.data.title}
+                      {ipfsDataErrors[proposal.data.ipfsHash] ? (
+                        ipfsDataErrors[proposal.data.ipfsHash]
+                      ) : proposal.data.title ===
+                        `Proposal #${proposal.data.id}` ? (
+                        <CustomSkeleton width={250} height={24} />
+                      ) : (
+                        proposal.data.title
+                      )}
                     </Box>
                   </Box>
 

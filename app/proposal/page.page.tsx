@@ -5,6 +5,7 @@ import {
   getProposalMetadata,
   getProposalState,
   getVotingMachineProposalState,
+  ProposalMetadata,
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import type { Metadata } from 'next';
@@ -13,6 +14,7 @@ import { getContract } from 'viem';
 
 import { ProposalClientPageSSR } from '../../src/proposals/components/proposal/ProposalClientPageSSR';
 import { metaTexts } from '../../src/ui/utils/metaTexts';
+import { texts } from '../../src/ui/utils/texts';
 import { appConfig } from '../../src/utils/appConfig';
 import {
   cachedDetailsPath,
@@ -41,17 +43,29 @@ export async function generateMetadata({
     : undefined;
 
   if (ipfsHash && proposalId) {
-    const ipfsData = await getProposalMetadata(ipfsHash);
+    try {
+      const ipfsData = await getProposalMetadata(ipfsHash);
 
-    return {
-      title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
-      description: ipfsData?.title || '',
-      openGraph: {
-        images: ['/metaLogo.jpg'],
+      return {
         title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
         description: ipfsData?.title || '',
-      },
-    };
+        openGraph: {
+          images: ['/metaLogo.jpg'],
+          title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
+          description: ipfsData?.title || '',
+        },
+      };
+    } catch (e) {
+      return {
+        title: texts.other.fetchFromIpfsError,
+        description: metaTexts.ipfsDescription,
+        openGraph: {
+          images: ['/metaLogo.jpg'],
+          title: `${texts.other.fetchFromIpfsError}`,
+          description: metaTexts.ipfsDescription,
+        },
+      };
+    }
   }
 
   return {
@@ -179,11 +193,18 @@ export default async function ProposalPage({
     };
   }
 
-  const ipfsDataSSR = cachedDetailsData?.ipfs
-    ? undefined
-    : ipfsHash
-      ? await getProposalMetadata(ipfsHash)
+  let ipfsDataSSR: ProposalMetadata | undefined = undefined;
+  try {
+    ipfsDataSSR = !!cachedDetailsData?.ipfs
+      ? cachedDetailsData?.ipfs
+      : ipfsHash
+        ? await getProposalMetadata(ipfsHash)
+        : undefined;
+  } catch (e) {
+    ipfsDataSSR = !!cachedDetailsData?.ipfs
+      ? cachedDetailsData?.ipfs
       : undefined;
+  }
 
   return (
     <ProposalClientPageSSR

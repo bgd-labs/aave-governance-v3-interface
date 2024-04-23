@@ -1,6 +1,6 @@
 'use client';
 
-import { ClientsRecord, IWalletSlice } from '@bgd-labs/frontend-web3-utils';
+import { IWalletSlice } from '@bgd-labs/frontend-web3-utils';
 import { StoreApi } from 'zustand';
 
 import {
@@ -50,12 +50,6 @@ import {
   createPayloadsHelperSlice,
   IPayloadsHelperSlice,
 } from './payloadsHelperSlice';
-
-export type StoreSliceWithClients<T extends object, E extends object = T> = (
-  set: StoreApi<E extends T ? E : E & T>['setState'],
-  get: StoreApi<E extends T ? E : E & T>['getState'],
-  clients: ClientsRecord,
-) => T;
 
 export type RootState = IProposalsSlice &
   IProposalsListCacheSlice &
