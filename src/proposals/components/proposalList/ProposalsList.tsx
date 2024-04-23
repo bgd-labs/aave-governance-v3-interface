@@ -1,6 +1,5 @@
 import {
   CachedProposalDataItemWithId,
-  ProposalEstimatedState,
   ProposalWithId,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
@@ -69,7 +68,6 @@ export function ProposalsList({
   const loadingListCache = useStore((state) => state.loadingListCache);
   const filteredState = useStore((state) => state.filteredState);
   const setFilteredState = useStore((state) => state.setFilteredState);
-  const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
   const getPaginatedProposalsData = useStore(
     (state) => state.getPaginatedProposalsData,
   );
