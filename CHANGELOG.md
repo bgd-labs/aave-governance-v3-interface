@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.1...v2.3.2) (2024-04-29)
+
+
+### Bug Fixes
+
+* update ipfs part of data logic and update packages ([#87](https://github.com/bgd-labs/aave-governance-v3-interface/issues/87)) ([755b341](https://github.com/bgd-labs/aave-governance-v3-interface/commit/755b34126947c74d13acc2f4db56ecdf586c8165))
+
 ## [2.3.1](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.0...v2.3.1) (2024-03-28)
 
 
