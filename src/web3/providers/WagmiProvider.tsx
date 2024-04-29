@@ -6,7 +6,6 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useMemo } from 'react';
-import { WagmiProvider as BaseWagmiProvider } from 'wagmi';
 
 import { useStore } from '../../store/ZustandStoreProvider';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';
@@ -49,19 +48,17 @@ export default function WagmiProvider() {
   }, []);
 
   return (
-    <BaseWagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <WagmiZustandSync
-          withAutoConnect
-          wagmiConfig={config}
-          defaultChainId={appConfig.govCoreChainId}
-          store={{
-            setWagmiConfig,
-            setDefaultChainId,
-            changeActiveWalletAccount,
-          }}
-        />
-      </QueryClientProvider>
-    </BaseWagmiProvider>
+    <QueryClientProvider client={queryClient}>
+      <WagmiZustandSync
+        withAutoConnect
+        wagmiConfig={config}
+        defaultChainId={appConfig.govCoreChainId}
+        store={{
+          setWagmiConfig,
+          setDefaultChainId,
+          changeActiveWalletAccount,
+        }}
+      />
+    </QueryClientProvider>
   );
 }

@@ -261,7 +261,7 @@ export const createProposalsSlice: StoreSlice<
   getTotalPayloadsCount: async () => {
     await Promise.all(
       appConfig.payloadsControllerChainIds.map(async (chainId) => {
-        await Promise.all(
+        await Promise.allSettled(
           appConfig.payloadsControllerConfig[chainId].contractAddresses.map(
             async (payloadsController) => {
               const totalPayloadsCount =
@@ -497,24 +497,50 @@ export const createProposalsSlice: StoreSlice<
       (value, index, self) => self.indexOf(value) === index,
     );
 
-    const allIpfsData = await Promise.all(
-      filteredNewIpfsHashes.map(async (hash) => {
-        return await getProposalMetadata(
+    filteredNewIpfsHashes.map(async (hash) => {
+      try {
+        const ipfsData = await getProposalMetadata(
           hash,
           ipfsGateway,
           get().setIpfsDataErrors,
           texts.other.fetchFromIpfsIncorrectHash,
         );
-      }),
-    );
+
+        if (ipfsData) {
+          set((state) =>
+            produce(state, (draft) => {
+              draft.ipfsData[hash] = ipfsData;
+            }),
+          );
+
+          set((state) =>
+            produce(state, (draft) => {
+              ids.forEach((id) => {
+                const proposalData = draft.detailedProposalsData[id];
+                if (proposalData) {
+                  draft.detailedProposalsData[id] = {
+                    ...proposalData,
+                    title: getProposalTitle(
+                      get(),
+                      id,
+                      proposalData.ipfsHash,
+                      draft.detailedProposalsData[id]?.title,
+                    ),
+                  };
+                }
+              });
+            }),
+          );
+        } else {
+          get().setIpfsDataErrors(hash, texts.other.fetchFromIpfsIncorrectHash);
+        }
+      } catch (e) {
+        get().setIpfsDataErrors(hash, texts.other.fetchFromIpfsIncorrectHash);
+      }
+    });
 
     set((state) =>
       produce(state, (draft) => {
-        allIpfsData.forEach((ipfs, index) => {
-          if (ipfs) {
-            draft.ipfsData[filteredNewIpfsHashes[index]] = ipfs;
-          }
-        });
         ids.forEach((id) => {
           const proposalData = draft.detailedProposalsData[id];
           if (proposalData) {

@@ -19,6 +19,7 @@ export const ZustandStoreProvider = ({
   children,
 }: ZustandStoreProviderProps) => {
   const storeRef = useRef<StoreApi<RootState>>();
+
   if (!storeRef.current) {
     storeRef.current = create(devtools(createRootSlice, { serialize: true }));
   }
