@@ -193,17 +193,13 @@ export default async function ProposalPage({
     };
   }
 
-  let ipfsDataSSR: ProposalMetadata | undefined = undefined;
+  let ipfsDataSSR: ProposalMetadata | undefined;
   try {
-    ipfsDataSSR = !!cachedDetailsData?.ipfs
-      ? cachedDetailsData?.ipfs
-      : ipfsHash
-        ? await getProposalMetadata(ipfsHash)
-        : undefined;
+    ipfsDataSSR =
+      cachedDetailsData?.ipfs ??
+      (ipfsHash ? await getProposalMetadata(ipfsHash) : undefined);
   } catch (e) {
-    ipfsDataSSR = !!cachedDetailsData?.ipfs
-      ? cachedDetailsData?.ipfs
-      : undefined;
+    ipfsDataSSR = cachedDetailsData?.ipfs;
   }
 
   return (
