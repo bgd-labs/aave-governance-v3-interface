@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.3](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.2...v2.3.3) (2024-05-02)
+
+
+### Bug Fixes
+
+* chains ([ad9835a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/ad9835a9a20228e73d42ea0ad2ba1b058f41f593))
+
 ## [2.3.2](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.1...v2.3.2) (2024-04-29)
 
 
