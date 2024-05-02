@@ -67,20 +67,20 @@ export const initialRpcUrls: Record<number, string[]> = {
   ],
   [optimism.id]: [
     process.env.NEXT_PUBLIC_RPC_OPTIMISM ||
-      'https://endpoints.omniatech.io/v1/arbitrum/one/public',
+      'https://optimism.blockpi.network/v1/rpc/public',
     'https://optimism.blockpi.network/v1/rpc/public',
     'https://optimism.llamarpc.com',
     'https://optimism.publicnode.com',
   ],
   [gnosis.id]: [
     process.env.NEXT_PUBLIC_RPC_GNOSIS ||
-      'https://endpoints.omniatech.io/v1/arbitrum/one/public',
+      'https://gnosis.blockpi.network/v1/rpc/public',
     'https://gnosis.blockpi.network/v1/rpc/public',
     'https://gnosis-mainnet.public.blastapi.io',
   ],
   [scroll.id]: [
     process.env.NEXT_PUBLIC_RPC_SCROLL ||
-      'https://endpoints.omniatech.io/v1/arbitrum/one/public',
+      'https://scroll.blockpi.network/v1/rpc/public',
     'https://scroll.blockpi.network/v1/rpc/public',
     'https://scroll-mainnet.public.blastapi.io',
   ],
