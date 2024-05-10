@@ -38,7 +38,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.5",
-    "@gelatonetwork/relay-sdk": "^5.5.6",
+    "@gelatonetwork/relay-sdk-viem": "^1.0.1",
     "@headlessui/react": "^1.7.19",
     "@mui/system": "^5.15.15",
     "@next/bundle-analyzer": "^14.2.2",

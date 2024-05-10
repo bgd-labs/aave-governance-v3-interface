@@ -41,8 +41,11 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { GelatoRelay, SponsoredCallRequest } from '@gelatonetwork/relay-sdk';
-import { BaseRelayParams } from '@gelatonetwork/relay-sdk/dist/lib/types';
+import {
+  GelatoRelay,
+  SponsoredCallRequest,
+} from '@gelatonetwork/relay-sdk-viem';
+import { BaseRelayParams } from '@gelatonetwork/relay-sdk-viem/dist/lib/types';
 import { writeContract } from '@wagmi/core';
 import {
   Address,

@@ -158,7 +158,7 @@ export default async function ProposalPage({
         cachedDetailsData.proposal,
       ),
       payloads: cachedDetailsData.payloads || [],
-      title: cachedDetailsData.ipfs.title || `Proposal #${id}`,
+      title: cachedDetailsData.ipfs?.title || `Proposal #${id}`,
       prerender: true,
     };
 
