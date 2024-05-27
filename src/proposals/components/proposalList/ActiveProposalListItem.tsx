@@ -55,30 +55,22 @@ export function ActiveProposalListItem({
   const [isIPFSError, setIsIpfsError] = useState(
     ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash],
   );
+  const [ipfsErrorCount, setIpfsErrorCount] = useState(0);
+
+  const MAX_COUNT = 5;
 
   useEffect(() => {
     setIsIpfsError(
       ipfsDataErrors[proposal.data.ipfsHash] &&
         !ipfsData[proposal.data.ipfsHash],
     );
-    if (isIPFSError) {
-      setTimeout(
-        async () =>
-          await new Promise((resolve) => {
-            function loop() {
-              getIpfsData([proposal.data.id], proposal.data.ipfsHash as Hex);
-              if (!isIPFSError) {
-                // @ts-ignore
-                return resolve(() => console.info('Ipfs data got'));
-              }
-              setTimeout(loop, 1000);
-            }
-            loop();
-          }),
-        1000,
-      );
+    if (isIPFSError && ipfsErrorCount <= MAX_COUNT) {
+      setTimeout(async () => {
+        getIpfsData([proposal.data.id], proposal.data.ipfsHash as Hex);
+        setIpfsErrorCount(ipfsErrorCount + 1);
+      }, 1000);
     }
-  }, [isIPFSError, Object.keys(ipfsDataErrors).length]);
+  }, [ipfsErrorCount, isIPFSError, Object.keys(ipfsDataErrors).length]);
 
   if (isForHelpModal) {
     activeWallet = {
@@ -222,7 +214,9 @@ export function ActiveProposalListItem({
                           ? `${theme.palette.$text} !important`
                           : theme.palette.$text,
                       }}>
-                      {isIPFSError ? (
+                      {isIPFSError && ipfsErrorCount > MAX_COUNT ? (
+                        'Ipfs getting error'
+                      ) : isIPFSError ? (
                         <CustomSkeleton width={250} height={24} />
                       ) : proposal.data.title ===
                         `Proposal #${proposal.data.id}` ? (
