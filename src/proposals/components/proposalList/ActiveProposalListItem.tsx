@@ -43,6 +43,7 @@ export function ActiveProposalListItem({
   const isRendered = useStore((state) => state.isRendered);
   const appClients = useStore((state) => state.appClients);
   const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
+  const ipfsData = useStore((state) => state.ipfsData);
   let activeWallet = useStore((state) => state.activeWallet);
 
   const [isClicked, setIsClicked] = useState(false);
@@ -91,6 +92,9 @@ export function ActiveProposalListItem({
 
   const isVoted = votedPower > 0;
 
+  const isIPFSError =
+    ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash];
+
   const handleVoteButtonClick = (proposalId: number) => {
     voteButtonClick(proposalId);
     disablePageLoader();
@@ -126,7 +130,7 @@ export function ActiveProposalListItem({
       <Box
         component={isForHelpModal ? Box : Link}
         href={
-          ipfsDataErrors[proposal.data.ipfsHash]
+          isIPFSError
             ? ROUTES.proposalWithoutIpfs(proposal.data.id)
             : ROUTES.proposal(proposal.data.id, proposal.data.ipfsHash)
         }
@@ -193,8 +197,8 @@ export function ActiveProposalListItem({
                           ? `${theme.palette.$text} !important`
                           : theme.palette.$text,
                       }}>
-                      {ipfsDataErrors[proposal.data.ipfsHash] ? (
-                        ipfsDataErrors[proposal.data.ipfsHash]
+                      {isIPFSError ? (
+                        `Proposal #${proposal.data.id}`
                       ) : proposal.data.title ===
                         `Proposal #${proposal.data.id}` ? (
                         <CustomSkeleton width={250} height={24} />
