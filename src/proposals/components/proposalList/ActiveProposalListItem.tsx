@@ -5,8 +5,8 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
-import React, { useState } from 'react';
-import { zeroAddress } from 'viem';
+import React, { useEffect, useState } from 'react';
+import { Hex, zeroAddress } from 'viem';
 
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
@@ -43,9 +43,34 @@ export function ActiveProposalListItem({
   const isRendered = useStore((state) => state.isRendered);
   const appClients = useStore((state) => state.appClients);
   const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
+  const ipfsData = useStore((state) => state.ipfsData);
+  const getIpfsData = useStore((state) => state.getIpfsData);
   let activeWallet = useStore((state) => state.activeWallet);
 
+  const proposal = proposalData.proposal;
+  const loading = proposalData.loading;
+  const balanceLoading = proposalData.balanceLoading;
+
   const [isClicked, setIsClicked] = useState(false);
+  const [isIPFSError, setIsIpfsError] = useState(
+    ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash],
+  );
+  const [ipfsErrorCount, setIpfsErrorCount] = useState(0);
+
+  const MAX_COUNT = 5;
+
+  useEffect(() => {
+    setIsIpfsError(
+      ipfsDataErrors[proposal.data.ipfsHash] &&
+        !ipfsData[proposal.data.ipfsHash],
+    );
+    if (isIPFSError && ipfsErrorCount <= MAX_COUNT) {
+      setTimeout(async () => {
+        getIpfsData([proposal.data.id], proposal.data.ipfsHash as Hex);
+        setIpfsErrorCount(ipfsErrorCount + 1);
+      }, 1000);
+    }
+  }, [ipfsErrorCount, isIPFSError, Object.keys(ipfsDataErrors).length]);
 
   if (isForHelpModal) {
     activeWallet = {
@@ -58,10 +83,6 @@ export function ActiveProposalListItem({
       isContractAddress: false,
     };
   }
-
-  const proposal = proposalData.proposal;
-  const loading = proposalData.loading;
-  const balanceLoading = proposalData.balanceLoading;
 
   const {
     stateTimestamp,
@@ -126,7 +147,7 @@ export function ActiveProposalListItem({
       <Box
         component={isForHelpModal ? Box : Link}
         href={
-          ipfsDataErrors[proposal.data.ipfsHash]
+          isIPFSError
             ? ROUTES.proposalWithoutIpfs(proposal.data.id)
             : ROUTES.proposal(proposal.data.id, proposal.data.ipfsHash)
         }
@@ -193,8 +214,10 @@ export function ActiveProposalListItem({
                           ? `${theme.palette.$text} !important`
                           : theme.palette.$text,
                       }}>
-                      {ipfsDataErrors[proposal.data.ipfsHash] ? (
-                        ipfsDataErrors[proposal.data.ipfsHash]
+                      {isIPFSError && ipfsErrorCount > MAX_COUNT ? (
+                        'Ipfs getting error'
+                      ) : isIPFSError ? (
+                        <CustomSkeleton width={250} height={24} />
                       ) : proposal.data.title ===
                         `Proposal #${proposal.data.id}` ? (
                         <CustomSkeleton width={250} height={24} />

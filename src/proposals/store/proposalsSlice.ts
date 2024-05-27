@@ -102,7 +102,11 @@ export interface IProposalsSlice {
 
   ipfsData: Record<string, ProposalMetadata>;
   ipfsDataErrors: Record<string, string>;
-  setIpfsDataErrors: (ipfsHash: string, text?: string) => void;
+  setIpfsDataErrors: (
+    ipfsHash: string,
+    text?: string,
+    remove?: boolean,
+  ) => void;
   setIpfsData: (hash: string, data: ProposalMetadata) => void;
   getIpfsData: (ids: number[], hash?: Hex) => Promise<void>;
 
@@ -459,13 +463,23 @@ export const createProposalsSlice: StoreSlice<
 
   ipfsData: {},
   ipfsDataErrors: {},
-  setIpfsDataErrors: (ipfsHash, text) => {
-    set((state) =>
-      produce(state, (draft) => {
-        draft.ipfsDataErrors[ipfsHash] =
-          text === '' ? '' : text || texts.other.fetchFromIpfsError;
-      }),
-    );
+  setIpfsDataErrors: (ipfsHash, text, remove) => {
+    if (remove) {
+      set((state) =>
+        produce(state, (draft) => {
+          if (!!draft.ipfsDataErrors[ipfsHash]) {
+            delete draft.ipfsDataErrors[ipfsHash];
+          }
+        }),
+      );
+    } else {
+      set((state) =>
+        produce(state, (draft) => {
+          draft.ipfsDataErrors[ipfsHash] =
+            text === '' ? '' : text || texts.other.fetchFromIpfsError;
+        }),
+      );
+    }
   },
   setIpfsData: (hash, data) => {
     if (!get().ipfsData[hash]) {
@@ -507,6 +521,8 @@ export const createProposalsSlice: StoreSlice<
         );
 
         if (ipfsData) {
+          get().setIpfsDataErrors(hash, '', true);
+
           set((state) =>
             produce(state, (draft) => {
               draft.ipfsData[hash] = ipfsData;
