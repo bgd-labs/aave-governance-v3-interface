@@ -5,8 +5,8 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
-import React, { useState } from 'react';
-import { zeroAddress } from 'viem';
+import React, { useEffect, useState } from 'react';
+import { Hex, zeroAddress } from 'viem';
 
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
@@ -44,9 +44,41 @@ export function ActiveProposalListItem({
   const appClients = useStore((state) => state.appClients);
   const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
   const ipfsData = useStore((state) => state.ipfsData);
+  const getIpfsData = useStore((state) => state.getIpfsData);
   let activeWallet = useStore((state) => state.activeWallet);
 
+  const proposal = proposalData.proposal;
+  const loading = proposalData.loading;
+  const balanceLoading = proposalData.balanceLoading;
+
   const [isClicked, setIsClicked] = useState(false);
+  const [isIPFSError, setIsIpfsError] = useState(
+    ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash],
+  );
+
+  useEffect(() => {
+    setIsIpfsError(
+      ipfsDataErrors[proposal.data.ipfsHash] &&
+        !ipfsData[proposal.data.ipfsHash],
+    );
+    if (isIPFSError) {
+      setTimeout(
+        async () =>
+          await new Promise((resolve) => {
+            function loop() {
+              getIpfsData([proposal.data.id], proposal.data.ipfsHash as Hex);
+              if (!isIPFSError) {
+                // @ts-ignore
+                return resolve(() => console.info('Ipfs data got'));
+              }
+              setTimeout(loop, 1000);
+            }
+            loop();
+          }),
+        1000,
+      );
+    }
+  }, [isIPFSError, Object.keys(ipfsDataErrors).length]);
 
   if (isForHelpModal) {
     activeWallet = {
@@ -59,10 +91,6 @@ export function ActiveProposalListItem({
       isContractAddress: false,
     };
   }
-
-  const proposal = proposalData.proposal;
-  const loading = proposalData.loading;
-  const balanceLoading = proposalData.balanceLoading;
 
   const {
     stateTimestamp,
@@ -91,9 +119,6 @@ export function ActiveProposalListItem({
   const support = proposal.data.votingMachineData.votedInfo.support;
 
   const isVoted = votedPower > 0;
-
-  const isIPFSError =
-    ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash];
 
   const handleVoteButtonClick = (proposalId: number) => {
     voteButtonClick(proposalId);
@@ -198,7 +223,7 @@ export function ActiveProposalListItem({
                           : theme.palette.$text,
                       }}>
                       {isIPFSError ? (
-                        `Proposal #${proposal.data.id}`
+                        <CustomSkeleton width={250} height={24} />
                       ) : proposal.data.title ===
                         `Proposal #${proposal.data.id}` ? (
                         <CustomSkeleton width={250} height={24} />
