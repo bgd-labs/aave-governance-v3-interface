@@ -27,6 +27,9 @@ export async function getProposalMetadata({
         ...data,
       };
     } else {
+      console.error(
+        "Can't fetch cached ipfs data. Try to fetch from IPFS gateway",
+      );
       return await baseGetProposalMetadata({
         hash,
         gateway: ipfsGateway,
@@ -36,7 +39,9 @@ export async function getProposalMetadata({
       });
     }
   } catch (e) {
-    console.error("Can't fetch cached ipfs data. Try to fetch from IPFS");
+    console.error(
+      'An error occurred while fetching proposal metadata from IPFS, trying to request one more time.',
+    );
     return await baseGetProposalMetadata({
       hash,
       gateway: ipfsGateway,
