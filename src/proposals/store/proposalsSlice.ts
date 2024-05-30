@@ -4,7 +4,6 @@ import {
   checkHash,
   ContractsConstants,
   getProofOfRepresentative,
-  getProposalMetadata,
   getProposalStepsAndAmounts,
   getVotingMachineProposalState,
   getVotingProofs,
@@ -38,7 +37,7 @@ import {
 import { IUISlice } from '../../ui/store/uiSlice';
 import { texts } from '../../ui/utils/texts';
 import { appConfig } from '../../utils/appConfig';
-import { ipfsGateway } from '../../utils/configs';
+import { getProposalMetadata } from '../../utils/getProposalMetadata';
 import { PAGE_SIZE } from '../../web3/services/govDataService';
 import { ICreationFeesSlice } from '../../web3/store/creationFeesSlice';
 import { ENSDataExists } from '../../web3/store/ensSelectors';
@@ -513,12 +512,10 @@ export const createProposalsSlice: StoreSlice<
 
     filteredNewIpfsHashes.map(async (hash) => {
       try {
-        const ipfsData = await getProposalMetadata(
+        const ipfsData = await getProposalMetadata({
           hash,
-          ipfsGateway,
-          get().setIpfsDataErrors,
-          texts.other.fetchFromIpfsIncorrectHash,
-        );
+          setIpfsError: get().setIpfsDataErrors,
+        });
 
         if (ipfsData) {
           get().setIpfsDataErrors(hash, '', true);
