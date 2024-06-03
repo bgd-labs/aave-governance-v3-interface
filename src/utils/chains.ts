@@ -20,8 +20,7 @@ import {
 // chains RPC urls
 export const initialRpcUrls: Record<number, string[]> = {
   [mainnet.id]: [
-    process.env.NEXT_PUBLIC_RPC_MAINNET ||
-      'https://blissful-purple-sky.quiknode.pro',
+    process.env.NEXT_PUBLIC_RPC_MAINNET || 'https://rpc.ankr.com/eth',
     'https://rpc.ankr.com/eth',
     'https://eth.nodeconnect.org',
   ],
