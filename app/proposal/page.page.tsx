@@ -2,7 +2,6 @@ import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 import {
   CachedDetails,
   getGovCoreConfigs,
-  getProposalMetadata,
   getProposalState,
   getVotingMachineProposalState,
   ProposalMetadata,
@@ -23,6 +22,7 @@ import {
   cachedVotesPath,
   githubStartUrl,
 } from '../../src/utils/cacheGithubLinks';
+import { getProposalMetadata } from '../../src/utils/getProposalMetadata';
 import { initialClients } from '../../src/utils/initialClients';
 
 export const revalidate = 0;
@@ -44,7 +44,7 @@ export async function generateMetadata({
 
   if (ipfsHash && proposalId) {
     try {
-      const ipfsData = await getProposalMetadata(ipfsHash);
+      const ipfsData = await getProposalMetadata({ hash: ipfsHash });
 
       return {
         title: `${metaTexts.main}${metaTexts.proposalId(proposalId)}`,
@@ -197,7 +197,7 @@ export default async function ProposalPage({
   try {
     ipfsDataSSR =
       cachedDetailsData?.ipfs ??
-      (ipfsHash ? await getProposalMetadata(ipfsHash) : undefined);
+      (ipfsHash ? await getProposalMetadata({ hash: ipfsHash }) : undefined);
   } catch (e) {
     ipfsDataSSR = cachedDetailsData?.ipfs;
   }

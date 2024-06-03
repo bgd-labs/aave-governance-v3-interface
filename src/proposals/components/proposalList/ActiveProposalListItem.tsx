@@ -6,7 +6,7 @@ import {
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
-import { Hex, zeroAddress } from 'viem';
+import { zeroAddress } from 'viem';
 
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { Link } from '../../../ui';
@@ -44,7 +44,6 @@ export function ActiveProposalListItem({
   const appClients = useStore((state) => state.appClients);
   const ipfsDataErrors = useStore((state) => state.ipfsDataErrors);
   const ipfsData = useStore((state) => state.ipfsData);
-  const getIpfsData = useStore((state) => state.getIpfsData);
   let activeWallet = useStore((state) => state.activeWallet);
 
   const proposal = proposalData.proposal;
@@ -55,22 +54,13 @@ export function ActiveProposalListItem({
   const [isIPFSError, setIsIpfsError] = useState(
     ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash],
   );
-  const [ipfsErrorCount, setIpfsErrorCount] = useState(0);
-
-  const MAX_COUNT = 5;
 
   useEffect(() => {
     setIsIpfsError(
       ipfsDataErrors[proposal.data.ipfsHash] &&
         !ipfsData[proposal.data.ipfsHash],
     );
-    if (isIPFSError && ipfsErrorCount <= MAX_COUNT) {
-      setTimeout(async () => {
-        getIpfsData([proposal.data.id], proposal.data.ipfsHash as Hex);
-        setIpfsErrorCount(ipfsErrorCount + 1);
-      }, 1000);
-    }
-  }, [ipfsErrorCount, isIPFSError, Object.keys(ipfsDataErrors).length]);
+  }, [isIPFSError, Object.keys(ipfsDataErrors).length]);
 
   if (isForHelpModal) {
     activeWallet = {
@@ -214,7 +204,7 @@ export function ActiveProposalListItem({
                           ? `${theme.palette.$text} !important`
                           : theme.palette.$text,
                       }}>
-                      {isIPFSError && ipfsErrorCount > MAX_COUNT ? (
+                      {isIPFSError ? (
                         'Ipfs getting error'
                       ) : isIPFSError ? (
                         <CustomSkeleton width={250} height={24} />

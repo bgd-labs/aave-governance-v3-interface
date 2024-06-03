@@ -1,6 +1,8 @@
 import { coreName } from './appConfig';
 
-export const githubStartUrl = `https://raw.githubusercontent.com/bgd-labs/aave-governance-ui-helpers/main/cache/ui/${coreName}`;
+export const githubInitialUrl =
+  'https://raw.githubusercontent.com/bgd-labs/aave-governance-ui-helpers/main/cache';
+export const githubStartUrl = `${githubInitialUrl}/ui/${coreName}`;
 
 export const listViewPath = '/list_view_proposals.json';
 export const cachedProposalsIdsPath = '/cached_proposals_ids.json';
@@ -15,3 +17,6 @@ export const cachedVotesPath = (id: number) =>
 
 export const cachedEventsPath = (id: number) =>
   `/events/proposal_${id}_events.json`;
+
+export const cachedIPFSDataPath = (ipfsHash: string) =>
+  `/ipfs/${ipfsHash}.json`;
