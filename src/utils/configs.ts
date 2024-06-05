@@ -6,7 +6,6 @@ import { CHAINS } from './chains';
 export const ipfsGateway = 'https://cloudflare-ipfs.com/ipfs';
 export const fallbackGateways = [
   'https://ipfs.io',
-  'https://ipfs.eth.aragon.network',
   'https://dweb.link',
   'https://ipfs.runfission.com',
 ];
