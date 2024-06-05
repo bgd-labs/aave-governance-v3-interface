@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.3.4](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.3...v2.3.4) (2024-06-05)
+
+
+### Bug Fixes
+
+* added fallback for ipfs and make first request from cache ([#92](https://github.com/bgd-labs/aave-governance-v3-interface/issues/92)) ([fc7fbdf](https://github.com/bgd-labs/aave-governance-v3-interface/commit/fc7fbdfda3c89564c2499a4c0592360b385b9b80))
+* gelay-sdk version ([22509b4](https://github.com/bgd-labs/aave-governance-v3-interface/commit/22509b44f65b78450dcc92c740a3fb0fb6788cce))
+* RPC's urls ([c8b7e64](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c8b7e6490fb584d9146d559c1a919c50b8d9c096))
+* use correct url ([#94](https://github.com/bgd-labs/aave-governance-v3-interface/issues/94)) ([909fe32](https://github.com/bgd-labs/aave-governance-v3-interface/commit/909fe328a5328d67d88b55e77d03ab686d5c50ea))
+
 ## [2.3.3](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.2...v2.3.3) (2024-05-02)
 
 
