@@ -233,7 +233,7 @@ export const createDelegationSlice: StoreSlice<
           sigs.push(sig);
         }
 
-        if (!!sigs.length) {
+        if (sigs.length) {
           await get().executeTx({
             body: () => {
               get().setModalOpen(true);

@@ -35,10 +35,10 @@ type Props = {
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
-  const proposalId = !!searchParams['proposalId']
+  const proposalId = searchParams['proposalId']
     ? String(searchParams['proposalId'])
     : undefined;
-  const ipfsHash = !!searchParams['ipfsHash']
+  const ipfsHash = searchParams['ipfsHash']
     ? String(searchParams['ipfsHash'])
     : undefined;
 
@@ -85,10 +85,10 @@ export default async function ProposalPage({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   // params
-  const proposalId = !!searchParams['proposalId']
+  const proposalId = searchParams['proposalId']
     ? String(searchParams['proposalId'])
     : undefined;
-  const ipfsHash = !!searchParams['ipfsHash']
+  const ipfsHash = searchParams['ipfsHash']
     ? String(searchParams['ipfsHash'])
     : undefined;
   const id = Number(proposalId);

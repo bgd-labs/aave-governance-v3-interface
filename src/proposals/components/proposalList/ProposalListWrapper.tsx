@@ -85,7 +85,8 @@ export default function ProposalListWrapper({
       removeActivePage?: boolean;
       removeFilteredState?: boolean;
     }) => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       const params = new URLSearchParams(searchParams);
       if (removeActivePage) {
         params.delete('activePage');

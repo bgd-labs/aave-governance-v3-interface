@@ -44,7 +44,7 @@ const Text = ({
       withoutHover={forHelp}
       isErrorOnRight>
       <>
-        {!!address
+        {address
           ? texts.representationsPage.represented
           : texts.representationsPage.notRepresented}
         {!!address && (

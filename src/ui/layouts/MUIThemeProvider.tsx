@@ -20,7 +20,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       : setCurrentTheme(createTheme(getDesignTokens('dark')));
   }, [resolvedTheme]);
 
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.h1 = {
     fontFamily: FONT,
     fontWeight: '700',
@@ -32,7 +33,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '28px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.h2 = {
     fontFamily: FONT,
     fontWeight: '600',
@@ -44,7 +46,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '23px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.h3 = {
     fontFamily: FONT,
     fontWeight: '400',
@@ -56,7 +59,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '19px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.headline = {
     fontFamily: FONT,
     fontWeight: '600',
@@ -67,7 +71,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '24px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.body = {
     fontFamily: FONT,
     fontWeight: '400',
@@ -78,7 +83,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '24px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.descriptor = {
     fontFamily: FONT,
     fontWeight: '300',
@@ -89,7 +95,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '14px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.descriptorAccent = {
     fontFamily: FONT,
     fontWeight: '700',
@@ -100,7 +107,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '14px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.buttonLarge = {
     fontFamily: FONT,
     fontWeight: '700',
@@ -112,7 +120,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '18px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.buttonMedium = {
     fontFamily: FONT,
     fontWeight: '600',
@@ -124,7 +133,8 @@ export function MUIThemeProvider({ children }: { children: ReactNode }) {
       lineHeight: '17px',
     },
   };
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   currentTheme.typography.buttonSmall = {
     fontFamily: FONT,
     fontWeight: '400',

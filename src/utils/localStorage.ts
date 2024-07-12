@@ -51,7 +51,7 @@ export const getLocalStorageRepresentingAddresses = () => {
     LocalStorageKeys.RepresentingAddresses,
   );
 
-  return (!!addresses ? JSON.parse(addresses) : {}) as Record<
+  return (addresses ? JSON.parse(addresses) : {}) as Record<
     string,
     RepresentativeAddress
   >;

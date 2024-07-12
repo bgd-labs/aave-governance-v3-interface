@@ -120,7 +120,7 @@ export function HelpWalletModal({ infoType }: HelpWalletModalProps) {
       setIsOpen={setIsHelpWalletModalOpen}
       maxWidth={helpModalWidth}
       onBackButtonClick={
-        !!activeWallet
+        activeWallet
           ? () => {
               setActiveWallet('');
               setWalletActivating(false);

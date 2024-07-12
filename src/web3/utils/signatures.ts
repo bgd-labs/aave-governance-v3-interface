@@ -29,7 +29,7 @@ export async function getVoteSignatureParams({
       appConfig.votingMachineConfig[votingChainId].contractAddress,
   };
 
-  if (!!representativeAddress) {
+  if (representativeAddress) {
     const sig = hexToSignature(
       await signTypedData(wagmiConfig, {
         domain,

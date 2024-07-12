@@ -71,11 +71,7 @@ const ContentWrapper = ({
             p: '24px 30px',
             minHeight: 'unset',
             '@media only screen and (min-height: 575px)': {
-              minHeight: withMinHeight
-                ? 500
-                : !!minHeight
-                  ? minHeight
-                  : 'unset',
+              minHeight: withMinHeight ? 500 : minHeight ? minHeight : 'unset',
             },
           },
         }}>

@@ -94,7 +94,7 @@ export const createRepresentationsSlice: StoreSlice<
       );
 
       set({
-        representative: !!isAddressesValid
+        representative: isAddressesValid
           ? walletRepresentative || { chainsIds: [], address: '' }
           : { chainsIds: [], address: '' },
         representativeLoading: false,

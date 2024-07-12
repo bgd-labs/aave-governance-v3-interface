@@ -1,27 +1,10 @@
 import { Box, SxProps } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { toHex } from 'viem';
-import {
-  arbitrum,
-  avalanche,
-  avalancheFuji,
-  base,
-  bsc,
-  bscTestnet,
-  gnosis,
-  goerli,
-  mainnet,
-  metis,
-  optimism,
-  polygon,
-  polygonMumbai,
-  scroll,
-  sepolia,
-} from 'viem/chains';
 
 import { chainInfoHelper } from '../../utils/configs';
-import { Image } from '../primitives/Image';
 import { Tooltip } from './Tooltip';
+import { ChainIcon } from './Web3Icons/ChainIcon';
 
 interface NetworkIconProps {
   chainId: number;
@@ -30,59 +13,18 @@ interface NetworkIconProps {
   withTooltip?: boolean;
 }
 
-const getIconNetworkName = (chainId: number) => {
-  switch (chainId) {
-    case mainnet.id:
-      return 'ethereum';
-    case sepolia.id:
-      return 'ethereum';
-    case goerli.id:
-      return 'ethereum';
-    case polygon.id:
-      return 'polygon';
-    case polygonMumbai.id:
-      return 'polygon';
-    case avalanche.id:
-      return 'avalanche';
-    case avalancheFuji.id:
-      return 'avalanche';
-    case bsc.id:
-      return 'binance';
-    case bscTestnet.id:
-      return 'binance';
-    case base.id:
-      return 'base';
-    case arbitrum.id:
-      return 'arbitrum';
-    case metis.id:
-      return 'metis';
-    case optimism.id:
-      return 'optimism';
-    case gnosis.id:
-      return 'gnosis';
-    case scroll.id:
-      return 'scroll';
-    default:
-      return 'ethereum';
-  }
-};
-
 export function NetworkIcon({
   chainId,
   size,
   css,
   withTooltip,
 }: NetworkIconProps) {
-  const [networkIconName, setNetworkIconName] = useState(
-    getIconNetworkName(chainId),
-  );
   const [chain, setChain] = useState(
     chainInfoHelper.getChainParameters(chainId),
   );
 
   useEffect(() => {
     if (chainId) {
-      setNetworkIconName(getIconNetworkName(chainId));
       setChain(chainInfoHelper.getChainParameters(chainId));
     }
   }, [chainId]);
@@ -103,30 +45,10 @@ export function NetworkIcon({
               {chain.name}: {chain.id} <br /> ({toHex(chain.id)})
             </Box>
           }>
-          <Image
-            className="NetworkIcon"
-            sx={{
-              borderRadius: '50%',
-              width: size || 16,
-              height: size || 16,
-              ...css,
-            }}
-            src={`https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/assets/chains/${networkIconName.toLowerCase()}.svg`}
-            alt={`${chain.name} icon`}
-          />
+          <ChainIcon chainId={chainId} size={size} css={css} />
         </Tooltip>
       ) : (
-        <Image
-          className="NetworkIcon"
-          sx={{
-            borderRadius: '50%',
-            width: size || 16,
-            height: size || 16,
-            ...css,
-          }}
-          src={`https://raw.githubusercontent.com/bgd-labs/aave-address-book/main/assets/chains/${networkIconName.toLowerCase()}.svg`}
-          alt={`${chain.name} icon`}
-        />
+        <ChainIcon chainId={chainId} size={size} css={css} />
       )}
     </>
   );

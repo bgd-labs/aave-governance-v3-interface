@@ -118,7 +118,7 @@ export const createPayloadsExplorerSlice: StoreSlice<
     );
 
     const payloadsIds = Array.from(Array(totalPayloadsCount).keys());
-    const finishedIdsInStore = !!get().payloadsExploreData[chainId]
+    const finishedIdsInStore = get().payloadsExploreData[chainId]
       ? Object.values(get().payloadsExploreData[chainId][address] || {})
           .filter((payload) => payload.state >= PayloadState.Executed)
           .map((payload) => payload.id)
@@ -185,7 +185,7 @@ export const createPayloadsExplorerSlice: StoreSlice<
       await get().setPaginationDetails(chainId, address, activePage);
 
     if (totalPayloadsCount >= 1) {
-      if (!!idsForRequest.length) {
+      if (idsForRequest.length) {
         const payloadsData: Payload[] = await get().govDataService.getPayloads(
           chainId,
           address,

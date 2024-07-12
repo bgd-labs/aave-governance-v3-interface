@@ -7,7 +7,7 @@ import {
 export function getRepresentedAddresses(
   data: Record<number, RepresentationDataItem>,
 ) {
-  const representedAddresses: RepresentedAddress[] = !!Object.keys(data).length
+  const representedAddresses: RepresentedAddress[] = Object.keys(data).length
     ? Object.entries(data)
         .map((data) => {
           return data[1].represented.map((address) => {
@@ -34,7 +34,7 @@ export function formatRepresentedAddresses(
     const optionsItem = addresses.find(
       (address) => address.address === representedAddress.address,
     );
-    if (!!optionsItem?.address) {
+    if (optionsItem?.address) {
       addresses.push({
         chainsIds: [...optionsItem.chainsIds, representedAddress.chainId],
         address: optionsItem.address,

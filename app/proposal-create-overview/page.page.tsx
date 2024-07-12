@@ -25,13 +25,13 @@ export default async function ProposalCreateOverview({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   // params
-  const proposalId = !!searchParams['proposalId']
+  const proposalId = searchParams['proposalId']
     ? (Number(searchParams['proposalId']) as number)
     : undefined;
-  const ipfsHash = !!searchParams['ipfsHash']
+  const ipfsHash = searchParams['ipfsHash']
     ? (String(searchParams['ipfsHash']) as Hex)
     : undefined;
-  const votingPortal = !!searchParams['votingPortal']
+  const votingPortal = searchParams['votingPortal']
     ? (String(searchParams['votingPortal']) as Hex)
     : undefined;
 

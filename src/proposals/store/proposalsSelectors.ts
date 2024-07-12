@@ -70,7 +70,7 @@ export const getCachedProposalDataById = (store: RootState, id: number) => {
   const cachedProposalData = store.cachedProposals.find(
     (proposal) => proposal.id === id,
   );
-  if (!!cachedProposalData) {
+  if (cachedProposalData) {
     return {
       proposal: {
         data: {
@@ -129,7 +129,7 @@ export const getProposalDataById = ({
       }
     }
 
-    if (!!balances.length) {
+    if (balances.length) {
       balanceLoading = false;
     }
 
@@ -199,7 +199,7 @@ export const getCombineProposalDataById = (store: RootState, id: number) => {
       blockHashBalance: store.blockHashBalance,
       proposalId: id,
     });
-  } else if (!!cachedProposalData) {
+  } else if (cachedProposalData) {
     return getCachedProposalDataById(store, id);
   }
 };
@@ -219,7 +219,7 @@ export const getProposalTitle = (
     store.ipfsData[ipfsHash]
   ) {
     return store.ipfsData[ipfsHash].title;
-  } else if (!!title) {
+  } else if (title) {
     return title;
   } else {
     return `Proposal #${id}`;
@@ -405,7 +405,7 @@ export const selectAvailablePayloadsIdsByChainId = ({
     Array(totalPayloadsCount[payloadsController]).keys(),
   ).sort((a, b) => b - a);
 
-  if (!!detailedData.length) {
+  if (detailedData.length) {
     const allUsedPayloadsIds = detailedData
       .map(
         (proposal) =>
@@ -428,7 +428,7 @@ export const setProposalDetailsVoters = (
   setVoters: (voters: VotersData[]) => void,
   voters: VotersData[],
 ) => {
-  if (!!voters.length) {
+  if (voters.length) {
     setVoters(voters);
   }
 };

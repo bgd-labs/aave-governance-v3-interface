@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from '@mui/system';
+// eslint-disable-next-line import/default
 import arrayMutators from 'final-form-arrays';
 import { isEqual } from 'lodash';
 import { useRouter } from 'next/navigation';
@@ -48,7 +49,7 @@ export function RpcSwitcherPage() {
   }, [appClients]);
 
   useEffect(() => {
-    if (!!Object.keys(appClients).length) {
+    if (Object.keys(appClients).length) {
       setLoadingData(false);
     } else {
       setLoadingData(true);
