@@ -93,13 +93,13 @@ export function PayloadsExplorerPage() {
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       const params = new URLSearchParams(searchParams);
       params.set(name, value);
       params.delete('payloadId');
       params.delete('payloadChainId');
       params.delete('payloadsControllerAddress');
-
       return params.toString();
     },
     [searchParams],
@@ -263,7 +263,7 @@ export function PayloadsExplorerPage() {
     const reportFromStore =
       payloadsHelperData[`${payload.payloadsController}_${payload.id}`]
         ?.seatbeltMD;
-    if (!!reportFromStore) {
+    if (reportFromStore) {
       setFinalReport(reportFromStore);
       setIsSeatbeltModalOpen({
         ...isSeatbeltModalOpen,

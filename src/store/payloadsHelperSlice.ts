@@ -126,7 +126,7 @@ export const createPayloadsHelperSlice: StoreSlice<IPayloadsHelperSlice> = (
       return payloadHelperData.proposalId;
     } else {
       const proposalsPayloadsData = get().cachedProposalsPayloadsData;
-      if (!!Object.keys(proposalsPayloadsData).length) {
+      if (Object.keys(proposalsPayloadsData).length) {
         const proposalIdConnectedToPayload = Object.entries(
           proposalsPayloadsData,
         ).find((data) =>
@@ -137,7 +137,7 @@ export const createPayloadsHelperSlice: StoreSlice<IPayloadsHelperSlice> = (
           ),
         );
         const proposalIdConnectedToPayloadFinal =
-          !!proposalIdConnectedToPayload?.length
+          proposalIdConnectedToPayload?.length
             ? Number(proposalIdConnectedToPayload[0])
             : undefined;
         get().setPayloadsHelperData({
@@ -163,7 +163,7 @@ export const createPayloadsHelperSlice: StoreSlice<IPayloadsHelperSlice> = (
             ),
           );
           const proposalIdConnectedToPayloadFinal =
-            !!proposalIdConnectedToPayload?.length
+            proposalIdConnectedToPayload?.length
               ? Number(proposalIdConnectedToPayload[0])
               : undefined;
           get().setPayloadsHelperData({

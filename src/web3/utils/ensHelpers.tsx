@@ -19,7 +19,7 @@ export const getName = async (address: Hex) => {
 export const getAvatar = async (name: string, address: string) => {
   try {
     const background_image = await getEnsAvatar(client, { name });
-    return !!background_image ? background_image : makeBlockie(address);
+    return background_image ? background_image : makeBlockie(address);
   } catch (error) {
     console.error('ENS avatar lookup error', error);
   }

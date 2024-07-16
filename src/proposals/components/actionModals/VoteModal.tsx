@@ -15,7 +15,8 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
 import InfoIcon from '/public/images/icons/info.svg';
 

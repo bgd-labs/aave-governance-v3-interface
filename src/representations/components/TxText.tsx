@@ -35,7 +35,7 @@ export function TxText({
   const formattedData: { representative: Address | string; chainId: number }[] =
     [];
   for (const item of formData) {
-    let representative = item.representative;
+    const representative = item.representative;
     // get previous representative data for current chain id
     const initialRepresentativeItem: RepresentationFormData =
       initialData.filter((data) => data.chainId === item.chainId)[0];

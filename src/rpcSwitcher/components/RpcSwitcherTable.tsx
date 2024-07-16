@@ -32,7 +32,7 @@ export function RpcSwitcherTable({
     chainId: number;
     rpcUrl: string;
     inputName: string;
-  }[] = !!fields
+  }[] = fields
     ? fields.map((name: string, index: number) => {
         return {
           chainId: +Object.entries(rpcSwitcherData)[index][0],

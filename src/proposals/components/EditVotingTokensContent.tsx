@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 
 import { BackButton3D, Divider } from '../../ui';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
-import { TokenIcon } from '../../ui/components/TokenIcon';
+import { AssetIcon } from '../../ui/components/Web3Icons/AssetIcon';
 import { texts } from '../../ui/utils/texts';
 import { RepresentationIcon } from './RepresentationIcon';
 
@@ -215,7 +215,7 @@ export function EditVotingTokensContent({
               onClick={() => handleChange(item.underlyingAsset, !item.isActive)}
               key={index}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <TokenIcon
+                <AssetIcon
                   symbol={item.tokenName}
                   css={{ width: 21, height: 21, mr: 10 }}
                 />

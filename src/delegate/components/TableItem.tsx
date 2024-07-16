@@ -6,7 +6,7 @@ import { useStore } from '../../store/ZustandStoreProvider';
 import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
-import { TokenIcon } from '../../ui/components/TokenIcon';
+import { AssetIcon } from '../../ui/components/Web3Icons/AssetIcon';
 import { DelegateData } from '../types';
 import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
@@ -82,7 +82,7 @@ export function TableItem({
               <CustomSkeleton circle width={35} height={35} />
             </Box>
           ) : (
-            <TokenIcon
+            <AssetIcon
               symbol={symbol}
               css={{ mr: 16, width: 35, height: 35 }}
             />

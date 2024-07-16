@@ -34,7 +34,7 @@ export default async function Page({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const activePage = !!searchParams['activePage']
+  const activePage = searchParams['activePage']
     ? Number(searchParams['activePage']) - 1
     : 0;
 

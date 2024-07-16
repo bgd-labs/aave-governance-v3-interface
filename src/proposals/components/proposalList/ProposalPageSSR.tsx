@@ -52,7 +52,7 @@ export function ProposalPageSSR({
   }, []);
 
   useEffect(() => {
-    if (!!data.proposals.length) {
+    if (data.proposals.length) {
       setLoadingListCache(false);
       const proposalListCachedData = {
         totalProposalCount: data?.totalProposalCount || -1,

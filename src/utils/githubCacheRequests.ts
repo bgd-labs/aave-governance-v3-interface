@@ -24,7 +24,7 @@ const alovaInstance = createAlova({
   responded: {
     onSuccess: async (response) => {
       const data = await response.json();
-      return !!data ? data : undefined;
+      return data ? data : undefined;
     },
   },
 });

@@ -4,7 +4,7 @@ import React from 'react';
 import { RepresentationIcon } from '../../../proposals/components/RepresentationIcon';
 import { Divider } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
-import { TokenIcon } from '../../../ui/components/TokenIcon';
+import { AssetIcon } from '../../../ui/components/Web3Icons/AssetIcon';
 import { getAssetName } from '../../../utils/getAssetName';
 import { GovernancePowerType } from '../../services/delegationService';
 import { PowersByAssets } from '../../store/web3Slice';
@@ -114,7 +114,7 @@ export function PowersModalItem({
               mt: 18,
             }}>
             <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-              <TokenIcon
+              <AssetIcon
                 symbol={symbol}
                 css={{ mr: 10, width: 20, height: 20 }}
               />

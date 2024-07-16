@@ -241,7 +241,7 @@ export const createTransactionsSlice: StoreSlice<
         case TxType.activateVotingOnVotingMachine:
           await updateProposalData(data.payload.proposalId);
           break;
-        case TxType.vote:
+        case TxType.vote: {
           const proposalData = getProposalDataById({
             detailedProposalsData: get().detailedProposalsData,
             configs: get().configs,
@@ -266,6 +266,7 @@ export const createTransactionsSlice: StoreSlice<
             );
           }
           break;
+        }
         case TxType.closeAndSendVote:
           await updateProposalData(data.payload.proposalId);
           break;
@@ -313,7 +314,7 @@ export const createTransactionsSlice: StoreSlice<
   isGelatoAvailableChains: {},
   checkIsGelatoAvailableWithApiKey: async (chainId) => {
     if (typeof get().isGelatoAvailableChains[chainId] === 'undefined') {
-      if (!!gelatoApiKeys[chainId]) {
+      if (gelatoApiKeys[chainId]) {
         await get().checkIsGelatoAvailable(chainId);
         set((state) =>
           produce(state, (draft) => {

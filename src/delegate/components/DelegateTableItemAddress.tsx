@@ -43,7 +43,7 @@ function Text({
       withoutHover={forHelp}
       isError={isError}>
       <>
-        {!!shownAddress
+        {shownAddress
           ? texts.delegatePage.tableItemDelegated
           : texts.delegatePage.tableItemNotDelegated}
         {!!shownAddress && (

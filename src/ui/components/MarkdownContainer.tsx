@@ -1,8 +1,11 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
+// eslint-disable-next-line import/default
 import Markdown from 'react-markdown';
 import { Prism } from 'react-syntax-highlighter';
+// eslint-disable-next-line import/default
 import remarkGemoji from 'remark-gemoji';
+// eslint-disable-next-line import/default
 import remarkGfm from 'remark-gfm';
 
 import { Image } from '../primitives/Image';
@@ -94,7 +97,7 @@ export function MarkdownContainer({
               />
             );
           },
-          a({ children, className, node, ...rest }) {
+          a({ children, ...rest }) {
             return (
               <Link
                 href={rest.href || ''}
@@ -109,28 +112,28 @@ export function MarkdownContainer({
               </Link>
             );
           },
-          h1({ children, className, node, ...rest }) {
+          h1({ children }) {
             return (
               <Box component="h2" sx={{ typography: 'h1' }}>
                 {children}
               </Box>
             );
           },
-          h2({ children, className, node, ...rest }) {
+          h2({ children }) {
             return (
               <Box component="h3" sx={{ typography: 'h2' }}>
                 {children}
               </Box>
             );
           },
-          h3({ children, className, node, ...rest }) {
+          h3({ children }) {
             return (
               <Box component="h4" sx={{ typography: 'h3' }}>
                 {children}
               </Box>
             );
           },
-          p({ children, className, node, ...rest }) {
+          p({ children }) {
             return (
               <Box
                 component="p"
@@ -143,7 +146,7 @@ export function MarkdownContainer({
               </Box>
             );
           },
-          ul({ children, className, node, ...rest }) {
+          ul({ children }) {
             return (
               <Box
                 component="ul"
@@ -157,7 +160,7 @@ export function MarkdownContainer({
               </Box>
             );
           },
-          ol({ children, className, node, ...rest }) {
+          ol({ children }) {
             return (
               <Box
                 component="ol"
@@ -170,10 +173,11 @@ export function MarkdownContainer({
             );
           },
           code(props) {
-            const { children, className, node, ...rest } = props;
+            const { children, className, ...rest } = props;
             const match = /language-(\w+)/.exec(className || '');
             return match ? (
-              // @ts-ignore
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
               <Prism
                 {...rest}
                 PreTag="div"
@@ -181,9 +185,11 @@ export function MarkdownContainer({
                 language={match[1]}
                 style={
                   theme.palette.mode === 'dark'
-                    ? require('react-syntax-highlighter/dist/esm/styles/prism')
+                    ? // eslint-disable-next-line @typescript-eslint/no-var-requires
+                      require('react-syntax-highlighter/dist/esm/styles/prism')
                         .materialOceanic
-                    : require('react-syntax-highlighter/dist/esm/styles/prism')
+                    : // eslint-disable-next-line @typescript-eslint/no-var-requires
+                      require('react-syntax-highlighter/dist/esm/styles/prism')
                         .materialLight
                 }
               />
@@ -193,7 +199,7 @@ export function MarkdownContainer({
               </code>
             );
           },
-          table({ children, className, node, ...rest }) {
+          table({ children }) {
             return (
               <Box sx={{ width: '100%', pb: 12, overflowX: 'auto' }}>
                 <Box

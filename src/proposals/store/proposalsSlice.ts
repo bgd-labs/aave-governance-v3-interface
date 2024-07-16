@@ -298,7 +298,7 @@ export const createProposalsSlice: StoreSlice<
 
   titleSearchValue: undefined,
   setTitleSearchValue: (value) => {
-    if (!!value) {
+    if (value) {
       set({ titleSearchValue: value });
     } else {
       set({ titleSearchValue: undefined });
@@ -335,7 +335,7 @@ export const createProposalsSlice: StoreSlice<
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
       await get().getDetailedProposalsData({ ids: activeIds });
-      if (!!activeIds.length) {
+      if (activeIds.length) {
         await Promise.allSettled([
           await get().getIpfsData(activeIds),
           await get().getL1Balances(activeIds),
@@ -466,7 +466,7 @@ export const createProposalsSlice: StoreSlice<
     if (remove) {
       set((state) =>
         produce(state, (draft) => {
-          if (!!draft.ipfsDataErrors[ipfsHash]) {
+          if (draft.ipfsDataErrors[ipfsHash]) {
             delete draft.ipfsDataErrors[ipfsHash];
           }
         }),
@@ -770,7 +770,7 @@ export const createProposalsSlice: StoreSlice<
                 ? proposal.isFinished
                 : !!draft.detailedProposalsData[proposal.id]?.isFinished,
               votingMachineState: getVotingMachineProposalState(proposal),
-              payloads: !!draft.detailedProposalsData[proposal.id]?.isFinished
+              payloads: draft.detailedProposalsData[proposal.id]?.isFinished
                 ? draft.detailedProposalsData[proposal.id].payloads
                 : proposalPayloadsData.filter(
                     (payload) => payload.proposalId === proposal.id,
@@ -808,9 +808,9 @@ export const createProposalsSlice: StoreSlice<
       const paginatedIds = selectPaginatedIds(get());
       const { activeIds } = selectProposalIds(get(), paginatedIds);
 
-      const activeProposalsIds = !!ids?.length ? ids : activeIds;
+      const activeProposalsIds = ids?.length ? ids : activeIds;
 
-      if (!!activeProposalsIds.length) {
+      if (activeProposalsIds.length) {
         await get().getDetailedProposalsData({
           ids: activeProposalsIds,
           fullData: true,
@@ -1179,7 +1179,6 @@ export const createProposalsSlice: StoreSlice<
         });
 
         await get().executeTx({
-          // @ts-ignore
           body: () => {
             get().setModalOpen(true);
             return get().govDataService.sendProofs(
@@ -1483,7 +1482,7 @@ export const createProposalsSlice: StoreSlice<
 
     const cancellationFee = get().contractsConstants.cancellationFee;
 
-    if (!!cancellationFee) {
+    if (cancellationFee) {
       await get().executeTx({
         body: () => {
           get().setModalOpen(true);

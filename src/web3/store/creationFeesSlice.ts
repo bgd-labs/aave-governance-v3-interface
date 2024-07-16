@@ -79,7 +79,7 @@ export const creationFeesSlice: StoreSlice<
   },
 
   updateCreationFeesDataByCreator: async (creator, ids) => {
-    const govCoreConfigs = !!get().configs.length
+    const govCoreConfigs = get().configs.length
       ? {
           contractsConstants: get().contractsConstants,
           configs: get().configs,
@@ -96,7 +96,7 @@ export const creationFeesSlice: StoreSlice<
     if (creatorData) {
       const filteredData = Object.values(creatorData)
         .filter((data) => data.status < CreationFeeState.RETURNED)
-        .filter((data) => (!!ids ? ids.includes(data.proposalId) : true));
+        .filter((data) => (ids ? ids.includes(data.proposalId) : true));
 
       const from = Math.max(...filteredData.map((data) => data.proposalId));
       const to = Math.min(...filteredData.map((data) => data.proposalId));
@@ -142,7 +142,7 @@ export const creationFeesSlice: StoreSlice<
       );
 
       finalData.forEach((data) => {
-        if (!!data) {
+        if (data) {
           set((state) =>
             produce(state, (draft) => {
               draft.creationFeesData[creator] = {

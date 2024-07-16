@@ -47,6 +47,7 @@ import {
 } from '@gelatonetwork/relay-sdk-viem';
 import { BaseRelayParams } from '@gelatonetwork/relay-sdk-viem/dist/lib/types';
 import { writeContract } from '@wagmi/core';
+import { Draft } from 'immer';
 import {
   Address,
   Block,
@@ -483,7 +484,7 @@ export class GovDataService {
 
     const voters: VotersData[] = [];
 
-    if (!!endBlock) {
+    if (endBlock) {
       const newVoters = await getVoters({
         contractAddress: this.votingMachines[votingChainId].address,
         client: this.clients[votingChainId],
@@ -782,7 +783,7 @@ export class GovDataService {
     voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
-    let votingMachine = this.votingMachines[votingChainId];
+    const votingMachine = this.votingMachines[votingChainId];
     if (this.wagmiConfig) {
       return !!voterAddress && !!proofOfRepresentation
         ? writeContract(this.wagmiConfig, {
@@ -833,10 +834,10 @@ export class GovDataService {
     proofOfRepresentation?: Hex;
   }) {
     const relay = new GelatoRelay();
-    let votingMachine = this.votingMachines[votingChainId];
+    const votingMachine = this.votingMachines[votingChainId];
 
     if (this.wagmiConfig) {
-      const signatureParams = !!voterAddress
+      const signatureParams = voterAddress
         ? await getVoteSignatureParams({
             wagmiConfig: this.wagmiConfig,
             votingChainId,
@@ -1024,7 +1025,7 @@ export class GovDataService {
         accessLevel: payload.accessLevel,
         payloadsController: payload.payloadsController,
         payloadId: payload.id,
-      } as PayloadForCreation;
+      } as Draft<PayloadForCreation>;
     });
 
     if (this.wagmiConfig) {

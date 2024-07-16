@@ -4,7 +4,7 @@ import { useStore } from '../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
-import { TokenIcon } from '../../ui/components/TokenIcon';
+import { AssetIcon } from '../../ui/components/Web3Icons/AssetIcon';
 import { texts } from '../../ui/utils/texts';
 import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
@@ -60,7 +60,7 @@ export function MobileCard({
                 <CustomSkeleton circle width={30} height={30} />
               </Box>
             ) : (
-              <TokenIcon
+              <AssetIcon
                 symbol={symbol}
                 css={{ mr: 4, width: 30, height: 30 }}
               />

@@ -111,7 +111,7 @@ export function ProposalPageWrapper({
   }, [id]);
 
   useEffect(() => {
-    if (!!cachedProposals.length) {
+    if (cachedProposals.length) {
       setCachedProposalsIdsLocal(
         cachedProposals.map((proposal) => proposal.id),
       );
@@ -123,7 +123,7 @@ export function ProposalPageWrapper({
   }, [id, representative.address, activeWallet?.address]);
 
   useEffect(() => {
-    if (!!proposalDataFromStore) {
+    if (proposalDataFromStore) {
       setProposalData(
         getProposalDataById({
           detailedProposalsData,
@@ -254,7 +254,7 @@ export function ProposalPageWrapper({
   }, [id, proposalData?.loading, appMode]);
 
   useEffect(() => {
-    if (!!cachedProposalEvents) {
+    if (cachedProposalEvents) {
       if (!!Object.keys(cachedProposalEvents).length && !!proposalData) {
         initProposalHistory(proposalData.proposal, cachedProposalEvents);
       }

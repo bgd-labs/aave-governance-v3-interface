@@ -1,4 +1,5 @@
 import { useSearchParams } from 'next/navigation';
+// eslint-disable-next-line import/default
 import queryString from 'query-string';
 import React from 'react';
 import { Hex } from 'viem';
@@ -15,13 +16,13 @@ export default function ProposalCreateOverview() {
   if (!searchParams) return null;
 
   // params
-  const proposalId = !!searchParams.get('proposalId')
+  const proposalId = searchParams.get('proposalId')
     ? (Number(searchParams.get('proposalId')) as number)
     : undefined;
-  const ipfsHash = !!searchParams.get('ipfsHash')
+  const ipfsHash = searchParams.get('ipfsHash')
     ? (String(searchParams.get('ipfsHash')) as Hex)
     : undefined;
-  const votingPortal = !!searchParams.get('votingPortal')
+  const votingPortal = searchParams.get('votingPortal')
     ? (String(searchParams.get('votingPortal')) as Hex)
     : undefined;
 

@@ -34,7 +34,7 @@ export function RepresentationsTable({
     chainId: number;
     representative: string;
     inputName: string;
-  }[] = !!fields
+  }[] = fields
     ? fields.map((name: string, index: number) => {
         return {
           chainId: +Object.entries(representationData)[index][0],

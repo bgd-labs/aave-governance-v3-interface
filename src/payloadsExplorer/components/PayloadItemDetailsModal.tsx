@@ -199,7 +199,7 @@ export function PayloadItemDetailsModal({
                   loading={tx?.pending}
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (!!setSelectedPayloadForExecute) {
+                    if (setSelectedPayloadForExecute) {
                       setSelectedPayloadForExecute({
                         chainId: payload?.chainId,
                         payloadsController:

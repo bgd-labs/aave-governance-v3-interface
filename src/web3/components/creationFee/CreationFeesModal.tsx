@@ -144,7 +144,7 @@ export function CreationFeesModal({
 
   const handleClaim = async () => {
     setIsTxModalOpen(true);
-    if (!!selectedProposalIds.length) {
+    if (selectedProposalIds.length) {
       await executeTxWithLocalStatuses({
         callbackFunction: async () =>
           await redeemCancellationFee(
@@ -156,7 +156,7 @@ export function CreationFeesModal({
   };
 
   useEffect(() => {
-    if (!!selectedProposalIds.length) {
+    if (selectedProposalIds.length) {
       handleClaim();
     }
   }, [selectedProposalIds]);
@@ -215,7 +215,7 @@ export function CreationFeesModal({
               <CreationFeesModalItemLoading />
               <CreationFeesModalItemLoading />
             </>
-          ) : !!totalItemsCount ? (
+          ) : totalItemsCount ? (
             Object.values(dataByCreator)
               .sort((a, b) => b.proposalId - a.proposalId)
               .slice((currentPage - 1) * pageSize, currentPage * pageSize)
