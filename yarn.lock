@@ -1315,14 +1315,15 @@
     "@tanstack/react-query" "^5.40.0"
     dayjs "^1.11.11"
 
-"@bgd-labs/react-web3-icons@^0.0.49":
-  version "0.0.49"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-0.0.49.tgz#a6c84cb597ca389328946d9905fc5dee6c6d8303"
-  integrity sha512-0lVwVCXUE6In5JtTsOmIJKg2i4LfkMghXE2x0sNl7VIhSNTh16gZZWjW7TwAKGnTw/u3n5yOZ9bi4r5gKyTQlg==
+"@bgd-labs/react-web3-icons@0.0.68":
+  version "0.0.68"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-0.0.68.tgz#9f2bc29be3b83960f5595b060c8c7c38fe31e477"
+  integrity sha512-mp/QEqFrtI/maf+UR3LKb6304qKHdMmMmYLJXq8zhgoNwuCikmjk5H+SjAsXjBZUFV6y5lUhBAr0UUsX8FAasg==
   dependencies:
     "@loadable/component" "5.16.4"
-    react "18.2.0"
-    react-dom "18.2.0"
+    react "18.3.1"
+    react-dom "18.3.1"
+    react-inlinesvg "^4.1.3"
 
 "@changesets/apply-release-plan@^7.0.0":
   version "7.0.0"
@@ -8952,14 +8953,6 @@ react-custom-scrollbars-2@^4.5.0:
     prop-types "^15.5.10"
     raf "^3.1.0"
 
-react-dom@18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
-  integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
-  dependencies:
-    loose-envify "^1.1.0"
-    scheduler "^0.23.0"
-
 react-dom@18.3.1:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.3.1.tgz#c2265d79511b57d479b3dd3fdfa51536494c5cb4"
@@ -8981,6 +8974,18 @@ react-final-form@^6.5.9:
   integrity sha512-x3XYvozolECp3nIjly+4QqxdjSSWfcnpGEL5K8OBT6xmGrq5kBqbA6+/tOqoom9NwqIPPbxPNsOViFlbKgowbA==
   dependencies:
     "@babel/runtime" "^7.15.4"
+
+react-from-dom@^0.7.2:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.7.3.tgz#60e75fde2369ceb0a8f87d88f9cfbeb67b730e43"
+  integrity sha512-9IK6R7+eD1wOAMC2ZCrENev0eK1625cb7vX+cnnOR9LBRNbjKiaJk4ij2zQbcefEXTWjXFhA7CTO1cd8wMONnw==
+
+react-inlinesvg@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/react-inlinesvg/-/react-inlinesvg-4.1.3.tgz#671f083fd78934ec58afa5128460252dcae61177"
+  integrity sha512-p1+wkr1UQZyLw/3bdpnHO3v3tMNVWyxWnAEY6ML/Ql9ldDYTBTy6HqAyNl7u3au925XPffLMiXKnQrqZeJAldw==
+  dependencies:
+    react-from-dom "^0.7.2"
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
@@ -9038,13 +9043,6 @@ react-syntax-highlighter@^15.5.0:
     lowlight "^1.17.0"
     prismjs "^1.27.0"
     refractor "^3.6.0"
-
-react@18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
-  integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
-  dependencies:
-    loose-envify "^1.1.0"
 
 react@18.3.1:
   version "18.3.1"
@@ -9461,7 +9459,7 @@ safe-stable-stringify@^2.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-scheduler@^0.23.0, scheduler@^0.23.2:
+scheduler@^0.23.2:
   version "0.23.2"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.23.2.tgz#414ba64a3b282892e944cf2108ecc078d115cdc3"
   integrity sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==

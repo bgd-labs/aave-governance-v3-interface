@@ -2,12 +2,16 @@ import {
   Balance,
   valueToBigNumber,
 } from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  IconVariant,
+  Web3IconType,
+} from '@bgd-labs/react-web3-icons/dist/utils/index';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';
 
 import { BackButton3D, Divider } from '../../ui';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
-import { AssetIcon } from '../../ui/components/Web3Icons/AssetIcon';
+import { Web3Icon } from '../../ui/components/Web3Icon';
 import { texts } from '../../ui/utils/texts';
 import { RepresentationIcon } from './RepresentationIcon';
 
@@ -215,9 +219,13 @@ export function EditVotingTokensContent({
               onClick={() => handleChange(item.underlyingAsset, !item.isActive)}
               key={index}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <AssetIcon
-                  symbol={item.tokenName}
-                  css={{ width: 21, height: 21, mr: 10 }}
+                <Web3Icon
+                  size={21}
+                  css={{ mr: 10 }}
+                  iconInfo={{
+                    type: Web3IconType.asset,
+                    info: { symbol: item.tokenName, variant: IconVariant.Full },
+                  }}
                 />
                 <Box component="p" sx={{ typography: 'h3', fontWeight: 600 }}>
                   {item.tokenName}

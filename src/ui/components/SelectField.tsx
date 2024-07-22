@@ -65,10 +65,10 @@ export function SelectField({
               },
             }}>
             <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
-              {!!(value || value === 0) && withChainIcon && (
+              {withChainIcon && (
                 <NetworkIcon chainId={value} size={14} css={{ mr: 8 }} />
               )}
-              {!!(value || value === 0)
+              {value || value === 0
                 ? withChainName
                   ? getChainName(value)
                   : value
@@ -125,11 +125,16 @@ export function SelectField({
                     backgroundColor: theme.palette.$light,
                   },
                 }}>
-                {withChainName
-                  ? getChainName(option)
-                  : withMyself && option === ''
-                    ? 'Myself'
-                    : option}
+                <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
+                  {withChainIcon && (
+                    <NetworkIcon chainId={option} size={14} css={{ mr: 8 }} />
+                  )}
+                  {withChainName
+                    ? getChainName(option)
+                    : withMyself && option === ''
+                      ? 'Myself'
+                      : option}
+                </Box>
               </Listbox.Option>
             ))}
           </Listbox.Options>

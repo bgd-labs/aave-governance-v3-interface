@@ -1,10 +1,15 @@
+import {
+  IconVariant,
+  Web3IconType,
+} from '@bgd-labs/react-web3-icons/dist/utils/index';
 import { Box, useTheme } from '@mui/system';
+import React from 'react';
 
 import { useStore } from '../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
-import { AssetIcon } from '../../ui/components/Web3Icons/AssetIcon';
+import { Web3Icon } from '../../ui/components/Web3Icon';
 import { texts } from '../../ui/utils/texts';
 import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
@@ -60,9 +65,13 @@ export function MobileCard({
                 <CustomSkeleton circle width={30} height={30} />
               </Box>
             ) : (
-              <AssetIcon
-                symbol={symbol}
-                css={{ mr: 4, width: 30, height: 30 }}
+              <Web3Icon
+                size={30}
+                css={{ mr: 4 }}
+                iconInfo={{
+                  type: Web3IconType.asset,
+                  info: { symbol, variant: IconVariant.Full },
+                }}
               />
             )}
             {!symbol ? (

@@ -34,7 +34,7 @@
     "@bgd-labs/aave-address-book": "^2.30.0",
     "@bgd-labs/aave-governance-ui-helpers": "^3.1.5",
     "@bgd-labs/frontend-web3-utils": "^1.3.0",
-    "@bgd-labs/react-web3-icons": "^0.0.49",
+    "@bgd-labs/react-web3-icons": "0.0.68",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/server": "^11.11.0",

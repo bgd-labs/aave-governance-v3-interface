@@ -75,6 +75,7 @@ export function TableItem({
           ) : (
             <NetworkIcon
               chainId={chainId}
+              size={35}
               css={{ mr: 12, width: 35, height: 35 }}
             />
           )}

@@ -1,12 +1,17 @@
 import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
+import {
+  IconVariant,
+  Web3IconType,
+} from '@bgd-labs/react-web3-icons/dist/utils/index';
 import { Box, useTheme } from '@mui/system';
+import React from 'react';
 import { Address } from 'viem';
 
 import { useStore } from '../../store/ZustandStoreProvider';
 import { Divider } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { FormattedNumber } from '../../ui/components/FormattedNumber';
-import { AssetIcon } from '../../ui/components/Web3Icons/AssetIcon';
+import { Web3Icon } from '../../ui/components/Web3Icon';
 import { DelegateData } from '../types';
 import { getFormDelegateData } from '../utils/getFormDelegateData';
 import { DelegateTableItemAddress } from './DelegateTableItemAddress';
@@ -82,9 +87,13 @@ export function TableItem({
               <CustomSkeleton circle width={35} height={35} />
             </Box>
           ) : (
-            <AssetIcon
-              symbol={symbol}
-              css={{ mr: 16, width: 35, height: 35 }}
+            <Web3Icon
+              size={35}
+              css={{ mr: 16 }}
+              iconInfo={{
+                type: Web3IconType.asset,
+                info: { symbol, variant: IconVariant.Full },
+              }}
             />
           )}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>

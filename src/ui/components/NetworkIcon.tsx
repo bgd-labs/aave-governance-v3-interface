@@ -1,10 +1,14 @@
+import {
+  IconVariant,
+  Web3IconType,
+} from '@bgd-labs/react-web3-icons/dist/utils';
 import { Box, SxProps } from '@mui/system';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toHex } from 'viem';
 
 import { chainInfoHelper } from '../../utils/configs';
 import { Tooltip } from './Tooltip';
-import { ChainIcon } from './Web3Icons/ChainIcon';
+import { Web3Icon } from './Web3Icon';
 
 interface NetworkIconProps {
   chainId: number;
@@ -45,10 +49,24 @@ export function NetworkIcon({
               {chain.name}: {chain.id} <br /> ({toHex(chain.id)})
             </Box>
           }>
-          <ChainIcon chainId={chainId} size={size} css={css} />
+          <Web3Icon
+            iconInfo={{
+              type: Web3IconType.chain,
+              info: { chainId: chainId, variant: IconVariant.Full },
+            }}
+            size={size ?? 16}
+            css={css}
+          />
         </Tooltip>
       ) : (
-        <ChainIcon chainId={chainId} size={size} css={css} />
+        <Web3Icon
+          iconInfo={{
+            type: Web3IconType.chain,
+            info: { chainId: chainId, variant: IconVariant.Full },
+          }}
+          size={size ?? 16}
+          css={css}
+        />
       )}
     </>
   );
