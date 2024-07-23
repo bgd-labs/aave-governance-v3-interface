@@ -61,7 +61,8 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://endpoints.omniatech.io/v1/arbitrum/one/public',
   ],
   [metis.id]: [
-    'https://metis-mainnet.public.blastapi.io',
+    process.env.NEXT_PUBLIC_RPC_METIS ||
+      'https://metis-mainnet.public.blastapi.io',
     'https://metis.api.onfinality.io/public',
   ],
   [optimism.id]: [
