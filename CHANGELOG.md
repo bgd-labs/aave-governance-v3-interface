@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.3.4](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.3...v2.3.4) (2024-07-24)
+
+
+### Bug Fixes
+
+* added fallback for ipfs and make first request from cache ([#92](https://github.com/bgd-labs/aave-governance-v3-interface/issues/92)) ([fc7fbdf](https://github.com/bgd-labs/aave-governance-v3-interface/commit/fc7fbdfda3c89564c2499a4c0592360b385b9b80))
+* gelay-sdk version ([22509b4](https://github.com/bgd-labs/aave-governance-v3-interface/commit/22509b44f65b78450dcc92c740a3fb0fb6788cce))
+* rpc urls ([18e3101](https://github.com/bgd-labs/aave-governance-v3-interface/commit/18e3101a99b65ec53e3763bb7e7e8a509471b115))
+* RPC's urls ([c8b7e64](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c8b7e6490fb584d9146d559c1a919c50b8d9c096))
+* update packages ([#98](https://github.com/bgd-labs/aave-governance-v3-interface/issues/98)) ([58765ac](https://github.com/bgd-labs/aave-governance-v3-interface/commit/58765ac99566ebb57f4ce2b5b1e610b4ccd04ef5))
+* update packages / eslint / added web3-icons package ([#96](https://github.com/bgd-labs/aave-governance-v3-interface/issues/96)) ([11cceb1](https://github.com/bgd-labs/aave-governance-v3-interface/commit/11cceb1cf1c98ba0e148c7794d0e8e331480e780))
+* update web3 icons ([7e147a9](https://github.com/bgd-labs/aave-governance-v3-interface/commit/7e147a97deccc1a9869decfe05a9e054ceee3774))
+* use correct url ([#94](https://github.com/bgd-labs/aave-governance-v3-interface/issues/94)) ([909fe32](https://github.com/bgd-labs/aave-governance-v3-interface/commit/909fe328a5328d67d88b55e77d03ab686d5c50ea))
+
 ## [2.3.3](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.2...v2.3.3) (2024-05-02)
 
 
