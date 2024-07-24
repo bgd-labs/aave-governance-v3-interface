@@ -1,12 +1,9 @@
-import {
-  getBrowserWalletLabelAndIcon,
-  WalletType,
-} from '@bgd-labs/frontend-web3-utils';
+import { WalletType } from '@bgd-labs/frontend-web3-utils';
+import { getWeb3WalletName } from '@bgd-labs/react-web3-icons/dist/utils';
 import { useEffect, useState } from 'react';
 
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { BasicModal } from '../../../ui';
-import { setRelativePath } from '../../../ui/utils/relativePath';
 import { ConnectWalletModalContent } from './ConnectWalletModalContent';
 import { Wallet } from './WalletItem';
 
@@ -15,37 +12,30 @@ interface ConnectWalletModalProps {
   setIsOpen: (value: boolean) => void;
 }
 
-const browserWalletLabelAndIcon = getBrowserWalletLabelAndIcon();
-
 export const wallets: Wallet[] = [
   {
     walletType: WalletType.Injected,
-    icon: browserWalletLabelAndIcon.icon,
-    title: browserWalletLabelAndIcon.label,
+    walletName: getWeb3WalletName(),
     isVisible: true,
   },
   {
     walletType: WalletType.Coinbase,
-    icon: `url(${setRelativePath('/images/wallets/coinbase.svg')})`,
-    title: 'Coinbase',
+    walletName: 'Coinbase Wallet',
     isVisible: true,
   },
   {
     walletType: WalletType.WalletConnect,
-    icon: `url(${setRelativePath('/images/wallets/walletConnect.svg')})`,
-    title: 'WalletConnect',
+    walletName: 'WalletConnect',
     isVisible: true,
   },
   {
     walletType: WalletType.Safe,
-    icon: `url(${setRelativePath('/images/wallets/gnosisSafe.svg')})`,
-    title: 'Safe wallet',
+    walletName: 'Safe Wallet',
     isVisible: typeof window !== 'undefined' && window !== window.parent,
   },
   {
     walletType: WalletType.Impersonated,
-    icon: `url(${setRelativePath('/images/wallets/impersonated.svg')})`,
-    title: 'Impersonated',
+    walletName: 'Impersonated Wallet',
     isVisible: true,
   },
 ];

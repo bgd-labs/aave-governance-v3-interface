@@ -86,8 +86,7 @@ export function ConnectWalletModalContent({
                       {wallet.isVisible && (
                         <WalletItem
                           walletType={wallet.walletType}
-                          icon={wallet.icon}
-                          title={wallet.title}
+                          walletName={wallet.walletName}
                           setOpenImpersonatedForm={setImpersonatedFormOpen}
                           onClick={onWalletButtonClick}
                         />

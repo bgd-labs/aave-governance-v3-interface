@@ -1,14 +1,18 @@
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
+import {
+  IconVariant,
+  Web3IconType,
+} from '@bgd-labs/react-web3-icons/dist/utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../../ui';
+import { Web3Icon } from '../../../ui/components/Web3Icon';
 
 export type Wallet = {
   walletType: WalletType;
-  icon: string;
-  title: string;
+  walletName: string;
   onClick?: () => void;
   isVisible?: boolean;
   setOpenImpersonatedForm?: (value: boolean) => void;
@@ -16,8 +20,7 @@ export type Wallet = {
 
 export function WalletItem({
   walletType,
-  title,
-  icon,
+  walletName,
   onClick,
   setOpenImpersonatedForm,
 }: Wallet) {
@@ -37,7 +40,7 @@ export function WalletItem({
     <Box
       component="button"
       type="button"
-      onClick={!!onClick ? onClick : handleWalletClick}
+      onClick={onClick ? onClick : handleWalletClick}
       sx={{ width: '100%' }}>
       <BoxWith3D
         alwaysWithBorders
@@ -55,39 +58,16 @@ export function WalletItem({
           p: '8px 14px',
         }}>
         <Box component="h3" sx={{ typography: 'h3', color: '$text' }}>
-          {title}
+          {walletName}
         </Box>
 
-        {walletType === WalletType.Injected ? (
-          <Box
-            sx={(theme) => ({
-              width: iconSize,
-              height: iconSize,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              '> svg': {
-                width: iconSize,
-                height: iconSize,
-                path: {
-                  stroke: theme.palette.$main,
-                },
-              },
-            })}
-            dangerouslySetInnerHTML={{ __html: icon }}
-          />
-        ) : (
-          <Box
-            sx={{
-              width: iconSize,
-              height: iconSize,
-              background: icon,
-              backgroundSize: 'contain',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          />
-        )}
+        <Web3Icon
+          size={iconSize}
+          iconInfo={{
+            type: Web3IconType.wallet,
+            info: { walletName, variant: IconVariant.Full },
+          }}
+        />
       </BoxWith3D>
     </Box>
   );

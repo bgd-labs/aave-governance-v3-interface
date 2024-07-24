@@ -97,6 +97,7 @@ MyDocument.getInitialProps = async (ctx) => {
   const originalRenderPage = ctx.renderPage;
 
   const cache = createEmotionCache();
+  // @ts-ignore
   const { extractCriticalToChunks } = createEmotionServer(cache);
 
   ctx.renderPage = () =>

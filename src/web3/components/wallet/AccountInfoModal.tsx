@@ -47,7 +47,7 @@ export function AccountInfoModal({
 
   useEffect(() => {
     if (isOpen) {
-      if (!!representative.address) {
+      if (representative.address) {
         getCurrentPowers(representative.address);
       } else if (activeWallet?.address) {
         getCurrentPowers(activeWallet?.address);
