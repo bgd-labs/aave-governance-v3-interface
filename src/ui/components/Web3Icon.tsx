@@ -21,7 +21,7 @@ interface Web3IconProps {
   iconInfo:
     | IconInfo<AssetIconProps>
     | IconInfo<Pick<ChainType, 'chainId' | 'variant'>>
-    | IconInfo<Pick<WalletType, 'name' | 'variant'>>;
+    | IconInfo<Pick<WalletType, 'walletName' | 'variant'>>;
   size?: number;
   css?: SxProps;
 }
@@ -54,7 +54,7 @@ export const Web3Icon = ({ size, css, ...props }: Web3IconProps) => {
       };
     } else if (props.iconInfo.type === Web3IconType.wallet) {
       const walletInfo = getWalletIconNameAndPath(
-        props.iconInfo.info as Pick<WalletType, 'name' | 'variant'>,
+        props.iconInfo.info as Pick<WalletType, 'walletName' | 'variant'>,
       );
       iconPath = walletInfo.iconPathToRepo;
       componentsFallback = {
