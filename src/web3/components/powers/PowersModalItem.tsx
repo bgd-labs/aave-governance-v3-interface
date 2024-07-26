@@ -1,14 +1,10 @@
-import {
-  IconVariant,
-  Web3IconType,
-} from '@bgd-labs/react-web3-icons/dist/utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
 import { RepresentationIcon } from '../../../proposals/components/RepresentationIcon';
 import { Divider } from '../../../ui';
 import { FormattedNumber } from '../../../ui/components/FormattedNumber';
-import { Web3Icon } from '../../../ui/components/Web3Icon';
+import AssetIcon from '../../../ui/components/Web3Icons/AssetIcon';
 import { getAssetName } from '../../../utils/getAssetName';
 import { GovernancePowerType } from '../../services/delegationService';
 import { PowersByAssets } from '../../store/web3Slice';
@@ -118,14 +114,7 @@ export function PowersModalItem({
               mt: 18,
             }}>
             <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-              <Web3Icon
-                size={20}
-                css={{ mr: 10 }}
-                iconInfo={{
-                  type: Web3IconType.asset,
-                  info: { symbol, variant: IconVariant.Full },
-                }}
-              />
+              <AssetIcon symbol={symbol} size={20} css={{ mr: 10 }} />
               <Box sx={{ typography: 'headline' }}>{asset.tokenName}</Box>
             </Box>
             <Box

@@ -1,14 +1,10 @@
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
-import {
-  IconVariant,
-  Web3IconType,
-} from '@bgd-labs/react-web3-icons/dist/utils';
 import { Box } from '@mui/system';
 import React from 'react';
 
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { BoxWith3D } from '../../../ui';
-import { Web3Icon } from '../../../ui/components/Web3Icon';
+import WalletIcon from '../../../ui/components/Web3Icons/WalletIcon';
 
 export type Wallet = {
   walletType: WalletType;
@@ -60,14 +56,7 @@ export function WalletItem({
         <Box component="h3" sx={{ typography: 'h3', color: '$text' }}>
           {walletName}
         </Box>
-
-        <Web3Icon
-          size={iconSize}
-          iconInfo={{
-            type: Web3IconType.wallet,
-            info: { walletName, variant: IconVariant.Full },
-          }}
-        />
+        <WalletIcon walletName={walletName} size={iconSize} />
       </BoxWith3D>
     </Box>
   );
