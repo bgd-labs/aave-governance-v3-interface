@@ -1355,10 +1355,10 @@
     "@tanstack/react-query" "^5.51.11"
     dayjs "^1.11.12"
 
-"@bgd-labs/react-web3-icons@1.4.1-e4b1b8a8.0":
-  version "1.4.1-e4b1b8a8.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.4.1-e4b1b8a8.0.tgz#805c2a034175edc3db9597aa34f717e8bfd1a6de"
-  integrity sha512-lXYyyw9B8LGVjmyiKPVhT3khfDzBkQQdLCeDE0nVs1Czlq01Kwo4DdkvJOSk889SBO8NTClz+gTStxeWgZLEAA==
+"@bgd-labs/react-web3-icons@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.4.1.tgz#5f0deed17ab34406df3ac94c35a3fc27d9f9461b"
+  integrity sha512-l2P7ltLkNmjqY8Piex8dnzOiX6Z3XP4Lf8cODxDd1OHAjY9+ftIkStlwcjzqZUfI0vjP002G3nTVu9TuLDkFag==
   dependencies:
     "@loadable/component" "5.16.4"
     react "18.3.1"
