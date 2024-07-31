@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.5](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.4...v2.3.5) (2024-07-31)
+
+
+### Bug Fixes
+
+* update local storage value for rpc ([f035f1a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f035f1aa3c345d3b1b6e7efc8f34feb3bf554996))
+* updates web3 icons package ([#99](https://github.com/bgd-labs/aave-governance-v3-interface/issues/99)) ([89b935f](https://github.com/bgd-labs/aave-governance-v3-interface/commit/89b935ff7711c0b7a09c5c45962a68d4369a8ccd))
+
 ## [2.3.4](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.3...v2.3.4) (2024-07-24)
 
 
