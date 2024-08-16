@@ -1333,15 +1333,15 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
-"@bgd-labs/aave-address-book@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-3.0.1.tgz#942cef06984ed7b12b5a6694c5010637b505edd3"
-  integrity sha512-dlq/tBbGzmXPK4q94+Oy/XFXsE3qnKq60L9Hd67WlF3f6zCyzuTuQvUCPW/7hpH3Wda9LAnUbOxGunHAt05n6g==
+"@bgd-labs/aave-address-book@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-3.1.1.tgz#46e528f5b86dff0a26b17fd7573e2abf4c2c1c44"
+  integrity sha512-H3oQFMCgnL0BsQuSTAaj9M3zBm1uK3Uk6qfPH29ktLxhipE4UVqglhC/ZQVMT2wlgf1bMBjmsvwgTDRDOwXuFQ==
 
-"@bgd-labs/aave-governance-ui-helpers@^3.1.5":
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.1.5.tgz#028bd728c379d567201a97c57ade28f197ef90c1"
-  integrity sha512-OX7kbA6+V6ot/XA3ue1HFnxyhRT8v2Yllah4njXr7VH+PxeAIs1i5cbK2cN6qJ6tPHAC/JGFkGaSHIxdkjB3TQ==
+"@bgd-labs/aave-governance-ui-helpers@^3.1.6":
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.1.6.tgz#af7b48c9b13c733836d9dac3f0482f43567aeb38"
+  integrity sha512-hFpiY/bBb45nzy2LBzJiGvih8hzkh87QRkSEtWUSq2KpilSmUDZm/tFjMouuQfCcsOKoqHQwwmRaTAMM52A93A==
   dependencies:
     bs58 "^5.0.0"
     dayjs "^1.11.10"
@@ -1355,10 +1355,10 @@
     "@tanstack/react-query" "^5.51.11"
     dayjs "^1.11.12"
 
-"@bgd-labs/react-web3-icons@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.4.1.tgz#5f0deed17ab34406df3ac94c35a3fc27d9f9461b"
-  integrity sha512-l2P7ltLkNmjqY8Piex8dnzOiX6Z3XP4Lf8cODxDd1OHAjY9+ftIkStlwcjzqZUfI0vjP002G3nTVu9TuLDkFag==
+"@bgd-labs/react-web3-icons@^1.4.6":
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.4.6.tgz#7c5cfb1aa56ed1945c59839f3994d962010e1053"
+  integrity sha512-668HIZLxzvcI1uTDvQ3bkcBmLqV1k3OJ4R/6hpCyx6OQDzzjfvHhuLpIUPSbMzi3q+15xX8fMDVVE2MBUCs1Xg==
   dependencies:
     "@loadable/component" "5.16.4"
     react "18.3.1"
