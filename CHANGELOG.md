@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.3.5](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.4...v2.3.5) (2024-08-19)
+
+
+### Bug Fixes
+
+* added zksynk payloads controller to config ([472f143](https://github.com/bgd-labs/aave-governance-v3-interface/commit/472f1439f63963fe4a3ab5eb6c2c4044a5034dd0))
+* update local storage value for rpc ([f035f1a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f035f1aa3c345d3b1b6e7efc8f34feb3bf554996))
+* update rpc's ([9e29960](https://github.com/bgd-labs/aave-governance-v3-interface/commit/9e2996086d0941e18a44745fce9c5e03ff2da91c))
+* updates web3 icons package ([#99](https://github.com/bgd-labs/aave-governance-v3-interface/issues/99)) ([89b935f](https://github.com/bgd-labs/aave-governance-v3-interface/commit/89b935ff7711c0b7a09c5c45962a68d4369a8ccd))
+* zksynk payloads links ([8a66f72](https://github.com/bgd-labs/aave-governance-v3-interface/commit/8a66f7263f3a594382089033c1ae29d5312fe121))
+
 ## [2.3.4](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.3...v2.3.4) (2024-07-24)
 
 
