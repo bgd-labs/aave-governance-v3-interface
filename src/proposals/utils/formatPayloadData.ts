@@ -4,7 +4,7 @@ import {
   ProposalHistoryItem,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import dayjs from 'dayjs';
-import { metis, scroll } from 'viem/chains';
+import { metis, scroll, zkSync } from 'viem/chains';
 
 import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { getHistoryId } from '../components/proposalHistory/helpers';
@@ -17,7 +17,7 @@ export const generateSeatbeltLink = (
   startLink?: string,
 ) => {
   let isForgeReport = false;
-  if (payload.chainId === metis.id) {
+  if (payload.chainId === metis.id || payload.chainId === zkSync.id) {
     isForgeReport = true;
   } else if (payload.chainId === scroll.id) {
     isForgeReport = true;
