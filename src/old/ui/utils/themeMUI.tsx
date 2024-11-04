@@ -25,7 +25,7 @@ export const media = {
 export const FONT = isForIPFS
   ? "'Inter', sans-serif"
   : // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require('../../../app/layout.page').interNextFont.style.fontFamily;
+    require('../../../../app/layout.page').interNextFont.style.fontFamily;
 
 export const getDesignTokens = (mode: 'light' | 'dark') => {
   const getColor = (lightColor: string, darkColor: string) =>

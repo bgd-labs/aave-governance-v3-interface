@@ -4,11 +4,14 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { Metadata } from 'next';
 
-import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';
-import { metaTexts } from '../src/ui/utils/metaTexts';
-import { appConfig } from '../src/utils/appConfig';
-import { githubStartUrl, listViewPath } from '../src/utils/cacheGithubLinks';
-import { initialClients } from '../src/utils/initialClients';
+import { ProposalPageSSR } from '../src/old/proposals/components/proposalList/ProposalPageSSR';
+import { metaTexts } from '../src/old/ui/utils/metaTexts';
+import { appConfig } from '../src/old/utils/appConfig';
+import {
+  githubStartUrl,
+  listViewPath,
+} from '../src/old/utils/cacheGithubLinks';
+import { initialClients } from '../src/old/utils/initialClients';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;

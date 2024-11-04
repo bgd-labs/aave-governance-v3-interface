@@ -2,8 +2,8 @@ import createEmotionServer from '@emotion/server/create-instance';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 import * as React from 'react';
 
-import { metaTexts } from '../src/ui/utils/metaTexts';
-import { createEmotionCache } from '../src/ui/utils/themeMUI';
+import { metaTexts } from '../src/old/ui/utils/metaTexts';
+import { createEmotionCache } from '../src/old/ui/utils/themeMUI';
 
 const scriptForIpfs = `
 (function () {

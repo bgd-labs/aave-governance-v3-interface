@@ -6,10 +6,10 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 
-import { ZustandStoreProvider } from '../src/store/ZustandStoreProvider';
-import { AppGlobalStyles } from '../src/ui';
-import AppLayout from '../src/ui/layouts/AppLayout';
-import WagmiProvider from '../src/web3/providers/WagmiProvider';
+import { ZustandStoreProvider } from '../src/old/store/ZustandStoreProvider';
+import { AppGlobalStyles } from '../src/old/ui';
+import AppLayout from '../src/old/ui/layouts/AppLayout';
+import WagmiProvider from '../src/old/web3/providers/WagmiProvider';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
