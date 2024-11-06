@@ -24,17 +24,19 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v3
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
+          version: 9.6.0
 
-      - name: Packages install
-        shell: sh
-        run: yarn --frozen-lockfile --prefer-offline
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: pnpm
 
-      - name: Build next js app
-        run: yarn build
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Deploy to ipfs
         id: pinata
