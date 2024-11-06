@@ -93,8 +93,6 @@ export function PayloadsExplorerPage() {
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       const params = new URLSearchParams(searchParams);
       params.set(name, value);
       params.delete('payloadId');

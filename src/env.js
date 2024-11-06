@@ -1,0 +1,47 @@
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+export const env = createEnv({
+  server: {
+    NODE_ENV: z.enum(['development', 'test', 'production']),
+    API_URL: z.string().default('http://localhost:8000'),
+    RPC_MAINNET: z.string(),
+    RPC_POLYGON: z.string(),
+    RPC_AVALANCHE: z.string(),
+    RPC_OPTIMISM: z.string(),
+    RPC_ARBITRUM: z.string(),
+    RPC_METIS: z.string(),
+    RPC_BASE: z.string(),
+    RPC_GNOSIS: z.string(),
+    RPC_BNB: z.string(),
+    RPC_ZKSYNC: z.string(),
+    RPC_FANTOM: z.string(),
+    RPC_SCROLL: z.string(),
+  },
+  client: {
+    NEXT_PUBLIC_DEPLOY_FOR_IPFS: z.string(),
+    NEXT_PUBLIC_TERMS_AND_CONDITIONS_VISIBLE: z.string(),
+    NEXT_PUBLIC_WC_PROJECT_ID: z.string().or(z.undefined()),
+  },
+  runtimeEnv: {
+    NODE_ENV: process.env.NODE_ENV,
+    API_URL: process.env.API_URL,
+    RPC_MAINNET: process.env.RPC_MAINNET,
+    RPC_POLYGON: process.env.RPC_POLYGON,
+    RPC_AVALANCHE: process.env.RPC_AVALANCHE,
+    RPC_OPTIMISM: process.env.RPC_OPTIMISM,
+    RPC_ARBITRUM: process.env.RPC_ARBITRUM,
+    RPC_METIS: process.env.RPC_METIS,
+    RPC_BASE: process.env.RPC_BASE,
+    RPC_GNOSIS: process.env.RPC_GNOSIS,
+    RPC_BNB: process.env.RPC_BNB,
+    RPC_ZKSYNC: process.env.RPC_ZKSYNC,
+    RPC_FANTOM: process.env.RPC_FANTOM,
+    RPC_SCROLL: process.env.RPC_SCROLL,
+    NEXT_PUBLIC_DEPLOY_FOR_IPFS: process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS,
+    NEXT_PUBLIC_TERMS_AND_CONDITIONS_VISIBLE: process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_VISIBLE,
+    NEXT_PUBLIC_WC_PROJECT_ID: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
+  },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+  emptyStringAsUndefined: true,
+});

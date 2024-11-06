@@ -159,7 +159,7 @@ export const createProposalsHistorySlice: StoreSlice<
         txId: payload.id,
         txChainId: payload.chainId,
         timestamp: payload.createdAt,
-        addresses: payload.actions.map((action) => action.target),
+        addresses: payload.actions.map((action: any) => action.target),
         txHash:
           proposalEvents && proposalEvents[historyId]
             ? proposalEvents[historyId].txInfo.hash

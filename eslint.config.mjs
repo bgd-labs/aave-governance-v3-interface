@@ -63,6 +63,7 @@ export default tseslint.config(
       'react/self-closing-comp': 'warn',
       '@next/next/no-duplicate-head': 'off',
       'no-prototype-builtins': 'off',
+      'import/named': 'off'
     },
   },
 );
