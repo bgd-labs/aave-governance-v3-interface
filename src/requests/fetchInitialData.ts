@@ -2,7 +2,7 @@ import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
 import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
-import { appConfig } from '../appConfig';
+import { appConfig } from '../configs/appConfig';
 import { getGovCoreConfigs } from './utils/getGovCoreConfigs';
 
 export async function fetchInitialData({

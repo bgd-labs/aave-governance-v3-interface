@@ -31,7 +31,7 @@ import {
   zkSync,
 } from 'viem/chains';
 
-import { env } from './env';
+import { env } from '../env';
 
 export type CoreNetworkName = 'mainnet' | 'sepolia';
 

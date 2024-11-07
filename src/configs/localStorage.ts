@@ -3,13 +3,45 @@ import {
   WalletType,
 } from '@bgd-labs/frontend-web3-utils';
 
-import { AppModeType, IsGaslessVote } from './types';
+import {
+  AppClientsStorage,
+  AppModeType,
+  EnsDataItem,
+  IsGaslessVote,
+} from '../types';
 
 export enum LocalStorageKeys {
   GaslessVote = 'isGaslessVote',
   TermsAccept = 'termsAccept',
   AppMode = 'appMode',
+  EnsAddresses = 'EnsAddresses',
+  RpcUrls = 'rpcs_urls_4',
 }
+
+// for ENS
+export const getLocalStorageEnsAddresses = () => {
+  return localStorage?.getItem(LocalStorageKeys.EnsAddresses);
+};
+
+export const setLocalStorageEnsAddresses = (
+  ensAddresses: Record<string, EnsDataItem>,
+) => {
+  localStorage?.setItem(
+    LocalStorageKeys.EnsAddresses,
+    JSON.stringify(ensAddresses),
+  );
+};
+
+// for RPC switcher
+export const getLocalStorageRpcUrls = () => {
+  return localStorage?.getItem(LocalStorageKeys.RpcUrls);
+};
+
+export const setLocalStorageRpcUrls = (
+  rpcUrls: Record<number, AppClientsStorage>,
+) => {
+  localStorage?.setItem(LocalStorageKeys.RpcUrls, JSON.stringify(rpcUrls));
+};
 
 // for UI
 export const getLocalStorageLastConnectedWallet = () => {

@@ -3,7 +3,7 @@ import NextLink, { LinkProps as NextLinkProps } from 'next/link';
 import { ReactNode, useMemo } from 'react';
 import { resolve } from 'url';
 
-import { isForIPFS } from '../appConfig';
+import { isForIPFS } from '../configs/appConfig';
 
 interface LinkProps extends NextLinkProps {
   title?: string;

@@ -1,8 +1,6 @@
-// TODO
+import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 
-import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
-
-import { isForIPFS, isTermsAndConditionsVisible } from '../appConfig';
+import { isForIPFS, isTermsAndConditionsVisible } from '../configs/appConfig';
 import {
   getLocalStorageAppMode,
   getLocalStorageGaslessVote,
@@ -10,8 +8,9 @@ import {
   setLocalStorageAppMode,
   setLocalStorageGaslessVote,
   setLocalStorageTermsAccept,
-} from '../localStorage';
+} from '../configs/localStorage';
 import { AppModeType } from '../types';
+import { TransactionsSlice } from './transactionsSlice';
 
 export interface IUISlice {
   isGaslessVote: boolean;
@@ -31,16 +30,23 @@ export interface IUISlice {
   appMode: AppModeType;
   checkAppMode: () => void;
   setAppMode: (appMode: AppModeType) => void;
+
+  isModalOpen: boolean;
+  setModalOpen: (value: boolean) => void;
+
+  isTermModalOpen: boolean;
+  setIsTermModalOpen: (value: boolean) => void;
 }
 
-export const createUISlice: StoreSlice<IUISlice> = (set) => ({
+export const createUISlice: StoreSlice<
+  IUISlice,
+  IWalletSlice & TransactionsSlice
+> = (set, get) => ({
   isGaslessVote: true,
-  checkIsGaslessVote: () => {
+  checkIsGaslessVote: (chainId) => {
     if (
-      // eslint-disable-next-line
-      true
-      // get().isGelatoAvailableChains[chainId] &&
-      // !get().activeWallet?.isContractAddress
+      get().isGelatoAvailableChains[chainId] &&
+      !get().activeWallet?.isContractAddress
     ) {
       if (getLocalStorageGaslessVote() === 'on') {
         set({ isGaslessVote: true });
@@ -88,11 +94,7 @@ export const createUISlice: StoreSlice<IUISlice> = (set) => ({
 
   appMode: 'default',
   checkAppMode: () => {
-    if (
-      // eslint-disable-next-line
-      true
-      // get().activeWallet?.isContractAddress
-    ) {
+    if (get().activeWallet?.isContractAddress) {
       setLocalStorageAppMode('default');
       set({ appMode: 'default' });
     } else {
@@ -106,16 +108,22 @@ export const createUISlice: StoreSlice<IUISlice> = (set) => ({
     }
   },
   setAppMode: (appMode) => {
-    if (
-      // eslint-disable-next-line
-      true
-      // get().activeWallet?.isContractAddress
-    ) {
+    if (get().activeWallet?.isContractAddress) {
       setLocalStorageAppMode('default');
       set({ appMode: 'default' });
     } else {
       setLocalStorageAppMode(appMode);
       set({ appMode });
     }
+  },
+
+  isModalOpen: false,
+  setModalOpen: (value) => {
+    set({ isModalOpen: value });
+  },
+
+  isTermModalOpen: false,
+  setIsTermModalOpen: (value) => {
+    set({ isModalOpen: value, isTermModalOpen: value });
   },
 });

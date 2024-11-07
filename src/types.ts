@@ -1,4 +1,6 @@
 // ui
+import { Address, Chain, Client } from 'viem';
+
 export type AppModeType = 'default' | 'dev' | 'expert';
 export type IsGaslessVote = 'on' | 'off';
 
@@ -103,3 +105,50 @@ export type ProposalItemDataByWallet = Pick<ProposalOnTheList, 'proposalId'> & {
 };
 
 // Proposal screen (WIP)
+
+// ENS
+export enum ENSProperty {
+  NAME = 'name',
+  AVATAR = 'avatar',
+}
+
+export type EnsDataItem = {
+  name?: string;
+  avatar?: {
+    url?: string;
+    isExists?: boolean;
+  };
+  fetched?: {
+    name?: number;
+    avatar?: number;
+  };
+};
+
+// RPC switching
+export type AppClient = {
+  instance: Client;
+  rpcUrl: string;
+};
+
+export type RpcSwitcherFormData = { chainId: number; rpcUrl: string }[];
+
+export type AppClientsStorage = Omit<AppClient, 'instance'>;
+
+export type ChainInfo = {
+  clientInstances: Record<number, { instance: Client }>;
+  getChainParameters: (chainId: number) => Chain;
+};
+
+export type SetRpcErrorParams = {
+  isError: boolean;
+  rpcUrl: string;
+  chainId: number;
+};
+
+// representation
+export type RepresentativeAddress = {
+  chainsIds: number[];
+  address: Address | '';
+};
+
+export type RepresentedAddress = { chainId: number; address: Address | '' };
