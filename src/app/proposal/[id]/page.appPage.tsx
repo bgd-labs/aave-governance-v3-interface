@@ -4,12 +4,12 @@ import React from 'react';
 import { metaTexts } from '../../../helpers/texts/metaTexts';
 
 export const metadata: Metadata = {
-  title: `${metaTexts.main}${metaTexts.createPageMetaTitle}`,
-  description: metaTexts.createPageMetaDescription,
+  title: metaTexts.ipfsTitle,
+  description: metaTexts.ipfsDescription,
   openGraph: {
     images: ['/metaLogo.jpg'],
-    title: `${metaTexts.main}${metaTexts.createPageMetaTitle}`,
-    description: metaTexts.createPageMetaDescription,
+    title: metaTexts.ipfsTitle,
+    description: metaTexts.ipfsDescription,
   },
 };
 

@@ -13,6 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ProposalCreateOverview() {
-  return <h1>Create proposal overview</h1>;
+export default function Page() {
+  return <h1>Export proposal page</h1>;
 }

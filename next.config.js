@@ -40,10 +40,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   trailingSlash: true,
-  pageExtensions,
 };
 
 module.exports = withBundleAnalyzer(
-  process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? { ...nextConfig, output: 'export' }
-    : { ...nextConfig, pageExtensions: [...pageExtensions, "404.tsx", "api.ts"]},
+  process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? { ...nextConfig, output: 'export', pageExtensions: [...pageExtensions, "exportPage.tsx"] }
+    : { ...nextConfig, pageExtensions: [...pageExtensions, "appPage.tsx", "404.tsx", "api.ts"]},
 );
