@@ -2,7 +2,8 @@ import { Box, useTheme } from '@mui/system';
 import Image from 'next/image';
 import React from 'react';
 
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import gelatoIcon from '/public/images/icons/gelato.svg?url';
 
 import { BackButton3D, BigButton, Divider } from '../../ui';

@@ -63,7 +63,10 @@ export default tseslint.config(
       'react/self-closing-comp': 'warn',
       '@next/next/no-duplicate-head': 'off',
       'no-prototype-builtins': 'off',
-      'import/named': 'off'
+      'import/named': 'off',
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-unused-vars": "warn"
     },
   },
 );

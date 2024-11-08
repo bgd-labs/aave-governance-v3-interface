@@ -8,10 +8,7 @@ interface CustomSkeletonProps extends SkeletonProps {
   variant?: 'default' | 'dark';
 }
 
-export function CustomSkeleton({
-  variant = 'default',
-  ...rest
-}: CustomSkeletonProps) {
+export function CustomSkeleton({ ...rest }: CustomSkeletonProps) {
   const isRendered = useStore((store) => store.isRendered);
 
   return (

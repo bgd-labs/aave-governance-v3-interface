@@ -35,13 +35,13 @@ export function HelpModalContainer({
       <Box
         sx={{
           width: '100%',
-          pb: !!onMainButtonClick ? 35 : 0,
+          pb: onMainButtonClick ? 35 : 0,
           position: 'relative',
           [theme.breakpoints.up('sm')]: {
-            pb: !!onMainButtonClick ? 45 : 0,
+            pb: onMainButtonClick ? 45 : 0,
           },
           [theme.breakpoints.up('md')]: {
-            py: !!onMainButtonClick ? 45 : 0,
+            py: onMainButtonClick ? 45 : 0,
           },
         }}>
         {children}

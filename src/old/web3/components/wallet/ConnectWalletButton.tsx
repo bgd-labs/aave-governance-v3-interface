@@ -68,7 +68,7 @@ export function ConnectWalletButton({
 
   const [loading, setLoading] = useState(true);
 
-  const allTransactions = !!activeAddress ? allTxsFromStore : [];
+  const allTransactions = activeAddress ? allTxsFromStore : [];
   const lastTransaction = allTransactions[allTransactions.length - 1];
 
   const ensNameAbbreviated = ensName

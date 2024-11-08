@@ -5,7 +5,7 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 export const proposalsListRouter = createTRPCRouter({
   getProposals: publicProcedure
     .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
+    .query(async () => {
       try {
         throw new Error('TODO: not implemented');
       } catch (e) {

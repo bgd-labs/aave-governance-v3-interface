@@ -2,6 +2,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const pageExtensions =  ["page.tsx", "conf.tsx"];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -38,10 +40,10 @@ const nextConfig = {
   },
   reactStrictMode: true,
   trailingSlash: true,
-  pageExtensions: ["page.tsx", "layout.tsx"]
+  pageExtensions,
 };
 
 module.exports = withBundleAnalyzer(
   process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? { ...nextConfig, output: 'export' }
-    : { ...nextConfig, pageExtensions: ["page.tsx", "layout.tsx", "api.ts"]},
+    : { ...nextConfig, pageExtensions: [...pageExtensions, "404.tsx", "api.ts"]},
 );

@@ -22,7 +22,6 @@ export function Link({
   href,
   inNewWindow,
   children,
-  title,
   css,
   as,
   disabled,

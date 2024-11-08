@@ -37,7 +37,7 @@ export function ImpersonatedForm() {
           initialValues={{
             impersonatedAddress: impersonated?.address,
           }}>
-          {({ handleSubmit, values }) => (
+          {({ handleSubmit }) => (
             <Box
               component="form"
               onSubmit={handleSubmit}

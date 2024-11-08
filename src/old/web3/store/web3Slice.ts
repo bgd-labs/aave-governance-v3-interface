@@ -163,7 +163,7 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
 
     if (!!get().delegationService && !!get().govDataService) {
       if (!!activeAddress && !!get().currentPowers[activeAddress]) {
-        if (!!get().currentPowers[address]) {
+        if (get().currentPowers[address]) {
           if (
             get().currentPowers[address].timestamp + 3600000 < now ||
             request

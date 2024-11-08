@@ -2,7 +2,6 @@
 
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
-// eslint-disable-next-line import/default
 import arrayMutators from 'final-form-arrays';
 import isEqual from 'lodash/isEqual';
 import { useRouter } from 'next/navigation';

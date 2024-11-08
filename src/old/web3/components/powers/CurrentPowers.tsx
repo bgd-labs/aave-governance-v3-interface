@@ -119,7 +119,7 @@ export function CurrentPowers() {
                   setStartAnim(true);
                   setTimeout(() => setStartAnim(false), 500);
                   getCurrentPowers(
-                    !!representative.address
+                    representative.address
                       ? representative.address
                       : activeWallet?.address || zeroAddress,
                     true,
@@ -205,7 +205,7 @@ export function CurrentPowers() {
         <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Box
             onClick={() => {
-              if (!!currentPowersAll) {
+              if (currentPowersAll) {
                 setAccountInfoModalOpen(false);
                 setPowersInfoModalOpen(true);
               }

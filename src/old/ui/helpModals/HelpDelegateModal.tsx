@@ -1,5 +1,4 @@
 import { Box, useTheme } from '@mui/system';
-// eslint-disable-next-line import/default
 import arrayMutators from 'final-form-arrays';
 import isEqual from 'lodash/isEqual';
 import React, { useEffect, useState } from 'react';

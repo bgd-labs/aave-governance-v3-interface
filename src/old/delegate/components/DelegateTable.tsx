@@ -30,7 +30,7 @@ export function DelegateTable({
   const theme = useTheme();
 
   const dataForInputs: { symbol: Asset; amount: number; inputName: string }[] =
-    !!fields
+    fields
       ? fields.map((name: string, index: number) => {
           return {
             symbol: delegateData[index].symbol,

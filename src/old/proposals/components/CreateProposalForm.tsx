@@ -94,7 +94,7 @@ export function CreateProposalForm() {
     chainId?: number,
     payloadsController?: string,
   ) => {
-    if (!!selectedPayloads[fieldName]) {
+    if (selectedPayloads[fieldName]) {
       if (typeof chainId !== 'undefined') {
         const selectedPayload = {
           [fieldName]: {

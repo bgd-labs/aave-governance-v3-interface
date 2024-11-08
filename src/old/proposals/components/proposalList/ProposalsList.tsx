@@ -46,6 +46,7 @@ export function ProposalsList({
 
   const createQueryString = useCallback(
     (name: string, value: string, resetActivePage?: boolean) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const params = new URLSearchParams(searchParams);
       if (resetActivePage) {

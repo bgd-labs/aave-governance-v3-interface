@@ -15,17 +15,11 @@ import {
   votersVisibleCount,
 } from './VotersList';
 
-interface VotersLoadingProps
-  extends Pick<
-    VotersListProps,
-    'voters' | 'isStarted' | 'setIsVotersModalOpen'
-  > {}
-
 export function VotersListLoading({
   voters,
   isStarted,
   setIsVotersModalOpen,
-}: VotersLoadingProps) {
+}: Pick<VotersListProps, 'voters' | 'isStarted' | 'setIsVotersModalOpen'>) {
   const representative = useStore((store) => store.representative);
   const activeWallet = useStore((store) => store.activeWallet);
 

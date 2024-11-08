@@ -1,7 +1,6 @@
 'use client';
 
 import { useTheme } from '@mui/system';
-// eslint-disable-next-line import/default
 import arrayMutators from 'final-form-arrays';
 import { isEqual } from 'lodash';
 import { useRouter } from 'next/navigation';

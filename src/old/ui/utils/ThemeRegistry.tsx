@@ -1,6 +1,5 @@
 'use client';
 
-// eslint-disable-next-line import/default
 import createCache from '@emotion/cache';
 import { useServerInsertedHTML } from 'next/navigation';
 import React from 'react';

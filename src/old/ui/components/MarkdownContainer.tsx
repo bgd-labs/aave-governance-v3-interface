@@ -1,11 +1,8 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
-// eslint-disable-next-line import/default
 import Markdown from 'react-markdown';
 import { Prism } from 'react-syntax-highlighter';
-// eslint-disable-next-line import/default
 import remarkGemoji from 'remark-gemoji';
-// eslint-disable-next-line import/default
 import remarkGfm from 'remark-gfm';
 
 import { Image } from '../primitives/Image';
@@ -185,11 +182,9 @@ export function MarkdownContainer({
                 language={match[1]}
                 style={
                   theme.palette.mode === 'dark'
-                    ? // eslint-disable-next-line @typescript-eslint/no-var-requires
-                      require('react-syntax-highlighter/dist/esm/styles/prism')
+                    ? require('react-syntax-highlighter/dist/esm/styles/prism')
                         .materialOceanic
-                    : // eslint-disable-next-line @typescript-eslint/no-var-requires
-                      require('react-syntax-highlighter/dist/esm/styles/prism')
+                    : require('react-syntax-highlighter/dist/esm/styles/prism')
                         .materialLight
                 }
               />

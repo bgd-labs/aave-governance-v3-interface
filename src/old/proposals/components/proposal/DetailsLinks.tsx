@@ -32,13 +32,13 @@ export function DetailsLinks({
       link: snapshot,
     });
   }
-  if (!!discussionLink) {
+  if (discussionLink) {
     links.unshift({
       title: texts.proposals.detailsLinkForumDiscussion,
       link: discussionLink,
     });
   }
-  if (!!prerender) {
+  if (prerender) {
     links.unshift({
       title: texts.proposals.detailsLinkSeatbeltReport,
       link: `https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/proposals/${String(
