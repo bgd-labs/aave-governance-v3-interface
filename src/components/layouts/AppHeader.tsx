@@ -99,7 +99,7 @@ export function AppHeader() {
   } else {
     if (!headerNavItems.some((item) => item.title === 'Create')) {
       headerNavItems.unshift({
-        link: '/create',
+        link: ROUTES.create,
         title: texts.header.navCreate,
       });
     }

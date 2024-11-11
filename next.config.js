@@ -40,6 +40,7 @@ const nextConfig = {
   },
   reactStrictMode: true,
   trailingSlash: true,
+  skipTrailingSlashRedirect: true
 };
 
 module.exports = withBundleAnalyzer(
