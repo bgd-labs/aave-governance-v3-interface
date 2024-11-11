@@ -9,6 +9,10 @@ import {
   setLocalStorageGaslessVote,
   setLocalStorageTermsAccept,
 } from '../configs/localStorage';
+import {
+  getLocalStorageTutorialStartButtonClicked,
+  setLocalStorageTutorialStartButtonClicked,
+} from '../old/utils/localStorage';
 import { AppModeType } from '../types';
 import { TransactionsSlice } from './transactionsSlice';
 
@@ -36,6 +40,10 @@ export interface IUISlice {
 
   isTermModalOpen: boolean;
   setIsTermModalOpen: (value: boolean) => void;
+
+  isClickedOnStartButtonOnHelpModal: boolean;
+  checkTutorialStartButtonClick: () => void;
+  setIsClickedOnStartButtonOnHelpModal: (value: boolean) => void;
 }
 
 export const createUISlice: StoreSlice<
@@ -125,5 +133,25 @@ export const createUISlice: StoreSlice<
   isTermModalOpen: false,
   setIsTermModalOpen: (value) => {
     set({ isModalOpen: value, isTermModalOpen: value });
+  },
+
+  isClickedOnStartButtonOnHelpModal: false,
+  checkTutorialStartButtonClick: () => {
+    const localStorageTutorialStartButtonClick =
+      getLocalStorageTutorialStartButtonClicked();
+
+    if (localStorageTutorialStartButtonClick) {
+      set({
+        isClickedOnStartButtonOnHelpModal:
+          localStorageTutorialStartButtonClick === 'true',
+      });
+    } else {
+      setLocalStorageTutorialStartButtonClicked('false');
+      set({ isClickedOnStartButtonOnHelpModal: false });
+    }
+  },
+  setIsClickedOnStartButtonOnHelpModal: (value) => {
+    setLocalStorageTutorialStartButtonClicked(`${value}`);
+    set({ isClickedOnStartButtonOnHelpModal: value });
   },
 });

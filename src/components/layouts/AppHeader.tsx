@@ -56,6 +56,9 @@ export function AppHeader() {
   const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
   const isModalOpen = useStore((store) => store.isModalOpen);
   const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const isClickedOnStartButtonOnHelpModal = useStore(
+    (store) => store.isClickedOnStartButtonOnHelpModal,
+  );
   const isRpcHasError = useStore((store) => selectIsRpcAppHasErrors(store));
 
   const { scrollDirection } = useScrollDirection();
@@ -273,8 +276,9 @@ export function AppHeader() {
                             width: 8,
                             height: 8,
                             opacity:
-                              // isClickedOnStartButtonOnHelpModal || !isRendered
-                              !isRendered ? 0 : 1,
+                              isClickedOnStartButtonOnHelpModal || !isRendered
+                                ? 0
+                                : 1,
                             zIndex: 100,
                             position: 'absolute',
                             top: -3,
@@ -476,6 +480,7 @@ export function AppHeader() {
                       component="button"
                       type="button"
                       onClick={() => {
+                        // TODO
                         // closeHelpModals();
                         // setIsTermModalOpen(false);
                         // setIsHelpModalOpen(true);
@@ -582,6 +587,7 @@ export function AppHeader() {
                   component="button"
                   type="button"
                   onClick={() => {
+                    // TODO
                     // closeHelpModals();
                     // setIsTermModalOpen(true);
                     handleCloseMobileMenu();
