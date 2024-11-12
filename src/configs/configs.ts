@@ -11,3 +11,6 @@ export const fallbackGateways = [
 ];
 
 export const chainInfoHelper = initChainInformationConfig(CHAINS);
+
+// proposals list page size
+export const PAGE_SIZE = 12;

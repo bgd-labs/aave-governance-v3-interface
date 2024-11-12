@@ -323,11 +323,9 @@ export class GovDataService {
     const votingMachineChainIds = initialProposals
       .map((data) => data.votingChainId)
       .filter((value, index, self) => self.indexOf(value) === index);
-
     const data = await Promise.all(
       votingMachineChainIds.map(async (chainId) => {
         const votingMachineDataHelper = this.votingMachineDataHelpers[chainId];
-
         const formattedInitialProposals = initialProposals
           .filter((proposal) => proposal.votingChainId === chainId)
           .map((proposal) => {
@@ -336,9 +334,7 @@ export class GovDataService {
               snapshotBlockHash: proposal.snapshotBlockHash,
             };
           });
-
         const rpcUrl = this.clients[chainId].chain?.rpcUrls.default.http[0];
-
         try {
           if (!!setRpcError && rpcUrl) {
             setRpcError({ isError: false, rpcUrl, chainId });
@@ -369,7 +365,6 @@ export class GovDataService {
         }
       }),
     );
-
     return data.flat();
   }
 

@@ -1,6 +1,6 @@
-// ui
-import { Address, Chain, Client } from 'viem';
+import { Address, Chain, Client, Hex } from 'viem';
 
+// ui
 export type AppModeType = 'default' | 'dev' | 'expert';
 export type IsGaslessVote = 'on' | 'off';
 
@@ -21,6 +21,11 @@ export type ContractsConstants = {
   cancellationFee: string;
 };
 
+export type ProposalToGetUserData = {
+  id: bigint;
+  votingChainId: number;
+  snapshotBlockHash: Hex;
+};
 // statuses
 export enum ProposalState {
   Created,
@@ -67,6 +72,11 @@ export type InitialData = {
   totalProposalsCount: number;
 };
 
+export enum GovernancePowerType {
+  VOTING,
+  PROPOSITION,
+}
+
 // Proposal list
 type ProposalOnTheList = {
   proposalId: number;
@@ -97,13 +107,11 @@ export type FinishedProposalOnTheList = ProposalOnTheList & {
   finishedTimestamp: number;
 };
 
-// need only for active proposals
-export type ProposalItemDataByWallet = Pick<ProposalOnTheList, 'proposalId'> & {
-  votingPower: string;
-  votedInfo: { support: boolean; votedPower: string };
+export type ProposalItemDataByUser = Pick<ProposalOnTheList, 'proposalId'> & {
+  support: boolean;
+  votedPower: string;
   isVoted: boolean;
 };
-
 // Proposal screen (WIP)
 
 // ENS
