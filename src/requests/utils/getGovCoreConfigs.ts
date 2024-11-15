@@ -23,10 +23,10 @@ export async function getGovCoreConfigs({
     });
 
     const contractsConstants = {
-      precisionDivider: constants.precisionDivider.toString(),
-      cooldownPeriod: Number(constants.cooldownPeriod),
-      expirationTime: Number(constants.expirationTime),
-      cancellationFee: constants.cancellationFee.toString(),
+      precisionDivider: constants.precisionDivider,
+      cooldownPeriod: constants.cooldownPeriod,
+      expirationTime: constants.expirationTime,
+      cancellationFee: constants.cancellationFee,
     };
 
     const configs: VotingConfig[] = [];
@@ -37,11 +37,11 @@ export async function getGovCoreConfigs({
       const config: VotingConfig = {
         accessLevel: votingConfig.accessLevel,
         votingDuration: votingConfig.config.votingDuration,
-        quorum: Number(votingConfig.config.yesThreshold) || 200,
-        differential: Number(votingConfig.config.yesNoDifferential) || 50,
+        quorum: votingConfig.config.yesThreshold || 200n,
+        differential: votingConfig.config.yesNoDifferential || 50n,
         coolDownBeforeVotingStart:
           votingConfig.config.coolDownBeforeVotingStart,
-        minPropositionPower: Number(votingConfig.config.minPropositionPower),
+        minPropositionPower: votingConfig.config.minPropositionPower,
       };
 
       configs.push(config);
@@ -55,19 +55,19 @@ export async function getGovCoreConfigs({
     console.error('Cannot get gov core configs and constants. Set zero.');
 
     const contractsConstants = {
-      precisionDivider: '0',
-      cooldownPeriod: 100,
-      expirationTime: 1000,
-      cancellationFee: '0',
+      precisionDivider: 0n,
+      cooldownPeriod: 100n,
+      expirationTime: 1000n,
+      cancellationFee: 0n,
     };
     const configs = [
       {
         accessLevel: 1,
         votingDuration: 100,
-        quorum: 200,
-        differential: 50,
+        quorum: 200n,
+        differential: 50n,
         coolDownBeforeVotingStart: 100,
-        minPropositionPower: 100,
+        minPropositionPower: 100n,
       },
     ];
 

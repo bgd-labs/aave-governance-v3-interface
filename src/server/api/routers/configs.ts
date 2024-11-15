@@ -1,11 +1,13 @@
-import { Client } from 'viem';
-import { z } from 'zod';
-
+import { appConfig } from '../../../configs/appConfig';
 import { fetchInitialData } from '../../../requests/fetchInitialData';
+import { serverClients } from '../../../requests/utils/chains';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const configsRouter = createTRPCRouter({
-  get: publicProcedure
-    .input(z.object({ govCoreClient: z.custom<Client>() })) // TODO: server client
-    .query(async ({ input }) => await fetchInitialData({ input })),
+  get: publicProcedure.query(
+    async () =>
+      await fetchInitialData({
+        input: { govCoreClient: serverClients[appConfig.govCoreChainId] },
+      }),
+  ),
 });

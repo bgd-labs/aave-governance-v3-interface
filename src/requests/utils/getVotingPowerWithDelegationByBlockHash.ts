@@ -58,7 +58,7 @@ export async function getVotingPowerWithDelegationByBlockHash({
     const votingPower = data[index][1].result;
     return {
       blockHash,
-      asset: asset,
+      asset,
       votingPower: votingPower as bigint,
       userBalance: userBalance as bigint,
       isWithDelegatedPower: userBalance !== votingPower,

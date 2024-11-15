@@ -3,7 +3,7 @@ import {
   getVotingPowerWithDelegationByBlockHash,
 } from './utils/getVotingPowerWithDelegationByBlockHash';
 
-export async function fetchUserProposalsBalances({
+export async function fetchProposalsBalancesByUser({
   input,
 }: {
   input: GetVotingPowerWithDelegationByBlockHash;
@@ -12,7 +12,7 @@ export async function fetchUserProposalsBalances({
     throw new Error('TODO: API not implemented');
   } catch (e) {
     console.error(
-      'Error getting user proposals balances from API, using RPC fallback',
+      'Error getting proposals balances by user from API, using RPC fallback',
       e,
     );
     return await getVotingPowerWithDelegationByBlockHash({ ...input });

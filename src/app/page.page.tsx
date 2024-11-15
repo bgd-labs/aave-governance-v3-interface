@@ -1,10 +1,11 @@
 // TODO: just for test
 
 import { Metadata } from 'next';
-import { mainnet } from 'viem/chains';
 
+import { ActiveItem } from '../components/ProposalsList/ActiveItem';
+import { FinishedItem } from '../components/ProposalsList/FinishedItem';
+import { PAGE_SIZE } from '../configs/configs';
 import { metaTexts } from '../helpers/texts/metaTexts';
-import { createViemClient } from '../old/utils/chains';
 import { api } from '../trpc/server';
 
 export const metadata: Metadata = {
@@ -18,9 +19,24 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const data = await api.configs.get({
-    govCoreClient: createViemClient(mainnet, ''),
+  const { contractsConstants, totalProposalsCount, configs } =
+    await api.configs.get();
+
+  const proposalsData = await api.proposalsList.getAll({
+    ...contractsConstants,
+    votingConfigs: configs,
+    proposalsCount: totalProposalsCount,
+    pageSize: PAGE_SIZE,
   });
 
-  return <h1>Hello world {data.totalProposalsCount}</h1>;
+  return (
+    <div>
+      {proposalsData.activeProposalsData.map((proposal) => {
+        return <ActiveItem proposalData={proposal} key={proposal.proposalId} />;
+      })}
+      {proposalsData.finishedProposalsData.map((proposal) => {
+        return <FinishedItem data={proposal} key={proposal.proposalId} />;
+      })}
+    </div>
+  );
 }

@@ -1,22 +1,19 @@
-import {
-  GetVMProposalsData,
-  getVMProposalsData,
-} from './utils/getVMProposalsData';
+import { GetVotingData, getVotingData } from './utils/getVotingData';
 
-export async function fetchUserProposalData({
+export async function fetchProposalsDataByUser({
   input,
 }: {
-  input: GetVMProposalsData;
+  input: GetVotingData;
 }) {
   try {
     throw new Error('TODO: API not implemented');
   } catch (e) {
     console.error(
-      'Error getting user proposal data from API, using RPC fallback',
+      'Error getting proposal data by user from API, using RPC fallback',
       e,
     );
 
-    const preparedData = await getVMProposalsData({ ...input });
+    const preparedData = await getVotingData({ ...input });
 
     return preparedData.map((vmData) => {
       return {

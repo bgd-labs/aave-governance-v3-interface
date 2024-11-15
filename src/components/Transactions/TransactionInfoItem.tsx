@@ -16,7 +16,7 @@ import { getScanLink } from '../../helpers/getScanLink';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TxType, TxWithStatus } from '../../store/transactionsSlice';
-import { textCenterEllipsis } from '../../styles/text-center-ellipsis';
+import { textCenterEllipsis } from '../../styles/textCenterEllipsis';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../CopyAndExternalIconsSet';
 import { Link } from '../Link';

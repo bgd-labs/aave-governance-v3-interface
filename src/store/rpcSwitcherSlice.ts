@@ -10,7 +10,7 @@ import { getBlock, getProof } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
-import { createViemClient } from '../configs/chains';
+import { initialRpcUrls } from '../configs/chains';
 import { chainInfoHelper } from '../configs/configs';
 import {
   getLocalStorageRpcUrls,
@@ -23,6 +23,7 @@ import {
   RpcSwitcherFormData,
   SetRpcErrorParams,
 } from '../types';
+import { createViemClient } from '../utils/createClient';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { TransactionsSlice } from './transactionsSlice';
 import { IWeb3Slice } from './web3Slice';
@@ -84,10 +85,11 @@ export const createRpcSwitcherSlice: StoreSlice<
               if (chain) {
                 draft.appClients[chainIdNumber] = {
                   rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                  instance: createViemClient(
+                  instance: createViemClient({
                     chain,
-                    parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
-                  ),
+                    rpcUrl: parsedRpcUrlsFromStorage[chainIdNumber].rpcUrl,
+                    initialRpcUrls,
+                  }),
                 };
               }
             });
@@ -130,10 +132,11 @@ export const createRpcSwitcherSlice: StoreSlice<
       set((state) =>
         produce(state, (draft) => {
           draft.appClients[chainId].rpcUrl = rpcUrl;
-          draft.appClients[chainId].instance = createViemClient(
-            chainInfoHelper.getChainParameters(chainId),
+          draft.appClients[chainId].instance = createViemClient({
+            chain: chainInfoHelper.getChainParameters(chainId),
             rpcUrl,
-          );
+            initialRpcUrls,
+          });
         }),
       );
     });
@@ -223,11 +226,12 @@ export const createRpcSwitcherSlice: StoreSlice<
     ) {
       return;
     }
-    const client = createViemClient(
-      chainInfoHelper.getChainParameters(chainId),
+    const client = createViemClient({
+      chain: chainInfoHelper.getChainParameters(chainId),
       rpcUrl,
-      true,
-    );
+      initialRpcUrls,
+      withoutFallback: true,
+    });
 
     const contractAddresses =
       appConfig.payloadsControllerConfig[chainId].contractAddresses;

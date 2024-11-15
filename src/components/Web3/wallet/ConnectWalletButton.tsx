@@ -15,7 +15,7 @@ import { appConfig } from '../../../configs/appConfig';
 import { getLocalStorageLastConnectedWallet } from '../../../configs/localStorage';
 import { texts } from '../../../helpers/texts/texts';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import { textCenterEllipsis } from '../../../styles/text-center-ellipsis';
+import { textCenterEllipsis } from '../../../styles/textCenterEllipsis';
 import { media } from '../../../styles/themeMUI';
 import { useMediaQuery } from '../../../styles/useMediaQuery';
 import { RepresentativeAddress } from '../../../types';

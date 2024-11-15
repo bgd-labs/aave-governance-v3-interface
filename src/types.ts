@@ -1,24 +1,52 @@
-import { Address, Chain, Client, Hex } from 'viem';
+import {
+  IGovernanceDataHelper_ABI,
+  IPayloadsControllerDataHelper_ABI,
+  IVotingMachineDataHelper_ABI,
+} from '@bgd-labs/aave-address-book';
+import {
+  AbiStateMutability,
+  Address,
+  Chain,
+  Client,
+  ContractFunctionReturnType,
+  Hex,
+} from 'viem';
 
 // ui
 export type AppModeType = 'default' | 'dev' | 'expert';
 export type IsGaslessVote = 'on' | 'off';
 
 // base
+export type ProposalInitialStruct = ContractFunctionReturnType<
+  typeof IGovernanceDataHelper_ABI,
+  AbiStateMutability,
+  'getProposalsData'
+>[0];
+export type PayloadInitialStruct = ContractFunctionReturnType<
+  typeof IPayloadsControllerDataHelper_ABI,
+  AbiStateMutability,
+  'getPayloadsData'
+>[0];
+export type VMProposalInitialStruct = ContractFunctionReturnType<
+  typeof IVotingMachineDataHelper_ABI,
+  AbiStateMutability,
+  'getProposalsData'
+>[0];
+
 export type VotingConfig = {
   accessLevel: number;
-  quorum: number;
-  differential: number;
-  minPropositionPower: number;
+  quorum: bigint;
+  differential: bigint;
+  minPropositionPower: bigint;
   coolDownBeforeVotingStart: number;
   votingDuration: number;
 };
 
 export type ContractsConstants = {
-  precisionDivider: string;
-  cooldownPeriod: number;
-  expirationTime: number;
-  cancellationFee: string;
+  precisionDivider: bigint;
+  cooldownPeriod: bigint;
+  expirationTime: bigint;
+  cancellationFee: bigint;
 };
 
 export type ProposalToGetUserData = {
@@ -27,6 +55,26 @@ export type ProposalToGetUserData = {
   snapshotBlockHash: Hex;
 };
 // statuses
+export enum InitialProposalState {
+  Null, // proposal does not exists
+  Created, // created, waiting for a cooldown to initiate the balances snapshot
+  Active, // balances snapshot set, voting in progress
+  Queued, // voting results submitted, but proposal is under grace period when guardian can cancel it
+  Executed, // results sent to the execution chain(s)
+  Failed, // voting was not successful
+  Cancelled, // got cancelled by guardian, or because proposition power of creator dropped below allowed minimum
+  Expired,
+}
+
+export enum InitialPayloadState {
+  None,
+  Created,
+  Queued,
+  Executed,
+  Cancelled,
+  Expired,
+}
+
 export enum ProposalState {
   Created,
   Voting,
@@ -78,18 +126,22 @@ export enum GovernancePowerType {
 }
 
 // Proposal list
-type ProposalOnTheList = {
+export type ProposalOnTheList = {
   proposalId: number;
   title: string;
-  state: ProposalState;
   ipfsHash: string;
+  state: {
+    state: ProposalState;
+    timestamp: number;
+  };
 };
 
 export type ActiveProposalOnTheList = ProposalOnTheList & {
-  stateTimestamp: number;
-  nextState: ProposalNextState;
-  nextStateTimestamp: number;
-  pendingState: ProposalPendingState;
+  nextState: {
+    state: ProposalNextState;
+    timestamp: number;
+  };
+  pendingState?: ProposalPendingState;
   votingChainId: number;
   isVotingActive: boolean;
   isVotingFinished: boolean;
@@ -101,10 +153,6 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   againstVotes: number;
   requiredAgainstVotes: number;
   againstPercent: number;
-};
-
-export type FinishedProposalOnTheList = ProposalOnTheList & {
-  finishedTimestamp: number;
 };
 
 export type ProposalItemDataByUser = Pick<ProposalOnTheList, 'proposalId'> & {

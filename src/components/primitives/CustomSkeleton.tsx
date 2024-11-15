@@ -5,13 +5,15 @@ export function CustomSkeleton({
   width,
   height,
   circle,
+  className,
 }: {
   width?: number | string;
   height?: number | string;
   circle?: boolean;
+  className?: string;
 }) {
   return (
-    <Box>
+    <Box className={className}>
       <Box
         className="react-loading-skeleton"
         sx={(theme) => ({

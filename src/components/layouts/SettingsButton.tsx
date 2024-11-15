@@ -13,7 +13,7 @@ import { ROUTES } from '../../configs/routes';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { selectIsRpcAppHasErrors } from '../../store/selectors/rpcSwitcherSelectors';
-import { textCenterEllipsis } from '../../styles/text-center-ellipsis';
+import { textCenterEllipsis } from '../../styles/textCenterEllipsis';
 import { BoxWith3D } from '../BoxWith3D';
 import { Link } from '../Link';
 import { Divider } from '../primitives/Divider';

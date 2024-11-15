@@ -8,7 +8,7 @@ import { ROUTES } from '../../../configs/routes';
 import { texts } from '../../../helpers/texts/texts';
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import { AllTransactions, TxType } from '../../../store/transactionsSlice';
-import { textCenterEllipsis } from '../../../styles/text-center-ellipsis';
+import { textCenterEllipsis } from '../../../styles/textCenterEllipsis';
 import { media } from '../../../styles/themeMUI';
 import { useMediaQuery } from '../../../styles/useMediaQuery';
 import { RepresentedAddress } from '../../../types';

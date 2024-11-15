@@ -4,19 +4,19 @@ import { Address, Client, getContract, zeroAddress } from 'viem';
 import { appConfig } from '../../configs/appConfig';
 import { ProposalToGetUserData } from '../../types';
 
-export type GetVMProposalsData = {
+export type GetVotingData = {
   initialProposals: ProposalToGetUserData[];
-  userAddress: string;
+  userAddress?: string;
   clients: Record<number, Client>;
   representativeAddress?: string;
 };
 
-export async function getVMProposalsData({
+export async function getVotingData({
   initialProposals,
   userAddress,
   representativeAddress,
   clients,
-}: GetVMProposalsData) {
+}: GetVotingData) {
   const votingMachineChainIds = initialProposals
     .map((data) => data.votingChainId)
     .filter((value, index, self) => self.indexOf(value) === index);
@@ -25,7 +25,8 @@ export async function getVMProposalsData({
     votingMachineChainIds.map(async (chainId) => {
       const votingMachineDataHelper = getContract({
         abi: IVotingMachineDataHelper_ABI,
-        address: appConfig.votingMachineConfig[chainId].contractAddress,
+        address:
+          appConfig.votingMachineConfig[chainId].dataHelperContractAddress,
         client: clients[chainId],
       });
 
