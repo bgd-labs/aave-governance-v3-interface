@@ -190,9 +190,7 @@ export async function fetchProposalsDataForList({
     });
 
     return {
-      activeIds,
       activeProposalsData,
-      finishedIds,
       finishedProposalsData,
     };
   }

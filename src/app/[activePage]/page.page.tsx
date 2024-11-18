@@ -20,7 +20,7 @@ export async function generateStaticParams() {
   const proposalsCount = await api.configs.getProposalsCount();
   const allPagesCount = Math.ceil(Number(proposalsCount) / PAGE_SIZE);
   return [...Array(Number(allPagesCount)).keys()].map((activePage) => ({
-    activePage: String(activePage),
+    activePage: String(activePage + 1),
     fallback: false,
   }));
 }

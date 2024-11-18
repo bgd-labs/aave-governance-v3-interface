@@ -1,7 +1,13 @@
+import React from 'react';
+
 import { PAGE_SIZE } from '../../configs/configs';
 import { api } from '../../trpc/server';
+import { Container } from '../primitives/Container';
 import { ActiveItem } from './ActiveItem';
 import { FinishedItem } from './FinishedItem';
+import { NoData } from './NoData';
+import { NoFilteredData } from './NoFilteredData';
+import { ProposalsPagination } from './ProposalsPagination';
 
 export const selectIdsForRequest = (ids: number[], activePage: number) => {
   const startIndex = Number(activePage - 1) * PAGE_SIZE;
@@ -24,6 +30,14 @@ export async function ProposalsList({
     await api.configs.getProposalsCount(),
   ]);
 
+  if (count === 0n) {
+    return (
+      <Container>
+        <NoData />
+      </Container>
+    );
+  }
+
   const proposalsData = await api.proposalsList.getAll({
     ...configs.contractsConstants,
     votingConfigs: configs.configs,
@@ -33,14 +47,33 @@ export async function ProposalsList({
     ),
   });
 
+  if (
+    ![
+      ...proposalsData.activeProposalsData,
+      ...proposalsData.finishedProposalsData,
+    ].length &&
+    (searchParams.filteredState !== null ||
+      searchParams.titleSearchValue !== undefined)
+  ) {
+    return (
+      <Container>
+        <NoFilteredData />
+      </Container>
+    );
+  }
+
   return (
-    <div>
+    <Container>
       {proposalsData.activeProposalsData.map((proposal) => {
         return <ActiveItem proposalData={proposal} key={proposal.proposalId} />;
       })}
       {proposalsData.finishedProposalsData.map((proposal) => {
         return <FinishedItem data={proposal} key={proposal.proposalId} />;
       })}
-    </div>
+      <ProposalsPagination
+        activePage={activePage - 1}
+        totalPages={Math.ceil(Number(count) / PAGE_SIZE)}
+      />
+    </Container>
   );
 }
