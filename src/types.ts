@@ -1,8 +1,8 @@
 import {
-  IGovernanceDataHelper_ABI,
+  IGovernanceCore_ABI,
   IPayloadsControllerDataHelper_ABI,
   IVotingMachineDataHelper_ABI,
-} from '@bgd-labs/aave-address-book';
+} from '@bgd-labs/aave-address-book/abis';
 import {
   AbiStateMutability,
   Address,
@@ -18,10 +18,10 @@ export type IsGaslessVote = 'on' | 'off';
 
 // base
 export type ProposalInitialStruct = ContractFunctionReturnType<
-  typeof IGovernanceDataHelper_ABI,
+  typeof IGovernanceCore_ABI,
   AbiStateMutability,
-  'getProposalsData'
->[0];
+  'getProposal'
+>;
 export type PayloadInitialStruct = ContractFunctionReturnType<
   typeof IPayloadsControllerDataHelper_ABI,
   AbiStateMutability,
@@ -31,7 +31,9 @@ export type VMProposalInitialStruct = ContractFunctionReturnType<
   typeof IVotingMachineDataHelper_ABI,
   AbiStateMutability,
   'getProposalsData'
->[0];
+>[0] & {
+  votingChainId: number;
+};
 
 export type VotingConfig = {
   accessLevel: number;

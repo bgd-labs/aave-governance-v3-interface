@@ -1,4 +1,4 @@
-import { IGovernanceDataHelper_ABI } from '@bgd-labs/aave-address-book';
+import { IGovernanceDataHelper_ABI } from '@bgd-labs/aave-address-book/abis';
 import { Client, Hex } from 'viem';
 import { readContract } from 'viem/actions';
 

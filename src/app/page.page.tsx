@@ -4,7 +4,6 @@ import { Metadata } from 'next';
 
 import { ActiveItem } from '../components/ProposalsList/ActiveItem';
 import { FinishedItem } from '../components/ProposalsList/FinishedItem';
-import { PAGE_SIZE } from '../configs/configs';
 import { metaTexts } from '../helpers/texts/metaTexts';
 import { api } from '../trpc/server';
 
@@ -26,7 +25,6 @@ export default async function Page() {
     ...contractsConstants,
     votingConfigs: configs,
     proposalsCount: totalProposalsCount,
-    pageSize: PAGE_SIZE,
   });
 
   return (

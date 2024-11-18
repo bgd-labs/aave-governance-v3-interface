@@ -1,3 +1,8 @@
+import { IVotingPortal_ABI } from '@bgd-labs/aave-address-book/abis';
+import { Client } from 'viem';
+import { readContract } from 'viem/actions';
+
+import { appConfig } from '../configs/appConfig';
 import {
   ContractsConstants,
   InitialPayloadState,
@@ -20,6 +25,7 @@ export type FetchProposalsDataForListParams = Pick<
     votingConfigs: VotingConfig[];
     userAddress?: string;
     representativeAddress?: string;
+    clients: Record<number, Client>;
   };
 
 export async function fetchProposalsDataForList({
@@ -36,12 +42,14 @@ export async function fetchProposalsDataForList({
       'Error getting proposals data from API, using RPC fallback',
       e,
     );
-    const proposalsData = await getProposalsData(input);
+    const proposalsData = (await getProposalsData(input)).sort(
+      (a, b) => b.proposal.id - a.proposal.id,
+    );
 
     const payloadsChainsWithIds: Record<number, number[]> = {};
     const initialPayloads = proposalsData
       .map((proposal) => {
-        return proposal.proposalData.payloads;
+        return proposal.proposal.payloads;
       })
       .flat();
     const payloadsChains = initialPayloads
@@ -49,7 +57,7 @@ export async function fetchProposalsDataForList({
       .filter((value, index, self) => self.indexOf(value) === index);
     payloadsChains.forEach((chainId) => {
       payloadsChainsWithIds[Number(chainId)] = initialPayloads
-        .filter((payload) => payload.chain === BigInt(chainId))
+        .filter((payload) => Number(payload.chain) === Number(chainId))
         .map((payload) => payload.payloadId)
         .filter((value, index, self) => self.indexOf(value) === index);
     });
@@ -60,32 +68,31 @@ export async function fetchProposalsDataForList({
             await getPayloadsData({
               chainId: Number(chainId),
               payloadsIds,
-              clients,
             }),
         ),
       )
     ).flat();
 
     const proposalsWithPayloads = proposalsData.map((proposal) => {
-      const proposalPayloads = proposal.proposalData.payloads.map((payload) => {
+      const proposalPayloads = proposal.proposal.payloads.map((payload) => {
         return payloadsData.filter(
           (p) =>
-            Number(p.id) === payload.payloadId &&
-            p.chain === payload.chain &&
-            p.payloadsController === payload.payloadsController,
+            Number(p.payload.id) === Number(payload.payloadId) &&
+            Number(p.payload.data.chain) === Number(payload.chain) &&
+            p.payload.data.payloadsController === payload.payloadsController,
         )[0];
       });
       const isProposalPayloadsFinished = proposalPayloads.every(
         (payload) =>
-          payload && payload?.data.state > InitialPayloadState.Queued,
+          payload && payload?.payload.data.state > InitialPayloadState.Queued,
       );
       return {
         proposal: {
           ...proposal,
           isFinished:
-            proposal.proposalData.state === InitialProposalState.Executed
+            proposal.proposal.state === InitialProposalState.Executed
               ? isProposalPayloadsFinished
-              : proposal.proposalData.state > InitialProposalState.Executed,
+              : proposal.proposal.state > InitialProposalState.Executed,
         },
         payloads: proposalPayloads,
       };
@@ -93,21 +100,32 @@ export async function fetchProposalsDataForList({
 
     const activeIds = proposalsWithPayloads
       .filter((item) => !item.proposal.isFinished)
-      .map((item) => item.proposal.id);
+      .map((item) => item.proposal.proposal.id);
     const finishedIds = proposalsWithPayloads
       .filter((item) => item.proposal.isFinished)
-      .map((item) => item.proposal.id);
+      .map((item) => item.proposal.proposal.id);
 
-    const proposalsForGetVotingData = activeIds.map((id) => {
-      const proposal = proposalsWithPayloads.filter(
-        (item) => item.proposal.id === id,
-      )[0].proposal;
-      return {
-        id: proposal.id,
-        votingChainId: Number(proposal.votingChainId),
-        snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
-      };
-    });
+    const proposalsForGetVotingData = await Promise.all(
+      activeIds.map(async (id) => {
+        const proposal = proposalsWithPayloads.filter(
+          (item) => item.proposal.proposal.id === id,
+        )[0].proposal;
+        const votingChainId = await readContract(
+          clients[appConfig.govCoreChainId],
+          {
+            abi: IVotingPortal_ABI,
+            address: proposal.proposal.votingPortal,
+            functionName: 'VOTING_MACHINE_CHAIN_ID',
+            args: [],
+          },
+        );
+        return {
+          id: BigInt(proposal.proposal.id),
+          votingChainId: Number(votingChainId),
+          snapshotBlockHash: proposal.proposal.snapshotBlockHash,
+        };
+      }),
+    );
 
     const votingProposalsData =
       proposalsForGetVotingData.length > 0
@@ -124,21 +142,22 @@ export async function fetchProposalsDataForList({
         ? await Promise.all(
             activeIds.map(async (id) => {
               const data = proposalsWithPayloads.filter(
-                (item) => item.proposal.id === id,
+                (item) => item.proposal.proposal.id === id,
               )[0];
               const votingData = votingProposalsData.filter(
-                (data) => data.proposalData.id === id,
+                (data) => data.proposalData.id === BigInt(id),
               )[0];
               const votingConfig = votingConfigs.filter(
                 (config) =>
-                  config.accessLevel === data.proposal.proposalData.accessLevel,
+                  config.accessLevel === data.proposal.proposal.accessLevel,
               )[0];
               return formatActiveProposalData({
                 ...input,
                 ...votingConfig,
-                core: data.proposal,
-                payloads: data.payloads,
+                core: data.proposal.proposal,
+                payloads: data.payloads.map((payload) => payload.payload),
                 voting: votingData,
+                title: data.proposal.ipfs?.title,
               });
             }),
           )
@@ -146,23 +165,23 @@ export async function fetchProposalsDataForList({
 
     const finishedProposalsData = finishedIds.map((id) => {
       const data = proposalsWithPayloads.filter(
-        (item) => item.proposal.id === id,
+        (item) => item.proposal.proposal.id === id,
       )[0];
       const votingConfig = votingConfigs.filter(
-        (config) =>
-          config.accessLevel === data.proposal.proposalData.accessLevel,
+        (config) => config.accessLevel === data.proposal.proposal.accessLevel,
       )[0];
       const { proposalState, finishedTimestamp } =
         getStateAndTimestampForFinishedProposal({
           ...input,
           ...votingConfig,
-          core: data.proposal,
-          payloads: data.payloads,
+          core: data.proposal.proposal,
+          payloads: data.payloads.map((payload) => payload.payload),
         });
       return {
-        proposalId: Number(data.proposal.id),
-        title: `Proposal ${data.proposal.id}`, // TODO: should be proposal title
-        ipfsHash: data.proposal.proposalData.ipfsHash,
+        proposalId: Number(data.proposal.proposal.id),
+        title:
+          data.proposal.ipfs?.title ?? `Proposal #${data.proposal.proposal.id}`,
+        ipfsHash: data.proposal.proposal.ipfsHash,
         state: {
           state: proposalState,
           timestamp: finishedTimestamp,

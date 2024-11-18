@@ -1,4 +1,4 @@
-import { IVotingMachineDataHelper_ABI } from '@bgd-labs/aave-address-book';
+import { IVotingMachineDataHelper_ABI } from '@bgd-labs/aave-address-book/abis';
 import { Address, Client, getContract, zeroAddress } from 'viem';
 
 import { appConfig } from '../../configs/appConfig';
@@ -39,24 +39,18 @@ export async function getVotingData({
           };
         });
 
-      if (representativeAddress && userAddress) {
-        if (userAddress) {
-          return (
-            (await votingMachineDataHelper.read.getProposalsData([
-              appConfig.votingMachineConfig[chainId].contractAddress,
-              formattedInitialProposals,
-              (representativeAddress || userAddress || zeroAddress) as Address,
-            ])) || []
-          );
-        }
-      }
-      return (
-        (await votingMachineDataHelper.read.getProposalsData([
-          appConfig.votingMachineConfig[chainId].contractAddress,
-          formattedInitialProposals,
-          (userAddress || zeroAddress) as Address,
-        ])) || []
-      );
+      const data = await votingMachineDataHelper.read.getProposalsData([
+        appConfig.votingMachineConfig[chainId].contractAddress,
+        formattedInitialProposals,
+        (representativeAddress || userAddress || zeroAddress) as Address,
+      ]);
+
+      return data.map((votingData) => {
+        return {
+          ...votingData,
+          votingChainId: chainId,
+        };
+      });
     }),
   );
 

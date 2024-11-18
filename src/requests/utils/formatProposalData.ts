@@ -210,11 +210,9 @@ export function getStatesForActiveProposal({
   );
 
   const isCanceled =
-    core.proposalData.state === InitialProposalState.Cancelled ||
-    allPayloadsCanceled;
+    core.state === InitialProposalState.Cancelled || allPayloadsCanceled;
   const isExpired =
-    core.proposalData.state === InitialProposalState.Expired ||
-    allPayloadsExpired;
+    core.state === InitialProposalState.Expired || allPayloadsExpired;
   const isVotingActive = isVotingStarted && !isVotingEnded && !isCanceled;
   const isVotingFailed =
     isVotingEnded &&
@@ -229,13 +227,13 @@ export function getStatesForActiveProposal({
     isVotingEnded &&
     isVotingClosed &&
     voting.proposalData.sentToGovernance &&
-    core.proposalData.queuingTime > 0 &&
-    now > core.proposalData.queuingTime + Number(cooldownPeriod);
+    core.queuingTime > 0 &&
+    now > core.queuingTime + Number(cooldownPeriod);
   const isProposalExecuted =
     isVotingEnded &&
     isVotingClosed &&
     !isVotingFailed &&
-    core.proposalData.state === InitialProposalState.Executed &&
+    core.state === InitialProposalState.Executed &&
     !isCanceled;
   const isPayloadsQueued =
     isProposalExecuted && now > lastPayloadQueuedAt + executionDelay;
@@ -243,15 +241,15 @@ export function getStatesForActiveProposal({
     isVotingEnded &&
     isVotingClosed &&
     !isVotingFailed &&
-    core.proposalData.state === InitialProposalState.Executed &&
+    core.state === InitialProposalState.Executed &&
     !isCanceled &&
     allPayloadsExecuted &&
     !isExpired;
 
   let isProposalActive = true;
   if (
-    core.proposalData.state === InitialProposalState.Null ||
-    core.proposalData.state === InitialProposalState.Created
+    core.state === InitialProposalState.Null ||
+    core.state === InitialProposalState.Created
   ) {
     isProposalActive = false;
   } else if (isCanceled) {
@@ -330,19 +328,16 @@ export function getStateAndTimestampForActiveProposal({
   if (
     !isCanceled &&
     voting.proposalData.startTime === 0 &&
-    core.proposalData.state <= InitialProposalState.Active
+    core.state <= InitialProposalState.Active
   ) {
     return {
       state: ProposalState.Created,
-      timestamp: core.proposalData.creationTime,
+      timestamp: core.creationTime,
     };
-  } else if (
-    isVotingActive &&
-    core.proposalData.snapshotBlockHash !== zeroHash
-  ) {
+  } else if (isVotingActive && core.snapshotBlockHash !== zeroHash) {
     return {
       state: ProposalState.Voting,
-      timestamp: core.proposalData.votingActivationTime,
+      timestamp: core.votingActivationTime,
     };
   } else if (
     isVotingEnded &&
@@ -366,9 +361,9 @@ export function getStateAndTimestampForActiveProposal({
     return {
       state: ProposalState.Canceled,
       timestamp:
-        lastPayloadCanceledAt > core.proposalData.cancelTimestamp
+        lastPayloadCanceledAt > core.cancelTimestamp
           ? lastPayloadCanceledAt
-          : core.proposalData.cancelTimestamp,
+          : core.cancelTimestamp,
     };
   } else if (isPayloadsExecuted) {
     return {
@@ -379,9 +374,9 @@ export function getStateAndTimestampForActiveProposal({
     return {
       state: ProposalState.Expired,
       timestamp:
-        core.proposalData.state === ProposalState.Executed && allPayloadsExpired
+        core.state === ProposalState.Executed && allPayloadsExpired
           ? lastPayloadExpiredAt
-          : core.proposalData.creationTime + Number(expirationTime),
+          : core.creationTime + Number(expirationTime),
     };
   }
 }
@@ -436,24 +431,24 @@ export function getNextStateAndTimestampForActiveProposal({
     isVotingClosed &&
     !isVotingDefeated &&
     voting.proposalData.sentToGovernance &&
-    core.proposalData.queuingTime > 0 &&
-    now < core.proposalData.queuingTime + Number(cooldownPeriod);
+    core.queuingTime > 0 &&
+    now < core.queuingTime + Number(cooldownPeriod);
 
   const isPayloadsWaitForQueued =
-    core.proposalData.state === InitialProposalState.Executed &&
+    core.state === InitialProposalState.Executed &&
     now < firstPayloadQueuedAt + executionDelay;
 
   const executedTimestamp =
-    core.proposalData.queuingTime > 0 && firstPayloadQueuedAt === 0
-      ? core.proposalData.queuingTime + Number(cooldownPeriod)
-      : core.proposalData.queuingTime > 0 && firstPayloadQueuedAt > 0
+    core.queuingTime > 0 && firstPayloadQueuedAt === 0
+      ? core.queuingTime + Number(cooldownPeriod)
+      : core.queuingTime > 0 && firstPayloadQueuedAt > 0
         ? firstPayloadQueuedAt + executionDelay
         : 0;
 
-  if (now <= core.proposalData.creationTime + coolDownBeforeVotingStart) {
+  if (now <= core.creationTime + coolDownBeforeVotingStart) {
     return {
       state: ProposalNextState.Voting,
-      timestamp: core.proposalData.creationTime + coolDownBeforeVotingStart,
+      timestamp: core.creationTime + coolDownBeforeVotingStart,
     };
   } else if (
     isVotingStarted &&
@@ -484,9 +479,9 @@ export function getNextStateAndTimestampForActiveProposal({
     return {
       state: ProposalNextState.Expired,
       timestamp:
-        core.proposalData.state === InitialProposalState.Executed
+        core.state === InitialProposalState.Executed
           ? predictPayloadExpiredTime
-          : core.proposalData.creationTime + Number(expirationTime),
+          : core.creationTime + Number(expirationTime),
     };
   }
 }
@@ -509,7 +504,7 @@ export function getPendingStateForActiveProposal({
 
   if (!isVotingFailed) {
     if (
-      now > core.proposalData.creationTime + coolDownBeforeVotingStart &&
+      now > core.creationTime + coolDownBeforeVotingStart &&
       !isVotingStarted &&
       !isVotingEnded &&
       !isVotingClosed
@@ -522,12 +517,12 @@ export function getPendingStateForActiveProposal({
       isVotingEnded &&
       isVotingClosed &&
       voting.proposalData.sentToGovernance &&
-      core.proposalData.queuingTime <= 0
+      core.queuingTime <= 0
     ) {
       return ProposalPendingState.WaitForQueueProposal;
     } else if (
       isProposalQueued &&
-      core.proposalData.state !== InitialProposalState.Executed
+      core.state !== InitialProposalState.Executed
     ) {
       return ProposalPendingState.WaitForExecuteProposal;
     } else if (isProposalExecuted && lastPayloadQueuedAt === 0) {
@@ -544,12 +539,14 @@ export function getPendingStateForActiveProposal({
 
 export function formatActiveProposalData({
   ...data
-}: FormatProposalParamsWithVoting) {
+}: FormatProposalParamsWithVoting & {
+  title?: string;
+}) {
   const { isVotingActive } = getStatesForActiveProposal(data);
   const state = getStateAndTimestampForActiveProposal(data);
   const nextState = getNextStateAndTimestampForActiveProposal(data);
   const pendingState = getPendingStateForActiveProposal(data);
-  const { core, voting, differential, precisionDivider, quorum } = data;
+  const { core, voting, differential, precisionDivider, quorum, title } = data;
 
   const { minQuorumVotes } = formatQuorum(
     voting.proposalData.forVotes,
@@ -581,21 +578,22 @@ export function formatActiveProposalData({
     voting.proposalData.forVotes < minQuorumVotes
       ? minQuorumVotes
       : voting.proposalData.forVotes - requiredDiff;
+
   const againstPercent =
     allVotes > 0n
-      ? (voting.proposalData.againstVotes / requiredAgainstVotes > 0n
-          ? requiredAgainstVotes
-          : 1n) * 100n
+      ? (voting.proposalData.againstVotes /
+          (requiredAgainstVotes > 0n ? requiredAgainstVotes : 1n)) *
+        100n
       : 0;
 
   return {
-    proposalId: Number(core.id),
-    title: `Proposal ${core.id}`, // TODO
+    proposalId: Number(voting.proposalData.id),
+    title: title ?? `Proposal ${voting.proposalData.id}`,
     state,
-    ipfsHash: core.proposalData.ipfsHash,
+    ipfsHash: core.ipfsHash,
     nextState,
     pendingState,
-    votingChainId: Number(core.votingChainId),
+    votingChainId: voting.votingChainId,
     isVotingActive,
     isVotingFinished: state.state > ProposalState.Voting,
     isFinished: state.state > ProposalState.Succeed,
@@ -631,32 +629,29 @@ export function getStateAndTimestampForFinishedProposal({
   } = data;
 
   const { quorumReached } = formatQuorum(
-    core.proposalData.forVotes,
+    core.forVotes,
     quorum,
     precisionDivider,
   );
   const { requiredDiff } = formatDiff(
-    core.proposalData.forVotes,
-    core.proposalData.againstVotes,
+    core.forVotes,
+    core.againstVotes,
     differential,
     precisionDivider,
   );
 
   const isCanceled =
-    core.proposalData.state === InitialProposalState.Cancelled ||
-    allPayloadsCanceled;
+    core.state === InitialProposalState.Cancelled || allPayloadsCanceled;
   const isExpired =
-    core.proposalData.state === InitialProposalState.Expired ||
-    allPayloadsExpired;
+    core.state === InitialProposalState.Expired || allPayloadsExpired;
   const isVotingFailed =
-    core.proposalData.againstVotes >= core.proposalData.forVotes ||
-    (core.proposalData.againstVotes === 0n &&
-      core.proposalData.forVotes === 0n) ||
+    core.againstVotes >= core.forVotes ||
+    (core.againstVotes === 0n && core.forVotes === 0n) ||
     !quorumReached ||
-    core.proposalData.forVotes < core.proposalData.againstVotes + requiredDiff;
+    core.forVotes < core.againstVotes + requiredDiff;
   const isPayloadsExecuted =
     !isVotingFailed &&
-    core.proposalData.state === InitialProposalState.Executed &&
+    core.state === InitialProposalState.Executed &&
     !isCanceled &&
     allPayloadsExecuted &&
     !isExpired;
@@ -672,26 +667,24 @@ export function getStateAndTimestampForFinishedProposal({
     proposalState = ProposalState.Expired;
   }
 
-  let finishedTimestamp = core.proposalData.creationTime;
+  let finishedTimestamp = core.creationTime;
   if (proposalState === ProposalState.Failed) {
     finishedTimestamp =
-      core.proposalData.creationTime +
-      coolDownBeforeVotingStart +
-      core.proposalData.votingDuration;
+      core.creationTime + coolDownBeforeVotingStart + core.votingDuration;
   } else if (proposalState === ProposalState.Executed) {
     finishedTimestamp = lastPayloadExecutedAt;
   } else if (proposalState === ProposalState.Canceled) {
     finishedTimestamp =
-      lastPayloadCanceledAt > core.proposalData.cancelTimestamp
+      lastPayloadCanceledAt > core.cancelTimestamp
         ? lastPayloadCanceledAt
-        : core.proposalData.cancelTimestamp;
+        : core.cancelTimestamp;
   } else if (
-    core.proposalData.state === InitialProposalState.Executed &&
+    core.state === InitialProposalState.Executed &&
     allPayloadsExpired
   ) {
     finishedTimestamp = lastPayloadExpiredAt;
   } else {
-    finishedTimestamp = core.proposalData.creationTime + Number(expirationTime);
+    finishedTimestamp = core.creationTime + Number(expirationTime);
   }
 
   return {
