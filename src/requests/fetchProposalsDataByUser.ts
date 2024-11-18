@@ -12,10 +12,7 @@ export async function fetchProposalsDataByUser({
       'Error getting proposal data by user from API, using RPC fallback',
       e,
     );
-
-    const preparedData = await getVotingData({ ...input });
-
-    return preparedData.map((vmData) => {
+    return (await getVotingData({ ...input })).map((vmData) => {
       return {
         proposalId: vmData.proposalData.id,
         votedInfo: {

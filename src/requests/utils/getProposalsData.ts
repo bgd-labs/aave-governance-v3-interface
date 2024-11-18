@@ -13,7 +13,6 @@ export async function getProposalsData({
   const ids = proposalsCount
     ? [...Array(Number(proposalsCount)).keys()]
     : (proposalsIds ?? []);
-
   return await Promise.all(
     ids.map(async (id) => {
       const data = await cachingLayer.getProposal({

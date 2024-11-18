@@ -18,7 +18,6 @@ export async function getPayloadsData({
         payloadsController: payloadsConfig.contractAddresses[0],
         payloadId: id,
       });
-
       return {
         ...data,
         payload: {

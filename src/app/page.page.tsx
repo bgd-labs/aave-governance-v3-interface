@@ -1,11 +1,7 @@
-// TODO: just for test
-
 import { Metadata } from 'next';
 
-import { ActiveItem } from '../components/ProposalsList/ActiveItem';
-import { FinishedItem } from '../components/ProposalsList/FinishedItem';
+import { ProposalsList } from '../components/ProposalsList/ProposalsList';
 import { metaTexts } from '../helpers/texts/metaTexts';
-import { api } from '../trpc/server';
 
 export const metadata: Metadata = {
   title: `${metaTexts.ipfsTitle}`,
@@ -17,24 +13,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Page() {
-  const { contractsConstants, totalProposalsCount, configs } =
-    await api.configs.get();
-
-  const proposalsData = await api.proposalsList.getAll({
-    ...contractsConstants,
-    votingConfigs: configs,
-    proposalsCount: totalProposalsCount,
-  });
-
-  return (
-    <div>
-      {proposalsData.activeProposalsData.map((proposal) => {
-        return <ActiveItem proposalData={proposal} key={proposal.proposalId} />;
-      })}
-      {proposalsData.finishedProposalsData.map((proposal) => {
-        return <FinishedItem data={proposal} key={proposal.proposalId} />;
-      })}
-    </div>
-  );
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Record<string, string | undefined>;
+}) {
+  return <ProposalsList activePage={1} searchParams={searchParams} />;
 }
