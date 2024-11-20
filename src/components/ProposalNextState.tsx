@@ -2,6 +2,7 @@ import { Box, SxProps } from '@mui/system';
 import React from 'react';
 
 import InfoIcon from '../assets/icons/info.svg';
+import { useStore } from '../providers/ZustandStoreProvider';
 import { ProposalNextState as State } from '../types';
 import { IconBox } from './primitives/IconBox';
 import { Timer } from './Timer';
@@ -26,6 +27,10 @@ export function ProposalNextState({
   isForModal,
   isForHelpModal,
 }: ProposalEstimatedStatusProps) {
+  const updateProposalsListActiveData = useStore(
+    (store) => store.updateProposalsListActiveData,
+  );
+
   const statusTextStringArray = state.split(' ');
   statusTextStringArray.splice(state === State.Voting ? -3 : -1);
   const statusText = statusTextStringArray.join(' ');
@@ -68,11 +73,11 @@ export function ProposalNextState({
         in{' '}
         <Timer
           expiryTimestamp={timestamp}
-          // onExpire={
-          //   () =>
-          //     !isForHelpModal &&
-          //     getDetailedProposalsData({ ids: [proposalId], fullData: true }) // TODO update active proposals data
-          // }
+          onExpire={async () => {
+            if (!isForHelpModal) {
+              await updateProposalsListActiveData([proposalId]);
+            }
+          }}
         />
       </Box>
 

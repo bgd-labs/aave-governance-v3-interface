@@ -1,4 +1,5 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
+import { produce } from 'immer';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
 import { PAGE_SIZE } from '../configs/configs';
@@ -41,8 +42,8 @@ export interface IProposalsSlice {
   initializeProposalsCount: (count?: number) => Promise<void>;
 
   proposalsListData: {
-    activeProposalsData: ActiveProposalOnTheList[];
-    finishedProposalsData: ProposalOnTheList[];
+    activeProposalsData: Record<number, ActiveProposalOnTheList>;
+    finishedProposalsData: Record<number, ProposalOnTheList>;
   };
   initializeProposalsListData: (proposalsListData: {
     activeProposalsData: ActiveProposalOnTheList[];
@@ -56,6 +57,8 @@ export interface IProposalsSlice {
   newProposalsInterval: number | undefined;
   startNewProposalsPolling: () => Promise<void>;
   stopNewProposalsPolling: () => void;
+
+  updateProposalsListActiveData: (activeIds: number[]) => Promise<void>;
 }
 
 export const createProposalsSlice: StoreSlice<
@@ -98,64 +101,26 @@ export const createProposalsSlice: StoreSlice<
   },
 
   proposalsListData: {
-    activeProposalsData: [],
-    finishedProposalsData: [],
+    activeProposalsData: {},
+    finishedProposalsData: {},
     // TODO: user data
   },
   initializeProposalsListData: (proposalsListData) => {
-    const currentData = get().proposalsListData;
-    const activeProposalsCurrent = currentData.activeProposalsData;
-    const finishedProposalsCurrent = currentData.finishedProposalsData;
-
-    const activeProposalsData: ActiveProposalOnTheList[] = [];
-    for (let i = 0; i < proposalsListData.activeProposalsData.length; i++) {
-      let found = false;
-      for (let j = 0; j < activeProposalsCurrent.length; j++) {
-        if (
-          proposalsListData.activeProposalsData[i].proposalId ===
-          activeProposalsCurrent[j].proposalId
-        ) {
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        activeProposalsData.push({
-          ...proposalsListData.activeProposalsData[i],
-        });
-      }
-    }
-
-    const finishedProposalsData: ProposalOnTheList[] = [];
-    for (let i = 0; i < proposalsListData.finishedProposalsData.length; i++) {
-      let found = false;
-      for (let j = 0; j < finishedProposalsCurrent.length; j++) {
-        if (
-          proposalsListData.finishedProposalsData[i].proposalId ===
-          finishedProposalsCurrent[j].proposalId
-        ) {
-          found = true;
-          break;
-        }
-      }
-      if (!found) {
-        finishedProposalsData.push({
-          ...proposalsListData.finishedProposalsData[i],
-        });
-      }
-    }
-
-    set({
-      proposalsListData: {
-        activeProposalsData: [
-          ...activeProposalsCurrent,
-          ...activeProposalsData,
-        ],
-        finishedProposalsData: [
-          ...finishedProposalsCurrent,
-          ...finishedProposalsData,
-        ],
-      },
+    proposalsListData.activeProposalsData.forEach((proposal) => {
+      set((state) =>
+        produce(state, (draft) => {
+          draft.proposalsListData.activeProposalsData[proposal.proposalId] =
+            proposal;
+        }),
+      );
+    });
+    proposalsListData.finishedProposalsData.forEach((proposal) => {
+      set((state) =>
+        produce(state, (draft) => {
+          draft.proposalsListData.finishedProposalsData[proposal.proposalId] =
+            proposal;
+        }),
+      );
     });
   },
 
@@ -166,27 +131,11 @@ export const createProposalsSlice: StoreSlice<
 
     const func = async () => {
       const configs = get().configs;
-      const activeIds = get().proposalsListData.activeProposalsData.map(
-        (proposal) => proposal.proposalId,
-      );
+      const activeIds = Object.values(
+        get().proposalsListData.activeProposalsData,
+      ).map((proposal) => proposal.proposalId);
       if (configs && activeIds.length > 0) {
-        const input = {
-          ...configs.contractsConstants,
-          votingConfigs: configs.configs,
-          activeIds,
-        };
-        // TODO: user data
-        const proposalsData = await (isForIPFS
-          ? fetchActiveProposalsDataForList({
-              input: {
-                ...input,
-                clients: Object.values(get().appClients).map(
-                  (client) => client.instance,
-                ),
-              },
-            })
-          : api.proposalsList.getActive.query(input));
-        get().initializeProposalsListData(proposalsData);
+        await get().updateProposalsListActiveData(activeIds);
       }
     };
     func();
@@ -227,23 +176,7 @@ export const createProposalsSlice: StoreSlice<
           1,
           Number(totalProposalsCount) - currentProposalCount,
         );
-        const input = {
-          ...configs.contractsConstants,
-          votingConfigs: configs.configs,
-          activeIds: newIdsForFirstScreen,
-        };
-        // TODO: user data
-        const proposalsData = await (isForIPFS
-          ? fetchActiveProposalsDataForList({
-              input: {
-                ...input,
-                clients: Object.values(get().appClients).map(
-                  (client) => client.instance,
-                ),
-              },
-            })
-          : api.proposalsList.getActive.query(input));
-        get().initializeProposalsListData(proposalsData);
+        await get().updateProposalsListActiveData(newIdsForFirstScreen);
       }
     };
     func();
@@ -256,6 +189,29 @@ export const createProposalsSlice: StoreSlice<
     if (interval) {
       clearInterval(interval);
       set({ newProposalsInterval: undefined });
+    }
+  },
+
+  updateProposalsListActiveData: async (activeIds) => {
+    const configs = get().configs;
+    if (configs) {
+      const input = {
+        ...configs.contractsConstants,
+        votingConfigs: configs.configs,
+        activeIds,
+      };
+      // TODO: user data
+      const proposalsData = await (isForIPFS
+        ? fetchActiveProposalsDataForList({
+            input: {
+              ...input,
+              clients: Object.values(get().appClients).map(
+                (client) => client.instance,
+              ),
+            },
+          })
+        : api.proposalsList.getActive.query(input));
+      get().initializeProposalsListData(proposalsData);
     }
   },
 });

@@ -213,7 +213,7 @@ export function getStatesForActiveProposal({
     core.state === InitialProposalState.Cancelled || allPayloadsCanceled;
   const isExpired =
     core.state === InitialProposalState.Expired || allPayloadsExpired;
-  const isVotingActive = isVotingStarted && !isVotingEnded && !isCanceled;
+  const isVotingActive = isVotingStarted && !isCanceled;
   const isVotingFailed =
     isVotingEnded &&
     (voting.proposalData.againstVotes >= voting.proposalData.forVotes ||
@@ -223,7 +223,6 @@ export function getStatesForActiveProposal({
       voting.proposalData.forVotes <
         voting.proposalData.againstVotes + requiredDiff);
   const isProposalQueued =
-    isVotingStarted &&
     isVotingEnded &&
     isVotingClosed &&
     voting.proposalData.sentToGovernance &&
@@ -426,7 +425,6 @@ export function getNextStateAndTimestampForActiveProposal({
     !quorumReached;
 
   const isProposalWaitForQueued =
-    isVotingStarted &&
     isVotingEnded &&
     isVotingClosed &&
     !isVotingDefeated &&
@@ -510,14 +508,17 @@ export function getPendingStateForActiveProposal({
       !isVotingClosed
     ) {
       return ProposalPendingState.WaitForActivateVoting;
-    } else if (isVotingStarted && isVotingEnded && !isVotingClosed) {
+    } else if (
+      isVotingEnded &&
+      !isVotingClosed &&
+      !voting.proposalData.sentToGovernance
+    ) {
       return ProposalPendingState.WaitForCloseVoting;
     } else if (
-      isVotingStarted &&
       isVotingEnded &&
-      isVotingClosed &&
+      !isVotingClosed &&
       voting.proposalData.sentToGovernance &&
-      core.queuingTime <= 0
+      core.queuingTime <= 0n
     ) {
       return ProposalPendingState.WaitForQueueProposal;
     } else if (

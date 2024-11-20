@@ -11,18 +11,20 @@ export const selectProposalsForActivePage = (
       ),
       activePage,
     );
-    const fillteredActiveProposalsData =
-      store.proposalsListData.activeProposalsData.filter((proposal) =>
-        ids.includes(proposal.proposalId),
-      );
-    const fillteredFinishedProposalsData =
-      store.proposalsListData.finishedProposalsData.filter((proposal) =>
-        ids.includes(proposal.proposalId),
-      );
+    const fillteredActiveProposalsData = Object.values(
+      store.proposalsListData.activeProposalsData,
+    ).filter((proposal) => ids.includes(proposal.proposalId));
+    const fillteredFinishedProposalsData = Object.values(
+      store.proposalsListData.finishedProposalsData,
+    ).filter((proposal) => ids.includes(proposal.proposalId));
 
     return {
-      activeProposalsData: fillteredActiveProposalsData,
-      finishedProposalsData: fillteredFinishedProposalsData,
+      activeProposalsData: fillteredActiveProposalsData.sort(
+        (a, b) => b.proposalId - a.proposalId,
+      ),
+      finishedProposalsData: fillteredFinishedProposalsData.sort(
+        (a, b) => b.proposalId - a.proposalId,
+      ),
     };
   } else {
     return {
