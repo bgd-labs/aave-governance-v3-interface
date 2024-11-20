@@ -1,78 +1,78 @@
-import React from 'react';
+'use client';
 
-import { PAGE_SIZE } from '../../configs/configs';
-import { api } from '../../trpc/server';
+import { useEffect } from 'react';
+
+import { useStore } from '../../providers/ZustandStoreProvider';
+import { selectProposalsForActivePage } from '../../store/selectors/proposalsSelector';
+import {
+  ActiveProposalOnTheList,
+  ContractsConstants,
+  ProposalOnTheList,
+  VotingConfig,
+} from '../../types';
 import { Container } from '../primitives/Container';
 import { ActiveItem } from './ActiveItem';
 import { FinishedItem } from './FinishedItem';
-import { NoData } from './NoData';
-import { NoFilteredData } from './NoFilteredData';
 import { ProposalsPagination } from './ProposalsPagination';
 
-export const selectIdsForRequest = (ids: number[], activePage: number) => {
-  const startIndex = Number(activePage - 1) * PAGE_SIZE;
-  let endIndex = startIndex + PAGE_SIZE;
-  if (endIndex > ids.length) {
-    endIndex = ids.length;
-  }
-  return ids.slice(startIndex, endIndex);
-};
-
-export async function ProposalsList({
+export function ProposalsList({
   activePage,
-  searchParams,
+  configs,
+  count,
+  proposalsData,
 }: {
   activePage: number;
-  searchParams: Record<string, string | undefined>;
+  configs: {
+    configs: VotingConfig[];
+    contractsConstants: ContractsConstants;
+  };
+  count: number;
+  proposalsData: {
+    activeProposalsData: ActiveProposalOnTheList[];
+    finishedProposalsData: ProposalOnTheList[];
+  };
 }) {
-  const [configs, count] = await Promise.all([
-    await api.configs.get(),
-    await api.configs.getProposalsCount(),
+  const initializeConfigs = useStore((store) => store.initializeConfigs);
+  const initializeProposalsCount = useStore(
+    (store) => store.initializeProposalsCount,
+  );
+  const initializeProposalsListData = useStore(
+    (store) => store.initializeProposalsListData,
+  );
+  const totalProposalsCount = useStore((store) => store.totalProposalsCount);
+  const proposalsListData = useStore((store) =>
+    selectProposalsForActivePage(store, activePage),
+  );
+
+  useEffect(() => {
+    initializeConfigs(configs);
+  }, [configs]);
+  useEffect(() => {
+    initializeProposalsCount(count);
+  }, [count]);
+  useEffect(() => {
+    if (
+      proposalsData.activeProposalsData.length ||
+      proposalsData.finishedProposalsData.length
+    ) {
+      initializeProposalsListData(proposalsData);
+    }
+  }, [
+    proposalsData.activeProposalsData.length,
+    proposalsData.finishedProposalsData.length,
   ]);
-
-  if (count === 0n) {
-    return (
-      <Container>
-        <NoData />
-      </Container>
-    );
-  }
-
-  const proposalsData = await api.proposalsList.getAll({
-    ...configs.contractsConstants,
-    votingConfigs: configs.configs,
-    proposalsIds: selectIdsForRequest(
-      [...Array(Number(count)).keys()].sort((a, b) => b - a),
-      activePage,
-    ),
-  });
-
-  if (
-    ![
-      ...proposalsData.activeProposalsData,
-      ...proposalsData.finishedProposalsData,
-    ].length &&
-    (searchParams.filteredState !== null ||
-      searchParams.titleSearchValue !== undefined)
-  ) {
-    return (
-      <Container>
-        <NoFilteredData />
-      </Container>
-    );
-  }
 
   return (
     <Container>
-      {proposalsData.activeProposalsData.map((proposal) => {
+      {proposalsListData.activeProposalsData.map((proposal) => {
         return <ActiveItem proposalData={proposal} key={proposal.proposalId} />;
       })}
-      {proposalsData.finishedProposalsData.map((proposal) => {
+      {proposalsListData.finishedProposalsData.map((proposal) => {
         return <FinishedItem data={proposal} key={proposal.proposalId} />;
       })}
       <ProposalsPagination
         activePage={activePage - 1}
-        totalPages={Math.ceil(Number(count) / PAGE_SIZE)}
+        totalItems={totalProposalsCount}
       />
     </Container>
   );

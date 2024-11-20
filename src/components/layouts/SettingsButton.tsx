@@ -1,3 +1,5 @@
+'use client';
+
 import { Menu } from '@headlessui/react';
 import { Box, SxProps, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';

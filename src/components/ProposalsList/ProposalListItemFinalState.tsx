@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 

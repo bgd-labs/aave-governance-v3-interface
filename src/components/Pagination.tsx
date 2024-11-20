@@ -1,12 +1,14 @@
 import { useTheme } from '@mui/system';
-import ReactPaginate from 'react-paginate';
+import InitialPagination from 'rc-pagination';
+import { useState } from 'react';
 
+import { PAGE_SIZE } from '../configs/configs';
 import { texts } from '../helpers/texts/texts';
 import { BoxWith3D } from './BoxWith3D';
+import { Link } from './Link';
 
 export interface PaginationProps {
-  pageCount: number;
-  onPageChange: (value: number) => void;
+  totalItems: number;
   forcePage?: number;
   withoutQuery?: boolean;
   borderSize?: number;
@@ -14,15 +16,16 @@ export interface PaginationProps {
 }
 
 export function Pagination({
-  pageCount,
-  onPageChange,
+  totalItems,
   forcePage,
   borderSize = 10,
   isSmall,
 }: PaginationProps) {
   const theme = useTheme();
 
-  if (pageCount <= 1) return null;
+  const [currentPage, setCurrentPage] = useState<number>(1 + (forcePage ?? 0));
+
+  if (totalItems <= PAGE_SIZE) return null;
 
   return (
     <BoxWith3D
@@ -45,13 +48,13 @@ export function Pagination({
           pb: isSmall ? 8 : 10,
           pt: isSmall ? 15 : 20,
         },
-        '.pagination': {
+        '.rc-pagination': {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
         },
-        '.arrow': {
+        '.rc-pagination-prev, .rc-pagination-next': {
           display: 'inline-flex',
           flex: 1,
           a: {
@@ -112,144 +115,180 @@ export function Pagination({
               },
             },
           },
-          '&.disabled': {
-            a: {
-              cursor: 'not-allowed',
-              '&:before': {
-                color: '$textDisabled',
-              },
-              '&:after': {
-                border: `1px solid ${theme.palette.$textDisabled}`,
-                borderWidth: '0 2px 2px 0',
-              },
+        },
+        '.rc-pagination-disabled': {
+          a: {
+            cursor: 'not-allowed',
+            '&:before': {
+              color: '$textDisabled',
             },
-          },
-          '&.arrow-next': {
-            a: {
-              justifyContent: 'flex-end',
-              ml: 8,
-              mr: 15,
-              [theme.breakpoints.up('lg')]: {
-                mr: 25,
-              },
-              '&:before': {
-                content: `'${texts.other.paginationNext}'`,
-                mr: 5,
-              },
-              '&:after': {
-                transform: 'rotate(-45deg)',
-              },
-            },
-          },
-          '&.arrow-prev': {
-            a: {
-              flexDirection: 'row-reverse',
-              justifyContent: 'flex-end',
-              mr: 8,
-              ml: 15,
-              [theme.breakpoints.up('lg')]: {
-                ml: 25,
-              },
-              '&:before': {
-                content: `'${texts.other.paginationPrevious}'`,
-                ml: 5,
-              },
-              '&:after': {
-                transform: 'rotate(135deg)',
-              },
+            '&:after': {
+              border: `1px solid ${theme.palette.$textDisabled}`,
+              borderWidth: '0 2px 2px 0',
             },
           },
         },
-        '.page-item': {
+        '.rc-pagination-next': {
           a: {
-            color: '$textDisabled',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            width: 37,
-            height: 29,
-            pt: 5,
-            fontSize: 11,
-            lineHeight: 1,
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            [theme.breakpoints.up('sm')]: {
-              width: isSmall ? 48 : 75,
-            },
+            justifyContent: 'flex-end',
+            ml: 8,
+            mr: 15,
             [theme.breakpoints.up('lg')]: {
-              width: isSmall ? 54 : 92,
+              mr: 25,
             },
-            span: {
+            '&:before': {
+              content: `'${texts.other.paginationNext}'`,
+              mr: 5,
+            },
+            '&:after': {
+              transform: 'rotate(-45deg)',
+            },
+          },
+        },
+        '.rc-pagination-prev': {
+          a: {
+            flexDirection: 'row-reverse',
+            justifyContent: 'flex-end',
+            mr: 8,
+            ml: 15,
+            [theme.breakpoints.up('lg')]: {
+              ml: 25,
+            },
+            '&:before': {
+              content: `'${texts.other.paginationPrevious}'`,
+              ml: 5,
+            },
+            '&:after': {
+              transform: 'rotate(135deg)',
+            },
+          },
+        },
+        '.rc-pagination-item, .rc-pagination-jump-prev, .rc-pagination-jump-next':
+          {
+            a: {
+              color: '$textDisabled',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              minWidth: 20,
-              p: '4.5px 6px',
-              borderRadius: '50%',
-            },
-            '&:after, &:before': {
-              content: `''`,
-              width: '100%',
-              height: 2,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              backgroundColor: '$textDisabled',
+              position: 'relative',
+              width: 37,
+              height: 29,
+              pt: 5,
+              fontSize: 11,
+              lineHeight: 1,
+              cursor: 'pointer',
               transition: 'all 0.2s ease',
-            },
-            '&:after': {
-              width: 0,
-            },
-          },
-          '&.active': {
-            a: {
-              cursor: 'default',
-              color: '$text',
-              '&:after': {
-                backgroundColor: '$text',
-                width: '100%',
+              [theme.breakpoints.up('sm')]: {
+                width: isSmall ? 48 : 75,
               },
-            },
-          },
-          hover: {
-            a: {
-              color: theme.palette.$text,
-              '&:after': {
-                backgroundColor: theme.palette.$text,
-                width: '100%',
+              [theme.breakpoints.up('lg')]: {
+                width: isSmall ? 54 : 92,
               },
-            },
-          },
-          '&:active': {
-            a: {
               span: {
-                backgroundColor: '$light',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: 20,
+                p: '4.5px 6px',
+                borderRadius: '50%',
+                fontSize: 11,
+                lineHeight: 1,
+                color: '$textDisabled',
+              },
+              '&:after, &:before': {
+                content: `''`,
+                width: '100%',
+                height: 2,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                backgroundColor: '$textDisabled',
+                transition: 'all 0.2s ease',
+              },
+              '&:after': {
+                width: 0,
+              },
+            },
+            '&-active': {
+              a: {
+                cursor: 'default',
+                color: '$text',
+                '&:after': {
+                  backgroundColor: '$text',
+                  width: '100%',
+                },
+              },
+            },
+            hover: {
+              a: {
+                color: theme.palette.$text,
+                span: {
+                  color: theme.palette.$text,
+                },
+                '&:after': {
+                  backgroundColor: theme.palette.$text,
+                  width: '100%',
+                },
+              },
+            },
+            '&:active': {
+              a: {
+                span: {
+                  backgroundColor: '$light',
+                },
               },
             },
           },
-        },
       }}>
-      <ReactPaginate
-        onPageChange={(selectedItem) => {
-          onPageChange(selectedItem.selected);
+      <InitialPagination
+        current={currentPage}
+        hideOnSinglePage
+        total={totalItems}
+        pageSize={PAGE_SIZE}
+        onChange={(page) => setCurrentPage(page)}
+        showLessItems
+        locale={{
+          items_per_page: '/ page',
+          jump_to: 'Go to',
+          jump_to_confirm: 'confirm',
+          page: 'Page',
+          prev_page: 'Previous Page',
+          next_page: 'Next Page',
+          prev_5: 'Previous 5 Pages',
+          next_5: 'Next 5 Pages',
+          prev_3: 'Previous 3 Pages',
+          next_3: 'Next 3 Pages',
+          page_size: 'Page Size',
         }}
-        pageCount={pageCount}
-        pageRangeDisplayed={2}
-        marginPagesDisplayed={1}
-        nextLabel=""
-        previousLabel=""
-        pageClassName="page-item"
-        previousClassName="arrow arrow-prev"
-        nextClassName="arrow arrow-next"
-        breakLabel="..."
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
-        containerClassName="pagination"
-        activeClassName="active"
-        forcePage={forcePage}
-        renderOnZeroPageCount={() => null}
-        pageLabelBuilder={(page) => <span>{page}</span>}
+        itemRender={(current, type) => {
+          if (type === 'page') {
+            return (
+              <Link href={`/${current}/`} scroll>
+                <span>{current}</span>
+              </Link>
+            );
+          }
+          if (type === 'prev') {
+            return <Link href={`/${current}/`} scroll />;
+          }
+          if (type === 'next') {
+            return <Link href={`/${current}/`} scroll />;
+          }
+          if (type === 'jump-prev') {
+            return (
+              <Link href={`/${current}/`} scroll>
+                <span>...</span>
+              </Link>
+            );
+          }
+          if (type === 'jump-next') {
+            return (
+              <Link href={`/${current}/`} scroll>
+                <span>...</span>
+              </Link>
+            );
+          }
+        }}
       />
     </BoxWith3D>
   );

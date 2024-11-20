@@ -1,3 +1,5 @@
+'use client';
+
 import { styled } from '@mui/system';
 
 export const Input = styled('input')(({ theme }) => ({

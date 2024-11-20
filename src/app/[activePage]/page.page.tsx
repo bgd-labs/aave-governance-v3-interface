@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { ProposalsList } from '../../components/ProposalsList/ProposalsList';
+import { ProposalsListInitialize } from '../../components/ProposalsList/ProposalsListInitialize';
 import { PAGE_SIZE } from '../../configs/configs';
 import { metaTexts } from '../../helpers/texts/metaTexts';
 import { api } from '../../trpc/server';
@@ -25,16 +25,16 @@ export async function generateStaticParams() {
   }));
 }
 
+export const revalidate = 3600;
+
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: { activePage: string };
-  searchParams: Record<string, string | undefined>;
 }) {
   const activePage = +params.activePage;
   if (isNaN(activePage)) {
     notFound();
   }
-  return <ProposalsList activePage={activePage} searchParams={searchParams} />;
+  return <ProposalsListInitialize activePage={activePage} />;
 }

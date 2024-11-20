@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { ProposalsList } from '../components/ProposalsList/ProposalsList';
+import { ProposalsListInitialize } from '../components/ProposalsList/ProposalsListInitialize';
 import { metaTexts } from '../helpers/texts/metaTexts';
 
 export const metadata: Metadata = {
@@ -13,10 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Record<string, string | undefined>;
-}) {
-  return <ProposalsList activePage={1} searchParams={searchParams} />;
+export const revalidate = 3600;
+
+export default async function Page() {
+  return <ProposalsListInitialize activePage={1} />;
 }

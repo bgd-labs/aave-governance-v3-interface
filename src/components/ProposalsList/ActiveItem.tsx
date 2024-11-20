@@ -9,6 +9,8 @@ import { useStore } from '../../providers/ZustandStoreProvider';
 import { ActiveProposalOnTheList } from '../../types';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
 import { Link } from '../Link';
+import { ProposalNextState } from '../ProposalNextState';
+import { ProposalStateWithDate } from '../ProposalStateWithDate';
 import { VoteBar } from '../VoteBar';
 import { Loading } from './Loading';
 import { ProposalListItemFinalState } from './ProposalListItemFinalState';
@@ -53,30 +55,6 @@ export function ActiveItem({
   //     isContractAddress: false,
   //   };
   // }
-
-  // const {
-  //   stateTimestamp,
-  //   estimatedState,
-  //   timestampForEstimatedState,
-  //   waitForState,
-  //   votingPower,
-  //   forVotes,
-  //   requiredForVotes,
-  //   forPercent,
-  //   againstVotes,
-  //   requiredAgainstVotes,
-  //   againstPercent,
-  //   votedPower,
-  // } = formatProposal(proposal);
-
-  // const isVotingActive =
-  //   !loading && proposal.combineState === CombineProposalState.Active;
-  // const isVotingFinished =
-  //   !loading && proposal.combineState > CombineProposalState.Active;
-  // const isFinished =
-  //   !loading &&
-  //   (proposal.combineState >= CombineProposalState.Executed ||
-  //     proposal.combineState === CombineProposalState.Failed);
   //
   // const support = proposal.data.votingMachineData.votedInfo.support;
   //
@@ -116,7 +94,7 @@ export function ActiveItem({
     <div className="ProposalListItem">
       <Box
         component={isForHelpModal ? Box : Link}
-        href={ROUTES.proposal(proposalData.proposalId, proposalData.ipfsHash)}
+        href={ROUTES.proposal(proposalData.proposalId)}
         onClick={() => {
           if (!isForHelpModal) {
             setIsClicked(true);
@@ -186,34 +164,34 @@ export function ActiveItem({
                   </Box>
                 </Box>
 
-                {/*{!proposalData.isFinished && (*/}
-                {/*  <Box*/}
-                {/*    sx={{*/}
-                {/*      display: 'flex',*/}
-                {/*      alignItems: 'center',*/}
-                {/*      flexWrap: 'wrap',*/}
-                {/*    }}>*/}
-                {/*    <ProposalStatusWithDate*/}
-                {/*      css={{ mt: 8 }}*/}
-                {/*      status={proposal.combineState}*/}
-                {/*      timestamp={stateTimestamp}*/}
-                {/*      waitForState={waitForState}*/}
-                {/*      isFinished={isFinished}*/}
-                {/*    />*/}
+                {!proposalData.isFinished && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                    }}>
+                    <ProposalStateWithDate
+                      css={{ mt: 8 }}
+                      state={proposalData.state.state}
+                      timestamp={proposalData.state.timestamp}
+                      pendingState={proposalData.pendingState}
+                      isFinished={proposalData.isFinished}
+                    />
 
-                {/*    {!proposalData.isFinished && !proposalData.pendingState && (*/}
-                {/*      <Box sx={{ minWidth: 150 }}>*/}
-                {/*        <ProposalEstimatedStatus*/}
-                {/*          css={{ mt: 8, mr: 12 }}*/}
-                {/*          proposalId={proposal.data.id}*/}
-                {/*          estimatedStatus={estimatedState}*/}
-                {/*          timestamp={timestampForEstimatedState}*/}
-                {/*          isForHelpModal={isForHelpModal}*/}
-                {/*        />*/}
-                {/*      </Box>*/}
-                {/*    )}*/}
-                {/*  </Box>*/}
-                {/*)}*/}
+                    {!proposalData.isFinished && !proposalData.pendingState && (
+                      <Box sx={{ minWidth: 150 }}>
+                        <ProposalNextState
+                          css={{ mt: 8, mr: 12 }}
+                          proposalId={proposalData.proposalId}
+                          state={proposalData.nextState.state}
+                          timestamp={proposalData.nextState.timestamp}
+                          isForHelpModal={isForHelpModal}
+                        />
+                      </Box>
+                    )}
+                  </Box>
+                )}
               </Box>
 
               {/*{isVotingFinished && isVoted && !isFinished && (*/}

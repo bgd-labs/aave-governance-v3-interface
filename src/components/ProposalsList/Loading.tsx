@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
@@ -34,12 +36,13 @@ export function Loading() {
               mb: 8,
               [theme.breakpoints.up('sm')]: { mb: 12 },
               [theme.breakpoints.up('lg')]: { mb: 16 },
-              '.ProposalListItem__title--loading': {
-                height: 17,
-                [theme.breakpoints.up('lg')]: {
-                  height: 21,
+              '.ProposalListItem__title--loading, .ProposalListItem__title--loading > div':
+                {
+                  height: 17,
+                  [theme.breakpoints.up('lg')]: {
+                    height: 21,
+                  },
                 },
-              },
             }}>
             <CustomSkeleton
               className="ProposalListItem__title--loading"
@@ -54,10 +57,11 @@ export function Loading() {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              '.ProposalListItem__status--loading': {
-                height: 13,
-                [theme.breakpoints.up('lg')]: { height: 16 },
-              },
+              '.ProposalListItem__status--loading, .ProposalListItem__status--loading > div':
+                {
+                  height: 13,
+                  [theme.breakpoints.up('lg')]: { height: 16 },
+                },
             }}>
             <Box sx={{ mr: 12 }}>
               <CustomSkeleton

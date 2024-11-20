@@ -131,6 +131,9 @@ importers:
       query-string:
         specifier: ^9.1.0
         version: 9.1.1
+      rc-pagination:
+        specifier: ^4.3.0
+        version: 4.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: 18.3.1
         version: 18.3.1
@@ -164,6 +167,9 @@ importers:
       react-syntax-highlighter:
         specifier: ^15.5.0
         version: 15.6.1(react@18.3.1)
+      react-timer-hook:
+        specifier: ^3.0.8
+        version: 3.0.8(react@18.3.1)
       remark-gemoji:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3113,6 +3119,9 @@ packages:
   citty@0.1.6:
     resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
 
+  classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+
   clean-css@5.3.3:
     resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==}
     engines: {node: '>= 10.0'}
@@ -5731,6 +5740,18 @@ packages:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
 
+  rc-pagination@4.3.0:
+    resolution: {integrity: sha512-UubEWA0ShnroQ1tDa291Fzw6kj0iOeF26IsUObxYTpimgj4/qPCWVFl18RLZE+0Up1IZg0IK4pMn6nB3mjvB7g==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+
+  rc-util@5.43.0:
+    resolution: {integrity: sha512-AzC7KKOXFqAdIBqdGWepL9Xn7cm3vnAmjlHqUnoQaTMZYhM4VlXGLkkHHxj/BZ7Td0+SOPKB4RGPboBVKT9htw==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+
   react-copy-to-clipboard@5.1.0:
     resolution: {integrity: sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==}
     peerDependencies:
@@ -5826,6 +5847,11 @@ packages:
     resolution: {integrity: sha512-OqJ2/vL7lEeV5zTJyG7kmARppUjiB9h9udl4qHQjjgEos66z00Ia0OckwYfRxCSFrW8RJIBnsBwQsHZbVPspqg==}
     peerDependencies:
       react: '>= 0.14.0'
+
+  react-timer-hook@3.0.8:
+    resolution: {integrity: sha512-bi2e7DhPBU1MRPU4ZHaVqBmgM9e2HK0ae8O2AIqwqjcPo4/qR7lVGQonOQLAKOZPQCJSYfV8F5aBWzOLXElzqQ==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -10936,6 +10962,8 @@ snapshots:
     dependencies:
       consola: 3.2.3
 
+  classnames@2.5.1: {}
+
   clean-css@5.3.3:
     dependencies:
       source-map: 0.6.1
@@ -14132,6 +14160,21 @@ snapshots:
 
   range-parser@1.2.1: {}
 
+  rc-pagination@4.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.26.0
+      classnames: 2.5.1
+      rc-util: 5.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  rc-util@5.43.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.26.0
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-is: 18.3.1
+
   react-copy-to-clipboard@5.1.0(react@18.3.1):
     dependencies:
       copy-to-clipboard: 3.3.3
@@ -14288,6 +14331,10 @@ snapshots:
       prismjs: 1.29.0
       react: 18.3.1
       refractor: 3.6.0
+
+  react-timer-hook@3.0.8(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react@18.3.1:
     dependencies:

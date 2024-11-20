@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, useTheme } from '@mui/system';
 import { useTheme as useThemeNext } from 'next-themes';
 import React from 'react';

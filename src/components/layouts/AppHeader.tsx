@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, useTheme } from '@mui/system';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
