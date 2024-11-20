@@ -55,6 +55,7 @@
     "@wagmi/core": "^2.14.2",
     "alova": "2.13.0",
     "bignumber.js": "^9.1.2",
+    "bs58": "^6.0.0",
     "dayjs": "^1.11.12",
     "encoding": "^0.1.13",
     "ethereum-blockies-base64": "^1.0.2",

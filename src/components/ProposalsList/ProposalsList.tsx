@@ -40,6 +40,18 @@ export function ProposalsList({
     (store) => store.initializeProposalsListData,
   );
   const totalProposalsCount = useStore((store) => store.totalProposalsCount);
+  const startActiveProposalsDataPolling = useStore(
+    (store) => store.startActiveProposalsDataPolling,
+  );
+  const stopActiveProposalsDataPolling = useStore(
+    (store) => store.stopActiveProposalsDataPolling,
+  );
+  const startNewProposalsPolling = useStore(
+    (store) => store.startNewProposalsPolling,
+  );
+  const stopNewProposalsPolling = useStore(
+    (store) => store.stopNewProposalsPolling,
+  );
   const proposalsListData = useStore((store) =>
     selectProposalsForActivePage(store, activePage),
   );
@@ -61,6 +73,14 @@ export function ProposalsList({
     proposalsData.activeProposalsData.length,
     proposalsData.finishedProposalsData.length,
   ]);
+  useEffect(() => {
+    startActiveProposalsDataPolling();
+    startNewProposalsPolling();
+    () => {
+      stopActiveProposalsDataPolling();
+      stopNewProposalsPolling();
+    };
+  }, []);
 
   return (
     <Container>

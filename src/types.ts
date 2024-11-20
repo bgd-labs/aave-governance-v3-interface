@@ -21,12 +21,19 @@ export type ProposalInitialStruct = ContractFunctionReturnType<
   typeof IGovernanceCore_ABI,
   AbiStateMutability,
   'getProposal'
->;
+> & {
+  id: number;
+  title?: string;
+};
 export type PayloadInitialStruct = ContractFunctionReturnType<
   typeof IPayloadsControllerDataHelper_ABI,
   AbiStateMutability,
   'getPayloadsData'
->[0];
+>[0] & {
+  id: bigint;
+  chain: bigint;
+  payloadsController: Address;
+};
 export type VMProposalInitialStruct = ContractFunctionReturnType<
   typeof IVotingMachineDataHelper_ABI,
   AbiStateMutability,
@@ -115,17 +122,20 @@ export enum ProposalPendingState {
   WaitForExecutePayloads = 'Pending payloads execution',
 }
 
-// Initial data
-export type InitialData = {
-  contractsConstants: ContractsConstants;
-  configs: VotingConfig[];
-  totalProposalsCount: number;
-};
-
 export enum GovernancePowerType {
   VOTING,
   PROPOSITION,
 }
+
+export type ProposalMetadata = {
+  originalIpfsHash: string;
+  title: string;
+  description: string;
+  ipfsHash: string;
+  discussions: string;
+  author: string;
+  snapshot?: string;
+};
 
 // Proposal list
 export type ProposalOnTheList = {

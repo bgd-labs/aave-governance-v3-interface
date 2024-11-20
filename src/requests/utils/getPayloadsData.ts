@@ -19,15 +19,13 @@ export async function getPayloadsData({
         payloadId: id,
       });
       return {
-        ...data,
-        payload: {
-          id: BigInt(id),
-          data: {
-            ...data.payload,
-            chain: BigInt(chainId),
-            payloadsController: payloadsConfig.contractAddresses[0],
-          },
+        id: BigInt(id),
+        chain: BigInt(chainId),
+        payloadsController: payloadsConfig.contractAddresses[0],
+        data: {
+          ...data.payload,
         },
+        logs: data.logs,
       };
     }),
   );

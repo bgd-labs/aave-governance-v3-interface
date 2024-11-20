@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { fetchActiveProposalsDataForList } from '../../../requests/fetchActiveProposalsDataForList';
 import { fetchProposalsDataByUser } from '../../../requests/fetchProposalsDataByUser';
 import {
   fetchProposalsDataForList,
@@ -20,17 +21,22 @@ export const proposalsListRouter = createTRPCRouter({
     ),
 
   getActive: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async () => {
-      try {
-        throw new Error('TODO: not implemented');
-      } catch (e) {
-        console.error(
-          'Error getting proposals list data from API, using RPC fallback',
-          e,
-        );
-      }
-    }),
+    .input(
+      z.custom<
+        Omit<
+          FetchProposalsDataForListParams,
+          'clients' | 'proposalsIds' | 'proposalsCount'
+        > & {
+          activeIds: number[];
+        }
+      >(),
+    )
+    .query(
+      async (input) =>
+        await fetchActiveProposalsDataForList({
+          input: { ...input.input, clients: serverClients },
+        }),
+    ),
 
   getUserData: publicProcedure
     .input(z.custom<Omit<GetVotingData, 'clients'>>())
