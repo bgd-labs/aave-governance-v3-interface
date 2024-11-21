@@ -13,9 +13,14 @@ export default function LoadingPage() {
   }, []);
   return (
     <Container>
-      {Array.from({ length: PAGE_SIZE }).map((_, index) => (
+      {Array.from({ length: 2 }).map((_, index) => (
         <ProposalListItemWrapper key={index}>
           <Loading />
+        </ProposalListItemWrapper>
+      ))}
+      {Array.from({ length: PAGE_SIZE - 2 }).map((_, index) => (
+        <ProposalListItemWrapper isFinished key={index}>
+          <Loading isFinished />
         </ProposalListItemWrapper>
       ))}
     </Container>

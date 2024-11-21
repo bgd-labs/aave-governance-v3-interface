@@ -47,6 +47,9 @@ export interface IRpcSwitcherSlice {
   setRpcFormError: ({ isError, rpcUrl, chainId }: SetRpcErrorParams) => void;
   rpcFormErrors: Record<string, { error: boolean; chainId: number }>;
   checkRpcUrl: (rpcUrl: string, chainId: number) => Promise<void>;
+
+  isRpcSwitcherChangedView: boolean;
+  setIsRpcSwitcherChangedView: (value: boolean) => void;
 }
 
 export const createRpcSwitcherSlice: StoreSlice<
@@ -249,7 +252,7 @@ export const createRpcSwitcherSlice: StoreSlice<
       // check get logs if initial request success
       try {
         const currentBlock = await getBlock(client, { blockTag: 'latest' });
-
+        // TODO: need fix
         await getPayloadsCreated({
           contractAddress: payloadsControllerContract.address,
           client,
@@ -279,5 +282,10 @@ export const createRpcSwitcherSlice: StoreSlice<
     } catch {
       get().setRpcFormError({ isError: true, rpcUrl, chainId });
     }
+  },
+
+  isRpcSwitcherChangedView: false,
+  setIsRpcSwitcherChangedView: (value) => {
+    set({ isRpcSwitcherChangedView: value });
   },
 });

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import React from 'react';
 
+import { RpcSwitcherPage } from '../../components/RpcSwitcher/RpcSwitcherPage';
 import { metaTexts } from '../../helpers/texts/metaTexts';
 
 export const metadata: Metadata = {
@@ -14,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <h1>Create page</h1>;
+  return <RpcSwitcherPage />;
 }
