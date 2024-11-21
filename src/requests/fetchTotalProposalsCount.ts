@@ -13,7 +13,7 @@ export async function fetchTotalProposalsCount({
     throw new Error('TODO: API not implemented');
   } catch (e) {
     console.error(
-      'Error getting initial configs from API, using RPC fallback',
+      'Error getting proposals count from API, using RPC fallback',
       e,
     );
     return await readContract(input.govCoreClient, {

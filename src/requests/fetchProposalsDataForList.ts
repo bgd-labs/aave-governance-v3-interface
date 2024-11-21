@@ -25,7 +25,7 @@ export async function fetchProposalsDataForList({
     throw new Error('TODO: API not implemented');
   } catch (e) {
     console.error(
-      'Error getting proposals data from API, using RPC fallback',
+      'Error getting proposals data for list from API, using RPC fallback',
       e,
     );
     const proposalsData = (await getProposalsData(input))
