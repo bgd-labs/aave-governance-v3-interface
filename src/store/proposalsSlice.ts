@@ -1,6 +1,5 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
-import { Client } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
 import { PAGE_SIZE } from '../configs/configs';
@@ -15,6 +14,7 @@ import {
   VotingConfig,
 } from '../types';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
+import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 
 export const selectIdsForRequest = (
   ids: number[],
@@ -212,18 +212,12 @@ export const createProposalsSlice: StoreSlice<
         votingConfigs: configs.configs,
         activeIds,
       };
-
-      const clients: Record<number, Client> = {};
-      Object.entries(get().appClients).forEach(([chainId, client]) => {
-        clients[Number(chainId)] = client.instance;
-      });
-
       // TODO: user data
       const proposalsData = await (isForIPFS
         ? fetchActiveProposalsDataForList({
             input: {
               ...input,
-              clients,
+              clients: selectAppClients(get()),
             },
           })
         : api.proposalsList.getActive.query(input));

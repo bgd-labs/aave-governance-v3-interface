@@ -10,6 +10,9 @@ export type IWeb3Slice = IWalletSlice & {
   // need for connect wallet button to not show last tx status always after connected wallet
   walletConnectedTimeLock: boolean;
   connectSigner: () => void;
+
+  connectWalletModalOpen: boolean;
+  setConnectWalletModalOpen: (value: boolean) => void;
 };
 
 export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
@@ -26,5 +29,10 @@ export const createWeb3Slice: StoreSlice<IWeb3Slice, TransactionsSlice> = (
   connectSigner() {
     set({ walletConnectedTimeLock: true });
     setTimeout(() => set({ walletConnectedTimeLock: false }), 1000);
+  },
+
+  connectWalletModalOpen: false,
+  setConnectWalletModalOpen(value) {
+    set({ connectWalletModalOpen: value });
   },
 });

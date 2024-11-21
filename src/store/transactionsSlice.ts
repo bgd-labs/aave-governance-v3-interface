@@ -10,7 +10,13 @@ import {
 import { produce } from 'immer';
 import { Address, Hex } from 'viem';
 
+import { createPayload } from '../components/Create/actions/createPayload';
+import { createProposal } from '../components/Create/actions/createProposal';
 import { gelatoApiKeys } from '../configs/appConfig';
+import { appConfig } from '../old/utils/appConfig';
+import { PayloadAction, ProposalInitialStruct } from '../types';
+import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
+import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 
 export enum TxType {
   createPayload = 'createPayload',
@@ -162,6 +168,30 @@ export type TransactionUnion =
   | ReturnFeesTx;
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion> & {
+  createPayload: ({
+    chainId,
+    payloadActions,
+    payloadsController,
+    payloadId,
+  }: {
+    chainId: number;
+    payloadActions: PayloadAction[];
+    payloadsController: Address;
+    payloadId: number;
+  }) => Promise<void>;
+  createProposal: ({
+    votingPortalAddress,
+    ipfsHash,
+    cancellationFee,
+    proposalsCount,
+    payloads,
+  }: {
+    votingPortalAddress: Address;
+    ipfsHash: Hex;
+    cancellationFee: string;
+    proposalsCount: number;
+  } & Pick<ProposalInitialStruct, 'payloads'>) => Promise<void>;
+
   isGelatoAvailableChains: Record<number, boolean>;
   checkIsGelatoAvailableWithApiKey: (chainId: number) => Promise<void>;
 };
@@ -176,8 +206,54 @@ export type AllTransactions = TxWithStatus[];
 
 export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,
-  IWalletSlice
+  IWalletSlice & IRpcSwitcherSlice
 > = (set, get) => ({
+  createPayload: async ({
+    chainId,
+    payloadActions,
+    payloadsController,
+    payloadId,
+  }) => {
+    await get().executeTx({
+      body: () => {
+        return createPayload({
+          wagmiConfig: get().wagmiConfig,
+          chainId,
+          payloadActions,
+          payloadsController,
+        });
+      },
+      params: {
+        type: TxType.createPayload,
+        desiredChainID: chainId,
+        payload: {
+          chainId,
+          payloadId,
+          payloadsController,
+        },
+      },
+    });
+  },
+
+  createProposal: async (input) => {
+    await get().executeTx({
+      body: () => {
+        return createProposal({
+          wagmiConfig: get().wagmiConfig,
+          clients: selectAppClients(get()),
+          ...input,
+        });
+      },
+      params: {
+        type: TxType.createProposal,
+        desiredChainID: appConfig.govCoreChainId,
+        payload: {
+          proposalId: input.proposalsCount,
+        },
+      },
+    });
+  },
+
   ...createBaseTransactionsSlice<TransactionUnion>({
     txStatusChangedCallback: async () => {
       // const updateProposalData = async (proposalId: number) => {

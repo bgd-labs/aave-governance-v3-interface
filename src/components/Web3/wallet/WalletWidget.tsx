@@ -24,6 +24,12 @@ export function WalletWidget() {
   const disconnectActiveWallet = useStore(
     (store) => store.disconnectActiveWallet,
   );
+  const connectWalletModalOpen = useStore(
+    (store) => store.connectWalletModalOpen,
+  );
+  const setConnectWalletModalOpen = useStore(
+    (store) => store.setConnectWalletModalOpen,
+  );
 
   const activeAddress = activeWallet?.address || '';
 
@@ -36,7 +42,6 @@ export function WalletWidget() {
   );
 
   const [accountInfoModalOpen, setAccountInfoModalOpen] = useState(false);
-  const [connectWalletModalOpen, setConnectWalletModalOpen] = useState(false);
   const [allTransactionModalOpen, setAllTransactionModalOpen] = useState(false);
 
   useEffect(() => {

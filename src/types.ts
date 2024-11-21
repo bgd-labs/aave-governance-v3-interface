@@ -63,6 +63,15 @@ export type ProposalToGetUserData = {
   votingChainId: number;
   snapshotBlockHash: Hex;
 };
+
+export type PayloadAction = {
+  payloadAddress: Address;
+  withDelegateCall: boolean;
+  accessLevel: number;
+  value: number;
+  signature: string;
+  callData?: string;
+};
 // statuses
 export enum InitialProposalState {
   Null, // proposal does not exists
@@ -220,3 +229,13 @@ export type RepresentativeAddress = {
 };
 
 export type RepresentedAddress = { chainId: number; address: Address | '' };
+
+// create proposal
+export type CreateProposalPageParams = {
+  payloadsCount: Record<string, number>;
+  accessLevels: number[];
+  proposalsCount: number;
+  payloadsAvailableIds: Record<string, number[]>;
+  cancellationFee: string;
+  proposalsData: ProposalInitialStruct[];
+};

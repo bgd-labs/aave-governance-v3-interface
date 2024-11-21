@@ -5,10 +5,10 @@ import { IRpcSwitcherSlice } from '../rpcSwitcherSlice';
 export const selectAppClients = (store: IRpcSwitcherSlice) => {
   return Object.entries(store.appClients).reduce(
     (acc, [key, value]) => {
-      acc[key] = value.instance;
+      acc[+key] = value.instance;
       return acc;
     },
-    {} as Record<string, Client>,
+    {} as Record<number, Client>,
   );
 };
 
