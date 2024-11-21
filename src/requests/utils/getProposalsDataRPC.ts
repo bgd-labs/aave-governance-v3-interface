@@ -25,19 +25,19 @@ export async function getProposalsDataRPC({
     ids.map((id) => id),
   );
 
-  return (
-    await readContract(clients[appConfig.govCoreChainId], {
-      abi: IGovernanceDataHelper_ABI,
-      address: appConfig.govCoreConfig.dataHelperContractAddress,
-      functionName: 'getProposalsData',
-      args: [
-        appConfig.govCoreConfig.contractAddress,
-        BigInt(fr),
-        BigInt(to || 0),
-        BigInt(proposalsCount || PAGE_SIZE),
-      ],
-    })
-  ).map((proposal) => {
+  const data = await readContract(clients[appConfig.govCoreChainId], {
+    abi: IGovernanceDataHelper_ABI,
+    address: appConfig.govCoreConfig.dataHelperContractAddress,
+    functionName: 'getProposalsData',
+    args: [
+      appConfig.govCoreConfig.contractAddress,
+      BigInt(fr),
+      BigInt(to || 0),
+      BigInt(proposalsCount || PAGE_SIZE),
+    ],
+  });
+
+  return data.map((proposal) => {
     return {
       id: Number(proposal.id),
       ...proposal.proposalData,

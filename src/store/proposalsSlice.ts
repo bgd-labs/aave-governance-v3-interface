@@ -1,5 +1,6 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { Client } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
 import { PAGE_SIZE } from '../configs/configs';
@@ -45,10 +46,13 @@ export interface IProposalsSlice {
     activeProposalsData: Record<number, ActiveProposalOnTheList>;
     finishedProposalsData: Record<number, ProposalOnTheList>;
   };
-  initializeProposalsListData: (proposalsListData: {
-    activeProposalsData: ActiveProposalOnTheList[];
-    finishedProposalsData: ProposalOnTheList[];
-  }) => void;
+  initializeProposalsListData: (
+    proposalsListData: {
+      activeProposalsData: ActiveProposalOnTheList[];
+      finishedProposalsData: ProposalOnTheList[];
+    },
+    fromServer?: boolean,
+  ) => void;
 
   activeProposalsDataInterval: number | undefined;
   startActiveProposalsDataPolling: () => Promise<void>;
@@ -105,12 +109,20 @@ export const createProposalsSlice: StoreSlice<
     finishedProposalsData: {},
     // TODO: user data
   },
-  initializeProposalsListData: (proposalsListData) => {
+  initializeProposalsListData: (proposalsListData, fromServer) => {
     proposalsListData.activeProposalsData.forEach((proposal) => {
       set((state) =>
         produce(state, (draft) => {
-          draft.proposalsListData.activeProposalsData[proposal.proposalId] =
-            proposal;
+          if (
+            !draft.proposalsListData.activeProposalsData[proposal.proposalId] &&
+            fromServer
+          ) {
+            draft.proposalsListData.activeProposalsData[proposal.proposalId] =
+              proposal;
+          } else if (!fromServer) {
+            draft.proposalsListData.activeProposalsData[proposal.proposalId] =
+              proposal;
+          }
         }),
       );
     });
@@ -200,14 +212,18 @@ export const createProposalsSlice: StoreSlice<
         votingConfigs: configs.configs,
         activeIds,
       };
+
+      const clients: Record<number, Client> = {};
+      Object.entries(get().appClients).forEach(([chainId, client]) => {
+        clients[Number(chainId)] = client.instance;
+      });
+
       // TODO: user data
       const proposalsData = await (isForIPFS
         ? fetchActiveProposalsDataForList({
             input: {
               ...input,
-              clients: Object.values(get().appClients).map(
-                (client) => client.instance,
-              ),
+              clients,
             },
           })
         : api.proposalsList.getActive.query(input));

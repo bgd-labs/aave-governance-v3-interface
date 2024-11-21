@@ -67,7 +67,7 @@ export function ProposalsList({
       proposalsData.activeProposalsData.length ||
       proposalsData.finishedProposalsData.length
     ) {
-      initializeProposalsListData(proposalsData);
+      initializeProposalsListData(proposalsData, true);
     }
   }, [
     proposalsData.activeProposalsData.length,
