@@ -4,8 +4,7 @@ import { writeContract } from '@wagmi/core';
 import { Address, Client, Hex } from 'viem';
 import { Config } from 'wagmi';
 
-import { isForIPFS } from '../../../configs/appConfig';
-import { appConfig } from '../../../old/utils/appConfig';
+import { appConfig, isForIPFS } from '../../../configs/appConfig';
 import { fetchPayloads } from '../../../requests/fetchPayloads';
 import { api } from '../../../trpc/client';
 import { ProposalInitialStruct } from '../../../types';
@@ -43,7 +42,6 @@ export async function createProposal({
                   Number(payload.chain) === Number(chainId) &&
                   payload.payloadsController === controller,
               )
-              .flat()
               .map((payload) => payload.payloadId);
 
             const input = {

@@ -12,8 +12,7 @@ import { Address, Hex } from 'viem';
 
 import { createPayload } from '../components/Create/actions/createPayload';
 import { createProposal } from '../components/Create/actions/createProposal';
-import { gelatoApiKeys } from '../configs/appConfig';
-import { appConfig } from '../old/utils/appConfig';
+import { appConfig, gelatoApiKeys } from '../configs/appConfig';
 import { PayloadAction, ProposalInitialStruct } from '../types';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';

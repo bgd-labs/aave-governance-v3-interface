@@ -107,6 +107,7 @@ export function getInitialRpcUrls({
     ],
     // testnets
     [sepolia.id]: [
+      'https://sepolia.drpc.org',
       'https://eth-sepolia.public.blastapi.io',
       'https://endpoints.omniatech.io/v1/eth/sepolia/public',
       'https://ethereum-sepolia.blockpi.network/v1/rpc/public',

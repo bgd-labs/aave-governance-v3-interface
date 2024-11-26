@@ -5,14 +5,12 @@ import {
   getLocalStorageAppMode,
   getLocalStorageGaslessVote,
   getLocalStorageTermsAccept,
+  getLocalStorageTutorialStartButtonClicked,
   setLocalStorageAppMode,
   setLocalStorageGaslessVote,
   setLocalStorageTermsAccept,
-} from '../configs/localStorage';
-import {
-  getLocalStorageTutorialStartButtonClicked,
   setLocalStorageTutorialStartButtonClicked,
-} from '../old/utils/localStorage';
+} from '../configs/localStorage';
 import { AppModeType } from '../types';
 import { TransactionsSlice } from './transactionsSlice';
 

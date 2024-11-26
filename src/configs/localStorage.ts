@@ -16,6 +16,7 @@ export enum LocalStorageKeys {
   AppMode = 'appMode',
   EnsAddresses = 'EnsAddresses',
   RpcUrls = 'rpcs_urls_4',
+  TutorialStartButtonClicked = 'tutorialStartButtonClicked',
 }
 
 // for ENS
@@ -72,4 +73,15 @@ export const getLocalStorageAppMode = () => {
 
 export const setLocalStorageAppMode = (value: AppModeType) => {
   return localStorage?.setItem(LocalStorageKeys.AppMode, value);
+};
+
+export const getLocalStorageTutorialStartButtonClicked = () => {
+  return localStorage?.getItem(LocalStorageKeys.TutorialStartButtonClicked);
+};
+
+export const setLocalStorageTutorialStartButtonClicked = (value: string) => {
+  return localStorage?.setItem(
+    LocalStorageKeys.TutorialStartButtonClicked,
+    value,
+  );
 };

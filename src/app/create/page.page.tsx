@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 3;
+
 export default async function Page() {
   const [configs, count] = await Promise.all([
     await api.configs.get(),

@@ -51,31 +51,31 @@ export function CreateProposalForm({
   const [selectedPayloads, setSelectedPayloads] = useState<
     Record<
       string,
-      { id?: number; chainId?: number; payloadsController?: string }
+      { payloadId?: number; chain?: bigint; payloadsController?: string }
     >
   >({});
 
   const handleSelectPayload = (
     fieldName: string,
-    id?: number,
-    chainId?: number,
+    payloadId?: number,
+    chain?: bigint,
     payloadsController?: string,
   ) => {
     if (selectedPayloads[fieldName]) {
-      if (typeof chainId !== 'undefined') {
+      if (typeof chain !== 'undefined') {
         const selectedPayload = {
           [fieldName]: {
-            id: selectedPayloads[fieldName].id,
-            chainId,
+            payloadId: selectedPayloads[fieldName].payloadId,
+            chain,
             payloadsController: selectedPayloads[fieldName].payloadsController,
           },
         };
         setSelectedPayloads({ ...selectedPayloads, ...selectedPayload });
-      } else if (typeof id !== 'undefined') {
+      } else if (typeof payloadId !== 'undefined') {
         const selectedPayload = {
           [fieldName]: {
-            id,
-            chainId: selectedPayloads[fieldName].chainId,
+            payloadId,
+            chain: selectedPayloads[fieldName].chain,
             payloadsController: selectedPayloads[fieldName].payloadsController,
           },
         };
@@ -83,21 +83,21 @@ export function CreateProposalForm({
       } else if (typeof payloadsController !== 'undefined') {
         const selectedPayload = {
           [fieldName]: {
-            id: selectedPayloads[fieldName].id,
-            chainId: selectedPayloads[fieldName].chainId,
-            payloadsController: payloadsController,
+            payloadId: selectedPayloads[fieldName].payloadId,
+            chain: selectedPayloads[fieldName].chain,
+            payloadsController,
           },
         };
         setSelectedPayloads({ ...selectedPayloads, ...selectedPayload });
       } else {
         const selectedPayload = {
-          [fieldName]: { id, chainId, payloadsController },
+          [fieldName]: { payloadId, chain, payloadsController },
         };
         setSelectedPayloads({ ...selectedPayloads, ...selectedPayload });
       }
     } else {
       const selectedPayload = {
-        [fieldName]: { id, chainId, payloadsController },
+        [fieldName]: { payloadId, chain, payloadsController },
       };
       setSelectedPayloads({ ...selectedPayloads, ...selectedPayload });
     }
@@ -119,12 +119,13 @@ export function CreateProposalForm({
     setSelectedPayloads(updatedSelectedPayloads);
     const selectedIds = Object.values(selectedPayloads)
       .filter((payload) => payload.payloadsController === payloadsController)
-      .map((payload) => payload.id);
+      .map((payload) => payload.payloadId);
 
     const availablePayloadsIds = getAvailablePayloadsIdsByChainId({
       chainId:
-        Object.values(selectedPayloads).map((payload) => payload.chainId)[0] ??
-        appConfig.govCoreChainId,
+        Object.values(selectedPayloads).map((payload) =>
+          Number(payload.chain),
+        )[0] ?? appConfig.govCoreChainId,
       proposalsCount,
       proposalsData,
       payloadsCount,
@@ -145,12 +146,12 @@ export function CreateProposalForm({
         ].contractAddresses.map((controller) => {
           const selectedIds = Object.values(selectedPayloads)
             .filter((payload) => payload.payloadsController === controller)
-            .map((payload) => payload.id);
+            .map((payload) => payload.payloadId);
 
           const availablePayloadsIds = getAvailablePayloadsIdsByChainId({
             chainId:
-              Object.values(selectedPayloads).map(
-                (payload) => payload.chainId,
+              Object.values(selectedPayloads).map((payload) =>
+                Number(payload.chain),
               )[0] ?? appConfig.govCoreChainId,
             proposalsCount,
             proposalsData,
@@ -332,7 +333,7 @@ export function CreateProposalForm({
                               handleDeletePayload(name);
                             }}>
                             <Field
-                              name={`${name}.chainId`}
+                              name={`${name}.chain`}
                               type="number"
                               validate={composeValidators(required)}
                               options={appConfig.payloadsControllerChainIds}>
@@ -354,15 +355,15 @@ export function CreateProposalForm({
                                     value={props.input.value}
                                     onChange={(event) => {
                                       fields.update(index, {
-                                        id: undefined,
-                                        chainId: event,
+                                        payloadId: undefined,
+                                        chain: BigInt(event),
                                         payloadsController: undefined,
                                       });
                                       props.input.onChange(event);
                                       const selectedPayload = {
                                         [name]: {
-                                          id: undefined,
-                                          event,
+                                          payloadId: undefined,
+                                          chain: BigInt(event),
                                           payloadsController: undefined,
                                         },
                                       };
@@ -427,7 +428,7 @@ export function CreateProposalForm({
                               typeof values.payloads[index]
                                 .payloadsController !== 'undefined' && (
                                 <Field
-                                  name={`${name}.id`}
+                                  name={`${name}.payloadId`}
                                   type="number"
                                   validate={composeValidators(required)}
                                   options={
