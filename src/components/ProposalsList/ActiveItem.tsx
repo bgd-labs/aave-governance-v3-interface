@@ -94,7 +94,11 @@ export function ActiveItem({
     <div className="ProposalListItem">
       <Box
         component={isForHelpModal ? Box : Link}
-        href={ROUTES.proposal(proposalData.proposalId)}
+        href={
+          proposalData.isNew
+            ? ROUTES.proposal(proposalData.proposalId, proposalData.isNew)
+            : ROUTES.proposal(proposalData.proposalId)
+        }
         onClick={() => {
           if (!isForHelpModal) {
             setIsClicked(true);

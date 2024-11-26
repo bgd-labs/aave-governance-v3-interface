@@ -120,8 +120,10 @@ export const createProposalsSlice: StoreSlice<
             draft.proposalsListData.activeProposalsData[proposal.proposalId] =
               proposal;
           } else if (!fromServer) {
-            draft.proposalsListData.activeProposalsData[proposal.proposalId] =
-              proposal;
+            draft.proposalsListData.activeProposalsData[proposal.proposalId] = {
+              ...proposal,
+              isNew: true,
+            };
           }
         }),
       );

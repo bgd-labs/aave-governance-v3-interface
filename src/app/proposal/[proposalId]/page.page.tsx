@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
+import { ProposalDetailsInitializer } from '../../../components/ProposalsDetails/ProposalDetailsInitializer';
 import { metaTexts } from '../../../helpers/texts/metaTexts';
 import { api } from '../../../trpc/server';
 
@@ -23,12 +24,26 @@ export async function generateStaticParams() {
   }));
 }
 
-export const revalidate = 3600;
+export const revalidate = 3600 * 3;
 
-export default function Page({ params }: { params: { proposalId: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: { proposalId: string };
+}) {
   const proposalId = +params.proposalId;
   if (isNaN(proposalId)) {
-    notFound(); // TODO: should be dynamic proposal page
+    notFound();
   }
-  return <h1>Proposal id {proposalId}</h1>;
+  const [configs, count] = await Promise.all([
+    await api.configs.get(),
+    await api.configs.getProposalsCount(),
+  ]);
+  return (
+    <ProposalDetailsInitializer
+      proposalId={proposalId}
+      configs={configs}
+      count={Number(count)}
+    />
+  );
 }
