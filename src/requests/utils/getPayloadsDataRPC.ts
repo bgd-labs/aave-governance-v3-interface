@@ -3,8 +3,7 @@ import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
-import { PayloadInitialStruct } from '../../types';
-import { GetPayloadsData } from './getPayloadsData';
+import { GetPayloadsData, PayloadInitialStruct } from '../../types';
 
 export async function getPayloadsDataRPC({
   chainId,

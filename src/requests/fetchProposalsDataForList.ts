@@ -1,9 +1,9 @@
 import { Client } from 'viem';
 
-import { ContractsConstants, VotingConfig } from '../types';
+import { ContractsConstants, GetProposalsData, VotingConfig } from '../types';
 import { getDataForList } from './utils/getDataForList';
-import { getPayloadsData } from './utils/getPayloadsData';
-import { GetProposalsData, getProposalsData } from './utils/getProposalsData';
+import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
+import { getProposalsDataRPC } from './utils/getProposalsDataRPC';
 
 export type FetchProposalsDataForListParams = Pick<
   ContractsConstants,
@@ -28,18 +28,18 @@ export async function fetchProposalsDataForList({
       'Error getting proposals data for list from API, using RPC fallback',
       e,
     );
-    const proposalsData = (await getProposalsData(input))
-      .sort((a, b) => b.proposal.id - a.proposal.id)
+    const proposalsData = (await getProposalsDataRPC(input))
+      .sort((a, b) => b.id - a.id)
       .map((proposal) => {
         return {
-          ...proposal.proposal,
-          title: proposal.ipfs?.title,
+          ...proposal,
+          title: `Proposal ${proposal.id}`,
         };
       });
     return await getDataForList({
       input,
       proposals: proposalsData,
-      getPayloadsData: ({ ...props }) => getPayloadsData({ ...props }),
+      getPayloadsData: ({ ...props }) => getPayloadsDataRPC({ ...props }),
     });
   }
 }

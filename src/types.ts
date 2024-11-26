@@ -239,3 +239,16 @@ export type CreateProposalPageParams = {
   cancellationFee: string;
   proposalsData: ProposalInitialStruct[];
 };
+
+// requessts
+export type GetPayloadsData = {
+  chainId: number;
+  payloadsIds: number[];
+  clients: Record<number, Client>;
+};
+
+export type GetProposalsData = {
+  proposalsCount?: number;
+  proposalsIds?: number[];
+  clients: Record<number, Client>;
+};

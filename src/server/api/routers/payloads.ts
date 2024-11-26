@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { fetchPayloads } from '../../../requests/fetchPayloads';
 import { serverClients } from '../../../requests/utils/chains';
-import { GetPayloadsData } from '../../../requests/utils/getPayloadsData';
+import { GetPayloadsData } from '../../../types';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const payloadsRouter = createTRPCRouter({

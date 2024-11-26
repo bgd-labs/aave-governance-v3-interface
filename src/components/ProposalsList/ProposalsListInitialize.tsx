@@ -1,20 +1,25 @@
 import { selectIdsForRequest } from '../../store/proposalsSlice';
 import { api } from '../../trpc/server';
+import { ContractsConstants, VotingConfig } from '../../types';
 import { Container } from '../primitives/Container';
 import { NoData } from './NoData';
 import { NoFilteredData } from './NoFilteredData';
 import { ProposalsList } from './ProposalsList';
 
+export const revalidate = 3600;
+
 export async function ProposalsListInitialize({
   activePage,
+  configs,
+  count,
 }: {
   activePage: number;
+  configs: {
+    configs: VotingConfig[];
+    contractsConstants: ContractsConstants;
+  };
+  count: bigint;
 }) {
-  const [configs, count] = await Promise.all([
-    await api.configs.get(),
-    await api.configs.getProposalsCount(),
-  ]);
-
   if (count === 0n) {
     return (
       <Container>

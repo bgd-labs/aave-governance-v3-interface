@@ -124,7 +124,7 @@ export function CreateProposalForm({
     const availablePayloadsIds = getAvailablePayloadsIdsByChainId({
       chainId:
         Object.values(selectedPayloads).map((payload) => payload.chainId)[0] ??
-        1,
+        appConfig.govCoreChainId,
       proposalsCount,
       proposalsData,
       payloadsCount,
@@ -151,7 +151,7 @@ export function CreateProposalForm({
             chainId:
               Object.values(selectedPayloads).map(
                 (payload) => payload.chainId,
-              )[0] ?? 1,
+              )[0] ?? appConfig.govCoreChainId,
             proposalsCount,
             proposalsData,
             payloadsCount,

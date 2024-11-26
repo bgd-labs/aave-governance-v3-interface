@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 
 import { ProposalsListInitialize } from '../components/ProposalsList/ProposalsListInitialize';
 import { metaTexts } from '../helpers/texts/metaTexts';
+import { api } from '../trpc/server';
 
 export const metadata: Metadata = {
   title: `${metaTexts.ipfsTitle}`,
@@ -13,8 +14,14 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
+export const revalidate = 3600 * 3;
 
 export default async function Page() {
-  return <ProposalsListInitialize activePage={1} />;
+  const [configs, count] = await Promise.all([
+    await api.configs.get(),
+    await api.configs.getProposalsCount(),
+  ]);
+  return (
+    <ProposalsListInitialize activePage={1} configs={configs} count={count} />
+  );
 }

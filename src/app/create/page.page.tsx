@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
 import React from 'react';
 
+import { CreateProposalPage } from '../../components/Create/CreateProposalPage';
 import { metaTexts } from '../../helpers/texts/metaTexts';
+import { api } from '../../trpc/server';
 
 export const metadata: Metadata = {
   title: `${metaTexts.main}${metaTexts.createPageMetaTitle}`,
@@ -13,6 +15,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Page() {
-  return <h1>Create page</h1>;
+export default async function Page() {
+  const [configs, count] = await Promise.all([
+    await api.configs.get(),
+    await api.configs.getProposalsCount(),
+  ]);
+
+  const data = await api.createProposal.get({ proposalsCount: count });
+
+  return (
+    <CreateProposalPage
+      proposalsCount={Number(count)}
+      proposalsData={data.proposalsData}
+      payloadsCount={data.payloadsCounts}
+      accessLevels={[1, 2]}
+      cancellationFee={configs.contractsConstants.cancellationFee.toString(10)}
+      payloadsAvailableIds={data.payloadsAvailableIds}
+    />
+  );
 }

@@ -1,4 +1,5 @@
-import { GetPayloadsData, getPayloadsData } from './utils/getPayloadsData';
+import { GetPayloadsData } from '../types';
+import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
 
 export async function fetchPayloads({ input }: { input: GetPayloadsData }) {
   try {
@@ -8,6 +9,6 @@ export async function fetchPayloads({ input }: { input: GetPayloadsData }) {
       'Error getting payloads data from API, using RPC fallback',
       e,
     );
-    return await getPayloadsData({ ...input });
+    return await getPayloadsDataRPC({ ...input });
   }
 }

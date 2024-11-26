@@ -4,6 +4,7 @@ import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
 import {
+  GetPayloadsData,
   InitialPayloadState,
   InitialProposalState,
   PayloadInitialStruct,
@@ -14,7 +15,6 @@ import {
   formatActiveProposalData,
   getStateAndTimestampForFinishedProposal,
 } from './formatProposalData';
-import { GetPayloadsData } from './getPayloadsData';
 import { getVotingData } from './getVotingData';
 
 export async function getDataForList({
