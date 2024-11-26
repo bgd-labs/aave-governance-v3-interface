@@ -25,16 +25,26 @@ export async function generateStaticParams() {
   }));
 }
 
-export const revalidate = 3600;
+export const revalidate = 3600 * 3;
 
 export default async function Page({
   params,
 }: {
   params: { activePage: string };
 }) {
+  const [configs, count] = await Promise.all([
+    await api.configs.get(),
+    await api.configs.getProposalsCount(),
+  ]);
   const activePage = +params.activePage;
   if (isNaN(activePage)) {
     notFound();
   }
-  return <ProposalsListInitialize activePage={activePage} />;
+  return (
+    <ProposalsListInitialize
+      count={count}
+      configs={configs}
+      activePage={activePage}
+    />
+  );
 }
