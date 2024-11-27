@@ -19,7 +19,7 @@ export function FinishedItem({ data }: { data: ProposalOnTheList }) {
     <div className="ProposalListItem">
       <Box
         component={Link}
-        href={ROUTES.proposal(data.proposalId)}
+        href={ROUTES.proposal(data.proposalId, data.ipfsHash)}
         onClick={() => setIsClicked(true)}>
         <ProposalListItemWrapper
           isVotingActive={false}

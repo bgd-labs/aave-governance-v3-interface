@@ -174,7 +174,7 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   againstVotes: number;
   requiredAgainstVotes: number;
   againstPercent: number;
-  isNew?: boolean;
+  isActive?: boolean;
 };
 
 export type ProposalItemDataByUser = Pick<ProposalOnTheList, 'proposalId'> & {

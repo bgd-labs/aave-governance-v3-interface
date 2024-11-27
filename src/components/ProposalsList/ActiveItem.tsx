@@ -95,9 +95,13 @@ export function ActiveItem({
       <Box
         component={isForHelpModal ? Box : Link}
         href={
-          proposalData.isNew
-            ? ROUTES.proposal(proposalData.proposalId, proposalData.isNew)
-            : ROUTES.proposal(proposalData.proposalId)
+          proposalData.isActive
+            ? ROUTES.proposal(
+                proposalData.proposalId,
+                proposalData.ipfsHash,
+                proposalData.isActive,
+              )
+            : ROUTES.proposal(proposalData.proposalId, proposalData.ipfsHash)
         }
         onClick={() => {
           if (!isForHelpModal) {

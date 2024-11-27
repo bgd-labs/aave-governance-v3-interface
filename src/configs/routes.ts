@@ -2,8 +2,10 @@ export const ROUTES = {
   main: '/',
   delegate: '/delegate/',
   representations: '/representations/',
-  proposal: (proposalId: number, isNew?: boolean) =>
-    isNew ? `/proposal/?proposalId=${proposalId}` : `/proposal/${proposalId}/`,
+  proposal: (proposalId: number, ipfsHash: string, isActive?: boolean) =>
+    isActive
+      ? `/proposal/?proposalId=${proposalId}_${ipfsHash}`
+      : `/proposal/${proposalId}_${ipfsHash}/`,
   rpcSwitcher: '/rpc-switcher/',
   proposalCreateOverview: '/proposal-create-overview/',
   payloadsExplorer: '/payloads-explorer/',

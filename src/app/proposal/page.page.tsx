@@ -1,18 +1,14 @@
-import { Metadata } from 'next';
-
 import { ProposalDetailsInitializer } from '../../components/ProposalsDetails/ProposalDetailsInitializer';
-import { metaTexts } from '../../helpers/texts/metaTexts';
+import { generateDetailsMetadata } from '../../helpers/generateDetailsMetadata';
 import { api } from '../../trpc/server';
 
-export const metadata: Metadata = {
-  title: metaTexts.ipfsTitle,
-  description: metaTexts.ipfsDescription,
-  openGraph: {
-    images: ['/metaLogo.jpg'],
-    title: metaTexts.ipfsTitle,
-    description: metaTexts.ipfsDescription,
-  },
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { proposalId: string };
+}) {
+  return await generateDetailsMetadata({ params: searchParams });
+}
 
 export const revalidate = 3600 * 3;
 

@@ -122,7 +122,7 @@ export const createProposalsSlice: StoreSlice<
           } else if (!fromServer) {
             draft.proposalsListData.activeProposalsData[proposal.proposalId] = {
               ...proposal,
-              isNew: true,
+              isActive: true,
             };
           }
         }),

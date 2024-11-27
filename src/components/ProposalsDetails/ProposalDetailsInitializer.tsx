@@ -11,7 +11,7 @@ export function ProposalDetailsInitializer({
   configs,
   count,
 }: {
-  proposalId?: number;
+  proposalId?: string;
   configs: {
     configs: VotingConfig[];
     contractsConstants: ContractsConstants;
@@ -23,7 +23,7 @@ export function ProposalDetailsInitializer({
     (store) => store.initializeProposalsCount,
   );
 
-  const [idFromQuery, setIdFromQuery] = useState<number | null>(null);
+  const [idFromQuery, setIdFromQuery] = useState<string | null>(null);
 
   useEffect(() => {
     initializeConfigs(configs);
@@ -39,13 +39,13 @@ export function ProposalDetailsInitializer({
     for (const [key, value] of queryParams.entries()) {
       if (value) {
         if (key === 'proposalId') {
-          setIdFromQuery(Number(value));
+          setIdFromQuery(value);
         }
       }
     }
   }, []);
 
-  const id = proposalId ?? idFromQuery ?? -1;
+  const id = proposalId?.split('_')[0] ?? idFromQuery?.split('_')[0] ?? -1;
 
   return (
     <Container>
