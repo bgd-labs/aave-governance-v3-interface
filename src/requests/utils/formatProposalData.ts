@@ -595,6 +595,8 @@ export function formatActiveProposalData({
     nextState,
     pendingState,
     votingChainId: voting.votingChainId,
+    snapshotBlockHash: core.snapshotBlockHash,
+    votingAssets: voting.votingAssets as string[],
     isVotingActive,
     isVotingFinished: state.state > ProposalState.Voting,
     isFinished: state.state > ProposalState.Succeed,

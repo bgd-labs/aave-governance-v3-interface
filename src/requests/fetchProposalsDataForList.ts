@@ -11,8 +11,6 @@ export type FetchProposalsDataForListParams = Pick<
 > &
   GetProposalsData & {
     votingConfigs: VotingConfig[];
-    userAddress?: string;
-    representativeAddress?: string;
     clients: Record<number, Client>;
   };
 

@@ -1,4 +1,4 @@
-import { selectIdsForRequest } from '../../store/proposalsSlice';
+import { selectIdsForRequest } from '../../store/proposalsListSlice';
 import { api } from '../../trpc/server';
 import { ContractsConstants, VotingConfig } from '../../types';
 import { Container } from '../primitives/Container';

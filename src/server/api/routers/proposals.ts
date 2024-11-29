@@ -6,12 +6,14 @@ import {
   FetchProposalByIdParams,
 } from '../../../requests/fetchProposalById';
 import { fetchProposalsBalancesByUser } from '../../../requests/fetchProposalsBalancesByUser';
+import { fetchProposalsDataByUser } from '../../../requests/fetchProposalsDataByUser';
 import { serverClients } from '../../../requests/utils/chains';
+import { GetVotingDataRPC } from '../../../requests/utils/getVotingDataRPC';
 import { GetVotingPowerWithDelegationByBlockHashRPC } from '../../../requests/utils/getVotingPowerWithDelegationByBlockHashRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const proposalsRouter = createTRPCRouter({
-  getBalances: publicProcedure
+  getWalletBalancesForProposal: publicProcedure
     .input(
       z.custom<Omit<GetVotingPowerWithDelegationByBlockHashRPC, 'client'>>(),
     )
@@ -22,6 +24,14 @@ export const proposalsRouter = createTRPCRouter({
             ...input.input,
             client: serverClients[appConfig.govCoreChainId],
           },
+        }),
+    ),
+  getProposalVotedData: publicProcedure
+    .input(z.custom<Omit<GetVotingDataRPC, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchProposalsDataByUser({
+          input: { ...input.input, clients: serverClients },
         }),
     ),
   getProposalById: publicProcedure

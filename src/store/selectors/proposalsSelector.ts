@@ -1,7 +1,11 @@
-import { IProposalsSlice, selectIdsForRequest } from '../proposalsSlice';
+import {
+  IProposalsListSlice,
+  selectIdsForRequest,
+} from '../proposalsListSlice';
+import { IProposalsSlice } from '../proposalsSlice';
 
 export const selectProposalsForActivePage = (
-  store: IProposalsSlice,
+  store: IProposalsSlice & IProposalsListSlice,
   activePage: number,
 ) => {
   if (store.totalProposalsCount !== -1) {
@@ -32,4 +36,19 @@ export const selectProposalsForActivePage = (
       finishedProposalsData: [],
     };
   }
+};
+
+export const selectProposalDataByUser = ({
+  votedData,
+  votingBalances,
+  walletAddress,
+  snapshotBlockHash,
+}: {
+  walletAddress: string;
+  snapshotBlockHash: string;
+} & Pick<IProposalsSlice, 'votedData' | 'votingBalances'>) => {
+  return {
+    voted: votedData[`${walletAddress}_${snapshotBlockHash}`],
+    voting: votingBalances[`${walletAddress}_${snapshotBlockHash}`],
+  };
 };

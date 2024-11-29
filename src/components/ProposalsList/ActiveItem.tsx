@@ -1,20 +1,25 @@
 'use client';
 
 import { Box, useTheme } from '@mui/system';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { zeroAddress } from 'viem';
 
 import { ROUTES } from '../../configs/routes';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
+import { selectProposalDataByUser } from '../../store/selectors/proposalsSelector';
+import { disablePageLoader } from '../../styles/disablePageLoader';
 import { ActiveProposalOnTheList } from '../../types';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
 import { Link } from '../Link';
 import { ProposalNextState } from '../ProposalNextState';
 import { ProposalStateWithDate } from '../ProposalStateWithDate';
 import { VoteBar } from '../VoteBar';
-import { Loading } from './Loading';
+import { VotedState } from '../VotedState';
 import { ProposalListItemFinalState } from './ProposalListItemFinalState';
 import { ProposalListItemWrapper } from './ProposalListItemWrapper';
+import { VoteButton } from './VoteButton';
+import { VotingPower } from './VotingPower';
 
 interface ActiveProposalListItemProps {
   proposalData: ActiveProposalOnTheList;
@@ -31,39 +36,42 @@ export function ActiveItem({
 
   const isRendered = useStore((state) => state.isRendered);
   const activeWallet = useStore((state) => state.activeWallet);
+  const balanceLoading = useStore(
+    (state) => state.userDataLoadings[proposalData.proposalId],
+  );
+  const votingBalances = useStore((state) => state.votingBalances);
+  const votedData = useStore((state) => state.votedData);
+
+  const userProposalData = selectProposalDataByUser({
+    votingBalances,
+    votedData,
+    walletAddress: activeWallet?.address ?? zeroAddress,
+    snapshotBlockHash: proposalData.snapshotBlockHash,
+  });
+
+  console.log(proposalData.proposalId, userProposalData);
 
   const [isClicked, setIsClicked] = useState(false);
-  // const [isIPFSError, setIsIpfsError] = useState(
-  //   ipfsDataErrors[proposal.data.ipfsHash] && !ipfsData[proposal.data.ipfsHash],
-  // );
-  //
-  // useEffect(() => {
-  //   setIsIpfsError(
-  //     ipfsDataErrors[proposal.data.ipfsHash] &&
-  //       !ipfsData[proposal.data.ipfsHash],
-  //   );
-  // }, [isIPFSError, Object.keys(ipfsDataErrors).length]);
+  const [votingPower, setVotingPower] = useState(0n);
 
-  // if (isForHelpModal) {
-  //   activeWallet = {
-  //     walletType: WalletType.Injected,
-  //     address: zeroAddress,
-  //     chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
-  //     chainId: appConfig.govCoreChainId,
-  //     connectorClient: appClients[appConfig.govCoreChainId].instance,
-  //     isActive: true,
-  //     isContractAddress: false,
-  //   };
-  // }
-  //
-  // const support = proposal.data.votingMachineData.votedInfo.support;
-  //
-  // const isVoted = votedPower > 0;
+  useEffect(() => {
+    setVotingPower(
+      userProposalData.voted && userProposalData.voting
+        ? userProposalData.voted.isVoted
+          ? userProposalData.voted.votedInfo.votedPower
+          : userProposalData.voting
+              .map((power) => power.votingPower)
+              .reduce((acc, num) => acc + num, 0n)
+        : 0n,
+    );
+  }, [userProposalData.voting]);
 
-  // const handleVoteButtonClick = (proposalId: number) => {
-  //   voteButtonClick(proposalId);
-  //   disablePageLoader();
-  // };
+  const handleVoteButtonClick = (proposalId: number) => {
+    if (voteButtonClick) {
+      voteButtonClick(proposalId);
+      disablePageLoader();
+    }
+  };
 
   const VotingNotStarted = ({
     withoutMaxWidth,
@@ -121,9 +129,6 @@ export function ActiveItem({
           isForHelpModal={isForHelpModal}
           isFinished={proposalData.isFinished}
           disabled={isClicked}>
-          {/*{loading ? (*/}
-          {/*  <Loading />*/}
-          {/*) : (*/}
           <>
             <Box
               sx={{
@@ -202,109 +207,116 @@ export function ActiveItem({
                 )}
               </Box>
 
-              {/*{isVotingFinished && isVoted && !isFinished && (*/}
-              {/*  <Box*/}
-              {/*    sx={{*/}
-              {/*      display: 'none',*/}
-              {/*      [theme.breakpoints.up('md')]: {*/}
-              {/*        display: 'block',*/}
-              {/*      },*/}
-              {/*    }}>*/}
-              {/*    <VotedState*/}
-              {/*      isBig*/}
-              {/*      css={{*/}
-              {/*        display: 'flex',*/}
-              {/*        flexDirection: 'column',*/}
-              {/*        alignItems: 'center',*/}
-              {/*        span: {*/}
-              {/*          display: 'block',*/}
-              {/*          mt: 4,*/}
-              {/*          color: '$text',*/}
-              {/*        },*/}
-              {/*      }}*/}
-              {/*      support={support}*/}
-              {/*    />*/}
-              {/*  </Box>*/}
-              {/*)}*/}
+              {proposalData.isVotingFinished &&
+                userProposalData.voted.isVoted &&
+                !proposalData.isFinished && (
+                  <Box
+                    sx={{
+                      display: 'none',
+                      [theme.breakpoints.up('md')]: {
+                        display: 'block',
+                      },
+                    }}>
+                    <VotedState
+                      isBig
+                      css={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        span: {
+                          display: 'block',
+                          mt: 4,
+                          color: '$text',
+                        },
+                      }}
+                      support={userProposalData.voted.votedInfo.support}
+                    />
+                  </Box>
+                )}
 
-              {/*{!isVotingFinished && (*/}
-              {/*  <Box*/}
-              {/*    sx={{*/}
-              {/*      display: 'none',*/}
-              {/*      [theme.breakpoints.up('md')]: {*/}
-              {/*        display: 'flex',*/}
-              {/*        flexDirection: 'column',*/}
-              {/*        alignItems: 'center',*/}
-              {/*        justifyContent: 'center',*/}
-              {/*      },*/}
-              {/*    }}>*/}
-              {/*    {activeWallet?.isActive ? (*/}
-              {/*      <>*/}
-              {/*        {isVotingActive ? (*/}
-              {/*          <>*/}
-              {/*            <VotingPower*/}
-              {/*              balanceLoading={balanceLoading}*/}
-              {/*              isVoted={isVoted}*/}
-              {/*              votingPower={isVoted ? votedPower : votingPower}*/}
-              {/*              isForHelpModal={isForHelpModal}*/}
-              {/*              votingChainId={proposal.data.votingChainId}*/}
-              {/*            />*/}
-              {/*            <Box sx={{ mt: 8 }}>*/}
-              {/*              {isVoted ? (*/}
-              {/*                <VotedState support={support} />*/}
-              {/*              ) : (*/}
-              {/*                <VoteButton*/}
-              {/*                  balanceLoading={balanceLoading}*/}
-              {/*                  votingPower={votingPower}*/}
-              {/*                  proposalId={proposal.data.id}*/}
-              {/*                  onClick={handleVoteButtonClick}*/}
-              {/*                  votingChainId={proposal.data.votingChainId}*/}
-              {/*                  isForHelpModal={isForHelpModal}*/}
-              {/*                />*/}
-              {/*              )}*/}
-              {/*            </Box>*/}
-              {/*          </>*/}
-              {/*        ) : (*/}
-              {/*          <Box*/}
-              {/*            component="div"*/}
-              {/*            sx={{*/}
-              {/*              typography: 'body',*/}
-              {/*              color: '$textSecondary',*/}
-              {/*              textAlign: 'center',*/}
-              {/*            }}>*/}
-              {/*            <VotingNotStarted />*/}
-              {/*          </Box>*/}
-              {/*        )}*/}
-              {/*      </>*/}
-              {/*    ) : (*/}
-              {/*      <>*/}
-              {/*        {isVotingActive && !isVotingFinished ? (*/}
-              {/*          <Box*/}
-              {/*            component="p"*/}
-              {/*            sx={{*/}
-              {/*              typography: 'body',*/}
-              {/*              color: '$textSecondary',*/}
-              {/*              textAlign: 'center',*/}
-              {/*            }}>*/}
-              {/*            {texts.proposals.walletNotConnected}*/}
-              {/*          </Box>*/}
-              {/*        ) : (*/}
-              {/*          !isVotingActive && (*/}
-              {/*            <Box*/}
-              {/*              component="div"*/}
-              {/*              sx={{*/}
-              {/*                typography: 'body',*/}
-              {/*                color: '$textSecondary',*/}
-              {/*                textAlign: 'center',*/}
-              {/*              }}>*/}
-              {/*              <VotingNotStarted />*/}
-              {/*            </Box>*/}
-              {/*          )*/}
-              {/*        )}*/}
-              {/*      </>*/}
-              {/*    )}*/}
-              {/*  </Box>*/}
-              {/*)}*/}
+              {!proposalData.isVotingFinished && (
+                <Box
+                  sx={{
+                    display: 'none',
+                    [theme.breakpoints.up('md')]: {
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    },
+                  }}>
+                  {activeWallet?.isActive ? (
+                    <>
+                      {proposalData.isVotingActive ? (
+                        <>
+                          <VotingPower
+                            balanceLoading={balanceLoading}
+                            isVoted={userProposalData.voted?.isVoted ?? false}
+                            votingPower={votingPower}
+                            isForHelpModal={isForHelpModal}
+                            votingChainId={proposalData.votingChainId}
+                          />
+                          <Box sx={{ mt: 8 }}>
+                            {userProposalData.voted?.isVoted ? (
+                              <VotedState
+                                support={
+                                  userProposalData.voted.votedInfo.support
+                                }
+                              />
+                            ) : (
+                              <VoteButton
+                                balanceLoading={balanceLoading}
+                                votingPower={votingPower}
+                                proposalId={proposalData.proposalId}
+                                onClick={handleVoteButtonClick}
+                                votingChainId={proposalData.votingChainId}
+                                isForHelpModal={isForHelpModal}
+                              />
+                            )}
+                          </Box>
+                        </>
+                      ) : (
+                        <Box
+                          component="div"
+                          sx={{
+                            typography: 'body',
+                            color: '$textSecondary',
+                            textAlign: 'center',
+                          }}>
+                          <VotingNotStarted />
+                        </Box>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {proposalData.isVotingActive &&
+                      !proposalData.isVotingFinished ? (
+                        <Box
+                          component="p"
+                          sx={{
+                            typography: 'body',
+                            color: '$textSecondary',
+                            textAlign: 'center',
+                          }}>
+                          {texts.proposals.walletNotConnected}
+                        </Box>
+                      ) : (
+                        !proposalData.isVotingActive && (
+                          <Box
+                            component="div"
+                            sx={{
+                              typography: 'body',
+                              color: '$textSecondary',
+                              textAlign: 'center',
+                            }}>
+                            <VotingNotStarted />
+                          </Box>
+                        )
+                      )}
+                    </>
+                  )}
+                </Box>
+              )}
 
               <>
                 {proposalData.isFinished ? (
@@ -356,38 +368,46 @@ export function ActiveItem({
                     <>
                       {proposalData.isVotingActive ? (
                         <>
-                          {/*<VotingPower*/}
-                          {/*  balanceLoading={balanceLoading}*/}
-                          {/*  isVoted={isVoted}*/}
-                          {/*  votingPower={isVoted ? votedPower : votingPower}*/}
-                          {/*  isForHelpModal={isForHelpModal}*/}
-                          {/*  votingChainId={proposal.data.votingChainId}*/}
-                          {/*/>*/}
-                          {/*{isVoted ? (*/}
-                          {/*  <VotedState support={support} />*/}
-                          {/*) : (*/}
-                          {/*  <VoteButton*/}
-                          {/*    balanceLoading={balanceLoading}*/}
-                          {/*    votingPower={votingPower}*/}
-                          {/*    proposalId={proposal.data.id}*/}
-                          {/*    onClick={handleVoteButtonClick}*/}
-                          {/*    votingChainId={proposal.data.votingChainId}*/}
-                          {/*    isForHelpModal={isForHelpModal}*/}
-                          {/*  />*/}
-                          {/*)}*/}
+                          <VotingPower
+                            balanceLoading={balanceLoading}
+                            isVoted={userProposalData.voted?.isVoted ?? false}
+                            votingPower={votingPower}
+                            isForHelpModal={isForHelpModal}
+                            votingChainId={proposalData.votingChainId}
+                          />
+                          {userProposalData.voted?.isVoted ? (
+                            <VotedState
+                              support={userProposalData.voted.votedInfo.support}
+                            />
+                          ) : (
+                            <VoteButton
+                              balanceLoading={balanceLoading}
+                              votingPower={votingPower}
+                              proposalId={proposalData.proposalId}
+                              onClick={handleVoteButtonClick}
+                              votingChainId={proposalData.votingChainId}
+                              isForHelpModal={isForHelpModal}
+                            />
+                          )}
                         </>
                       ) : proposalData.isVotingFinished ? (
                         <>
-                          {proposalData.isVotingFinished ? ( // TODO: isVoted
+                          {proposalData.isVotingFinished ? (
                             <>
-                              {/*<VotingPower*/}
-                              {/*  balanceLoading={balanceLoading}*/}
-                              {/*  isVoted={isVoted}*/}
-                              {/*  votingPower={isVoted ? votedPower : votingPower}*/}
-                              {/*  isForHelpModal={isForHelpModal}*/}
-                              {/*  votingChainId={proposal.data.votingChainId}*/}
-                              {/*/>*/}
-                              {/*<VotedState support={support} />*/}
+                              <VotingPower
+                                balanceLoading={balanceLoading}
+                                isVoted={
+                                  userProposalData.voted?.isVoted ?? false
+                                }
+                                votingPower={votingPower}
+                                isForHelpModal={isForHelpModal}
+                                votingChainId={proposalData.votingChainId}
+                              />
+                              <VotedState
+                                support={
+                                  userProposalData.voted.votedInfo.support
+                                }
+                              />
                             </>
                           ) : (
                             <Box
@@ -440,7 +460,6 @@ export function ActiveItem({
               </Box>
             )}
           </>
-          {/*)}*/}
         </ProposalListItemWrapper>
       </Box>
     </div>

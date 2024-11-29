@@ -1,33 +1,22 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { Address, Hex } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
-import { PAGE_SIZE } from '../configs/configs';
-import { fetchActiveProposalsDataForList } from '../requests/fetchActiveProposalsDataForList';
 import { fetchConfigs } from '../requests/fetchConfigs';
+import { fetchProposalsBalancesByUser } from '../requests/fetchProposalsBalancesByUser';
+import { fetchProposalsDataByUser } from '../requests/fetchProposalsDataByUser';
 import { fetchTotalProposalsCount } from '../requests/fetchTotalProposalsCount';
 import { api } from '../trpc/client';
 import {
-  ActiveProposalOnTheList,
   ContractsConstants,
-  ProposalOnTheList,
+  ProposalToGetUserData,
+  VotedDataByUser,
   VotingConfig,
+  VotingDataByUser,
 } from '../types';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
-
-export const selectIdsForRequest = (
-  ids: number[],
-  activePage: number,
-  pageSize?: number,
-) => {
-  const startIndex = Number(activePage - 1) * (pageSize ?? PAGE_SIZE);
-  let endIndex = startIndex + (pageSize ?? PAGE_SIZE);
-  if (endIndex > ids.length) {
-    endIndex = ids.length;
-  }
-  return ids.slice(startIndex, endIndex);
-};
 
 export interface IProposalsSlice {
   configs?: {
@@ -42,27 +31,22 @@ export interface IProposalsSlice {
   totalProposalsCount: number;
   initializeProposalsCount: (count?: number) => Promise<void>;
 
-  proposalsListData: {
-    activeProposalsData: Record<number, ActiveProposalOnTheList>;
-    finishedProposalsData: Record<number, ProposalOnTheList>;
-  };
-  initializeProposalsListData: (
-    proposalsListData: {
-      activeProposalsData: ActiveProposalOnTheList[];
-      finishedProposalsData: ProposalOnTheList[];
+  votedData: Record<string, VotedDataByUser>;
+  getVotedDataByUser: (
+    walletAddress: string,
+    proposal: ProposalToGetUserData,
+  ) => Promise<void>;
+
+  votingBalances: Record<string, VotingDataByUser[]>;
+  getVotingBalancesByUser: (
+    walletAddress: string,
+    proposal: {
+      votingAssets: string[];
+      snapshotBlockHash: string;
     },
-    fromServer?: boolean,
-  ) => void;
+  ) => Promise<void>;
 
-  activeProposalsDataInterval: number | undefined;
-  startActiveProposalsDataPolling: () => Promise<void>;
-  stopActiveProposalsDataPolling: () => void;
-
-  newProposalsInterval: number | undefined;
-  startNewProposalsPolling: () => Promise<void>;
-  stopNewProposalsPolling: () => void;
-
-  updateProposalsListActiveData: (activeIds: number[]) => Promise<void>;
+  userDataLoadings: Record<number, boolean>;
 }
 
 export const createProposalsSlice: StoreSlice<
@@ -104,126 +88,53 @@ export const createProposalsSlice: StoreSlice<
     }
   },
 
-  proposalsListData: {
-    activeProposalsData: {},
-    finishedProposalsData: {},
-    // TODO: user data
-  },
-  initializeProposalsListData: (proposalsListData, fromServer) => {
-    proposalsListData.activeProposalsData.forEach((proposal) => {
-      set((state) =>
-        produce(state, (draft) => {
-          if (
-            !draft.proposalsListData.activeProposalsData[proposal.proposalId] &&
-            fromServer
-          ) {
-            draft.proposalsListData.activeProposalsData[proposal.proposalId] =
-              proposal;
-          } else if (!fromServer) {
-            draft.proposalsListData.activeProposalsData[proposal.proposalId] = {
-              ...proposal,
-              isActive: true,
-            };
-          }
-        }),
-      );
-    });
-    proposalsListData.finishedProposalsData.forEach((proposal) => {
-      set((state) =>
-        produce(state, (draft) => {
-          draft.proposalsListData.finishedProposalsData[proposal.proposalId] =
-            proposal;
-        }),
-      );
-    });
-  },
-
-  activeProposalsDataInterval: undefined,
-  startActiveProposalsDataPolling: async () => {
-    const currentInterval = get().activeProposalsDataInterval;
-    clearInterval(currentInterval);
-
-    const func = async () => {
-      const configs = get().configs;
-      const activeIds = Object.values(
-        get().proposalsListData.activeProposalsData,
-      ).map((proposal) => proposal.proposalId);
-      if (configs && activeIds.length > 0) {
-        await get().updateProposalsListActiveData(activeIds);
-      }
-    };
-    func();
-
-    const interval = setInterval(func, 30000);
-    set({ activeProposalsDataInterval: Number(interval) });
-  },
-  stopActiveProposalsDataPolling: () => {
-    const interval = get().activeProposalsDataInterval;
-    if (interval) {
-      clearInterval(interval);
-      set({ activeProposalsDataInterval: undefined });
-    }
-  },
-
-  newProposalsInterval: undefined,
-  startNewProposalsPolling: async () => {
-    const currentInterval = get().newProposalsInterval;
-    clearInterval(currentInterval);
-
-    const func = async () => {
-      const totalProposalsCount = await (isForIPFS
-        ? fetchTotalProposalsCount({
-            input: {
-              govCoreClient:
-                get().appClients[appConfig.govCoreChainId].instance,
-            },
-          })
-        : api.configs.getProposalsCount.query());
-
-      const currentProposalCount = get().totalProposalsCount;
-      const configs = get().configs;
-
-      if (Number(totalProposalsCount) > currentProposalCount && configs) {
-        set({ totalProposalsCount: Number(totalProposalsCount) });
-        const newIdsForFirstScreen = selectIdsForRequest(
-          [...Array(Number(totalProposalsCount)).keys()].sort((a, b) => b - a),
-          1,
-          Number(totalProposalsCount) - currentProposalCount,
-        );
-        await get().updateProposalsListActiveData(newIdsForFirstScreen);
-      }
-    };
-    func();
-
-    const interval = setInterval(func, 15000);
-    set({ newProposalsInterval: Number(interval) });
-  },
-  stopNewProposalsPolling: () => {
-    const interval = get().newProposalsInterval;
-    if (interval) {
-      clearInterval(interval);
-      set({ newProposalsInterval: undefined });
-    }
-  },
-
-  updateProposalsListActiveData: async (activeIds) => {
-    const configs = get().configs;
-    if (configs) {
+  votedData: {},
+  getVotedDataByUser: async (walletAddress, proposal) => {
+    const key = `${walletAddress}_${proposal.snapshotBlockHash}`;
+    if (!get().votedData[key] || !get().votedData[key].isVoted) {
       const input = {
-        ...configs.contractsConstants,
-        votingConfigs: configs.configs,
-        activeIds,
+        initialProposals: [proposal],
+        walletAddress,
       };
-      // TODO: user data
-      const proposalsData = await (isForIPFS
-        ? fetchActiveProposalsDataForList({
+      const data = await (isForIPFS
+        ? fetchProposalsDataByUser({
             input: {
-              ...input,
               clients: selectAppClients(get()),
+              ...input,
             },
           })
-        : api.proposalsList.getActive.query(input));
-      get().initializeProposalsListData(proposalsData);
+        : api.proposals.getProposalVotedData.query(input));
+      set((state) =>
+        produce(state, (draft) => {
+          draft.votedData[key] = data[0];
+        }),
+      );
     }
   },
+  votingBalances: {},
+  getVotingBalancesByUser: async (walletAddress, proposal) => {
+    const key = `${walletAddress}_${proposal.snapshotBlockHash}`;
+    if (!get().votingBalances[key]) {
+      const input = {
+        address: walletAddress as Address,
+        assets: proposal.votingAssets as Address[],
+        blockHash: proposal.snapshotBlockHash as Hex,
+      };
+      const data = await (isForIPFS
+        ? fetchProposalsBalancesByUser({
+            input: {
+              client: get().appClients[appConfig.govCoreChainId].instance,
+              ...input,
+            },
+          })
+        : api.proposals.getWalletBalancesForProposal.query(input));
+      set((state) =>
+        produce(state, (draft) => {
+          draft.votingBalances[key] = data;
+        }),
+      );
+    }
+  },
+
+  userDataLoadings: {},
 });

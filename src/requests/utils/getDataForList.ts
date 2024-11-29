@@ -34,7 +34,7 @@ export async function getDataForList({
     PayloadInitialStruct[]
   >;
 }) {
-  const { clients, userAddress, representativeAddress, votingConfigs } = input;
+  const { clients, votingConfigs } = input;
 
   const proposalsData = proposals.sort((a, b) => b.id - a.id);
 
@@ -123,8 +123,6 @@ export async function getDataForList({
     proposalsForGetVotingData.length > 0
       ? await getVotingDataRPC({
           initialProposals: proposalsForGetVotingData,
-          userAddress,
-          representativeAddress,
           clients,
         })
       : [];

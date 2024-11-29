@@ -166,6 +166,8 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   votingChainId: number;
   isVotingActive: boolean;
   isVotingFinished: boolean;
+  snapshotBlockHash: string;
+  votingAssets: string[];
   isFinished: boolean;
   // votes
   forVotes: number;
@@ -177,11 +179,19 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   isActive?: boolean;
   ipfsError?: string;
 };
-
-export type ProposalItemDataByUser = Pick<ProposalOnTheList, 'proposalId'> & {
-  support: boolean;
-  votedPower: string;
+// Proposal data by user
+export type VotedDataByUser = {
+  proposalId: bigint;
+  votedInfo: { support: boolean; votedPower: bigint };
   isVoted: boolean;
+};
+
+export type VotingDataByUser = {
+  blockHash: string;
+  asset: string;
+  votingPower: bigint;
+  userBalance: bigint;
+  isWithDelegatedPower: boolean;
 };
 
 // ENS

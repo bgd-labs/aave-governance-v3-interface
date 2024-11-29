@@ -32,6 +32,7 @@ export function ProposalsList({
     finishedProposalsData: ProposalOnTheList[];
   };
 }) {
+  const activeWallet = useStore((store) => store.activeWallet);
   const initializeConfigs = useStore((store) => store.initializeConfigs);
   const initializeProposalsCount = useStore(
     (store) => store.initializeProposalsCount,
@@ -51,6 +52,9 @@ export function ProposalsList({
   );
   const stopNewProposalsPolling = useStore(
     (store) => store.stopNewProposalsPolling,
+  );
+  const updateUserDataOnTheList = useStore(
+    (store) => store.updateUserDataOnTheList,
   );
   const proposalsListData = useStore((store) =>
     selectProposalsForActivePage(store, activePage),
@@ -81,6 +85,11 @@ export function ProposalsList({
       stopNewProposalsPolling();
     };
   }, []);
+  useEffect(() => {
+    if (activeWallet?.address) {
+      updateUserDataOnTheList();
+    }
+  }, [activeWallet?.address]);
 
   return (
     <Container>

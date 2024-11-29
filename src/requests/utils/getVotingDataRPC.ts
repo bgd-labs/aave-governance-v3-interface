@@ -6,15 +6,13 @@ import { ProposalToGetUserData } from '../../types';
 
 export type GetVotingDataRPC = {
   initialProposals: ProposalToGetUserData[];
-  userAddress?: string;
+  walletAddress?: string;
   clients: Record<number, Client>;
-  representativeAddress?: string;
 };
 
 export async function getVotingDataRPC({
   initialProposals,
-  userAddress,
-  representativeAddress,
+  walletAddress,
   clients,
 }: GetVotingDataRPC) {
   const votingMachineChainIds = initialProposals
@@ -42,7 +40,7 @@ export async function getVotingDataRPC({
       const data = await votingMachineDataHelper.read.getProposalsData([
         appConfig.votingMachineConfig[chainId].contractAddress,
         formattedInitialProposals,
-        (representativeAddress || userAddress || zeroAddress) as Address,
+        (walletAddress ?? zeroAddress) as Address,
       ]);
 
       return data.map((votingData) => {

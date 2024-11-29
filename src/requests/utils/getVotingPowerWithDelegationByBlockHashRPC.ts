@@ -49,12 +49,8 @@ export async function getVotingPowerWithDelegationByBlockHashRPC({
   });
 
   return assets.map((asset, index) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    const userBalance = data[index][0].result;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    const votingPower = data[index][1].result;
+    const userBalance = data[index].result;
+    const votingPower = data[assets.length + index].result;
     return {
       blockHash,
       asset,
