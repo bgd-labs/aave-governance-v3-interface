@@ -1,4 +1,3 @@
-import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Hex } from 'viem';
@@ -7,7 +6,7 @@ import { getScanLink } from '../../helpers/getScanLink';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { ENSDataExists } from '../../store/selectors/ensSelectors';
-import { ENSProperty } from '../../types';
+import { ENSProperty, ProposalMetadata } from '../../types';
 import { BoxWith3D } from '../BoxWith3D';
 import { CopyAndExternalIconsSet } from '../CopyAndExternalIconsSet';
 import { MarkdownContainer } from '../MarkdownContainer';

@@ -7,7 +7,7 @@ import {
   FetchProposalsDataForListParams,
 } from '../../../requests/fetchProposalsDataForList';
 import { serverClients } from '../../../requests/utils/chains';
-import { GetVotingData } from '../../../requests/utils/getVotingData';
+import { GetVotingDataRPC } from '../../../requests/utils/getVotingDataRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const proposalsListRouter = createTRPCRouter({
@@ -39,7 +39,7 @@ export const proposalsListRouter = createTRPCRouter({
     ),
 
   getUserData: publicProcedure
-    .input(z.custom<Omit<GetVotingData, 'clients'>>())
+    .input(z.custom<Omit<GetVotingDataRPC, 'clients'>>())
     .query(
       async (input) =>
         await fetchProposalsDataByUser({

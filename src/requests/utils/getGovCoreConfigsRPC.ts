@@ -4,7 +4,7 @@ import { readContract } from 'viem/actions';
 
 import { VotingConfig } from '../../types';
 
-export async function getGovCoreConfigs({
+export async function getGovCoreConfigsRPC({
   client,
   govCoreContractAddress,
   govCoreDataHelperContractAddress,

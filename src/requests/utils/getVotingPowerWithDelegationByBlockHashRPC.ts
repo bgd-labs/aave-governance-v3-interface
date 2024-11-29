@@ -4,19 +4,19 @@ import { getBlock, multicall } from 'viem/actions';
 
 import { GovernancePowerType } from '../../types';
 
-export type GetVotingPowerWithDelegationByBlockHash = {
+export type GetVotingPowerWithDelegationByBlockHashRPC = {
   client: Client;
   blockHash: Hex;
   address: Address;
   assets: Address[];
 };
 
-export async function getVotingPowerWithDelegationByBlockHash({
+export async function getVotingPowerWithDelegationByBlockHashRPC({
   client,
   blockHash,
   address,
   assets,
-}: GetVotingPowerWithDelegationByBlockHash) {
+}: GetVotingPowerWithDelegationByBlockHashRPC) {
   const blockNumber = await getBlock(client, {
     blockHash,
   });

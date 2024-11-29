@@ -1,3 +1,5 @@
+// TODO: format with voting server data
+
 import { IVotingPortal_ABI } from '@bgd-labs/aave-address-book/abis';
 import { Client } from 'viem';
 import { readContract } from 'viem/actions';
@@ -15,7 +17,7 @@ import {
   formatActiveProposalData,
   getStateAndTimestampForFinishedProposal,
 } from './formatProposalData';
-import { getVotingData } from './getVotingData';
+import { getVotingDataRPC } from './getVotingDataRPC';
 
 export async function getDataForList({
   input,
@@ -119,7 +121,7 @@ export async function getDataForList({
 
   const votingProposalsData =
     proposalsForGetVotingData.length > 0
-      ? await getVotingData({
+      ? await getVotingDataRPC({
           initialProposals: proposalsForGetVotingData,
           userAddress,
           representativeAddress,

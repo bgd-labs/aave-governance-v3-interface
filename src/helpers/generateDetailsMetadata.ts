@@ -1,7 +1,7 @@
+import { getProposalMetadata } from '@bgd-labs/js-utils';
+
 import { isForIPFS } from '../configs/appConfig';
-import { getProposalMetadata } from '../requests/utils/getProposalMetadata';
 import { metaTexts } from './texts/metaTexts';
-import { texts } from './texts/texts';
 
 export async function generateDetailsMetadata({
   params,
@@ -25,30 +25,21 @@ export async function generateDetailsMetadata({
     if (proposalId) {
       const id = proposalId.split('_')[0];
       const ipfsHash = proposalId.split('_')[1];
+      let ipfsTitle = '';
       try {
-        const ipfsData = await getProposalMetadata({
-          hash: ipfsHash,
-        });
-        return {
-          title: `${metaTexts.main}${metaTexts.proposalId(id)}`,
-          description: ipfsData?.title || '',
-          openGraph: {
-            images: ['/metaLogo.jpg'],
-            title: `${metaTexts.main}${metaTexts.proposalId(id)}`,
-            description: ipfsData?.title || '',
-          },
-        };
+        ipfsTitle = (await getProposalMetadata(ipfsHash)).title;
       } catch (e) {
-        return {
-          title: texts.other.fetchFromIpfsError,
-          description: metaTexts.ipfsDescription,
-          openGraph: {
-            images: ['/metaLogo.jpg'],
-            title: `${texts.other.fetchFromIpfsError}`,
-            description: metaTexts.ipfsDescription,
-          },
-        };
+        console.error('Error getting proposal metadata', e);
       }
+      return {
+        title: `${metaTexts.main}${metaTexts.proposalId(id)}`,
+        description: ipfsTitle || '',
+        openGraph: {
+          images: ['/metaLogo.jpg'],
+          title: `${metaTexts.main}${metaTexts.proposalId(id)}`,
+          description: ipfsTitle || '',
+        },
+      };
     }
   }
 }

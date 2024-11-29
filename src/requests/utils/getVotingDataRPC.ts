@@ -4,19 +4,19 @@ import { Address, Client, getContract, zeroAddress } from 'viem';
 import { appConfig } from '../../configs/appConfig';
 import { ProposalToGetUserData } from '../../types';
 
-export type GetVotingData = {
+export type GetVotingDataRPC = {
   initialProposals: ProposalToGetUserData[];
   userAddress?: string;
   clients: Record<number, Client>;
   representativeAddress?: string;
 };
 
-export async function getVotingData({
+export async function getVotingDataRPC({
   initialProposals,
   userAddress,
   representativeAddress,
   clients,
-}: GetVotingData) {
+}: GetVotingDataRPC) {
   const votingMachineChainIds = initialProposals
     .map((data) => data.votingChainId)
     .filter((value, index, self) => self.indexOf(value) === index);

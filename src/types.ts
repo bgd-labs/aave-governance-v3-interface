@@ -24,6 +24,7 @@ export type ProposalInitialStruct = ContractFunctionReturnType<
 > & {
   id: number;
   title?: string;
+  ipfsError?: string;
 };
 export type PayloadInitialStruct = ContractFunctionReturnType<
   typeof IPayloadsControllerDataHelper_ABI,
@@ -137,7 +138,6 @@ export enum GovernancePowerType {
 }
 
 export type ProposalMetadata = {
-  originalIpfsHash: string;
   title: string;
   description: string;
   ipfsHash: string;
@@ -175,6 +175,7 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   requiredAgainstVotes: number;
   againstPercent: number;
   isActive?: boolean;
+  ipfsError?: string;
 };
 
 export type ProposalItemDataByUser = Pick<ProposalOnTheList, 'proposalId'> & {

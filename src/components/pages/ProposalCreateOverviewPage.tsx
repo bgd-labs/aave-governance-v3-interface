@@ -179,7 +179,11 @@ export function ProposalCreateOverviewPage({
                   <Box component="h2" sx={{ typography: 'h1', mb: 18 }}>
                     {ipfsData.title}
                   </Box>
-                  <DetailsShareLinks ipfs={ipfsData} forCreate />
+                  <DetailsShareLinks
+                    ipfs={ipfsData}
+                    ipfsError={ipfsError}
+                    forCreate
+                  />
                 </>
               )}
             </Box>

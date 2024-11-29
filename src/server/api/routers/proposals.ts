@@ -7,12 +7,14 @@ import {
 } from '../../../requests/fetchProposalById';
 import { fetchProposalsBalancesByUser } from '../../../requests/fetchProposalsBalancesByUser';
 import { serverClients } from '../../../requests/utils/chains';
-import { GetVotingPowerWithDelegationByBlockHash } from '../../../requests/utils/getVotingPowerWithDelegationByBlockHash';
+import { GetVotingPowerWithDelegationByBlockHashRPC } from '../../../requests/utils/getVotingPowerWithDelegationByBlockHashRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const proposalsRouter = createTRPCRouter({
   getBalances: publicProcedure
-    .input(z.custom<Omit<GetVotingPowerWithDelegationByBlockHash, 'client'>>())
+    .input(
+      z.custom<Omit<GetVotingPowerWithDelegationByBlockHashRPC, 'client'>>(),
+    )
     .query(
       async (input) =>
         await fetchProposalsBalancesByUser({

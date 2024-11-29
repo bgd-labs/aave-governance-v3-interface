@@ -1,11 +1,12 @@
+import { getProposalMetadata } from '@bgd-labs/js-utils';
 import { Client } from 'viem';
 
 import { PayloadParams } from '../components/pages/ProposalCreateOverviewPage';
+import { ipfsGateway } from '../configs/configs';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { texts } from '../old/ui/utils/texts';
 import { PayloadWithHashes, ProposalMetadata } from '../types';
 import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
-import { getProposalMetadata } from './utils/getProposalMetadata';
 
 export type FetchDataForCreateOverviewScreen = {
   ipfsHash: string;
@@ -30,7 +31,7 @@ export async function fetchDataForCreateOverviewScreen({
     let ipfsData: ProposalMetadata | undefined = undefined;
     let ipfsError = '';
     try {
-      ipfsData = await getProposalMetadata({ hash: ipfsHash });
+      ipfsData = await getProposalMetadata(ipfsHash, ipfsGateway);
     } catch (e) {
       ipfsError = texts.other.fetchFromIpfsError;
       console.error('Error getting ipfs data', e);

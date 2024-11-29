@@ -1,4 +1,3 @@
-import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, styled } from '@mui/system';
 import React from 'react';
 
@@ -7,6 +6,7 @@ import Twitter from '../../assets/icons/twitterX.svg';
 import { ipfsGateway } from '../../configs/configs';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
+import { ProposalMetadata } from '../../types';
 import { Link } from '../Link';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
 import { IconBox } from '../primitives/IconBox';

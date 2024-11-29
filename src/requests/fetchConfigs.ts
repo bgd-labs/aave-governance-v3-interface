@@ -1,7 +1,7 @@
 import { Client } from 'viem';
 
 import { appConfig } from '../configs/appConfig';
-import { getGovCoreConfigs } from './utils/getGovCoreConfigs';
+import { getGovCoreConfigsRPC } from './utils/getGovCoreConfigsRPC';
 
 export async function fetchConfigs({
   input,
@@ -12,7 +12,7 @@ export async function fetchConfigs({
     throw new Error('TODO: API not implemented');
   } catch (e) {
     console.error('Error getting configs from API, using RPC fallback', e);
-    return await getGovCoreConfigs({
+    return await getGovCoreConfigsRPC({
       client: input.govCoreClient,
       govCoreContractAddress: appConfig.govCoreConfig.contractAddress,
       govCoreDataHelperContractAddress:

@@ -11,18 +11,18 @@ export const selectProposalsForActivePage = (
       ),
       activePage,
     );
-    const fillteredActiveProposalsData = Object.values(
+    const filteredActiveProposalsData = Object.values(
       store.proposalsListData.activeProposalsData,
     ).filter((proposal) => ids.includes(proposal.proposalId));
-    const fillteredFinishedProposalsData = Object.values(
+    const filteredFinishedProposalsData = Object.values(
       store.proposalsListData.finishedProposalsData,
     ).filter((proposal) => ids.includes(proposal.proposalId));
 
     return {
-      activeProposalsData: fillteredActiveProposalsData.sort(
+      activeProposalsData: filteredActiveProposalsData.sort(
         (a, b) => b.proposalId - a.proposalId,
       ),
-      finishedProposalsData: fillteredFinishedProposalsData.sort(
+      finishedProposalsData: filteredFinishedProposalsData.sort(
         (a, b) => b.proposalId - a.proposalId,
       ),
     };

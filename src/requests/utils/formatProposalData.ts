@@ -605,6 +605,8 @@ export function formatActiveProposalData({
     againstVotes: +formatUnits(voting.proposalData.againstVotes, DECIMALS),
     requiredAgainstVotes: +formatUnits(requiredAgainstVotes, DECIMALS),
     againstPercent: +Number(againstPercent).toFixed(4),
+    // ipfs
+    ipfsError: core.ipfsError,
   };
 }
 
