@@ -23,7 +23,7 @@ export default async function Page() {
     await api.configs.getProposalsCount(),
   ]);
 
-  const data = await api.createProposal.get({ proposalsCount: count });
+  const data = await api.createProposal.getForCreate({ proposalsCount: count });
 
   return (
     <CreateProposalPage

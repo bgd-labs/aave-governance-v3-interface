@@ -182,7 +182,6 @@ export type ProposalItemDataByUser = Pick<ProposalOnTheList, 'proposalId'> & {
   votedPower: string;
   isVoted: boolean;
 };
-// Proposal screen (WIP)
 
 // ENS
 export enum ENSProperty {
@@ -241,7 +240,18 @@ export type CreateProposalPageParams = {
   proposalsData: ProposalInitialStruct[];
 };
 
-// requessts
+// create proposal overview
+export type PayloadWithHashes = PayloadInitialStruct & {
+  proposalId?: number;
+  seatbeltMD?: string;
+  creator?: Address;
+  createdTransactionHash?: string;
+  queuedTransactionHash?: string;
+  executedTransactionHash?: string;
+  isError?: boolean;
+};
+
+// requests
 export type GetPayloadsData = {
   chainId: number;
   payloadsIds: number[];

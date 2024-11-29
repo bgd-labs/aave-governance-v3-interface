@@ -97,12 +97,12 @@ export function AppHeader() {
     }
   }, [sm]);
 
-  if (appMode === 'default') {
+  if (appMode === 'default' || isForIPFS) {
     if (headerNavItems.some((item) => item.title === 'Create')) {
       headerNavItems.shift();
     }
   } else {
-    if (!headerNavItems.some((item) => item.title === 'Create')) {
+    if (!headerNavItems.some((item) => item.title === 'Create') && !isForIPFS) {
       headerNavItems.unshift({
         link: ROUTES.create,
         title: texts.header.navCreate,

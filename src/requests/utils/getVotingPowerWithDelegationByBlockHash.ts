@@ -22,11 +22,10 @@ export async function getVotingPowerWithDelegationByBlockHash({
   });
 
   const wagmiContracts = assets.map((asset) => {
-    const wagmiContract = {
+    return {
       address: asset,
       abi: IAaveTokenV3_ABI,
     } as const;
-    return wagmiContract;
   });
 
   const data = await multicall(client, {
