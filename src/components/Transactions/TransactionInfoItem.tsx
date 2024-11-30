@@ -40,7 +40,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         iconSize={10}
         css={{
           display: 'inline-block',
-          '.NetworkIcon': { mr: 2 },
+          '.ChainIcon': { display: 'inline', mr: 2 },
           '.ChainNameWithIcon__text': { display: 'inline' },
         }}
       />
@@ -54,7 +54,7 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         iconSize={10}
         css={{
           display: 'inline-block',
-          '.NetworkIcon': { mr: 2 },
+          '.ChainIcon': { display: 'inline', mr: 2 },
           '.ChainNameWithIcon__text': { display: 'inline' },
         }}
       />

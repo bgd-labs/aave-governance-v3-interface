@@ -58,7 +58,15 @@ export function VotingPower({
       </Box>
 
       {balanceLoading && !isVoted ? (
-        <CustomSkeleton width={60} height={19} />
+        <CustomSkeleton
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          width={60}
+          height={19}
+        />
       ) : (
         <Box
           onClick={(e) => {

@@ -1,17 +1,24 @@
 'use client';
 
+import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
+import { appConfig } from '../../configs/appConfig';
+import { chainInfoHelper } from '../../configs/configs';
 import { ROUTES } from '../../configs/routes';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
-import { selectProposalDataByUser } from '../../store/selectors/proposalsSelector';
+import {
+  selectProposalDataByUser,
+  selectVotingBalanceByUser,
+} from '../../store/selectors/proposalsSelector';
 import { disablePageLoader } from '../../styles/disablePageLoader';
 import { ActiveProposalOnTheList } from '../../types';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
 import { Link } from '../Link';
+import { CustomSkeleton } from '../primitives/CustomSkeleton';
 import { ProposalNextState } from '../ProposalNextState';
 import { ProposalStateWithDate } from '../ProposalStateWithDate';
 import { VoteBar } from '../VoteBar';
@@ -21,7 +28,7 @@ import { ProposalListItemWrapper } from './ProposalListItemWrapper';
 import { VoteButton } from './VoteButton';
 import { VotingPower } from './VotingPower';
 
-interface ActiveProposalListItemProps {
+interface ActiveItemProps {
   proposalData: ActiveProposalOnTheList;
   voteButtonClick?: (proposalId: number) => void;
   isForHelpModal?: boolean;
@@ -31,11 +38,12 @@ export function ActiveItem({
   proposalData,
   voteButtonClick,
   isForHelpModal,
-}: ActiveProposalListItemProps) {
+}: ActiveItemProps) {
   const theme = useTheme();
 
   const isRendered = useStore((state) => state.isRendered);
-  const activeWallet = useStore((state) => state.activeWallet);
+  const appClients = useStore((state) => state.appClients);
+  let activeWallet = useStore((state) => state.activeWallet);
   const balanceLoading = useStore(
     (state) => state.userDataLoadings[proposalData.proposalId],
   );
@@ -48,23 +56,39 @@ export function ActiveItem({
     walletAddress: activeWallet?.address ?? zeroAddress,
     snapshotBlockHash: proposalData.snapshotBlockHash,
   });
-
-  console.log(proposalData.proposalId, userProposalData);
-
-  const [isClicked, setIsClicked] = useState(false);
   const [votingPower, setVotingPower] = useState(0n);
 
+  const [isClicked, setIsClicked] = useState(false);
+
+  if (isForHelpModal) {
+    activeWallet = {
+      walletType: WalletType.Injected,
+      address: zeroAddress,
+      chain: chainInfoHelper.getChainParameters(appConfig.govCoreChainId),
+      chainId: appConfig.govCoreChainId,
+      connectorClient: appClients[appConfig.govCoreChainId].instance,
+      isActive: true,
+      isContractAddress: false,
+    };
+  }
+
   useEffect(() => {
-    setVotingPower(
-      userProposalData.voted && userProposalData.voting
-        ? userProposalData.voted.isVoted
-          ? userProposalData.voted.votedInfo.votedPower
-          : userProposalData.voting
-              .map((power) => power.votingPower)
-              .reduce((acc, num) => acc + num, 0n)
-        : 0n,
-    );
-  }, [userProposalData.voting]);
+    if (userProposalData.voted) {
+      if (userProposalData.voted.isVoted) {
+        setVotingPower(userProposalData.voted.votedInfo.votedPower);
+      } else {
+        if (userProposalData.voting) {
+          setVotingPower(
+            selectVotingBalanceByUser({
+              votingBalances,
+              walletAddress: activeWallet?.address ?? zeroAddress,
+              snapshotBlockHash: proposalData.snapshotBlockHash,
+            }),
+          );
+        }
+      }
+    }
+  }, [userProposalData.voted, userProposalData.voting, activeWallet]);
 
   const handleVoteButtonClick = (proposalId: number) => {
     if (voteButtonClick) {
@@ -173,7 +197,17 @@ export function ActiveItem({
                         ? `${theme.palette.$text} !important`
                         : theme.palette.$text,
                     }}>
-                    {proposalData.title}
+                    {proposalData.ipfsError ? (
+                      'Ipfs getting error'
+                    ) : proposalData.ipfsError ? (
+                      <CustomSkeleton width={250} height={24} />
+                    ) : proposalData.title ===
+                        `Proposal ${proposalData.proposalId}` &&
+                      !proposalData.isFinished ? (
+                      <CustomSkeleton width={250} height={24} />
+                    ) : (
+                      proposalData.title
+                    )}
                   </Box>
                 </Box>
 

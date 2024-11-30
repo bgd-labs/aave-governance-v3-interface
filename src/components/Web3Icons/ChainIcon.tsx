@@ -17,6 +17,7 @@ interface ChainIconProps extends ExternalComponentBaseProps {
 const ChainIcon = ({ chainId, size, css, ...props }: ChainIconProps) => {
   return (
     <Box
+      className="ChainIcon"
       sx={{
         lineHeight: 0,
         width: size ?? 12,

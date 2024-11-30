@@ -192,11 +192,14 @@ export const createProposalsListSlice: StoreSlice<
     const activeWallet = get().activeWallet;
     if (activeWallet) {
       proposalsData.map(async (proposal) => {
-        set((state) =>
-          produce(state, (draft) => {
-            draft.userDataLoadings[Number(proposal.id)] = true;
-          }),
-        );
+        const key = `${activeWallet.address}_${proposal.snapshotBlockHash}`;
+        if (!get().votedData[key]) {
+          set((state) =>
+            produce(state, (draft) => {
+              draft.userDataLoadings[Number(proposal.id)] = true;
+            }),
+          );
+        }
         await get().getVotedDataByUser(activeWallet.address, proposal);
         const data = selectProposalDataByUser({
           votedData: get().votedData,

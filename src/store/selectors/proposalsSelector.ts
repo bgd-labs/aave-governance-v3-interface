@@ -52,3 +52,18 @@ export const selectProposalDataByUser = ({
     voting: votingBalances[`${walletAddress}_${snapshotBlockHash}`],
   };
 };
+
+export const selectVotingBalanceByUser = ({
+  votingBalances,
+  walletAddress,
+  snapshotBlockHash,
+}: {
+  walletAddress: string;
+  snapshotBlockHash: string;
+} & Pick<IProposalsSlice, 'votingBalances'>) => {
+  return votingBalances[`${walletAddress}_${snapshotBlockHash}`]
+    ? votingBalances[`${walletAddress}_${snapshotBlockHash}`]
+        .map((power) => power.votingPower)
+        .reduce((acc, num) => acc + num, 0n)
+    : 0n;
+};

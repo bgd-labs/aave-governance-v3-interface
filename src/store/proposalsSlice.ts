@@ -16,6 +16,7 @@ import {
   VotingDataByUser,
 } from '../types';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
+import { selectVotingBalanceByUser } from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 
 export interface IProposalsSlice {
@@ -91,7 +92,15 @@ export const createProposalsSlice: StoreSlice<
   votedData: {},
   getVotedDataByUser: async (walletAddress, proposal) => {
     const key = `${walletAddress}_${proposal.snapshotBlockHash}`;
-    if (!get().votedData[key] || !get().votedData[key].isVoted) {
+    const votingBalance = selectVotingBalanceByUser({
+      votingBalances: get().votingBalances,
+      walletAddress,
+      snapshotBlockHash: proposal.snapshotBlockHash,
+    });
+    if (
+      !get().votedData[key] ||
+      (!get().votedData[key].isVoted && votingBalance > 0n)
+    ) {
       const input = {
         initialProposals: [proposal],
         walletAddress,

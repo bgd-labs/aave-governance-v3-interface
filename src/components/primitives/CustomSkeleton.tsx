@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/system';
+import { Box, SxProps } from '@mui/system';
 import React from 'react';
 
 export function CustomSkeleton({
@@ -8,14 +8,16 @@ export function CustomSkeleton({
   height,
   circle,
   className,
+  sx,
 }: {
   width?: number | string;
   height?: number | string;
   circle?: boolean;
   className?: string;
+  sx?: SxProps;
 }) {
   return (
-    <Box className={className}>
+    <Box className={className} sx={sx}>
       <Box
         className="react-loading-skeleton"
         sx={(theme) => ({
