@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { appConfig } from '../../../configs/appConfig';
+import { fetchCreatorPropositionPower } from '../../../requests/fetchCreatorPropositionPower';
 import {
   fetchProposalById,
   FetchProposalByIdParams,
@@ -12,6 +13,7 @@ import {
 import { fetchProposalsBalancesByUser } from '../../../requests/fetchProposalsBalancesByUser';
 import { fetchProposalsDataByUser } from '../../../requests/fetchProposalsDataByUser';
 import { serverClients } from '../../../requests/utils/chains';
+import { GetCreatorPropositionPower } from '../../../requests/utils/getOwnerPropositionPowerRPC';
 import { GetVotingDataRPC } from '../../../requests/utils/getVotingDataRPC';
 import { GetVotingPowerWithDelegationByBlockHashRPC } from '../../../requests/utils/getVotingPowerWithDelegationByBlockHashRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
@@ -57,6 +59,17 @@ export const proposalsRouter = createTRPCRouter({
           input: {
             ...input.input,
             clients: serverClients,
+          },
+        }),
+    ),
+  getCreatorPropositionPower: publicProcedure
+    .input(z.custom<Omit<GetCreatorPropositionPower, 'govCoreClient'>>())
+    .query(
+      async (input) =>
+        await fetchCreatorPropositionPower({
+          input: {
+            ...input.input,
+            govCoreClient: serverClients[appConfig.govCoreChainId],
           },
         }),
     ),

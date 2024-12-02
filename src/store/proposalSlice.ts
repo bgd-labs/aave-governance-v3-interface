@@ -2,8 +2,10 @@ import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { zeroHash } from 'viem';
 
-import { isForIPFS } from '../configs/appConfig';
+import { appConfig, isForIPFS } from '../configs/appConfig';
+import { fetchCreatorPropositionPower } from '../requests/fetchCreatorPropositionPower';
 import { fetchProposalDataForDetails } from '../requests/fetchProposalDataForDetails';
+import { GetCreatorPropositionPower } from '../requests/utils/getOwnerPropositionPowerRPC';
 import { api } from '../trpc/client';
 import { DetailedProposalData } from '../types';
 import { IProposalsSlice } from './proposalsSlice';
@@ -22,6 +24,12 @@ export interface IProposalSlice {
   stopActiveProposalDetailsPolling: () => void;
 
   updateDetailsUserData: (id: number) => Promise<void>;
+
+  creatorPropositionPower: Record<string, number>;
+  getCreatorPropositionPower: ({
+    creatorAddress,
+    underlyingAssets,
+  }: Omit<GetCreatorPropositionPower, 'govCoreClient'>) => Promise<void>;
 }
 
 export const createProposalSlice: StoreSlice<
@@ -65,6 +73,12 @@ export const createProposalSlice: StoreSlice<
         : api.proposals.getDetails.query(input));
       get().initializeProposalDetails(data);
       get().updateDetailsUserData(id);
+      if (!data.formattedData.isFinished) {
+        get().getCreatorPropositionPower({
+          creatorAddress: data.proposalData.creator,
+          underlyingAssets: data.votingData.votingAssets as string[],
+        });
+      }
     }
   },
 
@@ -122,5 +136,28 @@ export const createProposalSlice: StoreSlice<
         }),
       );
     }
+  },
+
+  creatorPropositionPower: {},
+  getCreatorPropositionPower: async ({ creatorAddress, underlyingAssets }) => {
+    const input = {
+      creatorAddress,
+      underlyingAssets,
+    };
+
+    const power = await (isForIPFS
+      ? fetchCreatorPropositionPower({
+          input: {
+            govCoreClient: selectAppClients(get())[appConfig.govCoreChainId],
+            ...input,
+          },
+        })
+      : api.proposals.getCreatorPropositionPower.query(input));
+
+    set((state) =>
+      produce(state, (draft) => {
+        draft.creatorPropositionPower[creatorAddress] = power;
+      }),
+    );
   },
 });

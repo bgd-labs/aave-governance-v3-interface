@@ -7,9 +7,9 @@ import React, { useState } from 'react';
 import { Address, Hex, zeroAddress } from 'viem';
 
 import { texts } from '../../helpers/texts/texts';
-import { useLastTxLocalStatus } from '../../helpers/useLastTxLocalStatus';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TxType } from '../../store/transactionsSlice';
+import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
 import { PayloadWithHashes, ProposalMetadata } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BigButton } from '../BigButton';

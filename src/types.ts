@@ -67,6 +67,12 @@ export type ProposalToGetUserData = {
   snapshotBlockHash: Hex;
 };
 
+export type InitialPayload = {
+  id: number;
+  chainId: number;
+  payloadsController: string;
+};
+
 export type PayloadAction = {
   payloadAddress: Address;
   withDelegateCall: boolean;
@@ -75,6 +81,13 @@ export type PayloadAction = {
   signature: string;
   callData?: string;
 };
+
+export enum Asset {
+  AAVE = 'AAVE',
+  STKAAVE = 'stkAAVE',
+  AAAVE = 'aAAVE',
+  GOVCORE = 'Gov core',
+}
 // statuses
 export enum InitialProposalState {
   Null, // proposal does not exists
@@ -205,6 +218,17 @@ export type DetailedProposalData = {
   ipfsError?: string;
 };
 
+export type VotersData = {
+  proposalId: number;
+  address: Hex;
+  support: boolean;
+  votingPower: number;
+  transactionHash: Hex;
+  blockNumber: number;
+  chainId: number;
+  ensName?: string;
+};
+
 // ENS
 export enum ENSProperty {
   NAME = 'name',
@@ -245,12 +269,45 @@ export type SetRpcErrorParams = {
 };
 
 // representation
+export type RepresentationDataItem = {
+  representative: Address | '';
+  represented: Address[];
+};
+
+export type RepresentationFormData = {
+  chainId: number;
+  representative: Address | '';
+};
+
 export type RepresentativeAddress = {
   chainsIds: number[];
   address: Address | '';
 };
 
 export type RepresentedAddress = { chainId: number; address: Address | '' };
+// delegation
+
+export type DelegateItem = {
+  underlyingAsset: Address;
+  symbol: Asset;
+  amount: number;
+  votingToAddress: Address | string;
+  propositionToAddress: Address | string;
+};
+
+export type DelegateData = {
+  underlyingAsset: Address;
+  votingToAddress: Address | string;
+  propositionToAddress: Address | string;
+};
+
+export type TxDelegateData = {
+  symbol: Asset;
+  underlyingAsset: Address;
+  bothAddresses?: Address | string;
+  votingToAddress?: Address | string;
+  propositionToAddress?: Address | string;
+};
 
 // create proposal
 export type CreateProposalPageParams = {

@@ -1,9 +1,9 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
 import React from 'react';
 
+import { BasicModal } from '../../components/BasicModal';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
-import { BasicModal } from '../BasicModal';
 import { TransactionsModalContent } from './TransactionsModalContent';
 
 interface TransactionsModalProps {

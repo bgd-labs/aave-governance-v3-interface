@@ -15,6 +15,7 @@ import {
 } from '../../types';
 import { Container } from '../primitives/Container';
 import { ProposalLoading } from './ProposalLoading';
+import { ProposalPage } from './ProposalPage';
 
 export function ProposalDetailsInitializer({
   proposalId,
@@ -50,6 +51,9 @@ export function ProposalDetailsInitializer({
   );
   const updateDetailsUserData = useStore(
     (store) => store.updateDetailsUserData,
+  );
+  const creatorPropositionPower = useStore(
+    (store) => store.creatorPropositionPower,
   );
 
   const [idFromQuery, setIdFromQuery] = useState<string | null>(null);
@@ -124,13 +128,48 @@ export function ProposalDetailsInitializer({
     }
   }, [userProposalData.voted, userProposalData.voting, activeWallet]);
 
+  const [isCreatorBalanceWarningVisible, setCreatorBalanceWarningVisible] =
+    useState(false);
+
+  useEffect(() => {
+    if (proposalData) {
+      const creator = proposalData?.proposalData.creator;
+      if (!proposalData?.formattedData.isFinished) {
+        const config = configs.configs.filter(
+          (conf) => conf.accessLevel === proposalData.proposalData.accessLevel,
+        )[0];
+        if (
+          !!creatorPropositionPower[creator] &&
+          creatorPropositionPower[creator] <= config.minPropositionPower
+        ) {
+          setCreatorBalanceWarningVisible(true);
+        }
+      }
+    }
+  }, [proposalData?.proposalData.creator]);
+
   if (!proposalData) {
     return <ProposalLoading withContainer />;
   }
 
   return (
     <Container>
-      <h1>Proposal {proposalData.metadata.title}</h1>
+      <ProposalPage
+        data={proposalData}
+        votingConfig={
+          configs.configs.filter(
+            (conf) =>
+              Number(conf.accessLevel) ===
+              Number(proposalData.proposalData.accessLevel),
+          )[0]
+        }
+        constants={configs.contractsConstants}
+        balanceLoading={balanceLoading}
+        votingPower={votingPower}
+        support={userProposalData.voted?.votedInfo.support ?? false}
+        isVoted={userProposalData.voted?.isVoted ?? false}
+        isCreatorBalanceWarningVisible={isCreatorBalanceWarningVisible}
+      />
     </Container>
   );
 }

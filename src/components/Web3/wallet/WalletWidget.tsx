@@ -3,7 +3,7 @@ import { Hex } from 'viem';
 
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import { selectENSAvatar } from '../../../store/selectors/ensSelectors';
-import { TransactionsModal } from '../../Transactions/TransactionsModal';
+import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';

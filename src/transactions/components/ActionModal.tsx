@@ -1,10 +1,10 @@
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
+import { BigButton, BigButtonProps } from '../../components/BigButton';
 import { texts } from '../../helpers/texts/texts';
-import { useLastTxLocalStatus } from '../../helpers/useLastTxLocalStatus';
 import { TransactionUnion } from '../../store/transactionsSlice';
-import { BigButton, BigButtonProps } from '../BigButton';
+import { useLastTxLocalStatus } from '../useLastTxLocalStatus';
 import { BasicActionModal } from './BasicActionModal';
 
 interface ActionModalProps

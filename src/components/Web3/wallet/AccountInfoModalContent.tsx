@@ -11,11 +11,11 @@ import { AllTransactions, TxType } from '../../../store/transactionsSlice';
 import { textCenterEllipsis } from '../../../styles/textCenterEllipsis';
 import { media } from '../../../styles/themeMUI';
 import { useMediaQuery } from '../../../styles/useMediaQuery';
+import { TransactionInfoItem } from '../../../transactions/components/TransactionInfoItem';
 import { RepresentedAddress } from '../../../types';
 import { Link } from '../../Link';
 import { Divider } from '../../primitives/Divider';
 import { IconBox } from '../../primitives/IconBox';
-import { TransactionInfoItem } from '../../Transactions/TransactionInfoItem';
 import { AccountAddressInfo } from './AccountAddressInfo';
 
 interface AccountInfoModalContentProps {

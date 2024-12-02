@@ -5,11 +5,11 @@ import { texts } from '../../helpers/texts/texts';
 import {
   ActionModalContentWrapper,
   ActionModalTitle,
-} from '../Transactions/ActionModalContentWrapper';
+} from '../../transactions/components/ActionModalContentWrapper';
 import {
   BasicActionModal,
   BasicActionModalProps,
-} from '../Transactions/BasicActionModal';
+} from '../../transactions/components/BasicActionModal';
 
 export function CreatePayloadModal({
   isOpen,

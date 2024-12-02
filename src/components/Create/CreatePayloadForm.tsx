@@ -13,9 +13,9 @@ import {
   required,
 } from '../../helpers/inputValidation';
 import { texts } from '../../helpers/texts/texts';
-import { useLastTxLocalStatus } from '../../helpers/useLastTxLocalStatus';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TxType } from '../../store/transactionsSlice';
+import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
 import { CreateProposalPageParams } from '../../types';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';

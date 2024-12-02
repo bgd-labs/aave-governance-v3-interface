@@ -10,10 +10,17 @@ import {
 import { produce } from 'immer';
 import { Address, Hex } from 'viem';
 
-import { createPayload } from '../components/Create/actions/createPayload';
-import { createProposal } from '../components/Create/actions/createProposal';
 import { appConfig, gelatoApiKeys } from '../configs/appConfig';
-import { PayloadAction, ProposalInitialStruct } from '../types';
+import { createPayload } from '../transactions/actions/createPayload';
+import { createProposal } from '../transactions/actions/createProposal';
+import { redeemCancellationFee } from '../transactions/actions/redeemCancellationFee';
+import {
+  DelegateData,
+  DelegateItem,
+  PayloadAction,
+  ProposalInitialStruct,
+  RepresentationFormData,
+} from '../types';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 
@@ -113,14 +120,14 @@ type ExecutePayloadTx = BaseTx & {
   };
 };
 
-// type DelegateTx = BaseTx & {
-//   type: TxType.delegate;
-//   payload: {
-//     delegateData: DelegateItem[];
-//     formDelegateData: DelegateData[];
-//     timestamp: number;
-//   };
-// };
+type DelegateTx = BaseTx & {
+  type: TxType.delegate;
+  payload: {
+    delegateData: DelegateItem[];
+    formDelegateData: DelegateData[];
+    timestamp: number;
+  };
+};
 
 type TestTx = BaseTx & {
   type: TxType.test;
@@ -133,20 +140,20 @@ type CancelProposalTx = BaseTx & {
   };
 };
 
-// type RepresentationsTx = BaseTx & {
-//   type: TxType.representations;
-//   payload: {
-//     initialData: RepresentationFormData[];
-//     data: RepresentationFormData[];
-//     timestamp: number;
-//   };
-// };
+type RepresentationsTx = BaseTx & {
+  type: TxType.representations;
+  payload: {
+    initialData: RepresentationFormData[];
+    data: RepresentationFormData[];
+    timestamp: number;
+  };
+};
 
 type ReturnFeesTx = BaseTx & {
   type: TxType.claimFees;
   payload: {
     creator: Address;
-    proposalIds: number[];
+    proposalsIds: number[];
   };
 };
 
@@ -160,10 +167,10 @@ export type TransactionUnion =
   | CloseAndSendVoteTx
   | ExecuteProposalTx
   | ExecutePayloadTx
-  // | DelegateTx
+  | DelegateTx
   | TestTx
   | CancelProposalTx
-  // | RepresentationsTx
+  | RepresentationsTx
   | ReturnFeesTx;
 
 export type TransactionsSlice = ITransactionsSlice<TransactionUnion> & {
@@ -190,6 +197,12 @@ export type TransactionsSlice = ITransactionsSlice<TransactionUnion> & {
     cancellationFee: string;
     proposalsCount: number;
   } & Pick<ProposalInitialStruct, 'payloads'>) => Promise<void>;
+  redeemCancellationFee: ({
+    proposalsIds,
+    creator,
+  }: {
+    proposalsIds: number[];
+  } & Pick<ProposalInitialStruct, 'creator'>) => Promise<void>;
 
   isGelatoAvailableChains: Record<number, boolean>;
   checkIsGelatoAvailableWithApiKey: (chainId: number) => Promise<void>;
@@ -251,6 +264,26 @@ export const createTransactionsSlice: StoreSlice<
         },
       },
     });
+  },
+
+  redeemCancellationFee: async ({ creator, proposalsIds }) => {
+    await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
+    const activeAddress = get().activeWallet?.address;
+    if (activeAddress) {
+      await get().executeTx({
+        body: () => {
+          return redeemCancellationFee({
+            wagmiConfig: get().wagmiConfig,
+            proposalsIds,
+          });
+        },
+        params: {
+          type: TxType.claimFees,
+          desiredChainID: appConfig.govCoreChainId,
+          payload: { creator, proposalsIds },
+        },
+      });
+    }
   },
 
   ...createBaseTransactionsSlice<TransactionUnion>({

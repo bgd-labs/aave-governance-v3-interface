@@ -4,10 +4,10 @@ import { writeContract } from '@wagmi/core';
 import { Address, Client, Hex } from 'viem';
 import { Config } from 'wagmi';
 
-import { appConfig, isForIPFS } from '../../../configs/appConfig';
-import { fetchPayloads } from '../../../requests/fetchPayloads';
-import { api } from '../../../trpc/client';
-import { ProposalInitialStruct } from '../../../types';
+import { appConfig, isForIPFS } from '../../configs/appConfig';
+import { fetchPayloads } from '../../requests/fetchPayloads';
+import { api } from '../../trpc/client';
+import { ProposalInitialStruct } from '../../types';
 
 export async function createProposal({
   wagmiConfig,

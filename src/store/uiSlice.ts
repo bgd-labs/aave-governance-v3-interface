@@ -45,6 +45,9 @@ export interface IUISlice {
 
   isExecutePayloadModalOpen: boolean;
   setExecutePayloadModalOpen: (value: boolean) => void;
+
+  isProposalHistoryModalOpen: boolean;
+  setIsProposalHistoryOpen: (value: boolean) => void;
 }
 
 export const createUISlice: StoreSlice<
@@ -159,5 +162,10 @@ export const createUISlice: StoreSlice<
   isExecutePayloadModalOpen: false,
   setExecutePayloadModalOpen: (value) => {
     set({ isModalOpen: value, isExecutePayloadModalOpen: value });
+  },
+
+  isProposalHistoryModalOpen: false,
+  setIsProposalHistoryOpen: (value) => {
+    set({ isModalOpen: value, isProposalHistoryModalOpen: value });
   },
 });

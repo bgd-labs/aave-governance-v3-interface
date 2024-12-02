@@ -1,8 +1,8 @@
-import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IAaveTokenV3';
 import { Address, Client, Hex } from 'viem';
 import { getBlock, multicall } from 'viem/actions';
 
 import { GovernancePowerType } from '../../types';
+import { IAaveTokenV3_ABI } from '../abis/IAaveTokenV3';
 
 export type GetVotingPowerWithDelegationByBlockHashRPC = {
   client: Client;

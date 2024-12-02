@@ -3,7 +3,7 @@ import { writeContract } from '@wagmi/core';
 import { Address, bytesToHex, stringToBytes } from 'viem';
 import { Config } from 'wagmi';
 
-import { PayloadAction } from '../../../types';
+import { PayloadAction } from '../../types';
 
 export async function createPayload({
   wagmiConfig,

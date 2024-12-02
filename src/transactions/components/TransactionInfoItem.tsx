@@ -10,6 +10,11 @@ import ArrowRightIcon from '../../assets/icons/arrowRight.svg';
 import CheckIcon from '../../assets/icons/check.svg';
 import CrossIcon from '../../assets/icons/cross.svg';
 import ReplacedIcon from '../../assets/icons/replacedIcon.svg';
+import { ChainNameWithIcon } from '../../components/ChainNameWithIcon';
+import { CopyAndExternalIconsSet } from '../../components/CopyAndExternalIconsSet';
+import { Link } from '../../components/Link';
+import { IconBox } from '../../components/primitives/IconBox';
+import { Spinner } from '../../components/Spinner';
 import { appConfig } from '../../configs/appConfig';
 import { chainInfoHelper } from '../../configs/configs';
 import { getScanLink } from '../../helpers/getScanLink';
@@ -17,11 +22,6 @@ import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TxType, TxWithStatus } from '../../store/transactionsSlice';
 import { textCenterEllipsis } from '../../styles/textCenterEllipsis';
-import { ChainNameWithIcon } from '../ChainNameWithIcon';
-import { CopyAndExternalIconsSet } from '../CopyAndExternalIconsSet';
-import { Link } from '../Link';
-import { IconBox } from '../primitives/IconBox';
-import { Spinner } from '../Spinner';
 
 interface TransactionInfoItemProps {
   tx: TxWithStatus;
@@ -198,9 +198,9 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === TxType.claimFees && tx.payload && (
             <>
               {texts.creationFee.claimGuaranteeTxInfo(
-                tx.payload.proposalIds.length,
+                tx.payload.proposalsIds.length,
               )}{' '}
-              {tx.payload.proposalIds.map((id) => (
+              {tx.payload.proposalsIds.map((id) => (
                 <b>{id}</b>
               ))}{' '}
               on <NetworkIconWitchChainN />

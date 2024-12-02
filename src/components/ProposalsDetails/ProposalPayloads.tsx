@@ -1,8 +1,4 @@
 import {
-  InitialPayload,
-  PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,
 } from '@bgd-labs/frontend-web3-utils';
@@ -22,7 +18,11 @@ import { getScanLink } from '../../helpers/getScanLink';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
-import { PayloadWithHashes } from '../../types';
+import {
+  InitialPayload,
+  InitialPayloadState,
+  PayloadWithHashes,
+} from '../../types';
 import { BoxWith3D } from '../BoxWith3D';
 import { CopyAndExternalIconsSet } from '../CopyAndExternalIconsSet';
 import { Link } from '../Link';
@@ -451,7 +451,7 @@ function PayloadItem({
               </PayloadItemStatusInfo>
             )}
 
-            {payload.data.state === PayloadState.Expired && (
+            {payload.data.state === InitialPayloadState.Expired && (
               <PayloadItemStatusInfo
                 title={texts.proposals.payloadsDetails.expired}>
                 <>
