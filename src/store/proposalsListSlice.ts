@@ -186,6 +186,7 @@ export const createProposalsListSlice: StoreSlice<
         id: BigInt(proposal.proposalId),
         votingChainId: proposal.votingChainId,
         votingAssets: proposal.votingAssets,
+        isVotingFinished: proposal.isVotingFinished,
         snapshotBlockHash: proposal.snapshotBlockHash as Hex,
       };
     });
@@ -207,7 +208,11 @@ export const createProposalsListSlice: StoreSlice<
           walletAddress: activeWallet.address,
           snapshotBlockHash: proposal.snapshotBlockHash,
         });
-        if (!data.voted.isVoted && proposal.snapshotBlockHash !== zeroHash) {
+        if (
+          !data.voted.isVoted &&
+          proposal.snapshotBlockHash !== zeroHash &&
+          !proposal.isVotingFinished
+        ) {
           await get().getVotingBalancesByUser(activeWallet.address, proposal);
         }
         set((state) =>

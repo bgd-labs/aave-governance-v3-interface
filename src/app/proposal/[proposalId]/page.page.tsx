@@ -34,18 +34,29 @@ export default async function Page({
   params: { proposalId: string };
 }) {
   const proposalId = params.proposalId;
-  if (isNaN(+proposalId.split('_')[0])) {
+  const id = +proposalId.split('_')[0];
+
+  if (isNaN(id)) {
     notFound();
   }
+
   const [configs, count] = await Promise.all([
     await api.configs.get(),
     await api.configs.getProposalsCount(),
   ]);
+
+  const data = await api.proposals.getDetails({
+    ...configs.contractsConstants,
+    votingConfigs: configs.configs,
+    proposalId: id,
+  });
+
   return (
     <ProposalDetailsInitializer
       proposalId={proposalId}
       configs={configs}
       count={Number(count)}
+      data={data}
     />
   );
 }

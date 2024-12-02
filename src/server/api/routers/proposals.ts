@@ -5,6 +5,10 @@ import {
   fetchProposalById,
   FetchProposalByIdParams,
 } from '../../../requests/fetchProposalById';
+import {
+  fetchProposalDataForDetails,
+  FetchProposalsDataForDetailsParams,
+} from '../../../requests/fetchProposalDataForDetails';
 import { fetchProposalsBalancesByUser } from '../../../requests/fetchProposalsBalancesByUser';
 import { fetchProposalsDataByUser } from '../../../requests/fetchProposalsDataByUser';
 import { serverClients } from '../../../requests/utils/chains';
@@ -42,6 +46,17 @@ export const proposalsRouter = createTRPCRouter({
           input: {
             ...input.input,
             govCoreClient: serverClients[appConfig.govCoreChainId],
+          },
+        }),
+    ),
+  getDetails: publicProcedure
+    .input(z.custom<Omit<FetchProposalsDataForDetailsParams, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchProposalDataForDetails({
+          input: {
+            ...input.input,
+            clients: serverClients,
           },
         }),
     ),

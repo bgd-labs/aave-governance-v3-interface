@@ -10,10 +10,7 @@ import { chainInfoHelper } from '../../configs/configs';
 import { ROUTES } from '../../configs/routes';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
-import {
-  selectProposalDataByUser,
-  selectVotingBalanceByUser,
-} from '../../store/selectors/proposalsSelector';
+import { selectProposalDataByUser } from '../../store/selectors/proposalsSelector';
 import { disablePageLoader } from '../../styles/disablePageLoader';
 import { ActiveProposalOnTheList } from '../../types';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
@@ -52,12 +49,12 @@ export function ActiveItem({
 
   const userProposalData = selectProposalDataByUser({
     votingBalances,
-    votedData,
-    walletAddress: activeWallet?.address ?? zeroAddress,
     snapshotBlockHash: proposalData.snapshotBlockHash,
+    walletAddress: activeWallet?.address ?? zeroAddress, // TODO: representation
+    votedData,
   });
-  const [votingPower, setVotingPower] = useState(0n);
 
+  const [votingPower, setVotingPower] = useState(0n);
   const [isClicked, setIsClicked] = useState(false);
 
   if (isForHelpModal) {
@@ -78,13 +75,7 @@ export function ActiveItem({
         setVotingPower(userProposalData.voted.votedInfo.votedPower);
       } else {
         if (userProposalData.voting) {
-          setVotingPower(
-            selectVotingBalanceByUser({
-              votingBalances,
-              walletAddress: activeWallet?.address ?? zeroAddress,
-              snapshotBlockHash: proposalData.snapshotBlockHash,
-            }),
-          );
+          setVotingPower(userProposalData.votingPower);
         }
       }
     }
@@ -242,7 +233,7 @@ export function ActiveItem({
               </Box>
 
               {proposalData.isVotingFinished &&
-                userProposalData.voted.isVoted &&
+                userProposalData.voted?.isVoted &&
                 !proposalData.isFinished && (
                   <Box
                     sx={{
@@ -322,32 +313,17 @@ export function ActiveItem({
                       )}
                     </>
                   ) : (
-                    <>
-                      {proposalData.isVotingActive &&
-                      !proposalData.isVotingFinished ? (
-                        <Box
-                          component="p"
-                          sx={{
-                            typography: 'body',
-                            color: '$textSecondary',
-                            textAlign: 'center',
-                          }}>
-                          {texts.proposals.walletNotConnected}
-                        </Box>
-                      ) : (
-                        !proposalData.isVotingActive && (
-                          <Box
-                            component="div"
-                            sx={{
-                              typography: 'body',
-                              color: '$textSecondary',
-                              textAlign: 'center',
-                            }}>
-                            <VotingNotStarted />
-                          </Box>
-                        )
-                      )}
-                    </>
+                    !proposalData.isVotingActive && (
+                      <Box
+                        component="div"
+                        sx={{
+                          typography: 'body',
+                          color: '$textSecondary',
+                          textAlign: 'center',
+                        }}>
+                        <VotingNotStarted />
+                      </Box>
+                    )
                   )}
                 </Box>
               )}
@@ -439,7 +415,7 @@ export function ActiveItem({
                               />
                               <VotedState
                                 support={
-                                  userProposalData.voted.votedInfo.support
+                                  userProposalData.voted?.votedInfo.support
                                 }
                               />
                             </>
@@ -466,29 +442,16 @@ export function ActiveItem({
                       )}
                     </>
                   ) : (
-                    <>
-                      {proposalData.isVotingActive &&
-                      !proposalData.isVotingFinished ? (
-                        <Box
-                          sx={{
-                            color: '$textSecondary',
-                            typography: 'body',
-                          }}>
-                          <p>{texts.proposals.walletNotConnected}</p>
-                        </Box>
-                      ) : (
-                        !proposalData.isVotingActive &&
-                        !proposalData.isVotingFinished && (
-                          <Box
-                            sx={{
-                              color: '$textSecondary',
-                              typography: 'body',
-                            }}>
-                            <VotingNotStarted withoutMaxWidth />
-                          </Box>
-                        )
-                      )}
-                    </>
+                    !proposalData.isVotingActive &&
+                    !proposalData.isVotingFinished && (
+                      <Box
+                        sx={{
+                          color: '$textSecondary',
+                          typography: 'body',
+                        }}>
+                        <VotingNotStarted withoutMaxWidth />
+                      </Box>
+                    )
                   )}
                 </Box>
               </Box>

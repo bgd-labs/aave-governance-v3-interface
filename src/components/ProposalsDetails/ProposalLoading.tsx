@@ -226,6 +226,7 @@ export function ProposalLoading({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       width: '100%',
+                      mb: 4,
                     }}>
                     <CustomSkeleton width={50} height={14} />
                     <CustomSkeleton width={50} height={14} />
@@ -239,6 +240,7 @@ export function ProposalLoading({
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       width: '100%',
+                      mb: 4,
                     }}>
                     <CustomSkeleton width={50} height={14} />
                     <CustomSkeleton width={50} height={14} />

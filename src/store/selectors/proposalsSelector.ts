@@ -1,3 +1,4 @@
+import { IProposalSlice } from '../proposalSlice';
 import {
   IProposalsListSlice,
   selectIdsForRequest,
@@ -50,20 +51,17 @@ export const selectProposalDataByUser = ({
   return {
     voted: votedData[`${walletAddress}_${snapshotBlockHash}`],
     voting: votingBalances[`${walletAddress}_${snapshotBlockHash}`],
+    votingPower: votingBalances[`${walletAddress}_${snapshotBlockHash}`]
+      ? votingBalances[`${walletAddress}_${snapshotBlockHash}`]
+          .map((power) => power.votingPower)
+          .reduce((acc, num) => acc + num, 0n)
+      : 0n,
   };
 };
 
-export const selectVotingBalanceByUser = ({
-  votingBalances,
-  walletAddress,
-  snapshotBlockHash,
-}: {
-  walletAddress: string;
-  snapshotBlockHash: string;
-} & Pick<IProposalsSlice, 'votingBalances'>) => {
-  return votingBalances[`${walletAddress}_${snapshotBlockHash}`]
-    ? votingBalances[`${walletAddress}_${snapshotBlockHash}`]
-        .map((power) => power.votingPower)
-        .reduce((acc, num) => acc + num, 0n)
-    : 0n;
+export const selectProposalDetailedData = ({
+  proposalDetails,
+  id,
+}: { id: number } & Pick<IProposalSlice, 'proposalDetails'>) => {
+  return proposalDetails[id];
 };

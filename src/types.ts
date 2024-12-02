@@ -12,6 +12,8 @@ import {
   Hex,
 } from 'viem';
 
+import { formatDataForDetails } from './requests/utils/formatProposalData';
+
 // ui
 export type AppModeType = 'default' | 'dev' | 'expert';
 export type IsGaslessVote = 'on' | 'off';
@@ -192,6 +194,15 @@ export type VotingDataByUser = {
   votingPower: bigint;
   userBalance: bigint;
   isWithDelegatedPower: boolean;
+};
+// Proposal details
+export type DetailedProposalData = {
+  proposalData: ProposalInitialStruct;
+  payloadsData: PayloadInitialStruct[];
+  votingData: VMProposalInitialStruct;
+  metadata: ProposalMetadata;
+  formattedData: ReturnType<typeof formatDataForDetails>;
+  ipfsError?: string;
 };
 
 // ENS

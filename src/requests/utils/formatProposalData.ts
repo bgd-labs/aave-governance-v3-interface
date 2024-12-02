@@ -8,6 +8,7 @@ import {
   InitialProposalState,
   PayloadInitialStruct,
   ProposalInitialStruct,
+  ProposalMetadata,
   ProposalNextState,
   ProposalPendingState,
   ProposalState,
@@ -29,6 +30,11 @@ type FormatProposalParams = Pick<
 
 type FormatProposalParamsWithVoting = FormatProposalParams & {
   voting: VMProposalInitialStruct;
+};
+
+type FormatProposalParamsWithMetadata = FormatProposalParamsWithVoting & {
+  metadata: ProposalMetadata;
+  ipfsError?: string;
 };
 
 // universal
@@ -609,6 +615,71 @@ export function formatActiveProposalData({
     againstPercent: +Number(againstPercent).toFixed(4),
     // ipfs
     ipfsError: core.ipfsError,
+  };
+}
+
+export function formatDataForDetails({
+  ...data
+}: FormatProposalParamsWithMetadata) {
+  const states = getStatesForActiveProposal(data);
+  const state = getStateAndTimestampForActiveProposal(data);
+  const nextState = getNextStateAndTimestampForActiveProposal(data);
+  const pendingState = getPendingStateForActiveProposal(data);
+
+  const { voting, differential, precisionDivider, quorum } = data;
+
+  const { minQuorumVotes } = formatQuorum(
+    voting.proposalData.forVotes,
+    quorum,
+    precisionDivider,
+  );
+  const { requiredDiff } = formatDiff(
+    voting.proposalData.forVotes,
+    voting.proposalData.againstVotes,
+    differential,
+    precisionDivider,
+  );
+
+  const allVotes =
+    voting.proposalData.forVotes + voting.proposalData.againstVotes;
+
+  const requiredForVotes =
+    voting.proposalData.againstVotes + requiredDiff < minQuorumVotes
+      ? minQuorumVotes
+      : voting.proposalData.againstVotes + requiredDiff;
+  const forPercent =
+    allVotes > 0n
+      ? (voting.proposalData.forVotes / requiredForVotes) * 100n
+      : 0;
+
+  const requiredAgainstVotes =
+    voting.proposalData.forVotes === 0n ||
+    voting.proposalData.forVotes - requiredDiff <= 0n ||
+    voting.proposalData.forVotes < minQuorumVotes
+      ? minQuorumVotes
+      : voting.proposalData.forVotes - requiredDiff;
+
+  const againstPercent =
+    allVotes > 0n
+      ? (voting.proposalData.againstVotes /
+          (requiredAgainstVotes > 0n ? requiredAgainstVotes : 1n)) *
+        100n
+      : 0;
+
+  return {
+    ...states,
+    state,
+    nextState,
+    pendingState,
+    isVotingFinished: state.state > ProposalState.Voting,
+    isFinished: state.state > ProposalState.Succeed,
+    // votes
+    forVotes: +formatUnits(voting.proposalData.forVotes, DECIMALS),
+    requiredForVotes: +formatUnits(requiredForVotes, DECIMALS),
+    forPercent: +Number(forPercent).toFixed(4),
+    againstVotes: +formatUnits(voting.proposalData.againstVotes, DECIMALS),
+    requiredAgainstVotes: +formatUnits(requiredAgainstVotes, DECIMALS),
+    againstPercent: +Number(againstPercent).toFixed(4),
   };
 }
 
