@@ -3,11 +3,16 @@ import { Draft, produce } from 'immer';
 import { zeroHash } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
+import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { fetchCreatorPropositionPower } from '../requests/fetchCreatorPropositionPower';
 import { fetchProposalDataForDetails } from '../requests/fetchProposalDataForDetails';
 import { GetCreatorPropositionPower } from '../requests/utils/getOwnerPropositionPowerRPC';
 import { api } from '../trpc/client';
-import { DetailedProposalData } from '../types';
+import {
+  DetailedProposalData,
+  PayloadInitialStruct,
+  ProposalInitialStruct,
+} from '../types';
 import { IProposalsSlice } from './proposalsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectProposalDataByUser } from './selectors/proposalsSelector';
@@ -30,6 +35,15 @@ export interface IProposalSlice {
     creatorAddress,
     underlyingAssets,
   }: Omit<GetCreatorPropositionPower, 'govCoreClient'>) => Promise<void>;
+
+  seatbeltReportsLoadings: Record<string, boolean>;
+  getSeatbeltReport: ({
+    proposalId,
+    payload,
+  }: {
+    proposalId: number;
+    payload: PayloadInitialStruct;
+  }) => Promise<void>;
 }
 
 export const createProposalSlice: StoreSlice<
@@ -157,6 +171,46 @@ export const createProposalSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         draft.creatorPropositionPower[creatorAddress] = power;
+      }),
+    );
+  },
+
+  seatbeltReportsLoadings: {},
+  getSeatbeltReport: async ({ proposalId, payload }) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.seatbeltReportsLoadings[
+          `${proposalId}_${payload.payloadsController}_${payload.id}`
+        ] = true;
+      }),
+    );
+    const seatbeltMDRequest = await fetch(generateSeatbeltLink(payload));
+    const seatbeltMD = seatbeltMDRequest.ok
+      ? await seatbeltMDRequest.text()
+      : undefined;
+    set((state) =>
+      produce(state, (draft) => {
+        draft.proposalDetails[proposalId] = {
+          ...draft.proposalDetails[proposalId],
+          payloadsData: draft.proposalDetails[proposalId].payloadsData.map(
+            (p) => {
+              if (
+                p.payloadsController === payload.payloadsController &&
+                p.chain === payload.chain &&
+                p.id === payload.id
+              ) {
+                return {
+                  ...p,
+                  seatbeltMD,
+                };
+              }
+              return p;
+            },
+          ),
+        };
+        draft.seatbeltReportsLoadings[
+          `${proposalId}_${payload.payloadsController}_${payload.id}`
+        ] = false;
       }),
     );
   },

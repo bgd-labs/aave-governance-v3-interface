@@ -278,6 +278,7 @@ function PayloadItem({
               <Box sx={{ typography: 'body' }}>
                 {texts.proposals.payloadsDetails.payload} {payloadNumber}
               </Box>
+              {/*TODO: need fix link*/}
               <CopyAndExternalIconsSet
                 iconSize={12}
                 externalLink={`https://vote.onaave.com/payloads-explorer/?payloadId=${payload.id}&payloadChainId=${Number(payload.chain)}&payloadsControllerAddress=${payload.payloadsController}`}
@@ -504,7 +505,6 @@ function PayloadItem({
               forCreate={forCreate}
               withLink
               setIsSeatbeltModalOpen={setIsSeatbeltModalOpen}
-              report={payload.seatbeltMD}
             />
           </Box>
         )}

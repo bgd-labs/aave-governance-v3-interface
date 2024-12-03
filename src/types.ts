@@ -211,7 +211,7 @@ export type VotingDataByUser = {
 // Proposal details
 export type DetailedProposalData = {
   proposalData: ProposalInitialStruct;
-  payloadsData: PayloadInitialStruct[];
+  payloadsData: PayloadWithHashes[];
   votingData: VMProposalInitialStruct;
   metadata: ProposalMetadata;
   formattedData: ReturnType<typeof formatDataForDetails>;

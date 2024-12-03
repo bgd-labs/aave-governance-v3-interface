@@ -4,6 +4,7 @@ import React from 'react';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { getScanLink } from '../helpers/getScanLink';
 import { texts } from '../helpers/texts/texts';
+import { useStore } from '../providers/ZustandStoreProvider';
 import { textCenterEllipsis } from '../styles/textCenterEllipsis';
 import { PayloadWithHashes } from '../types';
 import { CopyAndExternalIconsSet } from './CopyAndExternalIconsSet';
@@ -15,7 +16,6 @@ interface PayloadActionsProps {
   forCreate?: boolean;
   withLink?: boolean;
   setIsSeatbeltModalOpen?: (value: boolean) => void;
-  report?: string;
   withoutTitle?: boolean;
   textColor?: string;
   showMoreClick?: () => void;
@@ -27,12 +27,16 @@ export function PayloadActions({
   forCreate,
   withLink,
   setIsSeatbeltModalOpen,
-  report,
   withoutTitle,
   textColor,
   showMoreClick,
   withoutEllipsis,
 }: PayloadActionsProps) {
+  const getSeatbeltReport = useStore((store) => store.getSeatbeltReport);
+  const seatbeltReportsLoadings = useStore(
+    (store) => store.seatbeltReportsLoadings,
+  );
+
   const isWithShowMore = !!showMoreClick && payload.data.actions.length > 2;
 
   return (
@@ -119,7 +123,7 @@ export function PayloadActions({
         </Box>
       )}
 
-      {withLink && !report && !forCreate ? (
+      {withLink && !payload.seatbeltMD && !setIsSeatbeltModalOpen ? (
         <Link
           href={generateSeatbeltLink(payload)}
           inNewWindow
@@ -138,12 +142,22 @@ export function PayloadActions({
         </Link>
       ) : (
         withLink &&
-        !!setIsSeatbeltModalOpen &&
-        !!report && (
+        !!setIsSeatbeltModalOpen && (
           <Box sx={{ mt: 4 }}>
             <SmallButton
-              onClick={(e) => {
+              loading={
+                seatbeltReportsLoadings[
+                  `${payload.proposalId}_${payload.payloadsController}_${payload.id}`
+                ]
+              }
+              onClick={async (e) => {
                 e.stopPropagation();
+                if (!payload.seatbeltMD && !forCreate) {
+                  await getSeatbeltReport({
+                    proposalId: payload.proposalId ?? 0,
+                    payload,
+                  });
+                }
                 setIsSeatbeltModalOpen(true);
               }}>
               {texts.proposals.payloadsDetails.seatbelt}

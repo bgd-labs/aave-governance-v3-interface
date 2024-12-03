@@ -4,7 +4,7 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { zeroHash } from 'viem';
 
 import { appConfig } from '../../configs/appConfig';
@@ -43,6 +43,67 @@ interface ProposalStatusDetailsProps {
   hasRequiredRoots: boolean;
   setIsActivateVotingOnVotingMachineModalOpen: (value: boolean) => void;
 }
+
+const ActionItem = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) => {
+  const theme = useTheme();
+  return (
+    <BoxWith3D
+      borderSize={10}
+      contentColor="$mainLight"
+      wrapperCss={{
+        my: 18,
+        [theme.breakpoints.up('lg')]: {
+          my: 24,
+        },
+      }}
+      css={{
+        display: 'flex',
+        p: 18,
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        minHeight: 71,
+        flexWrap: 'wrap',
+        [theme.breakpoints.up('sm')]: {
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          minHeight: 95,
+        },
+        [theme.breakpoints.up('lg')]: {
+          minHeight: 118,
+          p: '24px 30px',
+        },
+      }}>
+      <Box
+        component="h3"
+        sx={{
+          typography: 'h3',
+          mb: 12,
+          fontWeight: 600,
+          [theme.breakpoints.up('sm')]: {
+            typography: 'h3',
+            fontWeight: 600,
+            mb: 18,
+            textAlign: 'center',
+          },
+          [theme.breakpoints.up('lg')]: {
+            typography: 'h3',
+            fontWeight: 600,
+            mb: 24,
+          },
+        }}>
+        {title}
+      </Box>
+      {children}
+    </BoxWith3D>
+  );
+};
 
 export function ProposalStatusDetails({
   blockHash,
@@ -205,224 +266,35 @@ export function ProposalStatusDetails({
   }
 
   const actions = () => {
-    if (activeWallet?.isActive) {
-      if (
-        proposalBasicStatus === InitialProposalState.Created &&
-        votingStartTime === 0 &&
-        blockHash === zeroHash
-      ) {
-        const now = dayjs().unix();
+    if (
+      proposalBasicStatus === InitialProposalState.Created &&
+      votingStartTime === 0 &&
+      blockHash === zeroHash
+    ) {
+      const now = dayjs().unix();
 
-        return {
-          title: texts.proposalActions.proposalCreated,
-          button: () => (
-            <>
-              {now > creationTime + coolDownBeforeVotingStart ? (
-                <BigButton
-                  loading={
-                    getTxStatus({
-                      type: TxType.activateVoting,
-                      payload: { proposalId },
-                    }).isPending
-                  }
-                  disabled={
-                    getTxStatus({
-                      type: TxType.activateVoting,
-                      payload: { proposalId },
-                    }).isSuccess
-                  }
-                  onClick={() => setIsActivateVotingModalOpen(true)}>
-                  {texts.proposalActions.activateVoting}
-                </BigButton>
-              ) : (
-                <Box
-                  sx={{
-                    typography: 'body',
-                    textAlign: 'center',
-                    color: '$textSecondary',
-                  }}>
-                  <Timer
-                    expiryTimestamp={creationTime + coolDownBeforeVotingStart}
-                    onExpire={() => getProposalDetails(proposalId)}
-                  />{' '}
-                  {texts.proposalActions.activateVotingTimer}
-                </Box>
-              )}
-            </>
-          ),
-        };
-      } else if (
-        proposalBasicStatus <= InitialProposalState.Active &&
-        votingStartTime === 0 &&
-        blockHash !== zeroHash &&
-        !hasRequiredRoots
-      ) {
-        return {
-          title: texts.proposalActions.proposalActivated,
-          button: () => (
-            <>
-              {assetsForProofs.map((asset, index) => (
-                <BigButton
-                  css={{ mb: 8, '&:last-of-type': { mb: 0 } }}
-                  key={index}
-                  loading={
-                    getTxStatus({
-                      type: TxType.sendProofs,
-                      payload: {
-                        proposalId,
-                        blockHash: blockHash,
-                        underlyingAsset: asset.underlyingAsset,
-                        withSlot: asset.withSlot,
-                      },
-                    }).isPending
-                  }
-                  disabled={
-                    getTxStatus({
-                      type: TxType.sendProofs,
-                      payload: {
-                        proposalId,
-                        blockHash: blockHash,
-                        underlyingAsset: asset.underlyingAsset,
-                        withSlot: asset.withSlot,
-                      },
-                    }).isSuccess
-                  }
-                  onClick={() => asset.setIsModalOpen(true)}>
-                  {/*Send {getAssetName(asset.underlyingAsset)}{' '}*/}
-                  {asset.withSlot ? 'slot' : 'root'}
-                </BigButton>
-              ))}
-            </>
-          ),
-        };
-      } else if (
-        proposalBasicStatus <= InitialProposalState.Active &&
-        votingStartTime === 0 &&
-        blockHash !== zeroHash &&
-        hasRequiredRoots
-      ) {
-        const returnObject = {
-          title: texts.proposalActions.proofsSent,
-        };
-
-        if (blockHash === votingBlockHash) {
-          return {
-            ...returnObject,
-            button: () => (
+      return {
+        title: texts.proposalActions.proposalCreated,
+        button: () => (
+          <>
+            {now > creationTime + coolDownBeforeVotingStart ? (
               <BigButton
-                disabled={
-                  getTxStatus({
-                    type: TxType.activateVotingOnVotingMachine,
-                    payload: { proposalId },
-                  }).isSuccess
-                }
                 loading={
                   getTxStatus({
-                    type: TxType.activateVotingOnVotingMachine,
+                    type: TxType.activateVoting,
                     payload: { proposalId },
                   }).isPending
                 }
-                onClick={() =>
-                  setIsActivateVotingOnVotingMachineModalOpen(true)
-                }>
+                disabled={
+                  getTxStatus({
+                    type: TxType.activateVoting,
+                    payload: { proposalId },
+                  }).isSuccess
+                }
+                onClick={() => setIsActivateVotingModalOpen(true)}>
                 {texts.proposalActions.activateVoting}
               </BigButton>
-            ),
-          };
-        } else {
-          return {
-            ...returnObject,
-            button: () => (
-              <Box
-                sx={{
-                  typography: 'body',
-                  textAlign: 'center',
-                  color: '$textSecondary',
-                }}>
-                {texts.proposalActions.waitForBridging}
-              </Box>
-            ),
-          };
-        }
-      } else if (votingClosedAndSentBlockNumber === 0 && !isExecuted) {
-        return {
-          title: texts.proposalActions.votingPassed,
-          button: () => (
-            <BigButton
-              disabled={
-                getTxStatus({
-                  type: TxType.closeAndSendVote,
-                  payload: { proposalId },
-                }).isSuccess
-              }
-              loading={
-                getTxStatus({
-                  type: TxType.closeAndSendVote,
-                  payload: { proposalId },
-                }).isPending
-              }
-              onClick={() => setCloseVotingModalOpen(true)}>
-              {texts.proposalActions.closeVoting}
-            </BigButton>
-          ),
-        };
-      } else if (
-        proposalResultsSent &&
-        proposalQueuingTime === 0 &&
-        !isExecuted
-      ) {
-        return {
-          title: texts.proposalActions.votingClosedResultsSent,
-          button: () => (
-            <Box
-              sx={{
-                typography: 'body',
-                textAlign: 'center',
-                color: '$textSecondary',
-              }}>
-              {texts.proposalActions.proposalTimeLocked}
-            </Box>
-          ),
-        };
-      } else if (
-        proposalResultsSent &&
-        proposalQueuingTime !== 0 &&
-        proposalBasicStatus !== InitialProposalState.Executed &&
-        !isExecuted
-      ) {
-        const returnObject = {
-          title: texts.proposalActions.proposalCanBeExecuted,
-        };
-
-        if (
-          dayjs().unix() > proposalQueuingTime + cooldownPeriod &&
-          !isExecuted
-        ) {
-          return {
-            ...returnObject,
-            button: () => (
-              <BigButton
-                disabled={
-                  getTxStatus({
-                    type: TxType.executeProposal,
-                    payload: { proposalId },
-                  }).isSuccess
-                }
-                loading={
-                  getTxStatus({
-                    type: TxType.executeProposal,
-                    payload: { proposalId },
-                  }).isPending
-                }
-                onClick={() => setExecuteProposalModalOpen(true)}>
-                {texts.proposalActions.executeProposal}
-              </BigButton>
-            ),
-          };
-        } else {
-          return {
-            ...returnObject,
-            button: () => (
+            ) : (
               <Box
                 sx={{
                   typography: 'body',
@@ -430,79 +302,220 @@ export function ProposalStatusDetails({
                   color: '$textSecondary',
                 }}>
                 <Timer
-                  expiryTimestamp={proposalQueuingTime + cooldownPeriod}
+                  expiryTimestamp={creationTime + coolDownBeforeVotingStart}
                   onExpire={() => getProposalDetails(proposalId)}
                 />{' '}
-                {texts.proposalActions.executeProposalTimer}
+                {texts.proposalActions.activateVotingTimer}
               </Box>
-            ),
-          };
-        }
-      }
-    } else {
+            )}
+          </>
+        ),
+      };
+    } else if (
+      proposalBasicStatus <= InitialProposalState.Active &&
+      votingStartTime === 0 &&
+      blockHash !== zeroHash &&
+      !hasRequiredRoots
+    ) {
       return {
-        title: texts.proposalActions.noWalletTitle,
+        title: texts.proposalActions.proposalActivated,
         button: () => (
-          <BigButton onClick={() => setConnectWalletModalOpen(true)}>
-            {texts.proposalActions.noWalletButtonTitle}
+          <>
+            {assetsForProofs.map((asset, index) => (
+              <BigButton
+                css={{ mb: 8, '&:last-of-type': { mb: 0 } }}
+                key={index}
+                loading={
+                  getTxStatus({
+                    type: TxType.sendProofs,
+                    payload: {
+                      proposalId,
+                      blockHash: blockHash,
+                      underlyingAsset: asset.underlyingAsset,
+                      withSlot: asset.withSlot,
+                    },
+                  }).isPending
+                }
+                disabled={
+                  getTxStatus({
+                    type: TxType.sendProofs,
+                    payload: {
+                      proposalId,
+                      blockHash: blockHash,
+                      underlyingAsset: asset.underlyingAsset,
+                      withSlot: asset.withSlot,
+                    },
+                  }).isSuccess
+                }
+                onClick={() => asset.setIsModalOpen(true)}>
+                {/*Send {getAssetName(asset.underlyingAsset)}{' '}*/}
+                {asset.withSlot ? 'slot' : 'root'}
+              </BigButton>
+            ))}
+          </>
+        ),
+      };
+    } else if (
+      proposalBasicStatus <= InitialProposalState.Active &&
+      votingStartTime === 0 &&
+      blockHash !== zeroHash &&
+      hasRequiredRoots
+    ) {
+      const returnObject = {
+        title: texts.proposalActions.proofsSent,
+      };
+
+      if (blockHash === votingBlockHash) {
+        return {
+          ...returnObject,
+          button: () => (
+            <BigButton
+              disabled={
+                getTxStatus({
+                  type: TxType.activateVotingOnVotingMachine,
+                  payload: { proposalId },
+                }).isSuccess
+              }
+              loading={
+                getTxStatus({
+                  type: TxType.activateVotingOnVotingMachine,
+                  payload: { proposalId },
+                }).isPending
+              }
+              onClick={() => setIsActivateVotingOnVotingMachineModalOpen(true)}>
+              {texts.proposalActions.activateVoting}
+            </BigButton>
+          ),
+        };
+      } else {
+        return {
+          ...returnObject,
+          button: () => (
+            <Box
+              sx={{
+                typography: 'body',
+                textAlign: 'center',
+                color: '$textSecondary',
+              }}>
+              {texts.proposalActions.waitForBridging}
+            </Box>
+          ),
+        };
+      }
+    } else if (votingClosedAndSentBlockNumber === 0 && !isExecuted) {
+      return {
+        title: texts.proposalActions.votingPassed,
+        button: () => (
+          <BigButton
+            disabled={
+              getTxStatus({
+                type: TxType.closeAndSendVote,
+                payload: { proposalId },
+              }).isSuccess
+            }
+            loading={
+              getTxStatus({
+                type: TxType.closeAndSendVote,
+                payload: { proposalId },
+              }).isPending
+            }
+            onClick={() => setCloseVotingModalOpen(true)}>
+            {texts.proposalActions.closeVoting}
           </BigButton>
         ),
       };
+    } else if (
+      proposalResultsSent &&
+      proposalQueuingTime === 0 &&
+      !isExecuted
+    ) {
+      return {
+        title: texts.proposalActions.votingClosedResultsSent,
+        button: () => (
+          <Box
+            sx={{
+              typography: 'body',
+              textAlign: 'center',
+              color: '$textSecondary',
+            }}>
+            {texts.proposalActions.proposalTimeLocked}
+          </Box>
+        ),
+      };
+    } else if (
+      proposalResultsSent &&
+      proposalQueuingTime !== 0 &&
+      proposalBasicStatus !== InitialProposalState.Executed &&
+      !isExecuted
+    ) {
+      const returnObject = {
+        title: texts.proposalActions.proposalCanBeExecuted,
+      };
+
+      if (
+        dayjs().unix() > proposalQueuingTime + cooldownPeriod &&
+        !isExecuted
+      ) {
+        return {
+          ...returnObject,
+          button: () => (
+            <BigButton
+              disabled={
+                getTxStatus({
+                  type: TxType.executeProposal,
+                  payload: { proposalId },
+                }).isSuccess
+              }
+              loading={
+                getTxStatus({
+                  type: TxType.executeProposal,
+                  payload: { proposalId },
+                }).isPending
+              }
+              onClick={() => setExecuteProposalModalOpen(true)}>
+              {texts.proposalActions.executeProposal}
+            </BigButton>
+          ),
+        };
+      } else {
+        return {
+          ...returnObject,
+          button: () => (
+            <Box
+              sx={{
+                typography: 'body',
+                textAlign: 'center',
+                color: '$textSecondary',
+              }}>
+              <Timer
+                expiryTimestamp={proposalQueuingTime + cooldownPeriod}
+                onExpire={() => getProposalDetails(proposalId)}
+              />{' '}
+              {texts.proposalActions.executeProposalTimer}
+            </Box>
+          ),
+        };
+      }
     }
   };
 
   return (
     <>
-      {actions() && (
-        <BoxWith3D
-          borderSize={10}
-          contentColor="$mainLight"
-          wrapperCss={{
-            my: 18,
-            [theme.breakpoints.up('lg')]: {
-              my: 24,
-            },
-          }}
-          css={{
-            display: 'flex',
-            p: 18,
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            minHeight: 71,
-            flexWrap: 'wrap',
-            [theme.breakpoints.up('sm')]: {
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              minHeight: 95,
-            },
-            [theme.breakpoints.up('lg')]: {
-              minHeight: 118,
-              p: '24px 30px',
-            },
-          }}>
-          <Box
-            component="h3"
-            sx={{
-              typography: 'h3',
-              mb: 12,
-              fontWeight: 600,
-              [theme.breakpoints.up('sm')]: {
-                typography: 'h3',
-                fontWeight: 600,
-                mb: 18,
-                textAlign: 'center',
-              },
-              [theme.breakpoints.up('lg')]: {
-                typography: 'h3',
-                fontWeight: 600,
-                mb: 24,
-              },
-            }}>
-            {actions()?.title}
-          </Box>
-          {actions()?.button()}
-        </BoxWith3D>
+      {actions() && activeWallet && (
+        <ActionItem
+          title={actions()?.title ?? ''}
+          children={actions()?.button()}
+        />
+      )}
+      {!activeWallet && actions() && (
+        <ActionItem
+          title={texts.proposalActions.noWalletTitle}
+          children={
+            <BigButton onClick={() => setConnectWalletModalOpen(true)}>
+              {texts.proposalActions.noWalletButtonTitle}
+            </BigButton>
+          }
+        />
       )}
 
       {/*<ActivateVotingModal*/}

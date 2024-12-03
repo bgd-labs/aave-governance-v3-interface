@@ -54,7 +54,6 @@ export function AppHeader() {
   const isRendered = useStore((store) => store.isRendered);
   const activeWallet = useStore((store) => store.activeWallet);
   const checkAppMode = useStore((store) => store.checkAppMode);
-  const appMode = useStore((store) => store.appMode);
   const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
   const isModalOpen = useStore((store) => store.isModalOpen);
   const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
@@ -96,19 +95,6 @@ export function AppHeader() {
       handleCloseMobileMenu();
     }
   }, [sm]);
-
-  if (appMode === 'default' || isForIPFS) {
-    if (headerNavItems.some((item) => item.title === 'Create')) {
-      headerNavItems.shift();
-    }
-  } else {
-    if (!headerNavItems.some((item) => item.title === 'Create') && !isForIPFS) {
-      headerNavItems.unshift({
-        link: ROUTES.create,
-        title: texts.header.navCreate,
-      });
-    }
-  }
 
   return (
     <>

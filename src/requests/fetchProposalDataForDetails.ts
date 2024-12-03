@@ -121,7 +121,12 @@ export async function fetchProposalDataForDetails({
 
     return {
       proposalData,
-      payloadsData,
+      payloadsData: payloadsData.map((payload) => {
+        return {
+          ...payload,
+          proposalId: Number(proposalData.id),
+        };
+      }),
       votingData,
       metadata,
       formattedData,
