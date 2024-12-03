@@ -238,6 +238,7 @@ export function VotersList({
                     vote={vote}
                     key={vote.transactionHash}
                     activeAddress={
+                      // TODO
                       // representative.address ||
                       activeWallet?.address || zeroAddress
                     }

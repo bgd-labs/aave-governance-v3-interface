@@ -37,6 +37,7 @@ export function VotersListLoading({
             .map((vote) => (
               <VotersListItem
                 activeAddress={
+                  // TODO:
                   // representative.address ||
                   activeWallet?.address || zeroAddress
                 }

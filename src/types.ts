@@ -194,6 +194,7 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   isActive?: boolean;
   ipfsError?: string;
 };
+
 // Proposal data by user
 export type VotedDataByUser = {
   proposalId: bigint;
@@ -208,6 +209,7 @@ export type VotingDataByUser = {
   userBalance: bigint;
   isWithDelegatedPower: boolean;
 };
+
 // Proposal details
 export type DetailedProposalData = {
   proposalData: ProposalInitialStruct;
@@ -285,8 +287,8 @@ export type RepresentativeAddress = {
 };
 
 export type RepresentedAddress = { chainId: number; address: Address | '' };
-// delegation
 
+// delegation
 export type DelegateItem = {
   underlyingAsset: Address;
   symbol: Asset;

@@ -8,10 +8,15 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { zeroHash } from 'viem';
 
 import { appConfig } from '../../configs/appConfig';
+import { getAssetNameByAddress } from '../../helpers/getAssetName';
 import { getVoteBalanceSlot } from '../../helpers/getVoteBalanceSlot';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
+import { ActivateVotingModal } from '../../transactions/components/ActionModals/ActivateVotingModal';
+import { CloseVotingModal } from '../../transactions/components/ActionModals/CloseVotingModal';
+import { ExecuteProposalModal } from '../../transactions/components/ActionModals/ExecuteProposalModal';
+import { SendProofsModal } from '../../transactions/components/ActionModals/SendProofsModal';
 import { InitialProposalState, ProposalState } from '../../types';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
@@ -121,9 +126,8 @@ export function ProposalStatusDetails({
   hasRequiredRoots,
   votingClosedAndSentBlockNumber,
   setIsActivateVotingOnVotingMachineModalOpen,
+  votingChainId,
 }: ProposalStatusDetailsProps) {
-  const theme = useTheme();
-
   const transactionsPool = useStore((store) => store.transactionsPool);
   const activeWallet = useStore((store) => store.activeWallet);
   const appMode = useStore((store) => store.appMode);
@@ -348,7 +352,7 @@ export function ProposalStatusDetails({
                   }).isSuccess
                 }
                 onClick={() => asset.setIsModalOpen(true)}>
-                {/*Send {getAssetName(asset.underlyingAsset)}{' '}*/}
+                Send {getAssetNameByAddress(asset.underlyingAsset)}{' '}
                 {asset.withSlot ? 'slot' : 'root'}
               </BigButton>
             ))}
@@ -518,38 +522,38 @@ export function ProposalStatusDetails({
         />
       )}
 
-      {/*<ActivateVotingModal*/}
-      {/*  isOpen={isActivateVotingModalOpen}*/}
-      {/*  setIsOpen={setIsActivateVotingModalOpen}*/}
-      {/*  proposalId={proposalId}*/}
-      {/*/>*/}
+      <ActivateVotingModal
+        isOpen={isActivateVotingModalOpen}
+        setIsOpen={setIsActivateVotingModalOpen}
+        proposalId={proposalId}
+      />
 
-      {/*{assetsForProofs.map((asset, index) => (*/}
-      {/*  <SendProofsModal*/}
-      {/*    key={index}*/}
-      {/*    isOpen={asset.isModalOpen}*/}
-      {/*    setIsOpen={asset.setIsModalOpen}*/}
-      {/*    proposalId={proposalId}*/}
-      {/*    blockHash={blockHash}*/}
-      {/*    underlyingAsset={asset.underlyingAsset}*/}
-      {/*    baseBalanceSlotRaw={asset.baseBalanceSlotRaw}*/}
-      {/*    withSlot={asset.withSlot}*/}
-      {/*    votingChainId={votingChainId}*/}
-      {/*  />*/}
-      {/*))}*/}
+      {assetsForProofs.map((asset, index) => (
+        <SendProofsModal
+          key={index}
+          isOpen={asset.isModalOpen}
+          setIsOpen={asset.setIsModalOpen}
+          proposalId={proposalId}
+          blockHash={blockHash}
+          underlyingAsset={asset.underlyingAsset}
+          baseBalanceSlotRaw={asset.baseBalanceSlotRaw}
+          withSlot={asset.withSlot}
+          votingChainId={votingChainId}
+        />
+      ))}
 
-      {/*<CloseVotingModal*/}
-      {/*  isOpen={isCloseVotingModalOpen}*/}
-      {/*  setIsOpen={setCloseVotingModalOpen}*/}
-      {/*  proposalId={proposalId}*/}
-      {/*  votingChainId={votingChainId}*/}
-      {/*/>*/}
+      <CloseVotingModal
+        isOpen={isCloseVotingModalOpen}
+        setIsOpen={setCloseVotingModalOpen}
+        proposalId={proposalId}
+        votingChainId={votingChainId}
+      />
 
-      {/*<ExecuteProposalModal*/}
-      {/*  isOpen={isExecuteProposalModalOpen}*/}
-      {/*  setIsOpen={setExecuteProposalModalOpen}*/}
-      {/*  proposalId={proposalId}*/}
-      {/*/>*/}
+      <ExecuteProposalModal
+        isOpen={isExecuteProposalModalOpen}
+        setIsOpen={setExecuteProposalModalOpen}
+        proposalId={proposalId}
+      />
     </>
   );
 }

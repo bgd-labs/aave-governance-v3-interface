@@ -17,6 +17,7 @@ import { IconBox } from '../../components/primitives/IconBox';
 import { Spinner } from '../../components/Spinner';
 import { appConfig } from '../../configs/appConfig';
 import { chainInfoHelper } from '../../configs/configs';
+import { getAssetNameByAddress } from '../../helpers/getAssetName';
 import { getScanLink } from '../../helpers/getScanLink';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
@@ -104,8 +105,9 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === TxType.sendProofs && tx.payload && (
             <>
               {texts.transactions.sendProofsTx}{' '}
-              {/*<b>{getAssetName(tx.payload.underlyingAsset)}</b> for the proposal{' '}*/}
-              <b>#{tx.payload.proposalId}</b>, on <NetworkIconWitchChainN />
+              <b>{getAssetNameByAddress(tx.payload.underlyingAsset)}</b> for the
+              proposal <b>#{tx.payload.proposalId}</b>, on{' '}
+              <NetworkIconWitchChainN />
             </>
           )}
           {tx.type === TxType.activateVotingOnVotingMachine && tx.payload && (

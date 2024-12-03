@@ -6,6 +6,8 @@ import { formatUnits, Hex } from 'viem';
 
 import { DECIMALS } from '../../configs/configs';
 import { texts } from '../../helpers/texts/texts';
+import { ActivateVotingOnVotingMachineModal } from '../../transactions/components/ActionModals/ActivateVotingOnVotingMachineModal';
+import { ExecutePayloadModal } from '../../transactions/components/ActionModals/ExecutePayloadModal';
 import {
   ContractsConstants,
   DetailedProposalData,
@@ -62,6 +64,8 @@ export function ProposalPage({
   const [selectedPayloadForExecute, setSelectedPayloadForExecute] = useState<
     InitialPayload | undefined
   >(undefined);
+  const [isExecutePayloadModalOpen, setIsExecutePayloadModalOpen] =
+    useState(false);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
 
   return (
@@ -365,21 +369,21 @@ export function ProposalPage({
       {/*  />*/}
       {/*)}*/}
 
-      {/*<ActivateVotingOnVotingMachineModal*/}
-      {/*  isOpen={isActivateVotingOnVotingMachineModalOpen}*/}
-      {/*  setIsOpen={setIsActivateVotingOnVotingMachineModalOpen}*/}
-      {/*  proposalId={proposal.data.id}*/}
-      {/*  votingChainId={proposal.data.votingChainId}*/}
-      {/*/>*/}
+      <ActivateVotingOnVotingMachineModal
+        isOpen={isActivateVotingOnVotingMachineModalOpen}
+        setIsOpen={setIsActivateVotingOnVotingMachineModalOpen}
+        proposalId={data.proposalData.id}
+        votingChainId={data.votingData.votingChainId}
+      />
 
-      {/*{selectedPayloadForExecute && (*/}
-      {/*  <ExecutePayloadModal*/}
-      {/*    isOpen={isExecutePayloadModalOpen}*/}
-      {/*    setIsOpen={setExecutePayloadModalOpen}*/}
-      {/*    proposalId={proposal.data.id}*/}
-      {/*    payload={selectedPayloadForExecute}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {selectedPayloadForExecute && (
+        <ExecutePayloadModal
+          isOpen={isExecutePayloadModalOpen}
+          setIsOpen={setIsExecutePayloadModalOpen}
+          proposalId={data.proposalData.id}
+          payload={selectedPayloadForExecute}
+        />
+      )}
     </>
   );
 }
