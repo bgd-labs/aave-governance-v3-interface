@@ -1,7 +1,7 @@
-import { getProposalMetadata } from '@bgd-labs/js-utils';
 import { Client } from 'viem';
 
 import { ipfsGateway } from '../configs/configs';
+import { getProposalMetadata } from '../helpers/getProposalMetadata';
 import { texts } from '../old/ui/utils/texts';
 import { ContractsConstants, VotingConfig } from '../types';
 import { getDataForList } from './utils/getDataForList';

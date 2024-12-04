@@ -1,6 +1,5 @@
-import { getProposalMetadata } from '@bgd-labs/js-utils';
-
 import { isForIPFS } from '../configs/appConfig';
+import { getProposalMetadata } from './getProposalMetadata';
 import { metaTexts } from './texts/metaTexts';
 
 export async function generateDetailsMetadata({

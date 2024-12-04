@@ -1,9 +1,9 @@
-import { getProposalMetadata } from '@bgd-labs/js-utils';
 import { Client } from 'viem';
 
 import { PayloadParams } from '../components/pages/ProposalCreateOverviewPage';
 import { ipfsGateway } from '../configs/configs';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
+import { getProposalMetadata } from '../helpers/getProposalMetadata';
 import { texts } from '../old/ui/utils/texts';
 import { PayloadWithHashes, ProposalMetadata } from '../types';
 import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';

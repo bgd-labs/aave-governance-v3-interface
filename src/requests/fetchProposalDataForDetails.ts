@@ -1,10 +1,10 @@
 import { IVotingPortal_ABI } from '@bgd-labs/aave-address-book/abis';
-import { getProposalMetadata } from '@bgd-labs/js-utils';
 import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../configs/appConfig';
 import { ipfsGateway } from '../configs/configs';
+import { getProposalMetadata } from '../helpers/getProposalMetadata';
 import { texts } from '../old/ui/utils/texts';
 import { ContractsConstants, ProposalMetadata, VotingConfig } from '../types';
 import { formatDataForDetails } from './utils/formatProposalData';
