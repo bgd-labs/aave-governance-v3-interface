@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import React from 'react';
 
+import { RepresentationsPage } from '../../components/Representations/RepresentationsPage';
 import { metaTexts } from '../../helpers/texts/metaTexts';
 
 export const metadata: Metadata = {
@@ -14,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <h1>Representations page</h1>;
+  return <RepresentationsPage />;
 }

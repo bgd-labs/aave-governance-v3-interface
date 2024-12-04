@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Hex } from 'viem';
 
+import { getRepresentedAddresses } from '../../../helpers/getRepresentedAddresses';
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import { selectENSAvatar } from '../../../store/selectors/ensSelectors';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
@@ -30,6 +31,12 @@ export function WalletWidget() {
   const setConnectWalletModalOpen = useStore(
     (store) => store.setConnectWalletModalOpen,
   );
+  const accountInfoModalOpen = useStore((store) => store.accountInfoModalOpen);
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
+  const representative = useStore((store) => store.representative);
+  const representationData = useStore((store) => store.representationData);
 
   const activeAddress = activeWallet?.address || '';
 
@@ -41,7 +48,6 @@ export function WalletWidget() {
     undefined,
   );
 
-  const [accountInfoModalOpen, setAccountInfoModalOpen] = useState(false);
   const [allTransactionModalOpen, setAllTransactionModalOpen] = useState(false);
 
   useEffect(() => {
@@ -63,7 +69,7 @@ export function WalletWidget() {
     }
   }, [ensData, activeAddress]);
 
-  // const representedAddresses = getRepresentedAddresses(representationData);
+  const representedAddresses = getRepresentedAddresses(representationData);
 
   useEffect(() => {
     resetWalletConnectionError();
@@ -91,7 +97,7 @@ export function WalletWidget() {
         ensAvatar={shownAvatar}
         isAvatarExists={isAvatarExists}
         onClick={handleButtonClick}
-        // representative={representative}
+        representative={representative}
       />
 
       <ConnectWalletModal
@@ -105,7 +111,7 @@ export function WalletWidget() {
         isOpen={accountInfoModalOpen}
         setIsOpen={setAccountInfoModalOpen}
         setAllTransactionModalOpen={setAllTransactionModalOpen}
-        // representedAddresses={representedAddresses}
+        representedAddresses={representedAddresses}
         onDisconnectButtonClick={handleDisconnectClick}
       />
 

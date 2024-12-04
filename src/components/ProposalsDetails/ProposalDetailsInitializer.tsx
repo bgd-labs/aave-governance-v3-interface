@@ -34,6 +34,7 @@ export function ProposalDetailsInitializer({
   const activeWallet = useStore((store) => store.activeWallet);
   const votingBalances = useStore((store) => store.votingBalances);
   const votedData = useStore((store) => store.votedData);
+  const representative = useStore((store) => store.representative);
   const initializeConfigs = useStore((store) => store.initializeConfigs);
   const initializeProposalsCount = useStore(
     (store) => store.initializeProposalsCount,
@@ -89,7 +90,7 @@ export function ProposalDetailsInitializer({
         getProposalDetails(Number(id));
       }
     }
-  }, [id, data]);
+  }, [id, data, activeWallet, representative]);
 
   const proposalData = selectProposalDetailedData({ id: +id, proposalDetails });
 
@@ -101,10 +102,17 @@ export function ProposalDetailsInitializer({
   }, [proposalData?.proposalData.id]);
 
   useEffect(() => {
-    if (activeWallet && proposalData?.proposalData.id) {
+    if (
+      activeWallet &&
+      (proposalData?.proposalData.id || proposalData?.proposalData.id === 0)
+    ) {
       updateDetailsUserData(proposalData.proposalData.id);
     }
-  }, [proposalData?.proposalData.id, activeWallet?.address]);
+  }, [
+    proposalData?.proposalData.id,
+    activeWallet?.address,
+    representative?.address,
+  ]);
 
   const balanceLoading = useStore(
     (state) => state.userDataLoadings[proposalData?.proposalData.id ?? -1],
@@ -112,7 +120,8 @@ export function ProposalDetailsInitializer({
   const userProposalData = selectProposalDataByUser({
     votingBalances,
     snapshotBlockHash: proposalData?.proposalData.snapshotBlockHash ?? zeroHash,
-    walletAddress: activeWallet?.address ?? zeroAddress, // TODO: representation
+    walletAddress:
+      representative?.address || activeWallet?.address || zeroAddress,
     votedData,
   });
 
@@ -126,7 +135,12 @@ export function ProposalDetailsInitializer({
         }
       }
     }
-  }, [userProposalData.voted, userProposalData.voting, activeWallet]);
+  }, [
+    userProposalData.voted,
+    userProposalData.voting,
+    activeWallet,
+    representative.address,
+  ]);
 
   const [isCreatorBalanceWarningVisible, setCreatorBalanceWarningVisible] =
     useState(false);
@@ -166,8 +180,7 @@ export function ProposalDetailsInitializer({
         constants={configs.contractsConstants}
         balanceLoading={balanceLoading}
         votingPower={votingPower}
-        support={userProposalData.voted?.votedInfo.support ?? false}
-        isVoted={userProposalData.voted?.isVoted ?? false}
+        userProposalData={userProposalData}
         isCreatorBalanceWarningVisible={isCreatorBalanceWarningVisible}
       />
     </Container>

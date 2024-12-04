@@ -43,6 +43,9 @@ export interface IUISlice {
   checkTutorialStartButtonClick: () => void;
   setIsClickedOnStartButtonOnHelpModal: (value: boolean) => void;
 
+  accountInfoModalOpen: boolean;
+  setAccountInfoModalOpen: (value: boolean) => void;
+
   isExecutePayloadModalOpen: boolean;
   setExecutePayloadModalOpen: (value: boolean) => void;
 
@@ -157,6 +160,11 @@ export const createUISlice: StoreSlice<
   setIsClickedOnStartButtonOnHelpModal: (value) => {
     setLocalStorageTutorialStartButtonClicked(`${value}`);
     set({ isClickedOnStartButtonOnHelpModal: value });
+  },
+
+  accountInfoModalOpen: false,
+  setAccountInfoModalOpen: (value) => {
+    set({ isModalOpen: value, accountInfoModalOpen: value });
   },
 
   isExecutePayloadModalOpen: false,

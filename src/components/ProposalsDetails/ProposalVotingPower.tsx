@@ -4,13 +4,16 @@ import {
 } from '@bgd-labs/frontend-web3-utils';
 import { Box, styled, useTheme } from '@mui/system';
 import React from 'react';
+import { zeroAddress } from 'viem';
 
 import InfoIcon from '../../assets/icons/info.svg';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
+import { checkIsVotingAvailable } from '../../store/selectors/representationsSelectors';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
 import { media } from '../../styles/themeMUI';
 import { useMediaQuery } from '../../styles/useMediaQuery';
+import { VotedDataByUser, VotingDataByUser } from '../../types';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
@@ -19,6 +22,7 @@ import { NetworkIcon } from '../NetworkIcon';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
 import { IconBox } from '../primitives/IconBox';
 import NoSSR from '../primitives/NoSSR';
+import { RepresentationIcon } from '../RepresentationIcon';
 import { VotedState } from '../VotedState';
 
 const VotingPowerWrapper = styled('div')(({ theme }) => ({
@@ -39,41 +43,88 @@ const VotingPowerWrapper = styled('div')(({ theme }) => ({
 }));
 
 interface ProposalVotingPowerProps {
-  proposalDataLoading: boolean;
   balanceLoading: boolean;
   votingPower: number;
   proposalId: number;
   onClick: () => void;
-  support: boolean;
-  isVoted: boolean;
+  userProposalData: {
+    voted?: VotedDataByUser;
+    voting?: VotingDataByUser[];
+  };
   isFinished: boolean;
   isStarted: boolean;
   isAnyVote?: boolean;
   votingChainId: number;
 }
 
+const VotedBlock = ({
+  support,
+  representativeAddress,
+  disabled,
+  votingPower,
+}: {
+  support: boolean;
+  representativeAddress?: string;
+  disabled: boolean;
+  votingPower: number;
+}) => {
+  return (
+    <Box
+      sx={{
+        typography: 'body',
+        display: 'inline',
+        textAlign: 'center',
+        color: '$text',
+        '*': {
+          display: 'inline',
+        },
+      }}>
+      <VotedState support={support} css={{ color: '$text' }} />{' '}
+      <>
+        with{' '}
+        <Box
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            position: 'relative',
+          }}>
+          <RepresentationIcon
+            address={representativeAddress ?? zeroAddress}
+            disabled={disabled}
+          />
+          <FormattedNumber
+            variant="body"
+            value={votingPower}
+            visibleDecimals={2}
+          />
+        </Box>{' '}
+        voting power
+      </>
+    </Box>
+  );
+};
+
 export function ProposalVotingPower({
-  proposalDataLoading,
   balanceLoading,
   votingPower,
   proposalId,
   onClick,
-  support,
-  isVoted,
   isFinished,
   isStarted,
   votingChainId,
+  userProposalData,
+  isAnyVote,
 }: ProposalVotingPowerProps) {
   const theme = useTheme();
   const lg = useMediaQuery(media.lg);
 
   const activeWallet = useStore((store) => store.activeWallet);
   const transactionsPool = useStore((store) => store.transactionsPool);
-
-  // const representative = useStore((store) => store.representative);
-  // const setIsRepresentationInfoModalOpen = useStore(
-  //   (store) => store.setIsRepresentationInfoModalOpen,
-  // );
+  const supportObject = useStore((store) => store.supportObject);
+  const representative = useStore((store) => store.representative);
+  const setIsRepresentationInfoModalOpen = useStore(
+    (store) => store.setIsRepresentationInfoModalOpen,
+  );
 
   const tx =
     activeWallet &&
@@ -83,54 +134,15 @@ export function ProposalVotingPower({
       TxType.vote,
       {
         proposalId,
-        // support: !supportObject[proposalId],
-        // voter: representative.address || activeWallet?.address,
-        voter: activeWallet?.address,
+        support: !supportObject[proposalId],
+        voter: representative?.address || activeWallet?.address,
       },
     );
 
-  // const disabled = !checkIsVotingAvailable(representative, votingChainId);
-  const disabled = false;
+  const disabled = !checkIsVotingAvailable(representative, votingChainId);
 
   if (!activeWallet?.isActive) return null;
-  if (isFinished) return null;
-
-  const VotedBlock = () => {
-    return (
-      <Box
-        sx={{
-          typography: 'body',
-          display: 'inline',
-          textAlign: 'center',
-          color: '$text',
-          '*': {
-            display: 'inline',
-          },
-        }}>
-        <VotedState support={support} css={{ color: '$text' }} />{' '}
-        <>
-          with{' '}
-          <Box
-            sx={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              position: 'relative',
-            }}>
-            {/*<RepresentationIcon*/}
-            {/*  address={representative.address}*/}
-            {/*  disabled={disabled}*/}
-            {/*/>*/}
-            <FormattedNumber
-              variant="body"
-              value={votingPower}
-              visibleDecimals={2}
-            />
-          </Box>{' '}
-          voting power
-        </>
-      </Box>
-    );
-  };
+  if (!isAnyVote && isFinished) return null;
 
   return (
     <NoSSR>
@@ -143,7 +155,10 @@ export function ProposalVotingPower({
           justifyContent: 'center',
           flexDirection: 'column',
           minHeight: 60,
-          p: !isVoted && votingPower > 0 ? 20 : '12px 20px',
+          p:
+            !userProposalData.voted?.isVoted && votingPower > 0
+              ? 20
+              : '12px 20px',
           [theme.breakpoints.up('md')]: {
             minHeight: 70,
           },
@@ -156,18 +171,25 @@ export function ProposalVotingPower({
             <>
               {isFinished ? (
                 <>
-                  {proposalDataLoading ? (
+                  {balanceLoading ? (
                     <CustomSkeleton width={200} height={30} />
                   ) : (
                     <>
-                      {!isVoted ? (
+                      {!userProposalData.voted?.isVoted ? (
                         <Box
                           component="p"
                           sx={{ typography: 'body', textAlign: 'center' }}>
                           {texts.proposals.notVoted}
                         </Box>
                       ) : (
-                        <VotedBlock />
+                        <VotedBlock
+                          votingPower={votingPower}
+                          support={
+                            userProposalData.voted?.votedInfo.support ?? false
+                          }
+                          disabled={disabled}
+                          representativeAddress={representative.address}
+                        />
                       )}
                     </>
                   )}
@@ -188,7 +210,7 @@ export function ProposalVotingPower({
                   }}>
                   {isStarted ? (
                     <>
-                      {!isVoted && votingPower > 0 && (
+                      {!userProposalData.voted?.isVoted && votingPower > 0 && (
                         <VotingPowerWrapper>
                           <Box
                             component="p"
@@ -204,11 +226,11 @@ export function ProposalVotingPower({
                             <CustomSkeleton width={50} height={20} />
                           ) : (
                             <Box
-                              // onClick={() => {
-                              //   if (disabled) {
-                              //     setIsRepresentationInfoModalOpen(true);
-                              //   }
-                              // }}
+                              onClick={() => {
+                                if (disabled) {
+                                  setIsRepresentationInfoModalOpen(true);
+                                }
+                              }}
                               sx={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -223,10 +245,10 @@ export function ProposalVotingPower({
                                   ml: 0,
                                 },
                               }}>
-                              {/*<RepresentationIcon*/}
-                              {/*  address={representative.address}*/}
-                              {/*  disabled={disabled}*/}
-                              {/*/>*/}
+                              <RepresentationIcon
+                                address={representative.address}
+                                disabled={disabled}
+                              />
                               <FormattedNumber
                                 variant="h3"
                                 css={{
@@ -281,13 +303,23 @@ export function ProposalVotingPower({
                         </>
                       ) : (
                         <>
-                          {isVoted ? (
+                          {userProposalData.voted?.isVoted ? (
                             <>
-                              {proposalDataLoading ? (
+                              {balanceLoading ? (
                                 <CustomSkeleton width={200} height={30} />
                               ) : (
                                 <>
-                                  <VotedBlock />
+                                  <VotedBlock
+                                    votingPower={votingPower}
+                                    support={
+                                      userProposalData.voted?.votedInfo
+                                        .support ?? false
+                                    }
+                                    disabled={disabled}
+                                    representativeAddress={
+                                      representative.address
+                                    }
+                                  />
                                 </>
                               )}
                             </>
@@ -307,11 +339,9 @@ export function ProposalVotingPower({
                                       tx &&
                                       tx.type === 'vote' &&
                                       tx.payload.proposalId === proposalId &&
-                                      // tx.payload.voter ===
-                                      //   (representative.address ||
-                                      //     activeWallet.address) &&
                                       tx.payload.voter ===
-                                        activeWallet.address &&
+                                        (representative.address ||
+                                          activeWallet.address) &&
                                       tx.chainId === votingChainId &&
                                       (tx.pending ||
                                         tx.status === TransactionStatus.Success)

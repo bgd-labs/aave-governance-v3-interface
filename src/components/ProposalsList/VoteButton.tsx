@@ -1,5 +1,3 @@
-// TODO: representative
-
 import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,
@@ -9,6 +7,7 @@ import React from 'react';
 
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
+import { checkIsVotingAvailable } from '../../store/selectors/representationsSelectors';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
 import { NetworkIcon } from '../NetworkIcon';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
@@ -33,6 +32,8 @@ export function VoteButton({
 }: VoteButtonProps) {
   const transactionsPool = useStore((store) => store.transactionsPool);
   const activeWallet = useStore((store) => store.activeWallet);
+  const supportObject = useStore((store) => store.supportObject);
+  const representative = useStore((store) => store.representative);
 
   const activeAddress = activeWallet?.address;
 
@@ -44,10 +45,8 @@ export function VoteButton({
       TxType.vote,
       {
         proposalId,
-        // support: !supportObject[proposalId],
-        // voter: representative.address || activeAddress,
-        support: false,
-        voter: activeAddress,
+        support: !supportObject[proposalId],
+        voter: representative?.address || activeAddress,
       },
     );
 
@@ -55,16 +54,11 @@ export function VoteButton({
     tx &&
     tx.type === TxType.vote &&
     tx.payload.proposalId === proposalId &&
-    // tx.payload.voter === (representative.address || activeAddress) &&
-    tx.payload.voter === activeAddress &&
+    tx.payload.voter === (representative?.address || activeAddress) &&
     tx.chainId === votingChainId &&
     (tx.pending || tx.status === TransactionStatus.Success);
 
-  // const disabled = !useStore((store) =>
-  //   checkIsVotingAvailable(store.representative, votingChainId),
-  // );
-
-  const disabled = false;
+  const disabled = !checkIsVotingAvailable(representative, votingChainId);
 
   return (
     <>

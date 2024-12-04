@@ -6,8 +6,6 @@ import { NoData } from './NoData';
 import { NoFilteredData } from './NoFilteredData';
 import { ProposalsList } from './ProposalsList';
 
-export const revalidate = 3600;
-
 export async function ProposalsListInitialize({
   activePage,
   configs,

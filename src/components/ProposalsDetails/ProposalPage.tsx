@@ -13,7 +13,9 @@ import {
   DetailedProposalData,
   InitialPayload,
   ProposalState,
+  VotedDataByUser,
   VotingConfig,
+  VotingDataByUser,
 } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BlockWrapper } from '../BlockWrapper';
@@ -39,9 +41,11 @@ interface ProposalPageProps {
   constants: ContractsConstants;
   balanceLoading: boolean;
   votingPower: bigint;
-  support: boolean;
-  isVoted: boolean;
   isCreatorBalanceWarningVisible: boolean;
+  userProposalData: {
+    voted?: VotedDataByUser;
+    voting?: VotingDataByUser[];
+  };
 }
 
 export function ProposalPage({
@@ -50,9 +54,8 @@ export function ProposalPage({
   constants,
   balanceLoading,
   votingPower,
-  support,
-  isVoted,
   isCreatorBalanceWarningVisible,
+  userProposalData,
 }: ProposalPageProps) {
   const theme = useTheme();
   const router = useRouter();
@@ -200,12 +203,14 @@ export function ProposalPage({
                 votingPower={+formatUnits(votingPower, DECIMALS)}
                 proposalId={data.proposalData.id}
                 onClick={() => setIsVoteModalOpen(true)}
-                support={support}
-                isVoted={isVoted}
+                userProposalData={userProposalData}
                 isFinished={data.formattedData.isVotingFinished}
                 isStarted={data.formattedData.isVotingStarted}
                 votingChainId={data.votingData.votingChainId}
-                proposalDataLoading={false}
+                isAnyVote={
+                  data.votingData.proposalData.forVotes !== 0n ||
+                  data.votingData.proposalData.againstVotes !== 0n
+                }
               />
             </Box>
 
@@ -340,12 +345,14 @@ export function ProposalPage({
               votingPower={+formatUnits(votingPower, DECIMALS)}
               proposalId={data.proposalData.id}
               onClick={() => setIsVoteModalOpen(true)}
-              support={support}
-              isVoted={isVoted}
+              userProposalData={userProposalData}
               isFinished={data.formattedData.isVotingFinished}
               isStarted={data.formattedData.isVotingStarted}
               votingChainId={data.votingData.votingChainId}
-              proposalDataLoading={false}
+              isAnyVote={
+                data.votingData.proposalData.forVotes !== 0n ||
+                data.votingData.proposalData.againstVotes !== 0n
+              }
             />
           </Box>
         </Box>

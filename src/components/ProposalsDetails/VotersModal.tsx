@@ -53,7 +53,7 @@ interface VotersModalProps {
 }
 
 function ListItemAddress({ vote }: { vote: VotersData }) {
-  // const representative = useStore((store) => store.representative);
+  const representative = useStore((store) => store.representative);
   const activeWallet = useStore((store) => store.activeWallet);
 
   const sm = useMediaQuery(media.sm);
@@ -75,8 +75,11 @@ function ListItemAddress({ vote }: { vote: VotersData }) {
         sx={{
           typography:
             vote.address.toLowerCase() ===
-            // representative.address ||
-            (activeWallet?.address || zeroAddress).toLowerCase()
+            (
+              representative?.address ||
+              activeWallet?.address ||
+              zeroAddress
+            ).toLowerCase()
               ? 'headline'
               : 'body',
         }}>

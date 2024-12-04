@@ -16,6 +16,7 @@ import { RepresentedAddress } from '../../../types';
 import { Link } from '../../Link';
 import { Divider } from '../../primitives/Divider';
 import { IconBox } from '../../primitives/IconBox';
+import { RepresentingForm } from '../../Representations/RepresentingForm';
 import { AccountAddressInfo } from './AccountAddressInfo';
 
 interface AccountInfoModalContentProps {
@@ -231,13 +232,13 @@ export function AccountInfoModalContent({
         </Box>
       </Box>
 
-      {/*{isRepresentedAvailable && (*/}
-      {/*  <RepresentingForm*/}
-      {/*    representedAddresses={representedAddresses}*/}
-      {/*    isForTest={forTest}*/}
-      {/*    isTransactionsVisible={isActive && !!filteredTransactions.length}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {isRepresentedAvailable && (
+        <RepresentingForm
+          representedAddresses={representedAddresses}
+          isForTest={forTest}
+          isTransactionsVisible={isActive && !!filteredTransactions.length}
+        />
+      )}
 
       {/*{!forTest && <CurrentPowers />}*/}
 

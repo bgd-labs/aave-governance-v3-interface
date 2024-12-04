@@ -48,6 +48,11 @@ export interface IProposalsSlice {
   ) => Promise<void>;
 
   userDataLoadings: Record<number, boolean>;
+
+  supportObject: Record<number, boolean>;
+  fullClearSupportObject: () => void;
+  clearSupportObject: (proposalId: number) => void;
+  setSupportObject: (proposalId: number, support: boolean) => void;
 }
 
 export const createProposalsSlice: StoreSlice<
@@ -147,4 +152,23 @@ export const createProposalsSlice: StoreSlice<
   },
 
   userDataLoadings: {},
+
+  supportObject: {},
+  fullClearSupportObject: () => {
+    set({ supportObject: {} });
+  },
+  clearSupportObject: (proposalId) => {
+    set((state) =>
+      produce(state, (draft) => {
+        delete draft.supportObject[proposalId];
+      }),
+    );
+  },
+  setSupportObject: (proposalId, support) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.supportObject[proposalId] = support;
+      }),
+    );
+  },
 });

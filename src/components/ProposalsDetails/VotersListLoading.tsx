@@ -20,7 +20,7 @@ export function VotersListLoading({
   isStarted,
   setIsVotersModalOpen,
 }: Pick<VotersListProps, 'voters' | 'isStarted' | 'setIsVotersModalOpen'>) {
-  // const representative = useStore((store) => store.representative);
+  const representative = useStore((store) => store.representative);
   const activeWallet = useStore((store) => store.activeWallet);
 
   if (!isStarted) return null;
@@ -37,9 +37,9 @@ export function VotersListLoading({
             .map((vote) => (
               <VotersListItem
                 activeAddress={
-                  // TODO:
-                  // representative.address ||
-                  activeWallet?.address || zeroAddress
+                  representative?.address ||
+                  activeWallet?.address ||
+                  zeroAddress
                 }
                 vote={vote}
                 key={vote.transactionHash}

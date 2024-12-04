@@ -42,6 +42,7 @@ import {
   VotingDataByUser,
 } from '../types';
 import { IProposalSlice } from './proposalSlice';
+import { IRepresentationsSlice } from './representationsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 
@@ -293,7 +294,7 @@ export type AllTransactions = TxWithStatus[];
 
 export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,
-  IWalletSlice & IRpcSwitcherSlice & IProposalSlice
+  IWalletSlice & IRpcSwitcherSlice & IProposalSlice & IRepresentationsSlice
 > = (set, get) => ({
   vote: async ({
     votingChainId,
@@ -676,9 +677,8 @@ export const createTransactionsSlice: StoreSlice<
           // get().setIsDelegateChangedView(false);
           break;
         case TxType.representations:
-          // await get().getRepresentationData();
-          // get().setIsRepresentationsChangedView(false);
-          // get().resetL1Balances();
+          await get().getRepresentationData();
+          get().setIsRepresentationsChangedView(false);
           break;
         case TxType.cancelProposal:
           await get().getProposalDetails(data.payload.proposalId);

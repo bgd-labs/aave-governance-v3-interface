@@ -1,4 +1,7 @@
-import { IGovernanceDataHelper_ABI } from '@bgd-labs/aave-address-book/abis';
+import {
+  IGovernanceCore_ABI,
+  IGovernanceDataHelper_ABI,
+} from '@bgd-labs/aave-address-book/abis';
 import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
@@ -24,22 +27,37 @@ export async function getProposalsDataRPC({
     ids.map((id) => id),
   );
 
-  const data = await readContract(clients[appConfig.govCoreChainId], {
-    abi: IGovernanceDataHelper_ABI,
-    address: appConfig.govCoreConfig.dataHelperContractAddress,
-    functionName: 'getProposalsData',
-    args: [
-      appConfig.govCoreConfig.contractAddress,
-      BigInt(fr),
-      BigInt(to || 0),
-      BigInt(proposalsCount || PAGE_SIZE),
-    ],
-  });
+  if (fr === 0) {
+    const data = await readContract(clients[appConfig.govCoreChainId], {
+      abi: IGovernanceCore_ABI,
+      address: appConfig.govCoreConfig.contractAddress,
+      functionName: 'getProposal',
+      args: [0n],
+    });
+    return [
+      {
+        id: 0,
+        ...data,
+      },
+    ] as ProposalInitialStruct[];
+  } else {
+    const data = await readContract(clients[appConfig.govCoreChainId], {
+      abi: IGovernanceDataHelper_ABI,
+      address: appConfig.govCoreConfig.dataHelperContractAddress,
+      functionName: 'getProposalsData',
+      args: [
+        appConfig.govCoreConfig.contractAddress,
+        BigInt(fr),
+        BigInt(to || 0),
+        BigInt(proposalsCount || PAGE_SIZE),
+      ],
+    });
 
-  return data.map((proposal) => {
-    return {
-      id: Number(proposal.id),
-      ...proposal.proposalData,
-    } as ProposalInitialStruct;
-  });
+    return data.map((proposal) => {
+      return {
+        id: Number(proposal.id),
+        ...proposal.proposalData,
+      } as ProposalInitialStruct;
+    });
+  }
 }

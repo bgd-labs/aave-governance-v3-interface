@@ -8,6 +8,7 @@ import {
   AppModeType,
   EnsDataItem,
   IsGaslessVote,
+  RepresentativeAddress,
 } from '../types';
 
 export enum LocalStorageKeys {
@@ -17,6 +18,7 @@ export enum LocalStorageKeys {
   EnsAddresses = 'EnsAddresses',
   RpcUrls = 'rpcs_urls_4',
   TutorialStartButtonClicked = 'tutorialStartButtonClicked',
+  RepresentingAddresses = 'representingAddresses',
 }
 
 // for ENS
@@ -83,5 +85,26 @@ export const setLocalStorageTutorialStartButtonClicked = (value: string) => {
   return localStorage?.setItem(
     LocalStorageKeys.TutorialStartButtonClicked,
     value,
+  );
+};
+
+// for representations
+export const getLocalStorageRepresentingAddresses = () => {
+  const addresses = localStorage?.getItem(
+    LocalStorageKeys.RepresentingAddresses,
+  );
+
+  return (addresses ? JSON.parse(addresses) : {}) as Record<
+    string,
+    RepresentativeAddress
+  >;
+};
+
+export const setLocalStorageRepresentingAddresses = (
+  addresses: Record<string, RepresentativeAddress>,
+) => {
+  return localStorage?.setItem(
+    LocalStorageKeys.RepresentingAddresses,
+    JSON.stringify(addresses),
   );
 };

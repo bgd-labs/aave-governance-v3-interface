@@ -94,7 +94,11 @@ export function ProposalsList({
   return (
     <Container>
       {proposalsListData.activeProposalsData.map((proposal) => {
-        return <ActiveItem proposalData={proposal} key={proposal.proposalId} />;
+        if (!proposal.isFinished) {
+          return (
+            <ActiveItem proposalData={proposal} key={proposal.proposalId} />
+          );
+        }
       })}
       {proposalsListData.finishedProposalsData.map((proposal) => {
         return <FinishedItem data={proposal} key={proposal.proposalId} />;

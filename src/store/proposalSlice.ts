@@ -8,12 +8,9 @@ import { fetchCreatorPropositionPower } from '../requests/fetchCreatorPropositio
 import { fetchProposalDataForDetails } from '../requests/fetchProposalDataForDetails';
 import { GetCreatorPropositionPower } from '../requests/utils/getOwnerPropositionPowerRPC';
 import { api } from '../trpc/client';
-import {
-  DetailedProposalData,
-  PayloadInitialStruct,
-  ProposalInitialStruct,
-} from '../types';
+import { DetailedProposalData, PayloadInitialStruct } from '../types';
 import { IProposalsSlice } from './proposalsSlice';
+import { IRepresentationsSlice } from './representationsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectProposalDataByUser } from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
@@ -48,7 +45,7 @@ export interface IProposalSlice {
 
 export const createProposalSlice: StoreSlice<
   IProposalSlice,
-  IProposalsSlice & IRpcSwitcherSlice & IWeb3Slice
+  IProposalsSlice & IRpcSwitcherSlice & IWeb3Slice & IRepresentationsSlice
 > = (set, get) => ({
   proposalDetails: {},
   initializeProposalDetails: (data) => {
@@ -112,10 +109,11 @@ export const createProposalSlice: StoreSlice<
   },
 
   updateDetailsUserData: async (id) => {
-    const activeWallet = get().activeWallet;
+    const walletAddress =
+      get().representative?.address || get().activeWallet?.address;
     const proposal = get().proposalDetails[id];
-    if (activeWallet && proposal) {
-      const key = `${activeWallet.address}_${proposal.proposalData.snapshotBlockHash}`;
+    if (walletAddress && proposal) {
+      const key = `${walletAddress}_${proposal.proposalData.snapshotBlockHash}`;
       if (!get().votedData[key]) {
         set((state) =>
           produce(state, (draft) => {
@@ -123,7 +121,7 @@ export const createProposalSlice: StoreSlice<
           }),
         );
       }
-      await get().getVotedDataByUser(activeWallet.address, {
+      await get().getVotedDataByUser(walletAddress, {
         id: BigInt(proposal.proposalData.id),
         snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
         votingChainId: proposal.votingData.votingChainId,
@@ -131,7 +129,7 @@ export const createProposalSlice: StoreSlice<
       const data = selectProposalDataByUser({
         votedData: get().votedData,
         votingBalances: get().votingBalances,
-        walletAddress: activeWallet.address,
+        walletAddress,
         snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
       });
       if (
@@ -139,7 +137,7 @@ export const createProposalSlice: StoreSlice<
         proposal.proposalData.snapshotBlockHash !== zeroHash &&
         !proposal.formattedData.isVotingFinished
       ) {
-        await get().getVotingBalancesByUser(activeWallet.address, {
+        await get().getVotingBalancesByUser(walletAddress, {
           votingAssets: proposal.votingData.votingAssets as string[],
           snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
         });

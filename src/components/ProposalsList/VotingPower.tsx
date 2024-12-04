@@ -5,11 +5,14 @@ import { formatUnits } from 'viem';
 import InfoIcon from '../../assets/icons/info.svg';
 import { DECIMALS } from '../../configs/configs';
 import { texts } from '../../helpers/texts/texts';
+import { useStore } from '../../providers/ZustandStoreProvider';
+import { checkIsVotingAvailable } from '../../store/selectors/representationsSelectors';
 import { media } from '../../styles/themeMUI';
 import { useMediaQuery } from '../../styles/useMediaQuery';
 import { FormattedNumber } from '../FormattedNumber';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
 import { IconBox } from '../primitives/IconBox';
+import { RepresentationIcon } from '../RepresentationIcon';
 
 interface VotingPowerProps {
   balanceLoading: boolean;
@@ -29,10 +32,8 @@ export function VotingPower({
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
 
-  // const disabled = !useStore((store) =>
-  //   checkIsVotingAvailable(store.representative, votingChainId),
-  // );
-  const disabled = false;
+  const representative = useStore((store) => store.representative);
+  const disabled = !checkIsVotingAvailable(representative, votingChainId);
 
   return (
     <Box
@@ -82,12 +83,12 @@ export function VotingPower({
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          {/*{!isForHelpModal && (*/}
-          {/*  <RepresentationIcon*/}
-          {/*    address={representative.address}*/}
-          {/*    disabled={disabled}*/}
-          {/*  />*/}
-          {/*)}*/}
+          {!isForHelpModal && (
+            <RepresentationIcon
+              address={representative.address}
+              disabled={disabled}
+            />
+          )}
           <FormattedNumber
             variant="h2"
             css={{

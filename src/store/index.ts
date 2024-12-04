@@ -9,6 +9,10 @@ import {
   IProposalsListSlice,
 } from './proposalsListSlice';
 import { createProposalsSlice, IProposalsSlice } from './proposalsSlice';
+import {
+  createRepresentationsSlice,
+  IRepresentationsSlice,
+} from './representationsSlice';
 import { createRpcSwitcherSlice, IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import {
   createTransactionsSlice,
@@ -24,7 +28,8 @@ export type RootState = IUISlice &
   IRpcSwitcherSlice &
   IProposalsSlice &
   IProposalsListSlice &
-  IProposalSlice;
+  IProposalSlice &
+  IRepresentationsSlice;
 
 export const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -38,4 +43,5 @@ export const createRootSlice = (
   ...createProposalsSlice(set, get),
   ...createProposalsListSlice(set, get),
   ...createProposalSlice(set, get),
+  ...createRepresentationsSlice(set, get),
 });

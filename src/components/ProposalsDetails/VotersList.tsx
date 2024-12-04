@@ -205,7 +205,7 @@ export function VotersList({
   isVotingFinished,
   isStarted,
 }: VotersListProps) {
-  // const representative = useStore((store) => store.representative);
+  const representative = useStore((store) => store.representative);
   const activeWallet = useStore((store) => store.activeWallet);
 
   if (!isStarted) return null;
@@ -238,9 +238,9 @@ export function VotersList({
                     vote={vote}
                     key={vote.transactionHash}
                     activeAddress={
-                      // TODO
-                      // representative.address ||
-                      activeWallet?.address || zeroAddress
+                      representative?.address ||
+                      activeWallet?.address ||
+                      zeroAddress
                     }
                   />
                 ))}

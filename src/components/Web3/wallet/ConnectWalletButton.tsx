@@ -23,6 +23,7 @@ import { ChainNameWithIcon } from '../../ChainNameWithIcon';
 import { CustomSkeleton } from '../../primitives/CustomSkeleton';
 import { IconBox } from '../../primitives/IconBox';
 import { Image } from '../../primitives/Image';
+import { RepresentingButton } from '../../Representations/RepresentingButton';
 import { Spinner } from '../../Spinner';
 
 interface ConnectWalletButtonProps {
@@ -38,7 +39,7 @@ export function ConnectWalletButton({
   ensName,
   ensAvatar,
   isAvatarExists,
-  // representative,
+  representative,
 }: ConnectWalletButtonProps) {
   const walletActivating = useStore((store) => store.walletActivating);
   const walletConnectedTimeLock = useStore(
@@ -372,7 +373,7 @@ export function ConnectWalletButton({
                 </Box>
               </Box>
 
-              {/*{!!representative?.address && <RepresentingButton />}*/}
+              {!!representative?.address && <RepresentingButton />}
             </Box>
           )}
         </>

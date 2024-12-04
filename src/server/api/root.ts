@@ -3,6 +3,7 @@ import { createProposalRouter } from './routers/createProposal';
 import { payloadsRouter } from './routers/payloads';
 import { proposalsRouter } from './routers/proposals';
 import { proposalsListRouter } from './routers/proposalsList';
+import { representationsRouter } from './routers/representations';
 import { createCallerFactory, createTRPCRouter } from './trpc';
 
 export const appRouter = createTRPCRouter({
@@ -11,6 +12,7 @@ export const appRouter = createTRPCRouter({
   proposals: proposalsRouter,
   payloads: payloadsRouter,
   createProposal: createProposalRouter,
+  representations: representationsRouter,
 });
 
 export type AppRouter = typeof appRouter;

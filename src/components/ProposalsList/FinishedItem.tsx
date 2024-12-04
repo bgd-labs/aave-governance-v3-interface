@@ -13,6 +13,7 @@ import { ProposalListItemWrapper } from './ProposalListItemWrapper';
 export function FinishedItem({ data }: { data: ProposalOnTheList }) {
   const theme = useTheme();
   const isRendered = useStore((store) => store.isRendered);
+  const proposalDetails = useStore((store) => store.proposalDetails);
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -52,7 +53,8 @@ export function FinishedItem({ data }: { data: ProposalOnTheList }) {
                     : theme.palette.$text,
                   typography: 'h2',
                 }}>
-                {data.title}
+                {proposalDetails[data.proposalId]?.metadata?.title ??
+                  data.title}
               </Box>
             </Box>
 

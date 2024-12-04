@@ -14,6 +14,7 @@ import { ChainNameWithIcon } from '../../components/ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../../components/CopyAndExternalIconsSet';
 import { Link } from '../../components/Link';
 import { IconBox } from '../../components/primitives/IconBox';
+import { TxText } from '../../components/Representations/TxText';
 import { Spinner } from '../../components/Spinner';
 import { appConfig } from '../../configs/appConfig';
 import { chainInfoHelper } from '../../configs/configs';
@@ -187,16 +188,16 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
               <b>#{tx.payload.proposalId}</b> on <NetworkIconWitchChainN />
             </>
           )}
-          {/*{tx.type === TxType.representations && tx.payload && (*/}
-          {/*  <>*/}
-          {/*    <TxText*/}
-          {/*      initialData={tx.payload.initialData}*/}
-          {/*      formData={tx.payload.data}*/}
-          {/*      inTxHistory*/}
-          {/*    />{' '}*/}
-          {/*    on <NetworkIconWitchChainN />*/}
-          {/*  </>*/}
-          {/*)}*/}
+          {tx.type === TxType.representations && tx.payload && (
+            <>
+              <TxText
+                initialData={tx.payload.initialData}
+                formData={tx.payload.data}
+                inTxHistory
+              />{' '}
+              on <NetworkIconWitchChainN />
+            </>
+          )}
           {tx.type === TxType.claimFees && tx.payload && (
             <>
               {texts.creationFee.claimGuaranteeTxInfo(
