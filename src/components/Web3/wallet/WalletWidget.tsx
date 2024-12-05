@@ -5,6 +5,7 @@ import { getRepresentedAddresses } from '../../../helpers/getRepresentedAddresse
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import { selectENSAvatar } from '../../../store/selectors/ensSelectors';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
+import { PowersInfoModal } from '../powers/PowersInfoModal';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
@@ -37,6 +38,10 @@ export function WalletWidget() {
   );
   const representative = useStore((store) => store.representative);
   const representationData = useStore((store) => store.representationData);
+  const powersInfoModalOpen = useStore((store) => store.powersInfoModalOpen);
+  const setPowersInfoModalOpen = useStore(
+    (store) => store.setPowersInfoModalOpen,
+  );
 
   const activeAddress = activeWallet?.address || '';
 
@@ -121,12 +126,12 @@ export function WalletWidget() {
           setIsOpen={setAllTransactionModalOpen}
         />
       )}
-      {/*{powersInfoModalOpen && (*/}
-      {/*  <PowersInfoModal*/}
-      {/*    isOpen={powersInfoModalOpen}*/}
-      {/*    setIsOpen={setPowersInfoModalOpen}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {powersInfoModalOpen && (
+        <PowersInfoModal
+          isOpen={powersInfoModalOpen}
+          setIsOpen={setPowersInfoModalOpen}
+        />
+      )}
 
       {/*{appMode === 'expert' && (*/}
       {/*  <CreationFeesModal*/}

@@ -5,6 +5,7 @@ import { payloadsRouter } from './routers/payloads';
 import { proposalsRouter } from './routers/proposals';
 import { proposalsListRouter } from './routers/proposalsList';
 import { representationsRouter } from './routers/representations';
+import { walletRouter } from './routers/wallet';
 import { createCallerFactory, createTRPCRouter } from './trpc';
 
 export const appRouter = createTRPCRouter({
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   createProposal: createProposalRouter,
   representations: representationsRouter,
   delegation: delegationRouter,
+  wallet: walletRouter,
 });
 
 export type AppRouter = typeof appRouter;

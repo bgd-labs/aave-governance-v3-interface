@@ -237,6 +237,35 @@ export type VotersData = {
   ensName?: string;
 };
 
+// User powers
+export type PowerByAsset = {
+  userBalance: bigint;
+  totalPower: bigint;
+  delegatedPower: bigint;
+  isWithDelegatedPower: boolean;
+};
+
+export type PowersByAssets = Record<
+  Hex,
+  {
+    tokenName: string;
+    underlyingAsset: Hex;
+    proposition: PowerByAsset;
+    voting: PowerByAsset;
+  }
+>;
+
+export type CurrentPower = {
+  timestamp: number;
+  totalPropositionPower: number;
+  totalVotingPower: number;
+  yourPropositionPower: number;
+  yourVotingPower: number;
+  delegatedPropositionPower: number;
+  delegatedVotingPower: number;
+  powersByAssets: PowersByAssets;
+};
+
 // ENS
 export enum ENSProperty {
   NAME = 'name',

@@ -19,6 +19,7 @@ export enum LocalStorageKeys {
   RpcUrls = 'rpcs_urls_4',
   TutorialStartButtonClicked = 'tutorialStartButtonClicked',
   RepresentingAddresses = 'representingAddresses',
+  PowersInfoClicked = 'powersInfoClicked',
 }
 
 // for ENS
@@ -107,4 +108,13 @@ export const setLocalStorageRepresentingAddresses = (
     LocalStorageKeys.RepresentingAddresses,
     JSON.stringify(addresses),
   );
+};
+
+// for current powers
+export const getLocalStoragePowersInfoClicked = () => {
+  return localStorage?.getItem(LocalStorageKeys.PowersInfoClicked);
+};
+
+export const setLocalStoragePowersInfoClicked = (value: string) => {
+  return localStorage?.setItem(LocalStorageKeys.PowersInfoClicked, value);
 };

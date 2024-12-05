@@ -51,6 +51,9 @@ export interface IUISlice {
 
   isProposalHistoryModalOpen: boolean;
   setIsProposalHistoryOpen: (value: boolean) => void;
+
+  powersInfoModalOpen: boolean;
+  setPowersInfoModalOpen: (value: boolean) => void;
 }
 
 export const createUISlice: StoreSlice<
@@ -175,5 +178,10 @@ export const createUISlice: StoreSlice<
   isProposalHistoryModalOpen: false,
   setIsProposalHistoryOpen: (value) => {
     set({ isModalOpen: value, isProposalHistoryModalOpen: value });
+  },
+
+  powersInfoModalOpen: false,
+  setPowersInfoModalOpen: (value) => {
+    set({ powersInfoModalOpen: value });
   },
 });

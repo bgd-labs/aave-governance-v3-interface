@@ -2,7 +2,7 @@
 
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Address } from 'viem';
 
 import { appConfig } from '../../configs/appConfig';
@@ -31,6 +31,10 @@ export function DelegateLoading() {
       }
     })
     .filter((data) => data !== undefined);
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, []);
 
   return (
     <>

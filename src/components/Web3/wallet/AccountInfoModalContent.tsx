@@ -17,6 +17,7 @@ import { Link } from '../../Link';
 import { Divider } from '../../primitives/Divider';
 import { IconBox } from '../../primitives/IconBox';
 import { RepresentingForm } from '../../Representations/RepresentingForm';
+import { CurrentPowers } from '../powers/CurrentPowers';
 import { AccountAddressInfo } from './AccountAddressInfo';
 
 interface AccountInfoModalContentProps {
@@ -240,7 +241,7 @@ export function AccountInfoModalContent({
         />
       )}
 
-      {/*{!forTest && <CurrentPowers />}*/}
+      {!forTest && <CurrentPowers />}
 
       {isActive && !!filteredTransactions.length && (
         <Box

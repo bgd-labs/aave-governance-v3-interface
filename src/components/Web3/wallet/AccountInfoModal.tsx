@@ -1,5 +1,5 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { zeroAddress } from 'viem';
 
 import { appConfig } from '../../../configs/appConfig';
@@ -29,6 +29,8 @@ export function AccountInfoModal({
   representedAddresses,
   onDisconnectButtonClick,
 }: AccountInfoModalProps) {
+  const representative = useStore((store) => store.representative);
+  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
   const activeWallet = useStore((store) => store.activeWallet);
   const allTxsFromStore = useStore((store) =>
     selectAllTransactionsByWallet(
@@ -38,6 +40,16 @@ export function AccountInfoModal({
   );
 
   const allTransactions = activeWallet ? allTxsFromStore : [];
+
+  useEffect(() => {
+    if (isOpen) {
+      if (representative.address) {
+        getCurrentPowers(representative.address);
+      } else if (activeWallet?.address) {
+        getCurrentPowers(activeWallet?.address);
+      }
+    }
+  }, [activeWallet?.address, representative.address, isOpen]);
 
   return (
     <BasicModal

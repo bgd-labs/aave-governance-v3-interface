@@ -2,6 +2,7 @@
 
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 import { appUsedNetworks } from '../../configs/appConfig';
 import { AppClientsStorage } from '../../types';
@@ -21,6 +22,10 @@ export function RpcSwitcherLoading() {
       rpcUrl: '',
     };
   });
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, []);
 
   return (
     <>

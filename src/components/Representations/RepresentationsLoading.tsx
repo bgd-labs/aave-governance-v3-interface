@@ -2,6 +2,7 @@
 
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 import { appUsedNetworks } from '../../configs/appConfig';
 import { RepresentationDataItem } from '../../types';
@@ -22,6 +23,10 @@ export function RepresentationsLoading() {
       represented: [],
     };
   });
+
+  useEffect(() => {
+    window.scroll(0, 0);
+  }, []);
 
   return (
     <>
