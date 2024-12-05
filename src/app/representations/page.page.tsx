@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { RepresentationsPage } from '../../components/Representations/RepresentationsPage';
 import { metaTexts } from '../../helpers/texts/metaTexts';
@@ -15,5 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <RepresentationsPage />;
+  return (
+    <Suspense>
+      <RepresentationsPage />
+    </Suspense>
+  );
 }

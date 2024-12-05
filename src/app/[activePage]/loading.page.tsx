@@ -2,10 +2,10 @@
 
 import { useEffect } from 'react';
 
-import { Container } from '../components/primitives/Container';
-import { Loading } from '../components/ProposalsList/Loading';
-import { ProposalListItemWrapper } from '../components/ProposalsList/ProposalListItemWrapper';
-import { PAGE_SIZE } from '../configs/configs';
+import { Container } from '../../components/primitives/Container';
+import { Loading } from '../../components/ProposalsList/Loading';
+import { ProposalListItemWrapper } from '../../components/ProposalsList/ProposalListItemWrapper';
+import { PAGE_SIZE } from '../../configs/configs';
 
 export default function LoadingPage() {
   useEffect(() => {
