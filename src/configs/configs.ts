@@ -5,6 +5,7 @@ import { CHAINS } from './chains';
 // ipfs gateway to get proposals metadata
 export const ipfsGateway = 'https://dweb.link/ipfs';
 
+// TODO: need refactor
 export const chainInfoHelper = initChainInformationConfig(CHAINS);
 
 // proposals list page size

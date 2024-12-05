@@ -2,6 +2,7 @@
 
 import { StoreApi } from 'zustand';
 
+import { createDelegationSlice, IDelegationSlice } from './delegationSlice';
 import { createEnsSlice, IEnsSlice } from './ensSlice';
 import { createProposalSlice, IProposalSlice } from './proposalSlice';
 import {
@@ -29,7 +30,8 @@ export type RootState = IUISlice &
   IProposalsSlice &
   IProposalsListSlice &
   IProposalSlice &
-  IRepresentationsSlice;
+  IRepresentationsSlice &
+  IDelegationSlice;
 
 export const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -44,4 +46,5 @@ export const createRootSlice = (
   ...createProposalsListSlice(set, get),
   ...createProposalSlice(set, get),
   ...createRepresentationsSlice(set, get),
+  ...createDelegationSlice(set, get),
 });

@@ -152,6 +152,12 @@ export enum GovernancePowerType {
   PROPOSITION,
 }
 
+export enum GovernancePowerTypeApp {
+  VOTING,
+  PROPOSITION,
+  All,
+}
+
 export type ProposalMetadata = {
   title: string;
   description: string;
@@ -309,6 +315,25 @@ export type TxDelegateData = {
   bothAddresses?: Address | string;
   votingToAddress?: Address | string;
   propositionToAddress?: Address | string;
+};
+
+export type DelegateDataParams = {
+  underlyingAsset: Address;
+  delegator: Address;
+  delegatee: Address;
+  delegationType: GovernancePowerTypeApp;
+  increaseNonce?: boolean;
+};
+
+export type BatchMetaDelegateParams = {
+  underlyingAsset: Address;
+  delegator: Address;
+  delegatee: Address;
+  deadline: bigint;
+  v: number;
+  r: Hex;
+  s: Hex;
+  delegationType: GovernancePowerTypeApp;
 };
 
 // create proposal

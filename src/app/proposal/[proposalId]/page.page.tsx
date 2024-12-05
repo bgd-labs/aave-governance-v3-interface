@@ -40,11 +40,7 @@ export default async function Page({
     notFound();
   }
 
-  const [configs, count] = await Promise.all([
-    await api.configs.get(),
-    await api.configs.getProposalsCount(),
-  ]);
-
+  const configs = await api.configs.get();
   const data = await api.proposals.getDetails({
     ...configs.contractsConstants,
     votingConfigs: configs.configs,
@@ -55,7 +51,6 @@ export default async function Page({
     <ProposalDetailsInitializer
       proposalId={proposalId}
       configs={configs}
-      count={Number(count)}
       data={data}
     />
   );

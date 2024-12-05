@@ -20,7 +20,6 @@ import { ProposalPage } from './ProposalPage';
 export function ProposalDetailsInitializer({
   proposalId,
   configs,
-  count,
   data,
 }: {
   proposalId?: string;
@@ -28,7 +27,6 @@ export function ProposalDetailsInitializer({
     configs: VotingConfig[];
     contractsConstants: ContractsConstants;
   };
-  count: number;
   data?: DetailedProposalData;
 }) {
   const activeWallet = useStore((store) => store.activeWallet);
@@ -36,9 +34,6 @@ export function ProposalDetailsInitializer({
   const votedData = useStore((store) => store.votedData);
   const representative = useStore((store) => store.representative);
   const initializeConfigs = useStore((store) => store.initializeConfigs);
-  const initializeProposalsCount = useStore(
-    (store) => store.initializeProposalsCount,
-  );
   const initializeProposalDetails = useStore(
     (store) => store.initializeProposalDetails,
   );
@@ -63,9 +58,6 @@ export function ProposalDetailsInitializer({
   useEffect(() => {
     initializeConfigs(configs);
   }, [configs]);
-  useEffect(() => {
-    initializeProposalsCount(count);
-  }, [count]);
 
   useEffect(() => {
     const search =
