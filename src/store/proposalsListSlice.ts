@@ -42,15 +42,20 @@ export interface IProposalsListSlice {
   ) => void;
 
   activeProposalsDataInterval: number | undefined;
-  startActiveProposalsDataPolling: () => Promise<void>;
+  startActiveProposalsDataPolling: (activePage?: number) => Promise<void>;
   stopActiveProposalsDataPolling: () => void;
 
   newProposalsInterval: number | undefined;
   startNewProposalsPolling: () => Promise<void>;
   stopNewProposalsPolling: () => void;
 
-  updateProposalsListActiveData: (activeIds: number[]) => Promise<void>;
+  updateProposalsListActiveData: (
+    activeIds: number[],
+    activePage?: number,
+  ) => Promise<void>;
   updateUserDataOnTheList: () => Promise<void>;
+
+  updatedListDataLoading: Record<number, boolean>;
 }
 
 export const createProposalsListSlice: StoreSlice<
@@ -104,20 +109,20 @@ export const createProposalsListSlice: StoreSlice<
   },
 
   activeProposalsDataInterval: undefined,
-  startActiveProposalsDataPolling: async () => {
+  startActiveProposalsDataPolling: async (activePage) => {
     const currentInterval = get().activeProposalsDataInterval;
     clearInterval(currentInterval);
 
-    const func = async () => {
+    const func = async (acP?: number) => {
       const configs = get().configs;
       const activeIds = Object.values(
         get().proposalsListData.activeProposalsData,
       ).map((proposal) => proposal.proposalId);
       if (configs && activeIds.length > 0) {
-        await get().updateProposalsListActiveData(activeIds);
+        await get().updateProposalsListActiveData(activeIds, acP);
       }
     };
-    func();
+    func(activePage);
 
     const interval = setInterval(func, 30000);
     set({ activeProposalsDataInterval: Number(interval) });
@@ -171,9 +176,19 @@ export const createProposalsListSlice: StoreSlice<
     }
   },
 
-  updateProposalsListActiveData: async (activeIds) => {
+  updateProposalsListActiveData: async (activeIds, activePage) => {
     const configs = get().configs;
-    if (configs) {
+    if (configs && activeIds.length > 0) {
+      if (
+        activePage &&
+        typeof get().updatedListDataLoading[activePage] === 'undefined'
+      ) {
+        set((state) =>
+          produce(state, (draft) => {
+            draft.updatedListDataLoading[activePage] = true;
+          }),
+        );
+      }
       const input = {
         ...configs.contractsConstants,
         votingConfigs: configs.configs,
@@ -189,6 +204,13 @@ export const createProposalsListSlice: StoreSlice<
         : api.proposalsList.getActive.query(input));
       get().initializeProposalsListData(proposalsData);
       get().updateUserDataOnTheList();
+      if (activePage) {
+        set((state) =>
+          produce(state, (draft) => {
+            draft.updatedListDataLoading[activePage] = false;
+          }),
+        );
+      }
     }
   },
 
@@ -239,4 +261,6 @@ export const createProposalsListSlice: StoreSlice<
       });
     }
   },
+
+  updatedListDataLoading: {},
 });

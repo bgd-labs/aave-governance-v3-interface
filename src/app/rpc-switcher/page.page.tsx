@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import React, { Suspense } from 'react';
 
+import { RpcSwitcherLoading } from '../../components/RpcSwitcher/RpcSwitcherLoading';
 import { RpcSwitcherPage } from '../../components/RpcSwitcher/RpcSwitcherPage';
 import { metaTexts } from '../../helpers/texts/metaTexts';
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <Suspense>
+    <Suspense fallback={<RpcSwitcherLoading />}>
       <RpcSwitcherPage />
     </Suspense>
   );

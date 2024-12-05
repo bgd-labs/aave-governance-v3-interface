@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import React, { Suspense } from 'react';
 
+import { RepresentationsLoading } from '../../components/Representations/RepresentationsLoading';
 import { RepresentationsPage } from '../../components/Representations/RepresentationsPage';
 import { metaTexts } from '../../helpers/texts/metaTexts';
 
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <Suspense>
+    <Suspense fallback={<RepresentationsLoading />}>
       <RepresentationsPage />
     </Suspense>
   );

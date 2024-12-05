@@ -13,6 +13,7 @@ import {
 import { Container } from '../primitives/Container';
 import { ActiveItem } from './ActiveItem';
 import { FinishedItem } from './FinishedItem';
+import ProposalsListPageLoading from './ProposalsListPageLoading';
 import { ProposalsPagination } from './ProposalsPagination';
 
 export function ProposalsList({
@@ -56,6 +57,9 @@ export function ProposalsList({
   const updateUserDataOnTheList = useStore(
     (store) => store.updateUserDataOnTheList,
   );
+  const updatedListDataLoading = useStore(
+    (store) => store.updatedListDataLoading,
+  );
   const proposalsListData = useStore((store) =>
     selectProposalsForActivePage(store, activePage),
   );
@@ -78,7 +82,7 @@ export function ProposalsList({
     proposalsData.finishedProposalsData.length,
   ]);
   useEffect(() => {
-    startActiveProposalsDataPolling();
+    startActiveProposalsDataPolling(activePage);
     startNewProposalsPolling();
     () => {
       stopActiveProposalsDataPolling();
@@ -90,6 +94,10 @@ export function ProposalsList({
       updateUserDataOnTheList();
     }
   }, [activeWallet?.address]);
+
+  if (updatedListDataLoading[activePage]) {
+    return <ProposalsListPageLoading />;
+  }
 
   return (
     <Container>
