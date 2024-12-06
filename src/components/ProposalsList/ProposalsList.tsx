@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { selectProposalsForActivePage } from '../../store/selectors/proposalsSelector';
+import { VoteModal } from '../../transactions/components/ActionModals/VoteModal';
 import {
   ActiveProposalOnTheList,
   ContractsConstants,
@@ -64,6 +65,9 @@ export function ProposalsList({
     selectProposalsForActivePage(store, activePage),
   );
 
+  const [proposalId, setProposalId] = useState<null | number>(null);
+  const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+
   useEffect(() => {
     initializeConfigs(configs);
   }, [configs]);
@@ -95,26 +99,51 @@ export function ProposalsList({
     }
   }, [activeWallet?.address]);
 
+  const handleVoteButtonClick = (proposalId: number) => {
+    setIsVoteModalOpen(true);
+    setProposalId(proposalId);
+  };
+
+  const handleClose = (value: boolean) => {
+    setProposalId(null);
+    setIsVoteModalOpen(value);
+  };
+
   if (updatedListDataLoading[activePage]) {
     return <ProposalsListPageLoading />;
   }
 
   return (
-    <Container>
-      {proposalsListData.activeProposalsData.map((proposal) => {
-        if (!proposal.isFinished) {
-          return (
-            <ActiveItem proposalData={proposal} key={proposal.proposalId} />
-          );
-        }
-      })}
-      {proposalsListData.finishedProposalsData.map((proposal) => {
-        return <FinishedItem data={proposal} key={proposal.proposalId} />;
-      })}
-      <ProposalsPagination
-        activePage={activePage - 1}
-        totalItems={totalProposalsCount}
-      />
-    </Container>
+    <>
+      <Container>
+        {proposalsListData.activeProposalsData.map((proposal) => {
+          if (!proposal.isFinished) {
+            return (
+              <ActiveItem
+                proposalData={proposal}
+                key={proposal.proposalId}
+                voteButtonClick={handleVoteButtonClick}
+              />
+            );
+          }
+        })}
+        {proposalsListData.finishedProposalsData.map((proposal) => {
+          return <FinishedItem data={proposal} key={proposal.proposalId} />;
+        })}
+        <ProposalsPagination
+          activePage={activePage - 1}
+          totalItems={totalProposalsCount}
+        />
+      </Container>
+
+      {(proposalId || proposalId === 0) && (
+        <VoteModal
+          isOpen={isVoteModalOpen}
+          setIsOpen={handleClose}
+          proposalId={proposalId}
+          fromList
+        />
+      )}
+    </>
   );
 }

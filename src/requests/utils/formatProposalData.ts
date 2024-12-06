@@ -544,6 +544,63 @@ export function getPendingStateForActiveProposal({
   }
 }
 
+export function getProposalVotingData({
+  forVotes,
+  againstVotes,
+  quorum,
+  differential,
+  precisionDivider,
+}: {
+  forVotes: bigint;
+  againstVotes: bigint;
+  quorum: bigint;
+  differential: bigint;
+  precisionDivider: bigint;
+}) {
+  const { minQuorumVotes } = formatQuorum(forVotes, quorum, precisionDivider);
+  const { requiredDiff } = formatDiff(
+    forVotes,
+    againstVotes,
+    differential,
+    precisionDivider,
+  );
+
+  const allVotes = forVotes + againstVotes;
+
+  const requiredForVotes =
+    againstVotes + requiredDiff < minQuorumVotes
+      ? minQuorumVotes
+      : againstVotes + requiredDiff;
+
+  const forPercent =
+    allVotes > 0n ? (Number(forVotes) / Number(requiredForVotes)) * 100 : 0;
+
+  const requiredAgainstVotes =
+    forVotes === 0n ||
+    forVotes - requiredDiff <= 0n ||
+    forVotes < minQuorumVotes
+      ? minQuorumVotes
+      : forVotes - requiredDiff;
+
+  const againstPercent =
+    allVotes > 0n
+      ? (Number(againstVotes) /
+          (requiredAgainstVotes > 0n ? Number(requiredAgainstVotes) : 1)) *
+        100
+      : 0;
+
+  return {
+    forVotes: +formatUnits(forVotes, DECIMALS),
+    requiredForVotes: +formatUnits(requiredForVotes, DECIMALS),
+    forPercent: +forPercent.toFixed(4),
+    againstVotes: +formatUnits(againstVotes, DECIMALS),
+    requiredAgainstVotes: +formatUnits(requiredAgainstVotes, DECIMALS),
+    againstPercent: +againstPercent.toFixed(4),
+    minQuorumVotes,
+    requiredDiff,
+  };
+}
+
 export function formatActiveProposalData({
   ...data
 }: FormatProposalParamsWithVoting & {
@@ -554,45 +611,6 @@ export function formatActiveProposalData({
   const nextState = getNextStateAndTimestampForActiveProposal(data);
   const pendingState = getPendingStateForActiveProposal(data);
   const { core, voting, differential, precisionDivider, quorum, title } = data;
-
-  const { minQuorumVotes } = formatQuorum(
-    voting.proposalData.forVotes,
-    quorum,
-    precisionDivider,
-  );
-  const { requiredDiff } = formatDiff(
-    voting.proposalData.forVotes,
-    voting.proposalData.againstVotes,
-    differential,
-    precisionDivider,
-  );
-
-  const allVotes =
-    voting.proposalData.forVotes + voting.proposalData.againstVotes;
-
-  const requiredForVotes =
-    voting.proposalData.againstVotes + requiredDiff < minQuorumVotes
-      ? minQuorumVotes
-      : voting.proposalData.againstVotes + requiredDiff;
-  const forPercent =
-    allVotes > 0n
-      ? (voting.proposalData.forVotes / requiredForVotes) * 100n
-      : 0;
-
-  const requiredAgainstVotes =
-    voting.proposalData.forVotes === 0n ||
-    voting.proposalData.forVotes - requiredDiff <= 0n ||
-    voting.proposalData.forVotes < minQuorumVotes
-      ? minQuorumVotes
-      : voting.proposalData.forVotes - requiredDiff;
-
-  const againstPercent =
-    allVotes > 0n
-      ? (voting.proposalData.againstVotes /
-          (requiredAgainstVotes > 0n ? requiredAgainstVotes : 1n)) *
-        100n
-      : 0;
-
   return {
     proposalId: Number(voting.proposalData.id),
     title: title ?? `Proposal ${voting.proposalData.id}`,
@@ -607,12 +625,13 @@ export function formatActiveProposalData({
     isVotingFinished: state.state > ProposalState.Voting,
     isFinished: state.state > ProposalState.Succeed,
     // votes
-    forVotes: +formatUnits(voting.proposalData.forVotes, DECIMALS),
-    requiredForVotes: +formatUnits(requiredForVotes, DECIMALS),
-    forPercent: +Number(forPercent).toFixed(4),
-    againstVotes: +formatUnits(voting.proposalData.againstVotes, DECIMALS),
-    requiredAgainstVotes: +formatUnits(requiredAgainstVotes, DECIMALS),
-    againstPercent: +Number(againstPercent).toFixed(4),
+    ...getProposalVotingData({
+      forVotes: voting.proposalData.forVotes,
+      againstVotes: voting.proposalData.againstVotes,
+      quorum,
+      differential,
+      precisionDivider,
+    }),
     // ipfs
     ipfsError: core.ipfsError,
   };
@@ -625,47 +644,7 @@ export function formatDataForDetails({
   const state = getStateAndTimestampForActiveProposal(data);
   const nextState = getNextStateAndTimestampForActiveProposal(data);
   const pendingState = getPendingStateForActiveProposal(data);
-
   const { voting, differential, precisionDivider, quorum } = data;
-
-  const { minQuorumVotes } = formatQuorum(
-    voting.proposalData.forVotes,
-    quorum,
-    precisionDivider,
-  );
-  const { requiredDiff } = formatDiff(
-    voting.proposalData.forVotes,
-    voting.proposalData.againstVotes,
-    differential,
-    precisionDivider,
-  );
-
-  const allVotes =
-    voting.proposalData.forVotes + voting.proposalData.againstVotes;
-
-  const requiredForVotes =
-    voting.proposalData.againstVotes + requiredDiff < minQuorumVotes
-      ? minQuorumVotes
-      : voting.proposalData.againstVotes + requiredDiff;
-  const forPercent =
-    allVotes > 0n
-      ? (voting.proposalData.forVotes / requiredForVotes) * 100n
-      : 0;
-
-  const requiredAgainstVotes =
-    voting.proposalData.forVotes === 0n ||
-    voting.proposalData.forVotes - requiredDiff <= 0n ||
-    voting.proposalData.forVotes < minQuorumVotes
-      ? minQuorumVotes
-      : voting.proposalData.forVotes - requiredDiff;
-
-  const againstPercent =
-    allVotes > 0n
-      ? (voting.proposalData.againstVotes /
-          (requiredAgainstVotes > 0n ? requiredAgainstVotes : 1n)) *
-        100n
-      : 0;
-
   return {
     ...states,
     state,
@@ -674,12 +653,13 @@ export function formatDataForDetails({
     isVotingFinished: state.state > ProposalState.Voting,
     isFinished: state.state > ProposalState.Succeed,
     // votes
-    forVotes: +formatUnits(voting.proposalData.forVotes, DECIMALS),
-    requiredForVotes: +formatUnits(requiredForVotes, DECIMALS),
-    forPercent: +Number(forPercent).toFixed(4),
-    againstVotes: +formatUnits(voting.proposalData.againstVotes, DECIMALS),
-    requiredAgainstVotes: +formatUnits(requiredAgainstVotes, DECIMALS),
-    againstPercent: +Number(againstPercent).toFixed(4),
+    ...getProposalVotingData({
+      forVotes: voting.proposalData.forVotes,
+      againstVotes: voting.proposalData.againstVotes,
+      quorum,
+      differential,
+      precisionDivider,
+    }),
   };
 }
 

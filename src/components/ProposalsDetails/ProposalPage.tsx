@@ -8,6 +8,7 @@ import { DECIMALS } from '../../configs/configs';
 import { texts } from '../../helpers/texts/texts';
 import { ActivateVotingOnVotingMachineModal } from '../../transactions/components/ActionModals/ActivateVotingOnVotingMachineModal';
 import { ExecutePayloadModal } from '../../transactions/components/ActionModals/ExecutePayloadModal';
+import { VoteModal } from '../../transactions/components/ActionModals/VoteModal';
 import {
   ContractsConstants,
   DetailedProposalData,
@@ -360,13 +361,13 @@ export function ProposalPage({
 
       <ToTopButton />
 
-      {/*{data.formattedData.isVotingActive && (*/}
-      {/*  <VoteModal*/}
-      {/*    isOpen={isVoteModalOpen}*/}
-      {/*    setIsOpen={setIsVoteModalOpen}*/}
-      {/*    proposalId={proposal.data.id}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {data.formattedData.isVotingActive && (
+        <VoteModal
+          isOpen={isVoteModalOpen}
+          setIsOpen={setIsVoteModalOpen}
+          proposalId={data.proposalData.id}
+        />
+      )}
 
       {/*{isProposalHistoryModalOpen && (*/}
       {/*  <ProposalHistoryModal*/}

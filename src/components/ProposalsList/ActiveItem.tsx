@@ -46,6 +46,9 @@ export function ActiveItem({
   );
   const votingBalances = useStore((state) => state.votingBalances);
   const votedData = useStore((state) => state.votedData);
+  const proposalDetailsLoading = useStore(
+    (state) => state.proposalDetailsLoading,
+  );
 
   const userProposalData = selectProposalDataByUser({
     votingBalances,
@@ -296,6 +299,11 @@ export function ActiveItem({
                                 onClick={handleVoteButtonClick}
                                 votingChainId={proposalData.votingChainId}
                                 isForHelpModal={isForHelpModal}
+                                loading={
+                                  proposalDetailsLoading[
+                                    proposalData.proposalId
+                                  ]
+                                }
                               />
                             )}
                           </Box>
@@ -397,6 +405,9 @@ export function ActiveItem({
                               onClick={handleVoteButtonClick}
                               votingChainId={proposalData.votingChainId}
                               isForHelpModal={isForHelpModal}
+                              loading={
+                                proposalDetailsLoading[proposalData.proposalId]
+                              }
                             />
                           )}
                         </>

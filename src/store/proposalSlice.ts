@@ -20,6 +20,7 @@ export interface IProposalSlice {
   proposalDetails: Record<number, DetailedProposalData>;
   initializeProposalDetails: (data: DetailedProposalData) => void;
   getProposalDetails: (id: number) => Promise<void>;
+  proposalDetailsLoading: Record<number, boolean>;
 
   activeProposalDetailsInterval: number | undefined;
   startActiveProposalDetailsPolling: (id: number) => Promise<void>;
@@ -69,6 +70,13 @@ export const createProposalSlice: StoreSlice<
   getProposalDetails: async (id) => {
     const configs = get().configs;
     if (configs) {
+      if (typeof get().proposalDetailsLoading[id] === 'undefined') {
+        set((state) =>
+          produce(state, (draft) => {
+            draft.proposalDetailsLoading[id] = true;
+          }),
+        );
+      }
       const input = {
         ...configs.contractsConstants,
         votingConfigs: configs.configs,
@@ -83,15 +91,21 @@ export const createProposalSlice: StoreSlice<
           })
         : api.proposals.getDetails.query(input));
       get().initializeProposalDetails(data);
-      get().updateDetailsUserData(id);
+      await get().updateDetailsUserData(id);
       if (!data.formattedData.isFinished) {
-        get().getCreatorPropositionPower({
+        await get().getCreatorPropositionPower({
           creatorAddress: data.proposalData.creator,
           underlyingAssets: data.votingData.votingAssets as string[],
         });
       }
+      set((state) =>
+        produce(state, (draft) => {
+          draft.proposalDetailsLoading[id] = false;
+        }),
+      );
     }
   },
+  proposalDetailsLoading: {},
 
   activeProposalDetailsInterval: undefined,
   startActiveProposalDetailsPolling: async (id) => {

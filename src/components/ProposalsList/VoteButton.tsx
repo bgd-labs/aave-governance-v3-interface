@@ -20,6 +20,7 @@ interface VoteButtonProps {
   votingChainId: number;
   onClick: (proposalId: number) => void;
   isForHelpModal?: boolean;
+  loading?: boolean;
 }
 
 export function VoteButton({
@@ -29,6 +30,7 @@ export function VoteButton({
   votingChainId,
   onClick,
   isForHelpModal,
+  loading,
 }: VoteButtonProps) {
   const transactionsPool = useStore((store) => store.transactionsPool);
   const activeWallet = useStore((store) => store.activeWallet);
@@ -104,7 +106,7 @@ export function VoteButton({
                 </Box>
               ) : (
                 <SmallButton
-                  loading={buttonLoading}
+                  loading={loading || buttonLoading}
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
