@@ -7,10 +7,12 @@ import { useStore } from '../../providers/ZustandStoreProvider';
 import {
   selectProposalDataByUser,
   selectProposalDetailedData,
+  selectVotersByProposalId,
 } from '../../store/selectors/proposalsSelector';
 import {
   ContractsConstants,
   DetailedProposalData,
+  VotersData,
   VotingConfig,
 } from '../../types';
 import { Container } from '../primitives/Container';
@@ -21,6 +23,7 @@ export function ProposalDetailsInitializer({
   proposalId,
   configs,
   data,
+  voters,
 }: {
   proposalId?: string;
   configs: {
@@ -28,6 +31,7 @@ export function ProposalDetailsInitializer({
     contractsConstants: ContractsConstants;
   };
   data?: DetailedProposalData;
+  voters?: VotersData[];
 }) {
   const activeWallet = useStore((store) => store.activeWallet);
   const votingBalances = useStore((store) => store.votingBalances);
@@ -39,6 +43,12 @@ export function ProposalDetailsInitializer({
   );
   const getProposalDetails = useStore((store) => store.getProposalDetails);
   const proposalDetails = useStore((store) => store.proposalDetails);
+  const setVoters = useStore((store) => store.setVoters);
+  const getVoters = useStore((store) => store.getVoters);
+  const startVotersPolling = useStore((store) => store.startVotersPolling);
+  const stopVotersPolling = useStore((store) => store.stopVotersPolling);
+  const votersFromStore = useStore((store) => store.voters);
+  const getVotersLoading = useStore((store) => store.getVotersLoading);
   const startActiveProposalDetailsPolling = useStore(
     (store) => store.startActiveProposalDetailsPolling,
   );
@@ -83,6 +93,12 @@ export function ProposalDetailsInitializer({
       }
     }
   }, [id, data, activeWallet, representative]);
+
+  useEffect(() => {
+    if (voters?.length) {
+      setVoters(voters);
+    }
+  }, [voters?.length]);
 
   const proposalData = selectProposalDetailedData({ id: +id, proposalDetails });
 
@@ -154,6 +170,51 @@ export function ProposalDetailsInitializer({
     }
   }, [proposalData?.proposalData.creator]);
 
+  const {
+    lastBlockNumber: lastVoteBlockNumber,
+    votersLocal: votersForCurrentProposal,
+  } = selectVotersByProposalId(votersFromStore, +id);
+
+  useEffect(() => {
+    if (proposalData) {
+      const startBlock =
+        proposalData?.votingData.proposalData.creationBlockNumber;
+      const endBlock =
+        proposalData?.votingData.proposalData.votingClosedAndSentBlockNumber;
+
+      const totalVotes =
+        proposalData?.formattedData.forVotes +
+        proposalData?.formattedData.againstVotes;
+
+      if (startBlock > 0n) {
+        const params = {
+          proposalId: proposalData.proposalData.id,
+          votingChainId: proposalData.votingData.votingChainId,
+          startBlockNumber: Number(startBlock),
+          endBlockNumber: Number(endBlock),
+          lastVoteBlockNumber,
+        };
+
+        if (totalVotes > 0 && proposalData.formattedData.isVotingActive) {
+          getVoters(params);
+        }
+
+        if (proposalData.formattedData.isVotingActive) {
+          startVotersPolling(params);
+        } else {
+          stopVotersPolling();
+        }
+      }
+    }
+    return () => {
+      stopVotersPolling();
+    };
+  }, [
+    proposalData?.proposalData.id,
+    proposalData?.votingData.proposalData.creationBlockNumber,
+    proposalData?.votingData.proposalData.votingClosedAndSentBlockNumber,
+  ]);
+
   if (!proposalData) {
     return <ProposalLoading withContainer />;
   }
@@ -174,6 +235,14 @@ export function ProposalDetailsInitializer({
         votingPower={votingPower}
         userProposalData={userProposalData}
         isCreatorBalanceWarningVisible={isCreatorBalanceWarningVisible}
+        voters={votersForCurrentProposal}
+        votersInitialLoading={
+          getVotersLoading[proposalData.proposalData.id]?.initialLoading ||
+          false
+        }
+        votersLoading={
+          getVotersLoading[proposalData.proposalData.id]?.loading || false
+        }
       />
     </Container>
   );

@@ -1,3 +1,6 @@
+import { Hex } from 'viem';
+
+import { VotersData } from '../../types';
 import { IProposalSlice } from '../proposalSlice';
 import {
   IProposalsListSlice,
@@ -64,4 +67,22 @@ export const selectProposalDetailedData = ({
   id,
 }: { id: number } & Pick<IProposalSlice, 'proposalDetails'>) => {
   return proposalDetails[id];
+};
+
+export const selectVotersByProposalId = (
+  voters: Record<Hex, VotersData>,
+  id: number,
+) => {
+  const votersLocal = Object.values(voters).filter(
+    (voter) => voter.proposalId === id,
+  );
+  const lastBlockNumber = Math.max.apply(
+    0,
+    votersLocal.map((vote) => vote.blockNumber),
+  );
+
+  return {
+    votersLocal,
+    lastBlockNumber,
+  };
 };

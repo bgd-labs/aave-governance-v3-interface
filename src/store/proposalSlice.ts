@@ -1,20 +1,39 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
-import { zeroHash } from 'viem';
+import { Hex, zeroHash } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { fetchCreatorPropositionPower } from '../requests/fetchCreatorPropositionPower';
 import { fetchProposalDataForDetails } from '../requests/fetchProposalDataForDetails';
+import { fetchVoters } from '../requests/fetchVoters';
 import { GetCreatorPropositionPower } from '../requests/utils/getOwnerPropositionPowerRPC';
 import { api } from '../trpc/client';
-import { DetailedProposalData, PayloadInitialStruct } from '../types';
+import {
+  DetailedProposalData,
+  ENSProperty,
+  PayloadInitialStruct,
+  VotersData,
+} from '../types';
+import { IEnsSlice } from './ensSlice';
 import { IProposalsSlice } from './proposalsSlice';
 import { IRepresentationsSlice } from './representationsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
-import { selectProposalDataByUser } from './selectors/proposalsSelector';
+import { ENSDataExists } from './selectors/ensSelectors';
+import {
+  selectProposalDataByUser,
+  selectVotersByProposalId,
+} from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { IWeb3Slice } from './web3Slice';
+
+type GetVotersParams = {
+  proposalId: number;
+  votingChainId: number;
+  startBlockNumber: number;
+  endBlockNumber?: number;
+  lastBlockNumber?: number;
+};
 
 export interface IProposalSlice {
   proposalDetails: Record<number, DetailedProposalData>;
@@ -42,11 +61,38 @@ export interface IProposalSlice {
     proposalId: number;
     payload: PayloadInitialStruct;
   }) => Promise<void>;
+
+  voters: Record<Hex, VotersData>;
+  setVoters: (voters: VotersData[]) => void;
+  getVoters: ({
+    startBlockNumber,
+    endBlockNumber,
+    lastBlockNumber,
+    proposalId,
+    votingChainId,
+  }: GetVotersParams) => Promise<void>;
+  getVotersLoading: Record<
+    number,
+    { initialLoading: boolean; loading: boolean }
+  >;
+  getVotersInterval: number | undefined;
+  startVotersPolling: ({
+    startBlockNumber,
+    endBlockNumber,
+    lastBlockNumber,
+    proposalId,
+    votingChainId,
+  }: GetVotersParams) => Promise<void>;
+  stopVotersPolling: () => void;
 }
 
 export const createProposalSlice: StoreSlice<
   IProposalSlice,
-  IProposalsSlice & IRpcSwitcherSlice & IWeb3Slice & IRepresentationsSlice
+  IProposalsSlice &
+    IRpcSwitcherSlice &
+    IWeb3Slice &
+    IRepresentationsSlice &
+    IEnsSlice
 > = (set, get) => ({
   proposalDetails: {},
   initializeProposalDetails: (data) => {
@@ -225,5 +271,147 @@ export const createProposalSlice: StoreSlice<
         ] = false;
       }),
     );
+  },
+
+  voters: {},
+  setVoters: (voters) => {
+    set((state) =>
+      produce(state, (draft) => {
+        voters.forEach((votersData) => {
+          draft.voters[votersData.transactionHash] = votersData;
+        });
+      }),
+    );
+  },
+  getVoters: async ({
+    proposalId,
+    votingChainId,
+    startBlockNumber,
+    endBlockNumber,
+    lastBlockNumber,
+  }) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.getVotersLoading[proposalId] = {
+          initialLoading:
+            typeof draft.getVotersLoading[proposalId] !== 'undefined'
+              ? draft.getVotersLoading[proposalId].initialLoading
+              : true,
+          loading: true,
+        };
+      }),
+    );
+
+    const input = {
+      votingChainId,
+      startBlockNumber,
+      endBlockNumber,
+      lastBlockNumber,
+    };
+
+    const votersData = await (isForIPFS
+      ? fetchVoters({
+          input: {
+            clients: selectAppClients(get()),
+            ...input,
+          },
+        })
+      : api.proposals.getVoters.query(input));
+
+    set((state) =>
+      produce(state, (draft) => {
+        votersData.forEach((vote) => {
+          draft.voters[vote.transactionHash] = {
+            ...vote,
+            ensName: ENSDataExists(
+              get().ensData,
+              vote.address,
+              ENSProperty.NAME,
+            )
+              ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
+              : vote.ensName,
+          };
+        });
+      }),
+    );
+
+    const topVotersByProposalIdWithENS = await Promise.all(
+      selectVotersByProposalId(get().voters, proposalId)
+        .votersLocal.sort((a, b) => b.votingPower - a.votingPower)
+        .slice(0, 5)
+        .map(async (vote) => {
+          if (vote.ensName) {
+            return vote;
+          } else {
+            await get().fetchEnsNameByAddress(vote.address);
+            const ensName =
+              get().ensData[vote.address.toLocaleLowerCase() as Hex]?.name;
+            if (ensName) {
+              return {
+                ...vote,
+                ensName,
+              };
+            } else {
+              return vote;
+            }
+          }
+        }),
+    );
+
+    set((state) =>
+      produce(state, (draft) => {
+        topVotersByProposalIdWithENS.forEach((vote) => {
+          draft.voters[vote.transactionHash] = {
+            ...vote,
+            ensName: ENSDataExists(
+              get().ensData,
+              vote.address,
+              ENSProperty.NAME,
+            )
+              ? get().ensData[vote.address.toLocaleLowerCase() as Hex].name
+              : vote.ensName,
+          };
+        });
+      }),
+    );
+
+    set((state) =>
+      produce(state, (draft) => {
+        draft.getVotersLoading[proposalId] = {
+          initialLoading: false,
+          loading: false,
+        };
+      }),
+    );
+  },
+  getVotersLoading: {},
+
+  getVotersInterval: undefined,
+  startVotersPolling: async ({
+    proposalId,
+    votingChainId,
+    startBlockNumber,
+    endBlockNumber,
+    lastBlockNumber,
+  }) => {
+    const currentInterval = get().getVotersInterval;
+    clearInterval(currentInterval);
+    const interval = setInterval(() => {
+      get().getVoters({
+        proposalId,
+        votingChainId,
+        startBlockNumber,
+        endBlockNumber,
+        lastBlockNumber,
+      });
+    }, 60000);
+    set({ getVotersInterval: Number(interval) });
+  },
+  stopVotersPolling: () => {
+    const interval = get().getVotersInterval;
+    if (interval) {
+      clearInterval(interval);
+      set(() => ({ getVotersInterval: undefined }));
+    }
   },
 });

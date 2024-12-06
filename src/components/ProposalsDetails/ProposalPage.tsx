@@ -15,6 +15,7 @@ import {
   InitialPayload,
   ProposalState,
   VotedDataByUser,
+  VotersData,
   VotingConfig,
   VotingDataByUser,
 } from '../../types';
@@ -47,6 +48,9 @@ interface ProposalPageProps {
     voted?: VotedDataByUser;
     voting?: VotingDataByUser[];
   };
+  voters: VotersData[];
+  votersInitialLoading: boolean;
+  votersLoading: boolean;
 }
 
 export function ProposalPage({
@@ -57,6 +61,9 @@ export function ProposalPage({
   votingPower,
   isCreatorBalanceWarningVisible,
   userProposalData,
+  voters,
+  votersInitialLoading,
+  votersLoading,
 }: ProposalPageProps) {
   const theme = useTheme();
   const router = useRouter();
@@ -163,9 +170,9 @@ export function ProposalPage({
               isFinished={data.formattedData.isFinished}
               isStarted={data.formattedData.state.state > ProposalState.Created}
               isVotingFinished={data.formattedData.isVotingFinished}
-              voters={[]}
-              votersInitialLoading={false}
-              votersLoading={false}
+              voters={voters}
+              votersInitialLoading={votersInitialLoading}
+              votersLoading={votersLoading}
             />
 
             {isCreatorBalanceWarningVisible && (

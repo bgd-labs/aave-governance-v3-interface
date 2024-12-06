@@ -12,8 +12,10 @@ import {
 } from '../../../requests/fetchProposalDataForDetails';
 import { fetchProposalsBalancesByUser } from '../../../requests/fetchProposalsBalancesByUser';
 import { fetchProposalsDataByUser } from '../../../requests/fetchProposalsDataByUser';
+import { fetchVoters } from '../../../requests/fetchVoters';
 import { serverClients } from '../../../requests/utils/chains';
 import { GetCreatorPropositionPower } from '../../../requests/utils/getOwnerPropositionPowerRPC';
+import { GetVotersRPC } from '../../../requests/utils/getVotersRPC';
 import { GetVotingDataRPC } from '../../../requests/utils/getVotingDataRPC';
 import { GetVotingPowerWithDelegationByBlockHashRPC } from '../../../requests/utils/getVotingPowerWithDelegationByBlockHashRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
@@ -70,6 +72,17 @@ export const proposalsRouter = createTRPCRouter({
           input: {
             ...input.input,
             govCoreClient: serverClients[appConfig.govCoreChainId],
+          },
+        }),
+    ),
+  getVoters: publicProcedure
+    .input(z.custom<Omit<GetVotersRPC, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchVoters({
+          input: {
+            ...input.input,
+            clients: serverClients,
           },
         }),
     ),

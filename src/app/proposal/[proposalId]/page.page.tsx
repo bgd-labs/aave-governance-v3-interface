@@ -46,12 +46,21 @@ export default async function Page({
     votingConfigs: configs.configs,
     proposalId: id,
   });
+  // TODO: API
+  // const voters = await api.proposals.getVoters({
+  //   votingChainId: data.votingData.votingChainId,
+  //   startBlockNumber: Number(data.votingData.proposalData.creationBlockNumber),
+  //   endBlockNumber: Number(
+  //     data.votingData.proposalData.votingClosedAndSentBlockNumber,
+  //   ),
+  // });
 
   return (
     <ProposalDetailsInitializer
       proposalId={proposalId}
       configs={configs}
       data={data}
+      // voters={voters}
     />
   );
 }

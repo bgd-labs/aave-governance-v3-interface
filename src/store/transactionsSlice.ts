@@ -41,9 +41,11 @@ import {
   RepresentationFormData,
   VotingDataByUser,
 } from '../types';
+import { IDelegationSlice } from './delegationSlice';
 import { IProposalSlice } from './proposalSlice';
 import { IRepresentationsSlice } from './representationsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
+import { selectVotersByProposalId } from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 
 export enum TxType {
@@ -294,7 +296,11 @@ export type AllTransactions = TxWithStatus[];
 
 export const createTransactionsSlice: StoreSlice<
   TransactionsSlice,
-  IWalletSlice & IRpcSwitcherSlice & IProposalSlice & IRepresentationsSlice
+  IWalletSlice &
+    IRpcSwitcherSlice &
+    IProposalSlice &
+    IRepresentationsSlice &
+    IDelegationSlice
 > = (set, get) => ({
   vote: async ({
     votingChainId,
@@ -637,32 +643,30 @@ export const createTransactionsSlice: StoreSlice<
         case TxType.activateVotingOnVotingMachine:
           await get().getProposalDetails(data.payload.proposalId);
           break;
-        // case TxType.vote: {
-        //   const proposalData = getProposalDataById({
-        //     detailedProposalsData: get().detailedProposalsData,
-        //     configs: get().configs,
-        //     contractsConstants: get().contractsConstants,
-        //     representativeLoading: get().representativeLoading,
-        //     activeWallet: get().activeWallet,
-        //     representative: get().representative,
-        //     blockHashBalanceLoadings: get().blockHashBalanceLoadings,
-        //     blockHashBalance: get().blockHashBalance,
-        //     proposalId: data.payload.proposalId,
-        //   });
-        //
-        //   if (proposalData) {
-        //     const startBlock =
-        //       proposalData.proposal.data.votingMachineData.createdBlock;
-        //
-        //     await updateProposalData(data.payload.proposalId);
-        //     await get().getVoters(
-        //       data.payload.proposalId,
-        //       proposalData.proposal.data.votingChainId,
-        //       startBlock,
-        //     );
-        //   }
-        //   break;
-        // }
+        case TxType.vote: {
+          await get().getProposalDetails(data.payload.proposalId);
+          const proposalData = get().proposalDetails[data.payload.proposalId];
+          if (proposalData) {
+            const startBlockFromStore = Math.max(
+              ...selectVotersByProposalId(
+                get().voters,
+                proposalData.proposalData.id,
+              ).votersLocal.map((vote) => vote.blockNumber),
+            );
+            const votingStartedBlock = Number(
+              proposalData.votingData.proposalData.creationBlockNumber,
+            );
+            await get().getVoters({
+              proposalId: data.payload.proposalId,
+              votingChainId: proposalData.votingData.votingChainId,
+              startBlockNumber:
+                startBlockFromStore > votingStartedBlock
+                  ? startBlockFromStore
+                  : votingStartedBlock,
+            });
+          }
+          break;
+        }
         case TxType.closeAndSendVote:
           await get().getProposalDetails(data.payload.proposalId);
           break;
@@ -673,8 +677,8 @@ export const createTransactionsSlice: StoreSlice<
           await get().getProposalDetails(data.payload.proposalId);
           break;
         case TxType.delegate:
-          // await get().getDelegateData();
-          // get().setIsDelegateChangedView(false);
+          await get().getDelegateData();
+          get().setIsDelegateChangedView(false);
           break;
         case TxType.representations:
           await get().getRepresentationData();
