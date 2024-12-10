@@ -1,4 +1,3 @@
-import { selectIdsForRequest } from '../../store/proposalsListSlice';
 import { api } from '../../trpc/server';
 import { ContractsConstants, VotingConfig } from '../../types';
 import { Container } from '../primitives/Container';
@@ -29,10 +28,8 @@ export async function ProposalsListInitialize({
   const proposalsListData = await api.proposalsList.getAll({
     ...configs.contractsConstants,
     votingConfigs: configs.configs,
-    proposalsIds: selectIdsForRequest(
-      [...Array(Number(count)).keys()].sort((a, b) => b - a),
-      activePage,
-    ),
+    activePage,
+    proposalsCount: Number(count),
   });
 
   if (

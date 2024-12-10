@@ -9,7 +9,8 @@ export async function fetchCurrentUserPowers({
   input: GetCurrentUserPowersRPC;
 }) {
   try {
-    throw new Error('TODO: API not implemented');
+    // TODO: API not implemented
+    return await getCurrentUserPowersRPC({ ...input });
   } catch (e) {
     console.error(
       'Error getting current user powers from API, using RPC fallback',

@@ -1,20 +1,29 @@
 import { Client } from 'viem';
+import { mainnet } from 'viem/chains';
 
-import { ipfsGateway } from '../configs/configs';
+import { appConfig } from '../configs/appConfig';
+import { INITIAL_API_URL, ipfsGateway } from '../configs/configs';
 import { getProposalMetadata } from '../helpers/getProposalMetadata';
-import { texts } from '../old/ui/utils/texts';
-import { ContractsConstants, VotingConfig } from '../types';
-import { getDataForList } from './utils/getDataForList';
-import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
+import { texts } from '../helpers/texts/texts';
+import {
+  ContractsConstants,
+  GetProposalInitialResponse,
+  VotingConfig,
+} from '../types';
+import { formatListData } from './utils/formatDataFromAPI';
+import {
+  getDataForList,
+  getProposalsWithPayloads,
+} from './utils/getDataForList';
+import { getProposalPayloadsDataRPC } from './utils/getProposalPayloadsDataRPC';
 import { getProposalsDataRPC } from './utils/getProposalsDataRPC';
+import { getVotingProposalsDataRPC } from './utils/getVotingProposalsDataRPC';
 
 export type FetchProposalsDataForListParams = Pick<
   ContractsConstants,
   'precisionDivider' | 'expirationTime' | 'cooldownPeriod'
 > & {
   votingConfigs: VotingConfig[];
-  userAddress?: string;
-  representativeAddress?: string;
   clients: Record<number, Client>;
   activeIds: number[];
 };
@@ -25,7 +34,17 @@ export async function fetchActiveProposalsDataForList({
   input: FetchProposalsDataForListParams;
 }) {
   try {
-    throw new Error('TODO: API not implemented');
+    if (appConfig.govCoreChainId === mainnet.id) {
+      const data = await Promise.all(
+        input.activeIds.map(async (id) => {
+          const url = `${INITIAL_API_URL}/proposals/${id}/get/`;
+          const dataRaw = await fetch(url);
+          return (await dataRaw.json()) as GetProposalInitialResponse;
+        }),
+      );
+      return await formatListData(input, { proposals: data });
+    }
+    throw new Error('This chain id for gov core not supported by API');
   } catch (e) {
     console.error(
       'Error getting active proposals data for list from API, using RPC fallback',
@@ -56,10 +75,24 @@ export async function fetchActiveProposalsDataForList({
           };
         }),
     );
-    return await getDataForList({
+
+    const payloadsData = await getProposalPayloadsDataRPC({
+      proposalsData,
+      clients: input.clients,
+    });
+
+    const data = getProposalsWithPayloads({ proposalsData, payloadsData });
+
+    const voting = await getVotingProposalsDataRPC({
+      activeIds: data.activeIds,
+      proposalsWithPayloads: data.proposalsWithPayloads,
+      clients: input.clients,
+    });
+
+    return getDataForList({
       input,
-      proposals: proposalsData,
-      getPayloadsData: ({ ...props }) => getPayloadsDataRPC({ ...props }),
+      ...data,
+      voting,
     });
   }
 }

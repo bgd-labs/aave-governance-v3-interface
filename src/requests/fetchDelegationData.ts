@@ -9,7 +9,8 @@ export async function fetchDelegationData({
   input: GetDelegationDataRPC;
 }) {
   try {
-    throw new Error('TODO: API not implemented');
+    // TODO: API not implemented
+    return await getDelegationDataRPC({ ...input });
   } catch (e) {
     console.error(
       'Error getting representations data by user from API, using RPC fallback',

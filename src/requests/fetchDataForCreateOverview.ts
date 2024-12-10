@@ -4,7 +4,7 @@ import { PayloadParams } from '../components/pages/ProposalCreateOverviewPage';
 import { ipfsGateway } from '../configs/configs';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { getProposalMetadata } from '../helpers/getProposalMetadata';
-import { texts } from '../old/ui/utils/texts';
+import { texts } from '../helpers/texts/texts';
 import { PayloadWithHashes, ProposalMetadata } from '../types';
 import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
 

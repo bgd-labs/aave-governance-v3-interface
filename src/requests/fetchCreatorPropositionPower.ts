@@ -9,7 +9,8 @@ export async function fetchCreatorPropositionPower({
   input: GetCreatorPropositionPower;
 }) {
   try {
-    throw new Error('TODO: API not implemented');
+    // TODO: API not implemented
+    return await getCreatorPropositionPowerRPC({ ...input });
   } catch (e) {
     console.error(
       'Error getting proposals balances by user from API, using RPC fallback',

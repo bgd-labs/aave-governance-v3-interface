@@ -29,7 +29,7 @@ type FormatProposalParams = Pick<
   };
 
 type FormatProposalParamsWithVoting = FormatProposalParams & {
-  voting: VMProposalInitialStruct;
+  voting: Omit<VMProposalInitialStruct, 'strategy' | 'dataWarehouse'>;
 };
 
 type FormatProposalParamsWithMetadata = FormatProposalParamsWithVoting & {

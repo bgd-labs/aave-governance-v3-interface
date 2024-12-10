@@ -4,7 +4,6 @@ import { z } from 'zod';
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'test', 'production']),
-    API_URL: z.string().default('http://localhost:8000'),
     RPC_MAINNET: z.string().or(z.undefined()),
     RPC_POLYGON: z.string().or(z.undefined()),
     RPC_AVALANCHE: z.string().or(z.undefined()),
@@ -24,7 +23,6 @@ export const env = createEnv({
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    API_URL: process.env.API_URL,
     RPC_MAINNET: process.env.RPC_MAINNET,
     RPC_POLYGON: process.env.RPC_POLYGON,
     RPC_AVALANCHE: process.env.RPC_AVALANCHE,

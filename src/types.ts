@@ -398,3 +398,95 @@ export type GetProposalsData = {
   proposalsIds?: number[];
   clients: Record<number, Client>;
 };
+
+// From server
+export type ConstantsFromServer = [
+  {
+    COOLDOWN_PERIOD: number;
+    CANCELLATION_FEE: string;
+    PROPOSAL_EXPIRATION_TIME: number;
+    PRECISION_DIVIDER: string;
+  },
+];
+
+export type ConfigsFromServer = {
+  coolDownBeforeVotingStart: number;
+  votingDuration: number;
+  yesThreshold: number;
+  yesNoDifferential: number;
+  minPropositionPower: number;
+  accessLevel: number;
+}[];
+
+export type GetProposalInitialResponse = {
+  proposalId: number;
+  state: InitialProposalState;
+  accessLevel: number;
+  creationTime: number;
+  votingActivationTime: number | null;
+  queuingTime: number | null;
+  cancelTimestamp: number | null;
+  creator: Address;
+  votingPortal: Address;
+  snapshotBlockHash: Hex;
+  ipfsHash: Hex;
+  forVotes: string | null;
+  againstVotes: string | null;
+  cancellationFee: string | null;
+  createdTxHash: Hex | null;
+  executedTxHash: Hex | null;
+  cancelledTxHash: Hex | null;
+  queuedTxHash: Hex | null;
+  failedTxHash: Hex | null;
+  votingActivatedTxHash: Hex | null;
+  executedTimestamp: number | null;
+  failedTimestamp: number | null;
+  title: string | null;
+  votingChainId: number;
+  votingStartTime: number | null;
+  votingEndTime: number | null;
+  votingCreationBlockNumber: number | null;
+  votingProposalState: number | null;
+  votingClosedAndSentBlockNumber: number | null;
+  votingClosedAndSentTimestamp: number | null;
+  sentToGovernance: boolean | null;
+  votingDuration: number;
+  l1ProposalBlockHash: Hex | null;
+  hasRequiredRoots: boolean | null;
+  votingForVotes: string | null;
+  votingAgainstVotes: string | null;
+  payloads: [
+    {
+      chainId: number;
+      creator: Address;
+      payloadId: number;
+      payloadsController: Address;
+      delay: number;
+      state: InitialPayloadState;
+      createdAt: number;
+      expirationTime: number | null;
+      gracePeriod: number;
+      maximumAccessLevelRequired: number;
+      executedAt: number | null;
+      cancelledAt: number | null;
+      queuedAt: number | null;
+      lastUpdatedTimestamp: number;
+    },
+  ];
+};
+
+export type GetGovernanceProposalsResponse = {
+  proposals: GetProposalInitialResponse[];
+  totalProposalsCount: [
+    {
+      count: number | null;
+    },
+  ];
+};
+
+export type RepresentativeItem = {
+  representationChainId: number;
+  representative: Address;
+  represented: Address;
+  lastUpdatedTimestamp: number;
+};

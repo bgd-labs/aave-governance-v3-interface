@@ -1,3 +1,7 @@
+import { mainnet } from 'viem/chains';
+
+import { appConfig } from '../configs/appConfig';
+import { INITIAL_API_URL } from '../configs/configs';
 import { GetVotingDataRPC, getVotingDataRPC } from './utils/getVotingDataRPC';
 
 export async function fetchProposalsDataByUser({
@@ -6,7 +10,27 @@ export async function fetchProposalsDataByUser({
   input: GetVotingDataRPC;
 }) {
   try {
-    throw new Error('TODO: API not implemented');
+    if (appConfig.govCoreChainId === mainnet.id) {
+      return await Promise.all(
+        input.initialProposals.map(async (proposal) => {
+          const url = `${INITIAL_API_URL}/voting/${proposal.id}/${proposal.votingChainId}/${appConfig.votingMachineConfig[proposal.votingChainId].contractAddress}/${input.walletAddress}/voteInfo/`;
+          const dataRaw = await fetch(url);
+          const data = (await dataRaw.json()) as {
+            support: boolean;
+            votingPower: string;
+          }[];
+          return {
+            proposalId: proposal.id,
+            votedInfo: {
+              support: data[0].support,
+              votedPower: BigInt(data[0].votingPower),
+            },
+            isVoted: data[0].votingPower !== '0',
+          };
+        }),
+      );
+    }
+    throw new Error('This chain id for gov core not supported by API');
   } catch (e) {
     console.error(
       'Error getting proposal data by user from API, using RPC fallback',

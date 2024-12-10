@@ -5,7 +5,7 @@ import { readContract } from 'viem/actions';
 import { appConfig } from '../configs/appConfig';
 import { ipfsGateway } from '../configs/configs';
 import { getProposalMetadata } from '../helpers/getProposalMetadata';
-import { texts } from '../old/ui/utils/texts';
+import { texts } from '../helpers/texts/texts';
 import { ContractsConstants, ProposalMetadata, VotingConfig } from '../types';
 import { formatDataForDetails } from './utils/formatProposalData';
 import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
