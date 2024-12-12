@@ -50,11 +50,9 @@ export function getInitialRpcUrls({
       'https://eth.nodeconnect.org',
     ],
     [polygon.id]: [
-      polygonRPC || 'https://polygon.blockpi.network/v1/rpc/public',
-      'https://polygon.blockpi.network/v1/rpc/public',
+      polygonRPC || 'https://endpoints.omniatech.io/v1/matic/mainnet/public',
       'https://polygon.llamarpc.com',
       'https://polygon-bor.publicnode.com',
-      'https://endpoints.omniatech.io/v1/matic/mainnet/public',
     ],
     [avalanche.id]: [
       avalancheRPC || 'https://api.avax.network/ext/bc/C/rpc',

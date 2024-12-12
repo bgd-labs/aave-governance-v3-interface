@@ -3,10 +3,20 @@ import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../configs/appConfig';
-import { ipfsGateway } from '../configs/configs';
+import { INITIAL_API_URL, ipfsGateway } from '../configs/configs';
 import { getProposalMetadata } from '../helpers/getProposalMetadata';
 import { texts } from '../helpers/texts/texts';
-import { ContractsConstants, ProposalMetadata, VotingConfig } from '../types';
+import {
+  ContractsConstants,
+  GetProposalInitialResponse,
+  ProposalMetadata,
+  VotingConfig,
+} from '../types';
+import {
+  getProposalFormattedData,
+  getProposalPayloadsFormattedData,
+  getProposalVotingFormattedData,
+} from './utils/formatDataFromAPI';
 import { formatDataForDetails } from './utils/formatProposalData';
 import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
 import { getProposalsDataRPC } from './utils/getProposalsDataRPC';
@@ -27,7 +37,63 @@ export async function fetchProposalDataForDetails({
   input: FetchProposalsDataForDetailsParams;
 }) {
   try {
-    throw new Error('TODO: API not implemented');
+    const url = `${INITIAL_API_URL}/proposals/${input.proposalId}/get/`;
+    const dataRaw = await fetch(url);
+    const data = (await dataRaw.json()) as GetProposalInitialResponse &
+      ProposalMetadata;
+
+    const config = input.votingConfigs.filter(
+      (config) => config.accessLevel === data.accessLevel,
+    )[0];
+
+    let ipfsError = '';
+    let metadata: ProposalMetadata = {
+      title: data.title,
+      description: data.description,
+      discussions: data.discussions,
+      author: data.creator,
+      ipfsHash: data.ipfsHash,
+    };
+    if (!data.title) {
+      try {
+        metadata = await getProposalMetadata(data.ipfsHash, ipfsGateway);
+      } catch (e) {
+        ipfsError = texts.other.fetchFromIpfsError;
+        console.error('Error getting ipfs data', e);
+      }
+    }
+
+    const proposalData = getProposalFormattedData(data);
+    const payloadsData = getProposalPayloadsFormattedData(data);
+    const votingData = getProposalVotingFormattedData(data);
+
+    const formattedData = formatDataForDetails({
+      differential: config.differential,
+      coolDownBeforeVotingStart: config.coolDownBeforeVotingStart,
+      quorum: config.quorum,
+      precisionDivider: input.precisionDivider,
+      expirationTime: input.expirationTime,
+      cooldownPeriod: input.cooldownPeriod,
+      core: proposalData,
+      payloads: payloadsData,
+      voting: votingData,
+      metadata,
+      ipfsError,
+    });
+
+    return {
+      proposalData,
+      payloadsData: payloadsData.map((payload) => {
+        return {
+          ...payload,
+          proposalId: Number(data.proposalId),
+        };
+      }),
+      votingData,
+      metadata,
+      formattedData,
+      ipfsError,
+    };
   } catch (e) {
     console.error(
       'Error getting proposal details data from API, using RPC fallback',
