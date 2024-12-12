@@ -15,6 +15,7 @@ import {
   VotingConfig,
   VotingDataByUser,
 } from '../types';
+import { IProposalsListSlice } from './proposalsListSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectProposalDataByUser } from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
@@ -57,7 +58,7 @@ export interface IProposalsSlice {
 
 export const createProposalsSlice: StoreSlice<
   IProposalsSlice,
-  IRpcSwitcherSlice
+  IRpcSwitcherSlice & IProposalsListSlice
 > = (set, get) => ({
   initializeConfigs: async (configs) => {
     if (configs && !get().configs) {
@@ -78,7 +79,7 @@ export const createProposalsSlice: StoreSlice<
   totalProposalsCount: -1,
   initializeProposalsCount: async (count) => {
     if (count && count > get().totalProposalsCount) {
-      set({ totalProposalsCount: count });
+      set({ totalProposalsCount: count, paginationCount: count });
     } else {
       const totalProposalsCount = await (isForIPFS
         ? fetchTotalProposalsCount({
@@ -89,7 +90,10 @@ export const createProposalsSlice: StoreSlice<
           })
         : api.configs.getProposalsCount.query());
       if (Number(totalProposalsCount) > get().totalProposalsCount) {
-        set({ totalProposalsCount: Number(totalProposalsCount) });
+        set({
+          totalProposalsCount: Number(totalProposalsCount),
+          paginationCount: Number(totalProposalsCount),
+        });
       }
     }
   },

@@ -13,7 +13,7 @@ import { FetchProposalsDataForListParams } from '../fetchProposalsDataForList';
 import { getDataForList, getProposalsWithPayloads } from './getDataForList';
 
 export async function formatListData(
-  input: FetchProposalsDataForListParams,
+  input: Omit<FetchProposalsDataForListParams, 'clients'>,
   data: Omit<GetGovernanceProposalsResponse, 'totalProposalsCount'>,
 ) {
   const proposalsData = await Promise.all(

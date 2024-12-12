@@ -8,6 +8,7 @@ import NotFoundGhostImage from '../../assets/notFoundGhost.svg';
 import NoDataListImage from '../../assets/notFoundList.svg';
 import NoDataListDarkImage from '../../assets/notFoundListDark.svg';
 import { texts } from '../../helpers/texts/texts';
+import { useStore } from '../../providers/ZustandStoreProvider';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
 import { IconBox } from '../primitives/IconBox';
@@ -15,6 +16,7 @@ import { IconBox } from '../primitives/IconBox';
 export function NoFilteredData() {
   const theme = useTheme();
   const router = useRouter();
+  const clearFilters = useStore((store) => store.clearFilters);
 
   return (
     <Box
@@ -94,7 +96,11 @@ export function NoFilteredData() {
         </IconBox>
       </BoxWith3D>
 
-      <BigButton onClick={() => router.push('/')}>
+      <BigButton
+        onClick={() => {
+          clearFilters();
+          router.push('/');
+        }}>
         {texts.proposals.viewAll}
       </BigButton>
     </Box>

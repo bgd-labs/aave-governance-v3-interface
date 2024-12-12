@@ -65,7 +65,7 @@ export function getDataForList({
   finishedIds,
   voting,
 }: {
-  input: FetchProposalsDataForListParams;
+  input: Omit<FetchProposalsDataForListParams, 'clients'>;
   proposalsWithPayloads: {
     proposal: ProposalInitialStruct;
     payloads: PayloadInitialStruct[];

@@ -2,7 +2,6 @@ import { api } from '../../trpc/server';
 import { ContractsConstants, VotingConfig } from '../../types';
 import { Container } from '../primitives/Container';
 import { NoData } from './NoData';
-import { NoFilteredData } from './NoFilteredData';
 import { ProposalsList } from './ProposalsList';
 
 export async function ProposalsListInitialize({
@@ -31,19 +30,6 @@ export async function ProposalsListInitialize({
     activePage,
     proposalsCount: Number(count),
   });
-
-  if (
-    ![
-      ...proposalsListData.activeProposalsData,
-      ...proposalsListData.finishedProposalsData,
-    ].length
-  ) {
-    return (
-      <Container>
-        <NoFilteredData />
-      </Container>
-    );
-  }
 
   return (
     <ProposalsList

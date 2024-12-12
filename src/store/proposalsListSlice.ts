@@ -1,17 +1,27 @@
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { Hex, zeroHash } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
 import { PAGE_SIZE } from '../configs/configs';
+import { updateQueryParams } from '../helpers/updateQueryParams';
 import { fetchActiveProposalsDataForList } from '../requests/fetchActiveProposalsDataForList';
+import { fetchFilteredDataForList } from '../requests/fetchFilteredDataForList';
 import { fetchTotalProposalsCount } from '../requests/fetchTotalProposalsCount';
 import { api } from '../trpc/client';
-import { ActiveProposalOnTheList, ProposalOnTheList } from '../types';
+import {
+  ActiveProposalOnTheList,
+  ProposalOnTheList,
+  ProposalStateForFilters,
+} from '../types';
 import { IProposalsSlice } from './proposalsSlice';
 import { IRepresentationsSlice } from './representationsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
-import { selectProposalDataByUser } from './selectors/proposalsSelector';
+import {
+  selectFilteredIds,
+  selectProposalDataByUser,
+} from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { IWeb3Slice } from './web3Slice';
 
@@ -56,6 +66,32 @@ export interface IProposalsListSlice {
   updateUserDataOnTheList: () => Promise<void>;
 
   updatedListDataLoading: Record<number, boolean>;
+
+  paginationCount: number;
+  filters: {
+    state: ProposalStateForFilters | null;
+    title: string | null;
+    activePage: number | undefined;
+  };
+  filtersLoading: boolean;
+  clearFilters: () => void;
+  setStateFilter: (
+    value: ProposalStateForFilters | null,
+    router?: AppRouterInstance,
+    withoutRequest?: boolean,
+  ) => Promise<void>;
+  setTitleFilter: (
+    value: string | null,
+    router?: AppRouterInstance,
+    withoutRequest?: boolean,
+  ) => Promise<void>;
+  setActivePageFilter: (
+    value: number | undefined,
+    router?: AppRouterInstance,
+    withoutRequest?: boolean,
+  ) => Promise<void>;
+  initializeFilters: () => Promise<void>;
+  updateFilteredData: () => Promise<void>;
 }
 
 export const createProposalsListSlice: StoreSlice<
@@ -154,7 +190,10 @@ export const createProposalsListSlice: StoreSlice<
       const configs = get().configs;
 
       if (Number(totalProposalsCount) > currentProposalCount && configs) {
-        set({ totalProposalsCount: Number(totalProposalsCount) });
+        set({
+          totalProposalsCount: Number(totalProposalsCount),
+          paginationCount: Number(totalProposalsCount),
+        });
         const newIdsForFirstScreen = selectIdsForRequest(
           [...Array(Number(totalProposalsCount)).keys()].sort((a, b) => b - a),
           1,
@@ -263,4 +302,137 @@ export const createProposalsListSlice: StoreSlice<
   },
 
   updatedListDataLoading: {},
+
+  paginationCount: -1,
+  filters: {
+    state: null,
+    title: null,
+    activePage: undefined,
+  },
+  filtersLoading: false,
+  clearFilters: () => {
+    set({
+      paginationCount: get().totalProposalsCount,
+      filters: {
+        state: null,
+        title: null,
+        activePage: undefined,
+      },
+    });
+  },
+  setStateFilter: async (value, router, withoutRequest) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.filters = {
+          ...draft.filters,
+          activePage: 1,
+          state: value,
+        };
+      }),
+    );
+    if (router) {
+      updateQueryParams({
+        router,
+        params: { state: [String(value || '')] },
+        pathName: '/',
+      });
+    }
+    if (!withoutRequest) {
+      await get().updateFilteredData();
+    }
+  },
+  setTitleFilter: async (value, router, withoutRequest) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.filters = {
+          ...draft.filters,
+          activePage: 1,
+          title: value,
+        };
+      }),
+    );
+    if (router) {
+      updateQueryParams({
+        router,
+        params: { title: [String(value || '')] },
+        pathName: '/',
+      });
+    }
+    if (!withoutRequest) {
+      await get().updateFilteredData();
+    }
+  },
+  setActivePageFilter: async (value, router, withoutRequest) => {
+    set((state) =>
+      produce(state, (draft) => {
+        draft.filters = {
+          ...draft.filters,
+          activePage: value,
+        };
+      }),
+    );
+    if (router) {
+      updateQueryParams({
+        router,
+        params: { activePage: [String(value || '')] },
+        pathName: '/',
+      });
+    }
+    if (!withoutRequest) {
+      await get().updateFilteredData();
+    }
+  },
+  initializeFilters: async () => {
+    const search = window.location.search.substr(1);
+    const queryParams = new URLSearchParams(search);
+    for (const [key, value] of queryParams.entries()) {
+      if (value) {
+        if (key === 'state') {
+          await get().setStateFilter(
+            Number(value) as ProposalStateForFilters | null,
+            undefined,
+            true,
+          );
+        }
+        if (key === 'title' && value !== '') {
+          await get().setTitleFilter(value, undefined, true);
+        }
+        if (key === 'activePage') {
+          await get().setActivePageFilter(Number(value), undefined, true);
+        }
+      }
+    }
+    await get().updateFilteredData();
+  },
+  updateFilteredData: async () => {
+    const configs = get().configs;
+    get().stopActiveProposalsDataPolling();
+    get().stopNewProposalsPolling();
+
+    if (
+      configs &&
+      (get().filters.state !== null || get().filters.title !== null)
+    ) {
+      set({ filtersLoading: true });
+      const data = await fetchFilteredDataForList({
+        input: {
+          ...configs.contractsConstants,
+          votingConfigs: configs.configs,
+          activePage: get().filters.activePage,
+          state: get().filters.state,
+        },
+      });
+      if (data) {
+        get().initializeProposalsListData(data.data);
+        const count = selectFilteredIds(get()).length;
+        set({
+          paginationCount:
+            get().filters.state === ProposalStateForFilters.Active
+              ? count
+              : (data.count ?? -1),
+        });
+      }
+      set({ filtersLoading: false });
+    }
+  },
 });

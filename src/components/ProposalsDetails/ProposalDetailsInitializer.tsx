@@ -105,7 +105,7 @@ export function ProposalDetailsInitializer({
   useEffect(() => {
     if (proposalData && !proposalData.formattedData.isFinished) {
       startActiveProposalDetailsPolling(+id);
-      () => stopActiveProposalDetailsPolling();
+      return () => stopActiveProposalDetailsPolling();
     }
   }, [proposalData?.proposalData.id]);
 

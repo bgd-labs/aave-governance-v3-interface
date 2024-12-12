@@ -55,6 +55,7 @@ export function AppHeader() {
   const activeWallet = useStore((store) => store.activeWallet);
   const checkAppMode = useStore((store) => store.checkAppMode);
   const isAppBlockedByTerms = useStore((store) => store.isAppBlockedByTerms);
+  const clearFilters = useStore((store) => store.clearFilters);
   const isModalOpen = useStore((store) => store.isModalOpen);
   const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
   const isClickedOnStartButtonOnHelpModal = useStore(
@@ -178,7 +179,7 @@ export function AppHeader() {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Link
                 href={ROUTES.main}
-                // onClick={() => setActivePage(0)}
+                onClick={() => clearFilters()}
                 disabled={path === ROUTES.main}
                 css={{
                   lineHeight: 0,

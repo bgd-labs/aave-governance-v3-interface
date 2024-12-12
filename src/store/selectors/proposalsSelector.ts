@@ -1,6 +1,11 @@
+import Fuse from 'fuse.js';
 import { Hex } from 'viem';
 
-import { VotersData } from '../../types';
+import {
+  ProposalState,
+  ProposalStateForFilters,
+  VotersData,
+} from '../../types';
 import { IProposalSlice } from '../proposalSlice';
 import {
   IProposalsListSlice,
@@ -8,17 +13,91 @@ import {
 } from '../proposalsListSlice';
 import { IProposalsSlice } from '../proposalsSlice';
 
+export const selectFilteredIds = (
+  store: IProposalsSlice & IProposalsListSlice,
+) => {
+  const proposals = store.proposalsListData;
+
+  const activeFormattedProposals = Object.values(
+    proposals.activeProposalsData,
+  ).map((proposal) => {
+    return {
+      id: proposal.proposalId,
+      state: proposal.state.state,
+      title: proposal.title,
+    };
+  });
+
+  const finishedFormattedData = Object.values(
+    proposals.finishedProposalsData,
+  ).map((proposal) => {
+    return {
+      id: proposal.proposalId,
+      state: proposal.state.state,
+      title: proposal.title,
+    };
+  });
+
+  const totalData = [...activeFormattedProposals, ...finishedFormattedData];
+
+  const fuse = new Fuse(totalData, {
+    keys: ['title'],
+    threshold: 0.3,
+    distance: 1000,
+  });
+
+  const withoutTitle =
+    store.filters.title === null || store.filters.title === '';
+
+  return store.filters.state !== null && withoutTitle
+    ? totalData
+        .filter((proposal) =>
+          store.filters.state !== ProposalStateForFilters.Active
+            ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
+              proposal?.state === store.filters.state
+            : proposal?.state === ProposalState.Created ||
+              proposal?.state === ProposalState.Voting ||
+              proposal?.state === ProposalState.Succeed,
+        )
+        .map((proposal) => proposal?.id || 0)
+    : store.filters.state === null && store.filters.title !== null
+      ? fuse.search(store.filters.title || '').map((item) => item.item?.id || 0)
+      : fuse
+          .search(store.filters.title || '')
+          .filter((item) =>
+            store.filters.state !== ProposalStateForFilters.Active
+              ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
+                item.item?.state === store.filters.state
+              : item.item?.state === ProposalState.Created ||
+                item.item?.state === ProposalState.Voting ||
+                item.item?.state === ProposalState.Succeed,
+          )
+          .map((item) => item.item?.id || 0);
+};
+
 export const selectProposalsForActivePage = (
   store: IProposalsSlice & IProposalsListSlice,
   activePage: number,
 ) => {
   if (store.totalProposalsCount !== -1) {
-    const ids = selectIdsForRequest(
-      [...Array(Number(store.totalProposalsCount)).keys()].sort(
-        (a, b) => b - a,
-      ),
-      activePage,
+    const filteredIds = selectFilteredIds(store);
+    const idsByPage = selectIdsForRequest(
+      filteredIds.sort((a, b) => b - a),
+      store.filters.activePage ?? 1,
     );
+    const ids =
+      (store.filters.title !== null && store.filters.title !== '') ||
+      store.filters.state !== null
+        ? idsByPage
+        : selectIdsForRequest(
+            [...Array(Number(store.totalProposalsCount)).keys()].sort(
+              (a, b) => b - a,
+            ),
+            activePage,
+          );
+
     const filteredActiveProposalsData = Object.values(
       store.proposalsListData.activeProposalsData,
     ).filter((proposal) => ids.includes(proposal.proposalId));
@@ -34,12 +113,12 @@ export const selectProposalsForActivePage = (
         (a, b) => b.proposalId - a.proposalId,
       ),
     };
-  } else {
-    return {
-      activeProposalsData: [],
-      finishedProposalsData: [],
-    };
   }
+
+  return {
+    activeProposalsData: [],
+    finishedProposalsData: [],
+  };
 };
 
 export const selectProposalDataByUser = ({

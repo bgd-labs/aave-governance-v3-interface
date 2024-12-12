@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { useStore } from '../../providers/ZustandStoreProvider';
@@ -11,11 +12,13 @@ import {
   ProposalOnTheList,
   VotingConfig,
 } from '../../types';
+import { Pagination } from '../Pagination';
 import { Container } from '../primitives/Container';
 import { ActiveItem } from './ActiveItem';
+import { FiltersPanel } from './FiltersPanel';
 import { FinishedItem } from './FinishedItem';
+import { NoFilteredData } from './NoFilteredData';
 import ProposalsListPageLoading from './ProposalsListPageLoading';
-import { ProposalsPagination } from './ProposalsPagination';
 
 export function ProposalsList({
   activePage,
@@ -34,7 +37,9 @@ export function ProposalsList({
     finishedProposalsData: ProposalOnTheList[];
   };
 }) {
+  const router = useRouter();
   const activeWallet = useStore((store) => store.activeWallet);
+  const filtersLoading = useStore((store) => store.filtersLoading);
   const initializeConfigs = useStore((store) => store.initializeConfigs);
   const initializeProposalsCount = useStore(
     (store) => store.initializeProposalsCount,
@@ -42,6 +47,7 @@ export function ProposalsList({
   const initializeProposalsListData = useStore(
     (store) => store.initializeProposalsListData,
   );
+  const paginationCount = useStore((store) => store.paginationCount);
   const totalProposalsCount = useStore((store) => store.totalProposalsCount);
   const startActiveProposalsDataPolling = useStore(
     (store) => store.startActiveProposalsDataPolling,
@@ -61,6 +67,11 @@ export function ProposalsList({
   const updatedListDataLoading = useStore(
     (store) => store.updatedListDataLoading,
   );
+  const initializeFilters = useStore((store) => store.initializeFilters);
+  const filters = useStore((store) => store.filters);
+  const setActivePageFilter = useStore((store) => store.setActivePageFilter);
+  const clearFilters = useStore((store) => store.clearFilters);
+
   const proposalsListData = useStore((store) =>
     selectProposalsForActivePage(store, activePage),
   );
@@ -68,6 +79,12 @@ export function ProposalsList({
   const [proposalId, setProposalId] = useState<null | number>(null);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
 
+  useEffect(() => {
+    clearFilters();
+    if (activePage === 1) {
+      initializeFilters();
+    }
+  }, [activePage]);
   useEffect(() => {
     initializeConfigs(configs);
   }, [configs]);
@@ -88,7 +105,7 @@ export function ProposalsList({
   useEffect(() => {
     startActiveProposalsDataPolling(activePage);
     startNewProposalsPolling();
-    () => {
+    return () => {
       stopActiveProposalsDataPolling();
       stopNewProposalsPolling();
     };
@@ -109,12 +126,49 @@ export function ProposalsList({
     setIsVoteModalOpen(value);
   };
 
-  if (updatedListDataLoading[activePage]) {
-    return <ProposalsListPageLoading />;
+  if (updatedListDataLoading[activePage] || filtersLoading) {
+    return (
+      <>
+        <ProposalsListPageLoading />
+        <Container>
+          <Pagination
+            forcePage={
+              filters.state !== null
+                ? Number(filters.activePage) - 1
+                : activePage - 1
+            }
+            totalItems={
+              filters.state !== null ? paginationCount : totalProposalsCount
+            }
+            setCurrentPageState={(value) => setActivePageFilter(value, router)}
+            filtering={filters.state !== null}
+          />
+        </Container>
+      </>
+    );
+  }
+
+  if (
+    ![
+      ...proposalsListData.activeProposalsData,
+      ...proposalsListData.finishedProposalsData,
+    ].length
+  ) {
+    return (
+      <>
+        <FiltersPanel />
+
+        <Container>
+          <NoFilteredData />
+        </Container>
+      </>
+    );
   }
 
   return (
     <>
+      <FiltersPanel />
+
       <Container>
         {proposalsListData.activeProposalsData.map((proposal) => {
           if (!proposal.isFinished) {
@@ -130,9 +184,17 @@ export function ProposalsList({
         {proposalsListData.finishedProposalsData.map((proposal) => {
           return <FinishedItem data={proposal} key={proposal.proposalId} />;
         })}
-        <ProposalsPagination
-          activePage={activePage - 1}
-          totalItems={totalProposalsCount}
+        <Pagination
+          forcePage={
+            filters.state !== null
+              ? Number(filters.activePage) - 1
+              : activePage - 1
+          }
+          totalItems={
+            filters.state !== null ? paginationCount : totalProposalsCount
+          }
+          setCurrentPageState={(value) => setActivePageFilter(value, router)}
+          filtering={filters.state !== null}
         />
       </Container>
 

@@ -1,6 +1,6 @@
-import { useTheme } from '@mui/system';
+import { Box, useTheme } from '@mui/system';
 import InitialPagination from 'rc-pagination';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { PAGE_SIZE } from '../configs/configs';
 import { texts } from '../helpers/texts/texts';
@@ -13,6 +13,8 @@ export interface PaginationProps {
   withoutQuery?: boolean;
   borderSize?: number;
   isSmall?: boolean;
+  setCurrentPageState?: (page: number) => void;
+  filtering?: boolean;
 }
 
 export function Pagination({
@@ -20,6 +22,8 @@ export function Pagination({
   forcePage,
   borderSize = 10,
   isSmall,
+  setCurrentPageState,
+  filtering,
 }: PaginationProps) {
   const theme = useTheme();
 
@@ -57,7 +61,7 @@ export function Pagination({
         '.rc-pagination-prev, .rc-pagination-next': {
           display: 'inline-flex',
           flex: 1,
-          a: {
+          'a, .Pagination_item': {
             width: '100%',
             cursor: 'pointer',
             position: 'relative',
@@ -117,7 +121,7 @@ export function Pagination({
           },
         },
         '.rc-pagination-disabled': {
-          a: {
+          'a, .Pagination_item': {
             cursor: 'not-allowed',
             '&:before': {
               color: '$textDisabled',
@@ -129,7 +133,7 @@ export function Pagination({
           },
         },
         '.rc-pagination-next': {
-          a: {
+          'a, .Pagination_item': {
             justifyContent: 'flex-end',
             ml: 8,
             mr: 15,
@@ -146,7 +150,7 @@ export function Pagination({
           },
         },
         '.rc-pagination-prev': {
-          a: {
+          'a, .Pagination_item': {
             flexDirection: 'row-reverse',
             justifyContent: 'flex-end',
             mr: 8,
@@ -165,7 +169,7 @@ export function Pagination({
         },
         '.rc-pagination-item, .rc-pagination-jump-prev, .rc-pagination-jump-next':
           {
-            a: {
+            'a, .Pagination_item': {
               color: '$textDisabled',
               display: 'inline-flex',
               alignItems: 'center',
@@ -210,7 +214,7 @@ export function Pagination({
               },
             },
             '&-active': {
-              a: {
+              'a, .Pagination_item': {
                 cursor: 'default',
                 color: '$text',
                 '&:after': {
@@ -220,7 +224,7 @@ export function Pagination({
               },
             },
             hover: {
-              a: {
+              'a, .Pagination_item': {
                 color: theme.palette.$text,
                 span: {
                   color: theme.palette.$text,
@@ -262,27 +266,59 @@ export function Pagination({
         }}
         itemRender={(current, type) => {
           if (type === 'page') {
-            return (
+            return setCurrentPageState && filtering ? (
+              <Box
+                className="Pagination_item"
+                onClick={() => setCurrentPageState(current)}>
+                <span>{current}</span>
+              </Box>
+            ) : (
               <Link href={`/${current}/`} scroll>
                 <span>{current}</span>
               </Link>
             );
           }
           if (type === 'prev') {
-            return <Link href={`/${current}/`} scroll />;
+            return setCurrentPageState && filtering ? (
+              <Box
+                className="Pagination_item"
+                onClick={() => setCurrentPageState(current)}
+              />
+            ) : (
+              <Link href={`/${current}/`} scroll />
+            );
           }
           if (type === 'next') {
-            return <Link href={`/${current}/`} scroll />;
+            return setCurrentPageState && filtering ? (
+              <Box
+                className="Pagination_item"
+                onClick={() => setCurrentPageState(current)}
+              />
+            ) : (
+              <Link href={`/${current}/`} scroll />
+            );
           }
           if (type === 'jump-prev') {
-            return (
+            return setCurrentPageState && filtering ? (
+              <Box
+                className="Pagination_item"
+                onClick={() => setCurrentPageState(current)}>
+                <span>...</span>
+              </Box>
+            ) : (
               <Link href={`/${current}/`} scroll>
                 <span>...</span>
               </Link>
             );
           }
           if (type === 'jump-next') {
-            return (
+            return setCurrentPageState && filtering ? (
+              <Box
+                className="Pagination_item"
+                onClick={() => setCurrentPageState(current)}>
+                <span>...</span>
+              </Box>
+            ) : (
               <Link href={`/${current}/`} scroll>
                 <span>...</span>
               </Link>

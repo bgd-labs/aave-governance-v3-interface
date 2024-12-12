@@ -119,6 +119,17 @@ export enum ProposalState {
   Canceled,
 }
 
+export enum ProposalStateForFilters {
+  Created,
+  Voting,
+  Succeed,
+  Failed,
+  Executed,
+  Expired,
+  Canceled,
+  Active,
+}
+
 export enum ProposalStateWithName {
   Created = 'Created',
   Voting = 'Voting',
