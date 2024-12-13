@@ -303,6 +303,7 @@ export const createProposalSlice: StoreSlice<
     );
 
     const input = {
+      proposalId,
       votingChainId,
       startBlockNumber,
       endBlockNumber,

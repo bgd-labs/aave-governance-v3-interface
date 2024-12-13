@@ -40,7 +40,13 @@ export async function fetchProposalDataForDetails({
     const url = `${INITIAL_API_URL}/proposals/${input.proposalId}/get/`;
     const dataRaw = await fetch(url);
     const data = (await dataRaw.json()) as GetProposalInitialResponse &
-      ProposalMetadata;
+      ProposalMetadata & { originalIpfsHash: string | null };
+
+    if (!data.originalIpfsHash) {
+      throw new Error(
+        `Something went wrong when fetching proposal ${input.proposalId} from API.`,
+      );
+    }
 
     const config = input.votingConfigs.filter(
       (config) => config.accessLevel === data.accessLevel,
@@ -63,9 +69,15 @@ export async function fetchProposalDataForDetails({
       }
     }
 
-    const proposalData = getProposalFormattedData(data);
-    const payloadsData = getProposalPayloadsFormattedData(data);
-    const votingData = getProposalVotingFormattedData(data);
+    const formatData = {
+      ...data,
+      payloads: (data.payloads ?? []).length ? data.payloads : [],
+      ipfsHash: data.originalIpfsHash,
+    } as GetProposalInitialResponse;
+
+    const proposalData = getProposalFormattedData(formatData);
+    const payloadsData = getProposalPayloadsFormattedData(formatData);
+    const votingData = getProposalVotingFormattedData(formatData);
 
     const formattedData = formatDataForDetails({
       differential: config.differential,
@@ -90,7 +102,10 @@ export async function fetchProposalDataForDetails({
         };
       }),
       votingData,
-      metadata,
+      metadata: {
+        ...metadata,
+        description: String(JSON.parse(JSON.stringify(metadata.description))),
+      },
       formattedData,
       ipfsError,
     };
@@ -194,7 +209,10 @@ export async function fetchProposalDataForDetails({
         };
       }),
       votingData,
-      metadata,
+      metadata: {
+        ...metadata,
+        description: String(JSON.parse(JSON.stringify(metadata.description))),
+      },
       formattedData,
       ipfsError,
     };

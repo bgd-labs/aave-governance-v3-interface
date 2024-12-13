@@ -71,6 +71,7 @@ export function ProposalsList({
   const filters = useStore((store) => store.filters);
   const setActivePageFilter = useStore((store) => store.setActivePageFilter);
   const clearFilters = useStore((store) => store.clearFilters);
+  const initializeLoading = useStore((store) => store.initializeLoading);
 
   const proposalsListData = useStore((store) =>
     selectProposalsForActivePage(store, activePage),
@@ -126,7 +127,11 @@ export function ProposalsList({
     setIsVoteModalOpen(value);
   };
 
-  if (updatedListDataLoading[activePage] || filtersLoading) {
+  if (
+    updatedListDataLoading[activePage] ||
+    filtersLoading ||
+    initializeLoading
+  ) {
     return (
       <>
         <ProposalsListPageLoading />
@@ -152,7 +157,8 @@ export function ProposalsList({
     ![
       ...proposalsListData.activeProposalsData,
       ...proposalsListData.finishedProposalsData,
-    ].length
+    ].length &&
+    !initializeLoading
   ) {
     return (
       <>

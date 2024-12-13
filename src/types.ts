@@ -501,3 +501,11 @@ export type RepresentativeItem = {
   represented: Address;
   lastUpdatedTimestamp: number;
 };
+
+export type VoterAPI = {
+  voter: Address;
+  support: boolean;
+  votingPower: number;
+  txHash: Hex;
+  lastUpdatedTimestamp: number;
+};

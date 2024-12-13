@@ -14,6 +14,7 @@ import {
 } from './eventsHelpers';
 
 export type GetVotersRPC = {
+  proposalId: number;
   votingChainId: number;
   startBlockNumber: number;
   endBlockNumber?: number;

@@ -42,7 +42,9 @@ export async function fetchActiveProposalsDataForList({
           return (await dataRaw.json()) as GetProposalInitialResponse;
         }),
       );
-      return await formatListData(input, { proposals: data });
+      return await formatListData(input, {
+        proposals: data.filter((proposal) => (proposal.payloads ?? []).length),
+      });
     }
     throw new Error('This chain id for gov core not supported by API');
   } catch (e) {

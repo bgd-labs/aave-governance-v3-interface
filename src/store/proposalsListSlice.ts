@@ -50,6 +50,7 @@ export interface IProposalsListSlice {
     },
     fromServer?: boolean,
   ) => void;
+  initializeLoading: boolean;
 
   activeProposalsDataInterval: number | undefined;
   startActiveProposalsDataPolling: (activePage?: number) => Promise<void>;
@@ -103,6 +104,14 @@ export const createProposalsListSlice: StoreSlice<
     finishedProposalsData: {},
   },
   initializeProposalsListData: (proposalsListData, fromServer) => {
+    const activeProposalsData = get().proposalsListData.activeProposalsData;
+    const finishedProposalsData = get().proposalsListData.activeProposalsData;
+    if (
+      !Object.values(activeProposalsData).length &&
+      !Object.values(finishedProposalsData).length
+    ) {
+      set({ initializeLoading: true });
+    }
     proposalsListData.activeProposalsData.forEach((proposal) => {
       set((state) =>
         produce(state, (draft) => {
@@ -142,7 +151,9 @@ export const createProposalsListSlice: StoreSlice<
         }),
       );
     });
+    set({ initializeLoading: false });
   },
+  initializeLoading: true,
 
   activeProposalsDataInterval: undefined,
   startActiveProposalsDataPolling: async (activePage) => {
