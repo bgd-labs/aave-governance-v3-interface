@@ -164,7 +164,7 @@ export function FiltersPanel() {
               setIsOpen={setIsSearchButtonOpen}
               searchValue={searchValue}
               setSearchValue={handleSearchValueChange}
-              disabled={false} // TODO
+              disabled={true} // TODO: request to API with title not working yet
             />
 
             <FilterDropdown
