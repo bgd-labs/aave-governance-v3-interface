@@ -1,6 +1,6 @@
 'use client';
 
-import { IMetaDelegateHelper_ABI } from '@bgd-labs/aave-address-book';
+import { IMetaDelegateHelper_ABI } from '@bgd-labs/aave-address-book/abis';
 import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IAaveTokenV3';
 import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IATokenWithDelegation';

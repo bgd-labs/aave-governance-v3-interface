@@ -1,4 +1,4 @@
-import { IERC20_ABI } from '@bgd-labs/aave-address-book';
+import { IERC20_ABI } from '@bgd-labs/aave-address-book/abis';
 import { Asset, normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
 import {
   safeSdkOptions,

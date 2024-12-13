@@ -1,4 +1,4 @@
-import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book';
+import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book/abis';
 import {
   CachedDetails,
   getGovCoreConfigs,

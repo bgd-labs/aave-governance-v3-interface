@@ -1,12 +1,11 @@
 'use client';
 
-import { WalletIcon as WI } from '@bgd-labs/react-web3-icons';
-import { ExternalComponentBaseProps } from '@bgd-labs/react-web3-icons/dist/utils/index';
+import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { Box, SxProps } from '@mui/system';
 
 import { CustomSkeleton } from '../CustomSkeleton';
 
-interface WalletIconProps extends ExternalComponentBaseProps {
+interface WalletIconProps {
   walletName: string;
   size?: number;
   css?: SxProps;
@@ -24,10 +23,10 @@ const WalletIcon = ({ walletName, size, css, ...props }: WalletIconProps) => {
         height: size ?? 12,
         ...css,
       }}>
-      <WI
+      <Web3Icon
         width={size ?? 12}
         height={size ?? 12}
-        walletName={walletName}
+        walletKey={walletName}
         loader={
           <Box
             sx={{
