@@ -1,7 +1,9 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { mainnet } from 'viem/chains';
 
+import { appConfig } from '../../configs/appConfig';
 import { proposalStatusesForFilter } from '../../helpers/statuses';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
@@ -171,7 +173,7 @@ export function FiltersPanel() {
               statuses={proposalStatusesForFilter}
               selectedStatus={filters.state}
               setSelectedStatus={setFilteredStateLocal}
-              disabled={false} // TODO
+              disabled={appConfig.govCoreChainId !== mainnet.id}
             />
           </Box>
         </TopPanelContainer>

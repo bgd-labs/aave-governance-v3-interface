@@ -53,8 +53,10 @@ export function FinishedItem({ data }: { data: ProposalOnTheList }) {
                     : theme.palette.$text,
                   typography: 'h2',
                 }}>
-                {proposalDetails[data.proposalId]?.metadata?.title ??
-                  data.title}
+                {data.title !== `Proposal ${data.proposalId}`
+                  ? data.title
+                  : (proposalDetails[data.proposalId]?.metadata?.title ??
+                    data.title)}
               </Box>
             </Box>
 

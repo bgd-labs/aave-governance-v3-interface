@@ -223,7 +223,10 @@ export const createRepresentationsSlice: StoreSlice<
 
       await get().executeTx({
         body: () => {
-          return updateRepresentatives({ data: formattedData });
+          return updateRepresentatives({
+            wagmiConfig: get().wagmiConfig,
+            data: formattedData,
+          });
         },
         params: {
           type: TxType.representations,

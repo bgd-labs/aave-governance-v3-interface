@@ -41,6 +41,7 @@ import {
   RepresentationFormData,
   VotingDataByUser,
 } from '../types';
+import { ICreationFeesSlice } from './creationFeesSlice';
 import { IDelegationSlice } from './delegationSlice';
 import { IProposalSlice } from './proposalSlice';
 import { IRepresentationsSlice } from './representationsSlice';
@@ -300,7 +301,8 @@ export const createTransactionsSlice: StoreSlice<
     IRpcSwitcherSlice &
     IProposalSlice &
     IRepresentationsSlice &
-    IDelegationSlice
+    IDelegationSlice &
+    ICreationFeesSlice
 > = (set, get) => ({
   vote: async ({
     votingChainId,
@@ -338,6 +340,7 @@ export const createTransactionsSlice: StoreSlice<
               body: () => {
                 return gelato
                   ? voteBySignature({
+                      wagmiConfig: get().wagmiConfig,
                       votingChainId,
                       proposalId,
                       support,
@@ -350,6 +353,7 @@ export const createTransactionsSlice: StoreSlice<
                       proofOfRepresentation: proofOfRepresentative,
                     })
                   : vote({
+                      wagmiConfig: get().wagmiConfig,
                       votingChainId,
                       proposalId,
                       support,
@@ -382,6 +386,7 @@ export const createTransactionsSlice: StoreSlice<
               body: () => {
                 return gelato
                   ? voteBySignature({
+                      wagmiConfig: get().wagmiConfig,
                       votingChainId,
                       proposalId,
                       support,
@@ -392,6 +397,7 @@ export const createTransactionsSlice: StoreSlice<
                       proofs,
                     })
                   : vote({
+                      wagmiConfig: get().wagmiConfig,
                       votingChainId,
                       proposalId,
                       support,
@@ -688,10 +694,8 @@ export const createTransactionsSlice: StoreSlice<
           await get().getProposalDetails(data.payload.proposalId);
           break;
         case TxType.claimFees:
-          // await get().updateCreationFeesDataByCreator(
-          //   data.payload.creator,
-          //   data.payload.proposalIds,
-          // );
+          await get().getCreationFeesData(data.payload.creator);
+          await get().updateCreationFeesDataByCreator(data.payload.creator);
           break;
       }
     },

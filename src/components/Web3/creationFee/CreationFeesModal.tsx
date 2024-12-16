@@ -255,7 +255,7 @@ export function CreationFeesModal({
                     <img
                       width="100%"
                       height="auto"
-                      src="/src/assets/DarkNoFees.svg"
+                      src="/DarkNoFees.svg"
                       alt={texts.creationFee.noData}
                     />
                   ) : (
@@ -263,7 +263,7 @@ export function CreationFeesModal({
                     <img
                       width="100%"
                       height="auto"
-                      src="/src/assets/LightNoFees.svg"
+                      src="/LightNoFees.svg"
                       alt="You haven't created any proposals yet"
                     />
                   )}
