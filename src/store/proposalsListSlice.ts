@@ -425,14 +425,18 @@ export const createProposalsListSlice: StoreSlice<
       (get().filters.state !== null || get().filters.title !== null)
     ) {
       set({ filtersLoading: true });
-      const data = await fetchFilteredDataForList({
-        input: {
-          ...configs.contractsConstants,
-          votingConfigs: configs.configs,
-          activePage: get().filters.activePage,
-          state: get().filters.state,
-        },
-      });
+
+      const input = {
+        ...configs.contractsConstants,
+        votingConfigs: configs.configs,
+        activePage: get().filters.activePage,
+        state: get().filters.state,
+      };
+
+      const data = await (isForIPFS
+        ? fetchFilteredDataForList({ input })
+        : api.proposalsList.getFilteredProposals.query(input));
+
       if (data) {
         get().initializeProposalsListData(data.data);
         const count = selectFilteredIds(get()).length;

@@ -397,6 +397,22 @@ export type PayloadWithHashes = PayloadInitialStruct & {
   isError?: boolean;
 };
 
+// creation fee return
+export enum CreationFeeState {
+  LATER,
+  AVAILABLE,
+  RETURNED,
+  NOT_AVAILABLE,
+}
+
+export type CreationFee = {
+  proposalId: number;
+  proposalStatus: InitialProposalState;
+  ipfsHash: string;
+  status: CreationFeeState;
+  title: string;
+};
+
 // requests
 export type GetPayloadsData = {
   chainId: number;
@@ -508,4 +524,29 @@ export type VoterAPI = {
   votingPower: number;
   txHash: Hex;
   lastUpdatedTimestamp: number;
+};
+
+export type FeesDataAPI = {
+  state: InitialProposalState;
+  accessLevel: number;
+  creationTime: number;
+  votingDuration: number;
+  votingActivationTime: number | null;
+  queuingTime: number | null;
+  cancelTimestamp: number | null;
+  creator: Address;
+  votingPortal: Address;
+  snapshotBlockHash: Hex;
+  ipfsHash: Hex;
+  forVotes: string;
+  againstVotes: string;
+  cancellationFee: string;
+  createdTxHash: Hex | null;
+  executedTxHash: Hex | null;
+  cancelledTxHash: Hex | null;
+  queuedTxHash: Hex | null;
+  failedTxHash: Hex | null;
+  votingActivatedTxHash: Hex | null;
+  executedTimestamp: number;
+  failedTimestamp: Hex | null;
 };

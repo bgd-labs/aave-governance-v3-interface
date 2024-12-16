@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 import { fetchActiveProposalsDataForList } from '../../../requests/fetchActiveProposalsDataForList';
 import {
+  fetchFilteredDataForList,
+  FetchFilteredDataForListParams,
+} from '../../../requests/fetchFilteredDataForList';
+import {
   fetchProposalsDataForList,
   FetchProposalsDataForListParams,
 } from '../../../requests/fetchProposalsDataForList';
@@ -33,6 +37,15 @@ export const proposalsListRouter = createTRPCRouter({
       async (input) =>
         await fetchActiveProposalsDataForList({
           input: { ...input.input, clients: serverClients },
+        }),
+    ),
+
+  getFilteredProposals: publicProcedure
+    .input(z.custom<FetchFilteredDataForListParams>())
+    .query(
+      async (input) =>
+        await fetchFilteredDataForList({
+          input: { ...input.input },
         }),
     ),
 });

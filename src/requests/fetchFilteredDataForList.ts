@@ -99,9 +99,6 @@ export async function fetchFilteredDataForList({
     }
     throw new Error('This chain id for gov core not supported by API');
   } catch (e) {
-    console.error(
-      'Error getting filtered proposals data for list from API, TODO: error case',
-      e,
-    );
+    console.error('Error getting filtered proposals data for list from API', e);
   }
 }

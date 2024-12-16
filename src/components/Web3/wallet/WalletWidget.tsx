@@ -5,13 +5,14 @@ import { getRepresentedAddresses } from '../../../helpers/getRepresentedAddresse
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import { selectENSAvatar } from '../../../store/selectors/ensSelectors';
 import { TransactionsModal } from '../../../transactions/components/TransactionsModal';
+import { CreationFeesModal } from '../creationFee/CreationFeesModal';
 import { PowersInfoModal } from '../powers/PowersInfoModal';
 import { AccountInfoModal } from './AccountInfoModal';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { ConnectWalletModal } from './ConnectWalletModal';
 
 export function WalletWidget() {
-  // const appMode = useStore((store) => store.appMode);
+  const appMode = useStore((store) => store.appMode);
   const activeWallet = useStore((store) => store.activeWallet);
   const fetchEnsAvatarByAddress = useStore(
     (store) => store.fetchEnsAvatarByAddress,
@@ -54,6 +55,7 @@ export function WalletWidget() {
   );
 
   const [allTransactionModalOpen, setAllTransactionModalOpen] = useState(false);
+  const [isCreationFeeModalOpen, setIsCreationFeeModalOpen] = useState(false);
 
   useEffect(() => {
     if (activeAddress) {
@@ -93,6 +95,7 @@ export function WalletWidget() {
   const handleDisconnectClick = async () => {
     await disconnectActiveWallet();
     setAccountInfoModalOpen(false);
+    setIsCreationFeeModalOpen(false);
   };
 
   return (
@@ -118,6 +121,7 @@ export function WalletWidget() {
         setAllTransactionModalOpen={setAllTransactionModalOpen}
         representedAddresses={representedAddresses}
         onDisconnectButtonClick={handleDisconnectClick}
+        setIsCreationFeeModalOpen={setIsCreationFeeModalOpen}
       />
 
       {allTransactionModalOpen && (
@@ -133,16 +137,16 @@ export function WalletWidget() {
         />
       )}
 
-      {/*{appMode === 'expert' && (*/}
-      {/*  <CreationFeesModal*/}
-      {/*    isOpen={isCreationFeeModalOpen}*/}
-      {/*    setIsOpen={setIsCreationFeeModalOpen}*/}
-      {/*    ensName={shownUserName}*/}
-      {/*    ensAvatar={shownAvatar}*/}
-      {/*    isAvatarExists={isAvatarExists}*/}
-      {/*    onDisconnectButtonClick={handleDisconnectClick}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {appMode === 'expert' && (
+        <CreationFeesModal
+          isOpen={isCreationFeeModalOpen}
+          setIsOpen={setIsCreationFeeModalOpen}
+          ensName={shownUserName}
+          ensAvatar={shownAvatar}
+          isAvatarExists={isAvatarExists}
+          onDisconnectButtonClick={handleDisconnectClick}
+        />
+      )}
     </>
   );
 }

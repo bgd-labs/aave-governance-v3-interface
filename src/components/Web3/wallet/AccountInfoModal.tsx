@@ -17,6 +17,7 @@ interface AccountInfoModalProps {
   isAvatarExists?: boolean;
   representedAddresses?: RepresentedAddress[];
   onDisconnectButtonClick: () => void;
+  setIsCreationFeeModalOpen?: (value: boolean) => void;
 }
 
 export function AccountInfoModal({
@@ -28,6 +29,7 @@ export function AccountInfoModal({
   isAvatarExists,
   representedAddresses,
   onDisconnectButtonClick,
+  setIsCreationFeeModalOpen,
 }: AccountInfoModalProps) {
   const representative = useStore((store) => store.representative);
   const getCurrentPowers = useStore((store) => store.getCurrentPowers);
@@ -72,6 +74,9 @@ export function AccountInfoModal({
         onRepresentationsButtonClick={() => setIsOpen(false)}
         onReturnFeeButtonClick={() => {
           setIsOpen(false);
+          if (setIsCreationFeeModalOpen) {
+            setIsCreationFeeModalOpen(true);
+          }
         }}
         onDisconnectButtonClick={onDisconnectButtonClick}
         onAllTransactionButtonClick={() => {
