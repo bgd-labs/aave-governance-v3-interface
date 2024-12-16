@@ -6,6 +6,7 @@ import { formatUnits, Hex } from 'viem';
 
 import { DECIMALS } from '../../configs/configs';
 import { texts } from '../../helpers/texts/texts';
+import { useStore } from '../../providers/ZustandStoreProvider';
 import { ActivateVotingOnVotingMachineModal } from '../../transactions/components/ActionModals/ActivateVotingOnVotingMachineModal';
 import { ExecutePayloadModal } from '../../transactions/components/ActionModals/ExecutePayloadModal';
 import { VoteModal } from '../../transactions/components/ActionModals/VoteModal';
@@ -29,6 +30,7 @@ import { ClaimFeesButton } from './ClaimFeesButton';
 import { Details } from './Details';
 import { DetailsLinks } from './DetailsLinks';
 import { DetailsShareLinks } from './DetailsShareLinks';
+import { ProposalHistoryModal } from './History/ProposalHistoryModal';
 import { LeftPanelWrapper } from './LeftPanelWrapper';
 import { ProposalPayloads } from './ProposalPayloads';
 import { ProposalStatusDetails } from './ProposalStatusDetails';
@@ -67,6 +69,13 @@ export function ProposalPage({
 }: ProposalPageProps) {
   const theme = useTheme();
   const router = useRouter();
+
+  const isProposalHistoryModalOpen = useStore(
+    (store) => store.isProposalHistoryModalOpen,
+  );
+  const setIsProposalHistoryOpen = useStore(
+    (store) => store.setIsProposalHistoryOpen,
+  );
 
   const [
     isActivateVotingOnVotingMachineModalOpen,
@@ -376,13 +385,14 @@ export function ProposalPage({
         />
       )}
 
-      {/*{isProposalHistoryModalOpen && (*/}
-      {/*  <ProposalHistoryModal*/}
-      {/*    isOpen={isProposalHistoryModalOpen}*/}
-      {/*    setIsOpen={setIsProposalHistoryOpen}*/}
-      {/*    proposalId={proposal.data.id}*/}
-      {/*  />*/}
-      {/*)}*/}
+      {isProposalHistoryModalOpen && (
+        <ProposalHistoryModal
+          proposal={data}
+          isOpen={isProposalHistoryModalOpen}
+          setIsOpen={setIsProposalHistoryOpen}
+          eventsData={{}} // TODO
+        />
+      )}
 
       <ActivateVotingOnVotingMachineModal
         isOpen={isActivateVotingOnVotingMachineModalOpen}

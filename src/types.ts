@@ -248,6 +248,43 @@ export type VotersData = {
   ensName?: string;
 };
 
+// history events
+export enum HistoryItemType {
+  PAYLOADS_CREATED = 0,
+  CREATED = 1,
+  PROPOSAL_ACTIVATE = 2,
+  OPEN_TO_VOTE = 3,
+  VOTING_OVER = 4,
+  VOTING_CLOSED = 5,
+  RESULTS_SENT = 6,
+  PROPOSAL_QUEUED = 7,
+  PROPOSAL_EXECUTED = 8,
+  PAYLOADS_QUEUED = 9,
+  PAYLOADS_EXECUTED = 10,
+  PROPOSAL_CANCELED = 11,
+  PAYLOADS_EXPIRED = 12,
+  PROPOSAL_EXPIRED = 13,
+}
+
+export type TxInfo = {
+  id: number;
+  hash: string;
+  chainId: number;
+  hashLoading: boolean;
+};
+
+export type ProposalHistoryItem = {
+  type: HistoryItemType;
+  title: string;
+  txInfo: TxInfo;
+  timestamp?: number;
+  addresses?: string[];
+};
+
+export type FilteredEvent = {
+  transactionHash: string;
+};
+
 // User powers
 export type PowerByAsset = {
   userBalance: bigint;
