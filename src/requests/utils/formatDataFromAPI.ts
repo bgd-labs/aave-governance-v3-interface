@@ -1,4 +1,10 @@
+import {
+  IGovernanceCore_ABI,
+  IVotingPortal_ABI,
+} from '@bgd-labs/aave-address-book/abis';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { zeroAddress, zeroHash } from 'viem';
+import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
 import { ipfsGateway } from '../../configs/configs';
@@ -10,6 +16,7 @@ import {
   InitialPayloadState,
   InitialProposalState,
 } from '../../types';
+import { IBaseVotingStrategy_ABI } from '../abis/IBaseVotingStrategy';
 import { FetchProposalsDataForListParams } from '../fetchProposalsDataForList';
 import { getDataForList, getProposalsWithPayloads } from './getDataForList';
 
@@ -89,15 +96,46 @@ export function getProposalPayloadsFormattedData(
         executedAt: payload.executedAt ?? 0,
         cancelledAt: payload.cancelledAt ?? 0,
         queuedAt: payload.queuedAt ?? 0,
-        actions: [],
+        actions: [], // TODO
       },
     };
   });
 }
 
-export function getProposalVotingFormattedData(
+export async function getProposalVotingFormattedData(
   proposal: GetProposalInitialResponse,
+  clients: ClientsRecord,
 ) {
+  let votingChainId = proposal.votingChainId;
+  // TODO: should be always from API request
+  if (!votingChainId) {
+    votingChainId = Number(
+      await readContract(clients[appConfig.govCoreChainId], {
+        abi: IVotingPortal_ABI,
+        address: proposal.votingPortal,
+        functionName: 'VOTING_MACHINE_CHAIN_ID',
+        args: [],
+      }),
+    );
+  }
+
+  // TODO: should be always from API request
+  const votingStrategyAddress = await readContract(
+    clients[appConfig.govCoreChainId],
+    {
+      abi: IGovernanceCore_ABI,
+      address: appConfig.govCoreConfig.contractAddress,
+      functionName: 'getPowerStrategy',
+      args: [],
+    },
+  );
+  const assets = await readContract(clients[appConfig.govCoreChainId], {
+    abi: IBaseVotingStrategy_ABI,
+    address: votingStrategyAddress,
+    functionName: 'getVotingAssetList',
+    args: [],
+  });
+
   return {
     proposalData: {
       id: BigInt(proposal.proposalId),
@@ -113,16 +151,12 @@ export function getProposalVotingFormattedData(
       ),
     },
     hasRequiredRoots: proposal.hasRequiredRoots ?? false,
-    votingChainId: proposal.votingChainId,
+    votingChainId,
     state: proposal.votingProposalState ?? 0,
+    strategy: votingStrategyAddress,
+    votingAssets: assets,
     // TODO:
-    strategy: zeroAddress,
     dataWarehouse: zeroAddress,
-    votingAssets: [
-      appConfig.additional.aaveAddress,
-      appConfig.additional.aAaveAddress,
-      appConfig.additional.stkAAVEAddress,
-    ],
     //
     votedInfo: {
       support: false,
@@ -136,7 +170,7 @@ export function getProposalVotingFormattedData(
 }
 
 export async function formatListData(
-  input: Omit<FetchProposalsDataForListParams, 'clients'>,
+  input: FetchProposalsDataForListParams,
   data: Omit<GetGovernanceProposalsResponse, 'totalProposalsCount'>,
 ) {
   const proposalsData = await Promise.all(
@@ -151,8 +185,11 @@ export async function formatListData(
     proposalsData,
     payloadsData,
   });
-  const voting = data.proposals.map((proposal) =>
-    getProposalVotingFormattedData(proposal),
+  const voting = await Promise.all(
+    data.proposals.map(
+      async (proposal) =>
+        await getProposalVotingFormattedData(proposal, input.clients),
+    ),
   );
 
   return getDataForList({

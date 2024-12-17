@@ -1,3 +1,4 @@
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
@@ -15,6 +16,7 @@ export type FetchFilteredDataForListParams = Pick<
   'precisionDivider' | 'expirationTime' | 'cooldownPeriod'
 > & {
   votingConfigs: VotingConfig[];
+  clients: ClientsRecord;
   activePage?: number;
   title?: string | null;
   state?: ProposalStateForFilters | null;

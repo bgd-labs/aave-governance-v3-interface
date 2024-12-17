@@ -427,7 +427,9 @@ export const createProposalsListSlice: StoreSlice<
       };
 
       const data = await (isForIPFS
-        ? fetchFilteredDataForList({ input })
+        ? fetchFilteredDataForList({
+            input: { ...input, clients: selectAppClients(get()) },
+          })
         : api.proposalsList.getFilteredProposals.query(input));
 
       if (data) {

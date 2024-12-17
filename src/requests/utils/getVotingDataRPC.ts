@@ -1,5 +1,6 @@
 import { IVotingMachineDataHelper_ABI } from '@bgd-labs/aave-address-book/abis';
-import { Address, Client, getContract, zeroAddress } from 'viem';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
+import { Address, getContract, zeroAddress } from 'viem';
 
 import { appConfig } from '../../configs/appConfig';
 import { ProposalToGetUserData } from '../../types';
@@ -7,7 +8,7 @@ import { ProposalToGetUserData } from '../../types';
 export type GetVotingDataRPC = {
   initialProposals: ProposalToGetUserData[];
   walletAddress?: string;
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 };
 
 export async function getVotingDataRPC({

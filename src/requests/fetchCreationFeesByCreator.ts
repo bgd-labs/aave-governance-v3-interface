@@ -7,6 +7,7 @@ import {
   CreationFeeState,
   FeesDataAPI,
   InitialProposalState,
+  ProposalState,
 } from '../types';
 
 export type FetchCreationFeesParams = {
@@ -42,9 +43,25 @@ export async function fetchCreationFeesByCreator({
           status = CreationFeeState.RETURNED;
         }
 
+        let proposalStatus = ProposalState.Created;
+        if (data.state === InitialProposalState.Active) {
+          proposalStatus = ProposalState.Voting;
+        } else if (data.state === InitialProposalState.Queued) {
+          proposalStatus = ProposalState.Succeed;
+        } else if (data.state === InitialProposalState.Executed) {
+          proposalStatus = ProposalState.Executed;
+        } else if (
+          data.state === InitialProposalState.Failed ||
+          data.state === InitialProposalState.Expired
+        ) {
+          proposalStatus = ProposalState.Failed;
+        } else if (data.state === InitialProposalState.Cancelled) {
+          proposalStatus = ProposalState.Canceled;
+        }
+
         return {
           proposalId: data.proposalId,
-          proposalStatus: data.state,
+          proposalStatus,
           ipfsHash: data.ipfsHash,
           title: data.title ?? `Proposal ${index}`,
           status,

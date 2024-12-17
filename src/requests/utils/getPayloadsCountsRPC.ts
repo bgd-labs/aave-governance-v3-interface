@@ -1,5 +1,5 @@
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book/abis';
-import { Client } from 'viem';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
@@ -11,7 +11,7 @@ export async function getPayloadsCountsRPC({
   proposalsCount,
   proposalsData,
 }: {
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
   proposalsCount: bigint;
   proposalsData: ProposalInitialStruct[];
 }) {

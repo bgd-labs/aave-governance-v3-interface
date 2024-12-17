@@ -1,13 +1,13 @@
 import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book/abis';
-import { PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { writeContract } from '@wagmi/core';
-import { Address, Client, Hex } from 'viem';
+import { Address, Hex } from 'viem';
 import { Config } from 'wagmi';
 
 import { appConfig, isForIPFS } from '../../configs/appConfig';
 import { fetchPayloads } from '../../requests/fetchPayloads';
 import { api } from '../../trpc/client';
-import { ProposalInitialStruct } from '../../types';
+import { InitialPayloadState, ProposalInitialStruct } from '../../types';
 
 export async function createProposal({
   wagmiConfig,
@@ -21,7 +21,7 @@ export async function createProposal({
   votingPortalAddress: Address;
   ipfsHash: Hex;
   cancellationFee: string;
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 } & Pick<ProposalInitialStruct, 'payloads'>) {
   const payloadsChainIds = payloads
     .map((payload) => payload.chain)
@@ -61,7 +61,9 @@ export async function createProposal({
     .flat();
 
   if (
-    payloadsData.some((payload) => payload.data.state === PayloadState.Expired)
+    payloadsData.some(
+      (payload) => payload.data.state === InitialPayloadState.Expired,
+    )
   ) {
     throw new Error('One ore multiple payloads has expired status');
   }

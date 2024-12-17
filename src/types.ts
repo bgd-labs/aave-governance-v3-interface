@@ -3,6 +3,7 @@ import {
   IPayloadsControllerDataHelper_ABI,
   IVotingMachineDataHelper_ABI,
 } from '@bgd-labs/aave-address-book/abis';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import {
   AbiStateMutability,
   Address,
@@ -235,6 +236,14 @@ export type DetailedProposalData = {
   metadata: ProposalMetadata;
   formattedData: ReturnType<typeof formatDataForDetails>;
   ipfsError?: string;
+  eventsHashes?: {
+    createdTxHash: string | null;
+    executedTxHash: string | null;
+    cancelledTxHash: string | null;
+    queuedTxHash: string | null;
+    failedTxHash: string | null;
+    votingActivatedTxHash: string | null;
+  };
 };
 
 export type VotersData = {
@@ -444,7 +453,7 @@ export enum CreationFeeState {
 
 export type CreationFee = {
   proposalId: number;
-  proposalStatus: InitialProposalState;
+  proposalStatus: ProposalState;
   ipfsHash: string;
   status: CreationFeeState;
   title: string;
@@ -454,13 +463,13 @@ export type CreationFee = {
 export type GetPayloadsData = {
   chainId: number;
   payloadsIds: number[];
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 };
 
 export type GetProposalsData = {
   proposalsCount?: number;
   proposalsIds?: number[];
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 };
 
 // From server

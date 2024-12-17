@@ -1,3 +1,4 @@
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { Client } from 'viem';
 
 import { PayloadParams } from '../components/pages/ProposalCreateOverviewPage';
@@ -11,7 +12,7 @@ import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';
 export type FetchDataForCreateOverviewScreen = {
   ipfsHash: string;
   payloads: PayloadParams[];
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 };
 
 export async function fetchDataForCreateOverviewScreen({

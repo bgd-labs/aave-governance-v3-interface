@@ -41,11 +41,11 @@ export const proposalsListRouter = createTRPCRouter({
     ),
 
   getFilteredProposals: publicProcedure
-    .input(z.custom<FetchFilteredDataForListParams>())
+    .input(z.custom<Omit<FetchFilteredDataForListParams, 'clients'>>())
     .query(
       async (input) =>
         await fetchFilteredDataForList({
-          input: { ...input.input },
+          input: { ...input.input, clients: serverClients },
         }),
     ),
 });

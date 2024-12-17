@@ -1,4 +1,4 @@
-import { Client } from 'viem';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 
 import { env } from '../../env';
 import { createViemClient } from '../../utils/createClient';
@@ -19,7 +19,7 @@ const initialRpcUrls = getInitialRpcUrls({
   zkSyncRPC: env.RPC_ZKSYNC,
 });
 const serverChains = getChains({ initialRpcUrls });
-export const serverClients: Record<number, Client> = {};
+export const serverClients: ClientsRecord = {};
 Object.values(serverChains).forEach((chain) => {
   serverClients[chain.id] = createViemClient({
     chain: chain,

@@ -9,6 +9,7 @@ import { TransactionUnion, TxType } from '../../../store/transactionsSlice';
 import { CreationFee, CreationFeeState } from '../../../types';
 import { BoxWith3D } from '../../BoxWith3D';
 import { Link } from '../../Link';
+import { ProposalState } from '../../ProposalState';
 import { SmallButton } from '../../SmallButton';
 
 interface CreationFeesModalItemProps {
@@ -95,7 +96,7 @@ export function CreationFeesModalItem({
               mr: 0,
             },
           }}>
-          {/*<ProposalStatus status={proposalStatus} />*/}
+          <ProposalState state={proposalStatus} />
         </Box>
       </Box>
 
@@ -113,7 +114,7 @@ export function CreationFeesModalItem({
             typography: 'descriptorAccent',
           },
         }}>
-        {/*<ProposalStatus status={proposalStatus} />*/}
+        <ProposalState state={proposalStatus} />
       </Box>
 
       <Box

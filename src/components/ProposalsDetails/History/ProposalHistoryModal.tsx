@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import {
-  DetailedProposalData,
-  HistoryItemType,
-  ProposalHistoryItem as IProposalHistoryItem,
-  TxInfo,
-} from '../../../types';
+import { DetailedProposalData, HistoryItemType, TxInfo } from '../../../types';
 import { DetailsModalWrapper } from './DetailsModalWrapper';
 import { getHistoryId } from './helpers';
 import { ProposalHistoryItem } from './ProposalHistoryItem';
@@ -90,7 +85,6 @@ const getHistoryLinkFunc = (
 
 interface ProposalHistoryModalProps {
   proposal: DetailedProposalData;
-  eventsData?: Record<string, IProposalHistoryItem>;
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
 }
@@ -179,19 +173,14 @@ function ProposalHistoryModalInit({
 
 export function ProposalHistoryModal({
   proposal,
-  eventsData,
   isOpen,
   setIsOpen,
 }: ProposalHistoryModalProps) {
   const initProposalHistory = useStore((store) => store.initProposalHistory);
 
   useEffect(() => {
-    initProposalHistory(proposal, eventsData);
-  }, [
-    isOpen,
-    proposal.proposalData.id,
-    Object.values(eventsData ?? {}).length,
-  ]);
+    initProposalHistory(proposal);
+  }, [isOpen, proposal.proposalData.id]);
 
   return (
     <ProposalHistoryModalInit

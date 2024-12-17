@@ -1,3 +1,4 @@
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { Client } from 'viem';
 
 import { getPayloadsCountsRPC } from './utils/getPayloadsCountsRPC';
@@ -5,7 +6,7 @@ import { getProposalsDataRPC } from './utils/getProposalsDataRPC';
 
 export type FetchDataForCreateProposalScreen = {
   proposalsCount: bigint;
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 };
 
 export async function fetchDataForCreateProposalScreen({

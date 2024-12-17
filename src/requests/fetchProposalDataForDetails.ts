@@ -1,4 +1,5 @@
 import { IVotingPortal_ABI } from '@bgd-labs/aave-address-book/abis';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
@@ -28,7 +29,7 @@ export type FetchProposalsDataForDetailsParams = Pick<
 > & {
   proposalId: number;
   votingConfigs: VotingConfig[];
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
 };
 
 export async function fetchProposalDataForDetails({
@@ -77,7 +78,10 @@ export async function fetchProposalDataForDetails({
 
     const proposalData = getProposalFormattedData(formatData);
     const payloadsData = getProposalPayloadsFormattedData(formatData);
-    const votingData = getProposalVotingFormattedData(formatData);
+    const votingData = await getProposalVotingFormattedData(
+      formatData,
+      input.clients,
+    );
 
     const formattedData = formatDataForDetails({
       differential: config.differential,
@@ -108,6 +112,14 @@ export async function fetchProposalDataForDetails({
       },
       formattedData,
       ipfsError,
+      eventsHashes: {
+        createdTxHash: formatData.createdTxHash,
+        executedTxHash: formatData.executedTxHash,
+        cancelledTxHash: formatData.cancelledTxHash,
+        queuedTxHash: formatData.queuedTxHash,
+        failedTxHash: formatData.failedTxHash,
+        votingActivatedTxHash: formatData.votingActivatedTxHash,
+      },
     };
   } catch (e) {
     console.error(

@@ -50,10 +50,7 @@ export interface IProposalHistorySlice {
     addresses?: string[];
     txHash?: string;
   }) => void;
-  initProposalHistory: (
-    proposal: DetailedProposalData,
-    proposalEvents?: Record<string, ProposalHistoryItem>,
-  ) => void;
+  initProposalHistory: (proposal: DetailedProposalData) => void;
   setHistoryItemLoading: (historyId: string) => void;
   setHistoryItemHash: (
     historyId: string,
@@ -140,7 +137,7 @@ export const createProposalHistorySlice: StoreSlice<
       }),
     );
   },
-  initProposalHistory: (proposal, proposalEvents) => {
+  initProposalHistory: (proposal) => {
     // PAYLOADS_CREATED
     proposal.payloadsData.forEach((payload, index) => {
       const historyId = `${proposal.proposalData.id}_${HistoryItemType.PAYLOADS_CREATED}_${Number(payload.id)}_${Number(payload.chain)}`;
@@ -155,10 +152,6 @@ export const createProposalHistorySlice: StoreSlice<
         txChainId: Number(payload.chain),
         timestamp: payload.data.createdAt,
         addresses: payload.data.actions.map((action: any) => action.target),
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
       });
     });
 
@@ -171,10 +164,7 @@ export const createProposalHistorySlice: StoreSlice<
       txId: proposal.proposalData.id,
       txChainId: appConfig.govCoreChainId,
       timestamp: proposal.proposalData.creationTime,
-      txHash:
-        proposalEvents && proposalEvents[historyIdProposalCreated]
-          ? proposalEvents[historyIdProposalCreated].txInfo.hash
-          : undefined,
+      txHash: proposal.eventsHashes?.createdTxHash ?? undefined,
     });
 
     // PROPOSAL_ACTIVATE
@@ -189,10 +179,7 @@ export const createProposalHistorySlice: StoreSlice<
         txId: proposal.proposalData.id,
         txChainId: appConfig.govCoreChainId,
         timestamp: proposal.proposalData.votingActivationTime,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
+        txHash: proposal.eventsHashes?.votingActivatedTxHash ?? undefined,
       });
     }
 
@@ -208,10 +195,6 @@ export const createProposalHistorySlice: StoreSlice<
         txId: proposal.proposalData.id,
         txChainId: proposal.votingData.votingChainId,
         timestamp: proposal.votingData.proposalData.startTime,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
       });
     }
 
@@ -227,10 +210,7 @@ export const createProposalHistorySlice: StoreSlice<
         txId: proposal.proposalData.id,
         txChainId: proposal.votingData.votingChainId,
         timestamp: proposal.votingData.proposalData.endTime,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
+        txHash: proposal.eventsHashes?.queuedTxHash ?? undefined,
       });
     }
 
@@ -250,10 +230,6 @@ export const createProposalHistorySlice: StoreSlice<
         txChainId: proposal.votingData.votingChainId,
         timestamp:
           proposal.votingData.proposalData.votingClosedAndSentTimestamp,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
       });
     }
 
@@ -269,14 +245,6 @@ export const createProposalHistorySlice: StoreSlice<
         title: texts.proposalHistory.votingResultsSent,
         txId: proposal.proposalData.id,
         txChainId: appConfig.govCoreChainId,
-        timestamp:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].timestamp
-            : undefined,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
       });
     }
 
@@ -295,10 +263,7 @@ export const createProposalHistorySlice: StoreSlice<
         txId: proposal.proposalData.id,
         txChainId: appConfig.govCoreChainId,
         timestamp: proposal.proposalData.queuingTime,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
+        txHash: proposal.eventsHashes?.queuedTxHash ?? undefined,
       });
     }
 
@@ -311,14 +276,7 @@ export const createProposalHistorySlice: StoreSlice<
         title: texts.proposalHistory.proposalExecuted(proposal.proposalData.id),
         txId: proposal.proposalData.id,
         txChainId: appConfig.govCoreChainId,
-        timestamp:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].timestamp
-            : undefined,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
+        txHash: proposal.eventsHashes?.executedTxHash ?? undefined,
       });
     }
 
@@ -342,10 +300,6 @@ export const createProposalHistorySlice: StoreSlice<
             txId: Number(payload.id),
             txChainId: Number(payload.chain),
             timestamp: payload.data.queuedAt,
-            txHash:
-              proposalEvents && proposalEvents[historyId]
-                ? proposalEvents[historyId].txInfo.hash
-                : undefined,
           });
         }
       });
@@ -371,10 +325,6 @@ export const createProposalHistorySlice: StoreSlice<
             txId: Number(payload.id),
             txChainId: Number(payload.chain),
             timestamp: payload.data.executedAt,
-            txHash:
-              proposalEvents && proposalEvents[historyId]
-                ? proposalEvents[historyId].txInfo.hash
-                : undefined,
           });
         }
       });
@@ -394,10 +344,7 @@ export const createProposalHistorySlice: StoreSlice<
           proposal.proposalData.cancelTimestamp
             ? proposal.formattedData.lastPayloadCanceledAt
             : proposal.proposalData.cancelTimestamp,
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
+        txHash: proposal.eventsHashes?.cancelledTxHash ?? undefined,
       });
     }
 
@@ -427,10 +374,6 @@ export const createProposalHistorySlice: StoreSlice<
                 : payload.data.queuedAt +
                   payload.data.delay +
                   payload.data.gracePeriod,
-            txHash:
-              proposalEvents && proposalEvents[historyId]
-                ? proposalEvents[historyId].txInfo.hash
-                : undefined,
           });
         }
       });
@@ -450,10 +393,6 @@ export const createProposalHistorySlice: StoreSlice<
             ? proposal.formattedData.lastPayloadExpiredAt
             : proposal.proposalData.creationTime +
               Number(get().configs?.contractsConstants.expirationTime ?? 0),
-        txHash:
-          proposalEvents && proposalEvents[historyId]
-            ? proposalEvents[historyId].txInfo.hash
-            : undefined,
       });
     }
   },

@@ -1,3 +1,4 @@
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { Client } from 'viem';
 import { mainnet } from 'viem/chains';
 
@@ -24,7 +25,7 @@ export type FetchProposalsDataForListParams = Pick<
   'precisionDivider' | 'expirationTime' | 'cooldownPeriod'
 > & {
   votingConfigs: VotingConfig[];
-  clients: Record<number, Client>;
+  clients: ClientsRecord;
   activeIds: number[];
 };
 

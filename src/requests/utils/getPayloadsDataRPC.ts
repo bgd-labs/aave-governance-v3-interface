@@ -1,5 +1,5 @@
 import { IPayloadsControllerDataHelper_ABI } from '@bgd-labs/aave-address-book/abis';
-import { Client } from 'viem';
+import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
@@ -9,7 +9,7 @@ export async function getPayloadsDataRPC({
   chainId,
   payloadsIds,
   clients,
-}: GetPayloadsData & { clients: Record<number, Client> }) {
+}: GetPayloadsData & { clients: ClientsRecord }) {
   const payloadsConfig = appConfig.payloadsControllerConfig[chainId];
   const payloadsData = await readContract(clients[chainId], {
     abi: IPayloadsControllerDataHelper_ABI,

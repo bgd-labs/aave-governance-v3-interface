@@ -390,7 +390,6 @@ export function ProposalPage({
           proposal={data}
           isOpen={isProposalHistoryModalOpen}
           setIsOpen={setIsProposalHistoryOpen}
-          eventsData={{}} // TODO
         />
       )}
 
