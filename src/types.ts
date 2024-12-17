@@ -546,6 +546,18 @@ export type GetProposalInitialResponse = {
       lastUpdatedTimestamp: number;
     },
   ];
+  payloadActions: [
+    {
+      value: number;
+      target: string;
+      chainId: number;
+      callData: string;
+      payloadId: number;
+      signature: string;
+      accessLevel: number;
+      withDelegateCall: boolean;
+    },
+  ];
 };
 
 export type GetGovernanceProposalsResponse = {

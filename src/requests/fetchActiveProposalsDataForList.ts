@@ -40,7 +40,7 @@ export async function fetchActiveProposalsDataForList({
         input.activeIds.map(async (id) => {
           const url = `${INITIAL_API_URL}/proposals/${id}/get/`;
           const dataRaw = await fetch(url);
-          return (await dataRaw.json()) as GetProposalInitialResponse;
+          return (await dataRaw.json())[0] as GetProposalInitialResponse;
         }),
       );
       return await formatListData(input, {

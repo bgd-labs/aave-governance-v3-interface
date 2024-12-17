@@ -40,7 +40,7 @@ export async function fetchProposalDataForDetails({
   try {
     const url = `${INITIAL_API_URL}/proposals/${input.proposalId}/get/`;
     const dataRaw = await fetch(url);
-    const data = (await dataRaw.json()) as GetProposalInitialResponse &
+    const data = (await dataRaw.json())[0] as GetProposalInitialResponse &
       ProposalMetadata & { originalIpfsHash: string | null };
 
     if (!data.originalIpfsHash) {

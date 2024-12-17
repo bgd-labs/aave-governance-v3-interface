@@ -3,7 +3,7 @@ import {
   IVotingPortal_ABI,
 } from '@bgd-labs/aave-address-book/abis';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { zeroAddress, zeroHash } from 'viem';
+import { Address, Hex, zeroAddress, zeroHash } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
@@ -96,7 +96,22 @@ export function getProposalPayloadsFormattedData(
         executedAt: payload.executedAt ?? 0,
         cancelledAt: payload.cancelledAt ?? 0,
         queuedAt: payload.queuedAt ?? 0,
-        actions: [], // TODO
+        actions: proposal.payloadActions
+          .filter(
+            (action) =>
+              action.payloadId === payload.payloadId &&
+              action.chainId === payload.chainId,
+          )
+          .map((action) => {
+            return {
+              value: BigInt(action.value),
+              accessLevel: action.accessLevel,
+              target: action.target as Address,
+              callData: action.callData as Hex,
+              withDelegateCall: action.withDelegateCall,
+              signature: action.signature,
+            };
+          }),
       },
     };
   });
