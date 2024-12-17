@@ -1,6 +1,6 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../../configs/appConfig';
@@ -119,23 +119,33 @@ export function FiltersPanelLoading() {
 
 export function FiltersPanel() {
   const router = useRouter();
-  const theme = useTheme();
+
   const isRendered = useStore((store) => store.isRendered);
   const setTitleFilter = useStore((store) => store.setTitleFilter);
   const filters = useStore((store) => store.filters);
   const setStateFilter = useStore((store) => store.setStateFilter);
 
   const [isSearchButtonOpen, setIsSearchButtonOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState<string | null>(null);
-  const debouncedSearchValue = useDebounce<string | null>(searchValue, 500);
+  const [searchValue, setSearchValue] = useState<string | null>(filters.title);
+  const debouncedSearchValue = useDebounce<string | null>(searchValue, 1000);
 
   const handleSearchValueChange = (value: string | null) => {
     setSearchValue(value);
   };
-  // useEffect(() => {
-  //   setTitleFilter(searchValue, router);
-  // }, [debouncedSearchValue]);
-  //
+
+  useEffect(() => {
+    if (isSearchButtonOpen) {
+      if (
+        typeof debouncedSearchValue === 'string' &&
+        debouncedSearchValue !== ''
+      ) {
+        setTitleFilter(searchValue, router, false, true);
+      } else {
+        setTitleFilter(null, router, true, true);
+      }
+    }
+  }, [debouncedSearchValue, isSearchButtonOpen]);
+
   const setFilteredStateLocal = (status: number | null) => {
     if (!!status || status === 0) {
       setStateFilter(Number(status), router);
@@ -166,7 +176,7 @@ export function FiltersPanel() {
               setIsOpen={setIsSearchButtonOpen}
               searchValue={searchValue}
               setSearchValue={handleSearchValueChange}
-              disabled={true} // TODO: request to API with title not working yet
+              disabled={appConfig.govCoreChainId !== mainnet.id}
             />
 
             <FilterDropdown

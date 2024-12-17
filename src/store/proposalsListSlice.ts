@@ -85,14 +85,14 @@ export interface IProposalsListSlice {
     value: string | null,
     router?: AppRouterInstance,
     withoutRequest?: boolean,
+    withoutLoading?: boolean,
   ) => Promise<void>;
   setActivePageFilter: (
     value: number | undefined,
-    router?: AppRouterInstance,
     withoutRequest?: boolean,
   ) => Promise<void>;
   initializeFilters: () => Promise<void>;
-  updateFilteredData: () => Promise<void>;
+  updateFilteredData: (withoutLoading?: boolean) => Promise<void>;
 }
 
 export const createProposalsListSlice: StoreSlice<
@@ -352,7 +352,7 @@ export const createProposalsListSlice: StoreSlice<
       await get().updateFilteredData();
     }
   },
-  setTitleFilter: async (value, router, withoutRequest) => {
+  setTitleFilter: async (value, router, withoutRequest, withoutLoading) => {
     set((state) =>
       produce(state, (draft) => {
         draft.filters = {
@@ -370,10 +370,10 @@ export const createProposalsListSlice: StoreSlice<
       });
     }
     if (!withoutRequest) {
-      await get().updateFilteredData();
+      await get().updateFilteredData(withoutLoading);
     }
   },
-  setActivePageFilter: async (value, router, withoutRequest) => {
+  setActivePageFilter: async (value, withoutRequest) => {
     set((state) =>
       produce(state, (draft) => {
         draft.filters = {
@@ -382,13 +382,6 @@ export const createProposalsListSlice: StoreSlice<
         };
       }),
     );
-    if (router) {
-      updateQueryParams({
-        router,
-        params: { activePage: [String(value || '')] },
-        pathName: '/',
-      });
-    }
     if (!withoutRequest) {
       await get().updateFilteredData();
     }
@@ -408,14 +401,11 @@ export const createProposalsListSlice: StoreSlice<
         if (key === 'title' && value !== '') {
           await get().setTitleFilter(value, undefined, true);
         }
-        if (key === 'activePage') {
-          await get().setActivePageFilter(Number(value), undefined, true);
-        }
       }
     }
     await get().updateFilteredData();
   },
-  updateFilteredData: async () => {
+  updateFilteredData: async (withoutLoading) => {
     const configs = get().configs;
     get().stopActiveProposalsDataPolling();
     get().stopNewProposalsPolling();
@@ -424,13 +414,16 @@ export const createProposalsListSlice: StoreSlice<
       configs &&
       (get().filters.state !== null || get().filters.title !== null)
     ) {
-      set({ filtersLoading: true });
+      if (!withoutLoading) {
+        set({ filtersLoading: true });
+      }
 
       const input = {
         ...configs.contractsConstants,
         votingConfigs: configs.configs,
         activePage: get().filters.activePage,
         state: get().filters.state,
+        title: get().filters.title,
       };
 
       const data = await (isForIPFS

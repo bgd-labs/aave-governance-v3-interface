@@ -586,4 +586,6 @@ export type FeesDataAPI = {
   votingActivatedTxHash: Hex | null;
   executedTimestamp: number;
   failedTimestamp: Hex | null;
+  proposalId: number;
+  title: string;
 };

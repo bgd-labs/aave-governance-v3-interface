@@ -471,8 +471,8 @@ export function AppHeader() {
                       onClick={() => {
                         // TODO
                         // closeHelpModals();
-                        // setIsTermModalOpen(false);
                         // setIsHelpModalOpen(true);
+                        setIsTermModalOpen(false);
                         handleCloseMobileMenu();
                       }}
                       sx={{
@@ -578,7 +578,7 @@ export function AppHeader() {
                   onClick={() => {
                     // TODO
                     // closeHelpModals();
-                    // setIsTermModalOpen(true);
+                    setIsTermModalOpen(true);
                     handleCloseMobileMenu();
                   }}
                   sx={{

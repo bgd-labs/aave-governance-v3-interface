@@ -28,7 +28,7 @@ export async function fetchFilteredDataForList({
   try {
     if (appConfig.govCoreChainId === mainnet.id) {
       const urlGen = (state?: number | null) =>
-        `${INITIAL_API_URL}/proposals/get/?pageSize=${PAGE_SIZE}&page=${input.activePage}${input.title ? `&title=${input.title}` : ''}&proposalState=${state}`;
+        `${INITIAL_API_URL}/proposals/get/?pageSize=${PAGE_SIZE}&page=${input.activePage}${input.title ? `&title=${input.title}` : ''}${state ? `&proposalState=${state}` : ''}`;
 
       if (input.state === ProposalStateForFilters.Active) {
         const data = await Promise.all([

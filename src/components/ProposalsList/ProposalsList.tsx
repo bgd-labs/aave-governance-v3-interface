@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { useStore } from '../../providers/ZustandStoreProvider';
@@ -37,7 +36,6 @@ export function ProposalsList({
     finishedProposalsData: ProposalOnTheList[];
   };
 }) {
-  const router = useRouter();
   const activeWallet = useStore((store) => store.activeWallet);
   const filtersLoading = useStore((store) => store.filtersLoading);
   const initializeConfigs = useStore((store) => store.initializeConfigs);
@@ -127,6 +125,9 @@ export function ProposalsList({
     setIsVoteModalOpen(value);
   };
 
+  const isWithFilters =
+    filters.state !== null || (filters.title !== null && filters.title !== '');
+
   if (
     updatedListDataLoading[activePage] ||
     filtersLoading ||
@@ -145,7 +146,7 @@ export function ProposalsList({
             totalItems={
               filters.state !== null ? paginationCount : totalProposalsCount
             }
-            setCurrentPageState={(value) => setActivePageFilter(value, router)}
+            setCurrentPageState={setActivePageFilter}
             filtering={filters.state !== null}
           />
         </Container>
@@ -192,15 +193,11 @@ export function ProposalsList({
         })}
         <Pagination
           forcePage={
-            filters.state !== null
-              ? Number(filters.activePage) - 1
-              : activePage - 1
+            isWithFilters ? Number(filters.activePage) - 1 : activePage - 1
           }
-          totalItems={
-            filters.state !== null ? paginationCount : totalProposalsCount
-          }
-          setCurrentPageState={(value) => setActivePageFilter(value, router)}
-          filtering={filters.state !== null}
+          totalItems={isWithFilters ? paginationCount : totalProposalsCount}
+          setCurrentPageState={setActivePageFilter}
+          filtering={isWithFilters}
         />
       </Container>
 

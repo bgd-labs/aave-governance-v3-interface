@@ -61,7 +61,7 @@ export const selectFilteredIds = (
               proposal?.state === ProposalState.Succeed,
         )
         .map((proposal) => proposal?.id || 0)
-    : store.filters.state === null && store.filters.title !== null
+    : store.filters.state === null && !withoutTitle
       ? fuse.search(store.filters.title || '').map((item) => item.item?.id || 0)
       : fuse
           .search(store.filters.title || '')
@@ -87,6 +87,7 @@ export const selectProposalsForActivePage = (
       filteredIds.sort((a, b) => b - a),
       store.filters.activePage ?? 1,
     );
+
     const ids =
       (store.filters.title !== null && store.filters.title !== '') ||
       store.filters.state !== null

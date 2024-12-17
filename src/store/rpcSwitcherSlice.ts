@@ -1,8 +1,4 @@
 import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book/abis';
-import {
-  blockLimit,
-  getPayloadsCreated,
-} from '@bgd-labs/aave-governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Client, getContract, zeroAddress, zeroHash } from 'viem';
@@ -16,6 +12,8 @@ import {
   getLocalStorageRpcUrls,
   setLocalStorageRpcUrls,
 } from '../configs/localStorage';
+import { blockLimit } from '../requests/utils/eventsHelpers';
+import { getPayloadsCreated } from '../requests/utils/getProposalEventsRPC';
 import {
   AppClient,
   AppClientsStorage,
@@ -252,7 +250,6 @@ export const createRpcSwitcherSlice: StoreSlice<
       // check get logs if initial request success
       try {
         const currentBlock = await getBlock(client, { blockTag: 'latest' });
-        // TODO: need fix
         await getPayloadsCreated({
           contractAddress: payloadsControllerContract.address,
           client,

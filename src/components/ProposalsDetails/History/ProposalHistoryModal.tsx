@@ -186,9 +186,7 @@ export function ProposalHistoryModal({
   const initProposalHistory = useStore((store) => store.initProposalHistory);
 
   useEffect(() => {
-    if (proposal.proposalData.title) {
-      initProposalHistory(proposal, eventsData);
-    }
+    initProposalHistory(proposal, eventsData);
   }, [
     isOpen,
     proposal.proposalData.id,

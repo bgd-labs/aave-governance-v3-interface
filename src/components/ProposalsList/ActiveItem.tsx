@@ -39,6 +39,7 @@ export function ActiveItem({
   const theme = useTheme();
 
   const isRendered = useStore((state) => state.isRendered);
+  const representative = useStore((state) => state.representative);
   const appClients = useStore((state) => state.appClients);
   let activeWallet = useStore((state) => state.activeWallet);
   const balanceLoading = useStore(
@@ -53,7 +54,8 @@ export function ActiveItem({
   const userProposalData = selectProposalDataByUser({
     votingBalances,
     snapshotBlockHash: proposalData.snapshotBlockHash,
-    walletAddress: activeWallet?.address ?? zeroAddress, // TODO: representation
+    walletAddress:
+      representative?.address || activeWallet?.address || zeroAddress,
     votedData,
   });
 
@@ -82,7 +84,12 @@ export function ActiveItem({
         }
       }
     }
-  }, [userProposalData.voted, userProposalData.voting, activeWallet]);
+  }, [
+    userProposalData.voted,
+    userProposalData.voting,
+    activeWallet,
+    representative,
+  ]);
 
   const handleVoteButtonClick = (proposalId: number) => {
     if (voteButtonClick) {

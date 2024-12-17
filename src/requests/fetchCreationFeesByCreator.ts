@@ -43,10 +43,10 @@ export async function fetchCreationFeesByCreator({
         }
 
         return {
-          proposalId: index, // TODO
+          proposalId: data.proposalId,
           proposalStatus: data.state,
           ipfsHash: data.ipfsHash,
-          title: `Proposal ${index}`, // TODO
+          title: data.title ?? `Proposal ${index}`,
           status,
         } as CreationFee;
       });
