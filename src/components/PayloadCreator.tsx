@@ -53,10 +53,10 @@ export function PayloadCreator({
             inNewWindow
             href={getScanLink({
               chainId: Number(payload.chain),
-              address: payload.creator as Address,
+              address: payload.data.creator as Address,
             })}>
             {textCenterEllipsis(
-              payload.creator as Address,
+              payload.data.creator as Address,
               ellipsisFrom || 8,
               8,
             )}
@@ -65,10 +65,10 @@ export function PayloadCreator({
           <CopyAndExternalIconsSet
             sx={{ '.CopyAndExternalIconsSet__copy': { mx: 4 } }}
             iconSize={iconSize || 10}
-            copyText={payload.creator}
+            copyText={payload.data.creator}
             externalLink={getScanLink({
               chainId: Number(payload.chain),
-              address: payload.creator as Address,
+              address: payload.data.creator as Address,
             })}
           />
         </Box>

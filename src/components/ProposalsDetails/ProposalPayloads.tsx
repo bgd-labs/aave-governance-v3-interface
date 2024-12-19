@@ -565,7 +565,7 @@ export function ProposalPayloads({
             setSelectedPayloadForExecute={setSelectedPayloadForExecute}
             proposalQueuingTime={proposalQueuingTime}
             forCreate={forCreate}
-            creator={payloads[0].creator || undefined}
+            creator={payloads[0].data.creator || undefined}
             createTransactionHash={
               payloads[0].createdTransactionHash || undefined
             }
@@ -591,7 +591,7 @@ export function ProposalPayloads({
                     setSelectedPayloadForExecute={setSelectedPayloadForExecute}
                     proposalQueuingTime={proposalQueuingTime}
                     forCreate={forCreate}
-                    creator={payload.creator || undefined}
+                    creator={payload.data.creator || undefined}
                     createTransactionHash={
                       payload.createdTransactionHash || undefined
                     }

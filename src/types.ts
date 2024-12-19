@@ -436,7 +436,6 @@ export type CreateProposalPageParams = {
 export type PayloadWithHashes = PayloadInitialStruct & {
   proposalId?: number;
   seatbeltMD?: string;
-  creator?: Address;
   createdTransactionHash?: string;
   queuedTransactionHash?: string;
   executedTransactionHash?: string;
@@ -490,6 +489,37 @@ export type ConfigsFromServer = {
   minPropositionPower: number;
   accessLevel: number;
 }[];
+
+export type PayloadFromServer = {
+  chainId: number;
+  payloadId: number;
+  creator: string;
+  payloadsController: string;
+  delay: number;
+  state: InitialPayloadState;
+  createdAt: number;
+  expirationTime: number | null;
+  gracePeriod: number;
+  maximumAccessLevelRequired: number | null;
+  executedAt: number;
+  cancelledAt: number;
+  queuedAt: number;
+  lastUpdatedTimestamp: number;
+  createdTxHash: string | null;
+  executedTxHash: string | null;
+  cancelledTxHash: string | null;
+  queuedTxHash: string | null;
+  actions: [
+    {
+      target: string;
+      withDelegateCall: boolean;
+      accessLevel: number;
+      value: number;
+      signature: string;
+      callData: string;
+    },
+  ];
+};
 
 export type GetProposalInitialResponse = {
   proposalId: number;

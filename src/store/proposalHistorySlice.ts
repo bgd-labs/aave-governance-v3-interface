@@ -2,19 +2,18 @@ import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 import { Address, zeroHash } from 'viem';
 
-import { appConfig } from '../configs/appConfig';
+import { appConfig, isForIPFS } from '../configs/appConfig';
 import { getBlockNumberByTimestamp } from '../helpers/getBlockNumberByTimestamp';
 import { texts } from '../helpers/texts/texts';
+import { fetchPayloadTxHashes } from '../requests/fetchPayloadTxHashes';
 import {
-  getPayloadsCreated,
-  getPayloadsExecuted,
-  getPayloadsQueued,
   getProposalActivated,
   getProposalActivatedOnVM,
   getProposalCreated,
   getProposalQueued,
   getProposalVotingClosed,
 } from '../requests/utils/getProposalEventsRPC';
+import { api } from '../trpc/client';
 import {
   DetailedProposalData,
   FilteredEvent,
@@ -57,6 +56,12 @@ export interface IProposalHistorySlice {
     filteredEvents: FilteredEvent[],
   ) => void;
 
+  setPayloadTxHashes: (
+    proposal: DetailedProposalData,
+    txInfo: TxInfo,
+    timestamp: number,
+  ) => Promise<void>;
+
   setPayloadsCreatedHistoryHash: (
     proposal: DetailedProposalData,
     txInfo: TxInfo,
@@ -97,6 +102,12 @@ export interface IProposalHistorySlice {
     txInfo: TxInfo,
   ) => void;
 }
+
+const generatePayloadHistoryId = (
+  proposal: DetailedProposalData,
+  txInfo: TxInfo,
+  type: HistoryItemType,
+) => `${proposal.proposalData.id}_${type}_${txInfo.id}_${txInfo.chainId}`;
 
 export const createProposalHistorySlice: StoreSlice<
   IProposalHistorySlice,
@@ -437,13 +448,7 @@ export const createProposalHistorySlice: StoreSlice<
     }
   },
 
-  // PAYLOADS_CREATED
-  setPayloadsCreatedHistoryHash: async (proposal, txInfo) => {
-    const historyId = `${proposal.proposalData.id}_${HistoryItemType.PAYLOADS_CREATED}_${txInfo.id}_${txInfo.chainId}`;
-    const historyItem = get().proposalHistory[historyId];
-
-    get().setHistoryItemLoading(historyId);
-
+  setPayloadTxHashes: async (proposal, txInfo, timestamp) => {
     const payloadControllerAddress =
       proposal.payloadsData.find(
         (payload) =>
@@ -451,47 +456,88 @@ export const createProposalHistorySlice: StoreSlice<
           Number(payload.chain) === txInfo.chainId,
       )?.payloadsController || '';
 
+    const input = {
+      payloadId: txInfo.id,
+      chainId: txInfo.chainId,
+      payloadsController: payloadControllerAddress as Address,
+      timestamp,
+    };
+
+    try {
+      const data = await (isForIPFS
+        ? fetchPayloadTxHashes({
+            input: {
+              clients: selectAppClients(get()),
+              state: InitialPayloadState.Created,
+              ...input,
+            },
+          })
+        : api.payloads.getTxHashes.query({
+            state: InitialPayloadState.Created,
+            ...input,
+          }));
+
+      data.map((hash, index) => {
+        if (hash.transactionHash !== zeroHash) {
+          if (index === 0) {
+            get().setHistoryItemHash(
+              generatePayloadHistoryId(
+                proposal,
+                txInfo,
+                HistoryItemType.PAYLOADS_CREATED,
+              ),
+              [hash],
+            );
+          }
+          if (index === 1) {
+            get().setHistoryItemHash(
+              generatePayloadHistoryId(
+                proposal,
+                txInfo,
+                HistoryItemType.PAYLOADS_QUEUED,
+              ),
+              [hash],
+            );
+          }
+          if (index === 2) {
+            get().setHistoryItemHash(
+              generatePayloadHistoryId(
+                proposal,
+                txInfo,
+                HistoryItemType.PAYLOADS_EXECUTED,
+              ),
+              [hash],
+            );
+          }
+        }
+      });
+
+      get().setRpcError({
+        isError: false,
+        rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+        chainId: txInfo.chainId,
+      });
+    } catch {
+      get().setRpcError({
+        isError: true,
+        rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
+        chainId: txInfo.chainId,
+      });
+    }
+  },
+
+  // PAYLOADS_CREATED
+  setPayloadsCreatedHistoryHash: async (proposal, txInfo) => {
+    const historyId = generatePayloadHistoryId(
+      proposal,
+      txInfo,
+      HistoryItemType.PAYLOADS_CREATED,
+    );
+    const historyItem = get().proposalHistory[historyId];
+    get().setHistoryItemLoading(historyId);
     if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
-        try {
-          const { minBlockNumber, maxBlockNumber } =
-            await getBlockNumberByTimestamp({
-              chainId: txInfo.chainId,
-              targetTimestamp: historyItem.timestamp,
-              client: get().appClients[txInfo.chainId].instance,
-            });
-          const events = await getPayloadsCreated({
-            contractAddress: payloadControllerAddress as Address,
-            client: selectAppClients(get())[txInfo.chainId],
-            chainId: txInfo.chainId,
-            startBlock: minBlockNumber,
-            endBlock: maxBlockNumber,
-          });
-
-          const filteredEvents = events
-            .filter(
-              (payload) =>
-                payload.payloadId === txInfo.id &&
-                payload.chainId === txInfo.chainId &&
-                payload.transactionHash !== txInfo.hash,
-            )
-            .map((event) => {
-              return { transactionHash: event.transactionHash };
-            });
-
-          get().setHistoryItemHash(historyId, filteredEvents);
-          get().setRpcError({
-            isError: false,
-            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
-            chainId: txInfo.chainId,
-          });
-        } catch {
-          get().setRpcError({
-            isError: true,
-            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
-            chainId: txInfo.chainId,
-          });
-        }
+        await get().setPayloadTxHashes(proposal, txInfo, historyItem.timestamp);
       }
     }
   },
@@ -750,118 +796,32 @@ export const createProposalHistorySlice: StoreSlice<
 
   // PAYLOADS_QUEUED
   setPayloadsQueuedHistoryHash: async (proposal, txInfo) => {
-    const historyId = `${proposal.proposalData.id}_${HistoryItemType.PAYLOADS_QUEUED}_${txInfo.id}_${txInfo.chainId}`;
+    const historyId = generatePayloadHistoryId(
+      proposal,
+      txInfo,
+      HistoryItemType.PAYLOADS_QUEUED,
+    );
     const historyItem = get().proposalHistory[historyId];
-
     get().setHistoryItemLoading(historyId);
-
-    const payloadControllerAddress =
-      proposal.payloadsData.find(
-        (payload) =>
-          Number(payload.id) === txInfo.id &&
-          Number(payload.chain) === txInfo.chainId,
-      )?.payloadsController || '';
-
     if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
-        try {
-          const { minBlockNumber, maxBlockNumber } =
-            await getBlockNumberByTimestamp({
-              chainId: txInfo.chainId,
-              targetTimestamp: historyItem.timestamp,
-              client: get().appClients[txInfo.chainId].instance,
-            });
-          const events = await getPayloadsQueued({
-            contractAddress: payloadControllerAddress as Address,
-            startBlock: minBlockNumber,
-            endBlock: maxBlockNumber,
-            chainId: txInfo.chainId,
-            client: selectAppClients(get())[txInfo.chainId],
-          });
-
-          const filteredEvents = events
-            .filter(
-              (payload) =>
-                payload.payloadId === txInfo.id &&
-                payload.chainId === txInfo.chainId &&
-                payload.transactionHash !== txInfo.hash,
-            )
-            .map((event) => {
-              return { transactionHash: event.transactionHash };
-            });
-
-          get().setHistoryItemHash(historyId, filteredEvents);
-          get().setRpcError({
-            isError: false,
-            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
-            chainId: txInfo.chainId,
-          });
-        } catch {
-          get().setRpcError({
-            isError: true,
-            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
-            chainId: txInfo.chainId,
-          });
-        }
+        await get().setPayloadTxHashes(proposal, txInfo, historyItem.timestamp);
       }
     }
   },
 
   // PAYLOADS_EXECUTED
   setPayloadsExecutedHistoryHash: async (proposal, txInfo) => {
-    const historyId = `${proposal.proposalData.id}_${HistoryItemType.PAYLOADS_EXECUTED}_${txInfo.id}_${txInfo.chainId}`;
+    const historyId = generatePayloadHistoryId(
+      proposal,
+      txInfo,
+      HistoryItemType.PAYLOADS_EXECUTED,
+    );
     const historyItem = get().proposalHistory[historyId];
-
     get().setHistoryItemLoading(historyId);
-
-    const payloadControllerAddress =
-      proposal.payloadsData.find(
-        (payload) =>
-          Number(payload.id) === txInfo.id &&
-          Number(payload.chain) === txInfo.chainId,
-      )?.payloadsController || '';
-
     if (historyItem.txInfo.hash === zeroHash) {
       if (historyItem.timestamp) {
-        try {
-          const { minBlockNumber, maxBlockNumber } =
-            await getBlockNumberByTimestamp({
-              chainId: txInfo.chainId,
-              targetTimestamp: historyItem.timestamp,
-              client: get().appClients[txInfo.chainId].instance,
-            });
-          const events = await getPayloadsExecuted({
-            contractAddress: payloadControllerAddress as Address,
-            client: selectAppClients(get())[txInfo.chainId],
-            startBlock: minBlockNumber,
-            endBlock: maxBlockNumber,
-            chainId: txInfo.chainId,
-          });
-
-          const filteredEvents = events
-            .filter(
-              (payload) =>
-                payload.payloadId === txInfo.id &&
-                payload.chainId === txInfo.chainId &&
-                payload.transactionHash !== txInfo.hash,
-            )
-            .map((event) => {
-              return { transactionHash: event.transactionHash };
-            });
-
-          get().setHistoryItemHash(historyId, filteredEvents);
-          get().setRpcError({
-            isError: false,
-            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
-            chainId: txInfo.chainId,
-          });
-        } catch {
-          get().setRpcError({
-            isError: true,
-            rpcUrl: get().appClients[txInfo.chainId].rpcUrl,
-            chainId: txInfo.chainId,
-          });
-        }
+        await get().setPayloadTxHashes(proposal, txInfo, historyItem.timestamp);
       }
     }
   },

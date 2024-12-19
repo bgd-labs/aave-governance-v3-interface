@@ -44,7 +44,7 @@ export async function fetchActiveProposalsDataForList({
         }),
       );
       return await formatListData(input, {
-        proposals: data.filter((proposal) => (proposal.payloads ?? []).length),
+        proposals: data,
       });
     }
     throw new Error('This chain id for gov core not supported by API');
