@@ -195,7 +195,7 @@ export function ProposalDetailsInitializer({
           lastVoteBlockNumber,
         };
 
-        if (totalVotes > 0 && proposalData.formattedData.isVotingActive) {
+        if (totalVotes > 0 && !voters?.length) {
           getVoters(params);
         }
 

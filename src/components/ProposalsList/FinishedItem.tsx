@@ -3,6 +3,7 @@
 import { Box, useTheme } from '@mui/system';
 import React, { useState } from 'react';
 
+import { isForIPFS } from '../../configs/appConfig';
 import { ROUTES } from '../../configs/routes';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { ProposalOnTheList } from '../../types';
@@ -14,13 +15,23 @@ export function FinishedItem({ data }: { data: ProposalOnTheList }) {
   const theme = useTheme();
   const isRendered = useStore((store) => store.isRendered);
   const proposalDetails = useStore((store) => store.proposalDetails);
+  const proposalsListData = useStore((store) => store.proposalsListData);
   const [isClicked, setIsClicked] = useState(false);
+
+  let isHasActiveForIPFS = false;
+  if (isForIPFS && proposalsListData.activeProposalsData[data.proposalId]) {
+    isHasActiveForIPFS = true;
+  }
 
   return (
     <div className="ProposalListItem">
       <Box
         component={Link}
-        href={ROUTES.proposal(data.proposalId, data.ipfsHash)}
+        href={ROUTES.proposal(
+          data.proposalId,
+          data.ipfsHash,
+          isHasActiveForIPFS,
+        )}
         onClick={() => setIsClicked(true)}>
         <ProposalListItemWrapper
           isVotingActive={false}
