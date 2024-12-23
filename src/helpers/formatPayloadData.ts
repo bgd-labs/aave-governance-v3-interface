@@ -1,11 +1,11 @@
 import dayjs from 'dayjs';
 import { metis, scroll, zkSync } from 'viem/chains';
 
-import { IProposalHistorySlice } from '../store/proposalHistorySlice';
 import {
   HistoryItemType,
   InitialPayloadState,
   PayloadWithHashes,
+  ProposalHistoryItem,
 } from '../types';
 
 export const seatbeltStartLink =
@@ -43,7 +43,8 @@ export function formatPayloadData({
   totalPayloadsCount?: number;
   payloadCount?: number;
   withoutProposalData?: boolean;
-} & Pick<IProposalHistorySlice, 'proposalHistory'>) {
+  proposalHistory?: Record<string, ProposalHistoryItem>;
+}) {
   const now = dayjs().unix();
 
   const isPayloadOnInitialState =
@@ -103,15 +104,17 @@ export function formatPayloadData({
   let statusText = 'Created';
   let txHash =
     payload.createdTransactionHash ??
-    proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_CREATED)]?.txInfo
-      .hash ??
+    (proposalHistory &&
+      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_CREATED)]
+        ?.txInfo.hash) ??
     '';
   if (isPayloadOnInitialState) {
     statusText = 'Created';
     txHash =
       payload.createdTransactionHash ??
-      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_CREATED)]
-        ?.txInfo.hash ??
+      (proposalHistory &&
+        proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_CREATED)]
+          ?.txInfo.hash) ??
       '';
   } else if (
     !isPayloadOnInitialState &&
@@ -121,8 +124,9 @@ export function formatPayloadData({
     statusText = 'Queued';
     txHash =
       payload.queuedTransactionHash ??
-      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_QUEUED)]
-        ?.txInfo.hash ??
+      (proposalHistory &&
+        proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_QUEUED)]
+          ?.txInfo.hash) ??
       '';
   } else if (
     !isPayloadOnInitialState &&
@@ -134,8 +138,9 @@ export function formatPayloadData({
     statusText = 'Executed';
     txHash =
       payload.executedTransactionHash ??
-      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_EXECUTED)]
-        ?.txInfo.hash ??
+      (proposalHistory &&
+        proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_EXECUTED)]
+          ?.txInfo.hash) ??
       '';
   } else if (payload.data.state === InitialPayloadState.Expired) {
     statusText = 'Expired';
