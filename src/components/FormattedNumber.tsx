@@ -1,12 +1,6 @@
-// TODO: temporary, use numeral instead
-
-import {
-  normalizeBN,
-  valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
-import { BigNumber } from 'bignumber.js';
 import dynamic from 'next/dynamic';
+import numeral from 'numeral';
 import React from 'react';
 
 const CountUp = dynamic(() => import('react-countup'), { ssr: false });
@@ -16,37 +10,9 @@ interface CompactNumberProps {
   visibleDecimals?: number;
 }
 
-const POSTFIXES = ['', 'K', 'M', 'B', 'T', 'P', 'E', 'Z', 'Y'];
-
-function getCompactValueEndPostfix(bnValue: BigNumber) {
-  const integerPlaces = bnValue.toFixed(0).length;
-  const significantDigitsGroup = Math.min(
-    Math.floor(integerPlaces ? (integerPlaces - 1) / 3 : 0),
-    POSTFIXES.length - 1,
-  );
-  const postfix = POSTFIXES[significantDigitsGroup];
-  const formattedValue = normalizeBN(
-    bnValue,
-    3 * significantDigitsGroup,
-  ).toNumber();
-
-  return { postfix, formattedValue };
-}
-
 function CompactNumber({ value, visibleDecimals = 2 }: CompactNumberProps) {
-  const bnValue = valueToBigNumber(value);
-
-  const { postfix, formattedValue } = getCompactValueEndPostfix(bnValue);
-
-  return (
-    <>
-      {new Intl.NumberFormat('en-US', {
-        maximumFractionDigits: visibleDecimals,
-        minimumFractionDigits: visibleDecimals,
-      }).format(formattedValue)}
-      {postfix}
-    </>
-  );
+  const visibleDecimalsLocal = String(0).padStart(visibleDecimals - 1, '0');
+  return numeral(value).format(`0.[${visibleDecimalsLocal}]a`).toUpperCase();
 }
 
 interface CountUpProps {
@@ -69,22 +35,28 @@ function CountUpFormatted({ startValue, endValue, decimals }: CountUpProps) {
 }
 
 function CompactCountUp({ startValue, endValue, decimals }: CountUpProps) {
-  const bnStartValue = valueToBigNumber(startValue);
-  const bnEndValue = valueToBigNumber(endValue);
+  const visibleDecimalsLocal = String(0).padStart(
+    (decimals < 4 ? 4 : decimals) - 1,
+    '0',
+  );
 
-  const { formattedValue: formattedStartValue } =
-    getCompactValueEndPostfix(bnStartValue);
-  const { postfix, formattedValue: formattedEndValue } =
-    getCompactValueEndPostfix(bnEndValue);
+  const startValueLocal = numeral(startValue).format(
+    `0.[${visibleDecimalsLocal}]a`,
+  );
+  const endValueLocal = numeral(endValue).format(
+    `0.[${visibleDecimalsLocal}]a`,
+  );
+
+  const postfix = endValueLocal.substr(endValueLocal.length - 1, 1);
 
   return (
     <>
       <CountUpFormatted
-        startValue={formattedStartValue}
-        endValue={formattedEndValue}
+        startValue={+startValueLocal.slice(0, -1)}
+        endValue={+endValueLocal.slice(0, -1)}
         decimals={decimals}
       />
-      {postfix}
+      {postfix.toUpperCase()}
     </>
   );
 }

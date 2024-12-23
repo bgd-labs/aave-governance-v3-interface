@@ -169,7 +169,9 @@ export const createProposalsListSlice: StoreSlice<
         await get().updateProposalsListActiveData(activeIds, acP);
       }
     };
-    func(activePage);
+    if (isForIPFS) {
+      func(activePage);
+    }
 
     const interval = setInterval(func, 30000);
     set({ activeProposalsDataInterval: Number(interval) });
@@ -213,7 +215,9 @@ export const createProposalsListSlice: StoreSlice<
         await get().updateProposalsListActiveData(newIdsForFirstScreen);
       }
     };
-    func();
+    if (isForIPFS) {
+      func();
+    }
 
     const interval = setInterval(func, 15000);
     set({ newProposalsInterval: Number(interval) });

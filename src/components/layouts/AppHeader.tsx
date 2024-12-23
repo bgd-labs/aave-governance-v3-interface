@@ -58,6 +58,8 @@ export function AppHeader() {
   const clearFilters = useStore((store) => store.clearFilters);
   const isModalOpen = useStore((store) => store.isModalOpen);
   const setIsTermModalOpen = useStore((store) => store.setIsTermModalOpen);
+  const closeHelpModals = useStore((store) => store.closeHelpModals);
+  const setIsHelpModalOpen = useStore((store) => store.setIsHelpModalOpen);
   const isClickedOnStartButtonOnHelpModal = useStore(
     (store) => store.isClickedOnStartButtonOnHelpModal,
   );
@@ -226,10 +228,10 @@ export function AppHeader() {
                     {item.title === texts.header.navTutorial ? (
                       <Box
                         component="button"
-                        // onClick={() => {
-                        //   closeHelpModals();
-                        //   setIsHelpModalOpen(true);
-                        // }}
+                        onClick={() => {
+                          closeHelpModals();
+                          setIsHelpModalOpen(true);
+                        }}
                         sx={{
                           typography: 'buttonSmall',
                           color: '$textLight',
@@ -469,9 +471,8 @@ export function AppHeader() {
                       component="button"
                       type="button"
                       onClick={() => {
-                        // TODO
-                        // closeHelpModals();
-                        // setIsHelpModalOpen(true);
+                        closeHelpModals();
+                        setIsHelpModalOpen(true);
                         setIsTermModalOpen(false);
                         handleCloseMobileMenu();
                       }}
@@ -576,8 +577,7 @@ export function AppHeader() {
                   component="button"
                   type="button"
                   onClick={() => {
-                    // TODO
-                    // closeHelpModals();
+                    closeHelpModals();
                     setIsTermModalOpen(true);
                     handleCloseMobileMenu();
                   }}

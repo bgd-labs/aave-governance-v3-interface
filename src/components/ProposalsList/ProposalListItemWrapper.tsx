@@ -15,6 +15,7 @@ export function ProposalListItemWrapper({
   isFinished,
   isForHelpModal,
   disabled,
+  className,
 }: {
   children: ReactNode;
   isVotingActive?: boolean;
@@ -22,6 +23,7 @@ export function ProposalListItemWrapper({
   isFinished?: boolean;
   isForHelpModal?: boolean;
   disabled?: boolean;
+  className?: string;
 }) {
   const sm = useMediaQuery(media.sm);
   const md = useMediaQuery(media.md);
@@ -29,6 +31,7 @@ export function ProposalListItemWrapper({
 
   return (
     <BoxWith3D
+      className={className}
       disabled={md && disabled}
       alwaysWithBorders={isForHelpModal}
       withActions={(!sm && !isForHelpModal) || !isForHelpModal}

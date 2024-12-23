@@ -1,7 +1,12 @@
 import dayjs from 'dayjs';
 import { metis, scroll, zkSync } from 'viem/chains';
 
-import { InitialPayloadState, PayloadWithHashes } from '../types';
+import { IProposalHistorySlice } from '../store/proposalHistorySlice';
+import {
+  HistoryItemType,
+  InitialPayloadState,
+  PayloadWithHashes,
+} from '../types';
 
 export const seatbeltStartLink =
   'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads/';
@@ -29,6 +34,7 @@ export function formatPayloadData({
   totalPayloadsCount,
   payloadCount,
   withoutProposalData,
+  proposalHistory,
 }: {
   payload: PayloadWithHashes;
   isProposalExecuted?: boolean;
@@ -37,7 +43,7 @@ export function formatPayloadData({
   totalPayloadsCount?: number;
   payloadCount?: number;
   withoutProposalData?: boolean;
-}) {
+} & Pick<IProposalHistorySlice, 'proposalHistory'>) {
   const now = dayjs().unix();
 
   const isPayloadOnInitialState =
@@ -91,18 +97,33 @@ export function formatPayloadData({
       ? `${payloadCount}/${totalPayloadsCount}`
       : '';
 
+  const generateHistoryId = (type: HistoryItemType) =>
+    `${payload.proposalId}_${type}_${Number(payload.id)}_${Number(payload.chain)}`;
+
   let statusText = 'Created';
-  let txHash = payload.createdTransactionHash ?? '';
+  let txHash =
+    payload.createdTransactionHash ??
+    proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_CREATED)]?.txInfo
+      .hash ??
+    '';
   if (isPayloadOnInitialState) {
     statusText = 'Created';
-    txHash = payload.createdTransactionHash ?? '';
+    txHash =
+      payload.createdTransactionHash ??
+      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_CREATED)]
+        ?.txInfo.hash ??
+      '';
   } else if (
     !isPayloadOnInitialState &&
     !isFinalStatus &&
     !isPayloadReadyForExecution
   ) {
     statusText = 'Queued';
-    txHash = payload.queuedTransactionHash ?? '';
+    txHash =
+      payload.queuedTransactionHash ??
+      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_QUEUED)]
+        ?.txInfo.hash ??
+      '';
   } else if (
     !isPayloadOnInitialState &&
     !isFinalStatus &&
@@ -111,7 +132,11 @@ export function formatPayloadData({
     statusText = 'Can be executed';
   } else if (isExecuted) {
     statusText = 'Executed';
-    txHash = payload.executedTransactionHash ?? '';
+    txHash =
+      payload.executedTransactionHash ??
+      proposalHistory[generateHistoryId(HistoryItemType.PAYLOADS_EXECUTED)]
+        ?.txInfo.hash ??
+      '';
   } else if (payload.data.state === InitialPayloadState.Expired) {
     statusText = 'Expired';
   } else if (payload.data.state === InitialPayloadState.Cancelled) {

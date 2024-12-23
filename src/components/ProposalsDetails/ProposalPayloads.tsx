@@ -168,6 +168,7 @@ function PayloadItem({
 
   const transactionsPool = useStore((store) => store.transactionsPool);
   const activeWallet = useStore((store) => store.activeWallet);
+  const proposalHistory = useStore((store) => store.proposalHistory);
   const setExecutePayloadModalOpen = useStore(
     (store) => store.setExecutePayloadModalOpen,
   );
@@ -200,6 +201,7 @@ function PayloadItem({
     forCreate,
     isProposalExecuted,
     proposalQueuingTime,
+    proposalHistory,
   });
 
   const isActionVisible = totalPayloadsCount > 1 ? isActionsOpen : isFullView;

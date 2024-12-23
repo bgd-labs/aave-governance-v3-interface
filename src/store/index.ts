@@ -24,6 +24,7 @@ import {
   createTransactionsSlice,
   TransactionsSlice,
 } from './transactionsSlice';
+import { createTutorialSlice, ITutorialSlice } from './tutorialSlice';
 import { createUISlice, IUISlice } from './uiSlice';
 import { createWeb3Slice, IWeb3Slice } from './web3Slice';
 
@@ -38,7 +39,8 @@ export type RootState = IUISlice &
   IRepresentationsSlice &
   IDelegationSlice &
   ICreationFeesSlice &
-  IProposalHistorySlice;
+  IProposalHistorySlice &
+  ITutorialSlice;
 
 export const createRootSlice = (
   set: StoreApi<RootState>['setState'],
@@ -56,4 +58,5 @@ export const createRootSlice = (
   ...createDelegationSlice(set, get),
   ...creationFeesSlice(set, get),
   ...createProposalHistorySlice(set, get),
+  ...createTutorialSlice(set, get),
 });

@@ -12,7 +12,11 @@ import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { selectProposalDataByUser } from '../../store/selectors/proposalsSelector';
 import { disablePageLoader } from '../../styles/disablePageLoader';
-import { ActiveProposalOnTheList } from '../../types';
+import {
+  ActiveProposalOnTheList,
+  VotedDataByUser,
+  VotingDataByUser,
+} from '../../types';
 import { ChainNameWithIcon } from '../ChainNameWithIcon';
 import { Link } from '../Link';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
@@ -29,12 +33,18 @@ interface ActiveItemProps {
   proposalData: ActiveProposalOnTheList;
   voteButtonClick?: (proposalId: number) => void;
   isForHelpModal?: boolean;
+  userData?: {
+    voted: VotedDataByUser;
+    voting: VotingDataByUser[];
+    votingPower: bigint;
+  };
 }
 
 export function ActiveItem({
   proposalData,
   voteButtonClick,
   isForHelpModal,
+  userData,
 }: ActiveItemProps) {
   const theme = useTheme();
 
@@ -51,13 +61,15 @@ export function ActiveItem({
     (state) => state.proposalDetailsLoading,
   );
 
-  const userProposalData = selectProposalDataByUser({
-    votingBalances,
-    snapshotBlockHash: proposalData.snapshotBlockHash,
-    walletAddress:
-      representative?.address || activeWallet?.address || zeroAddress,
-    votedData,
-  });
+  const userProposalData =
+    userData ??
+    selectProposalDataByUser({
+      votingBalances,
+      snapshotBlockHash: proposalData.snapshotBlockHash,
+      walletAddress:
+        representative?.address || activeWallet?.address || zeroAddress,
+      votedData,
+    });
 
   const [votingPower, setVotingPower] = useState(0n);
   const [isClicked, setIsClicked] = useState(false);

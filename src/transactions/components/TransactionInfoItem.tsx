@@ -12,6 +12,7 @@ import CrossIcon from '../../assets/icons/cross.svg';
 import ReplacedIcon from '../../assets/icons/replacedIcon.svg';
 import { ChainNameWithIcon } from '../../components/ChainNameWithIcon';
 import { CopyAndExternalIconsSet } from '../../components/CopyAndExternalIconsSet';
+import { DelegatedText } from '../../components/Delegate/DelegatedText';
 import { Link } from '../../components/Link';
 import { IconBox } from '../../components/primitives/IconBox';
 import { TxText } from '../../components/Representations/TxText';
@@ -173,15 +174,15 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
               <b>#{tx.payload.payloadId}</b> on <NetworkIconWitchChainN />
             </>
           )}
-          {/*{tx.type === TxType.delegate && tx.payload && (*/}
-          {/*  <>*/}
-          {/*    <DelegatedText*/}
-          {/*      delegateData={tx.payload.delegateData}*/}
-          {/*      formDelegateData={tx.payload.formDelegateData}*/}
-          {/*    />{' '}*/}
-          {/*    on <NetworkIconWitchChainN />*/}
-          {/*  </>*/}
-          {/*)}*/}
+          {tx.type === TxType.delegate && tx.payload && (
+            <>
+              <DelegatedText
+                delegateData={tx.payload.delegateData}
+                formDelegateData={tx.payload.formDelegateData}
+              />{' '}
+              on <NetworkIconWitchChainN />
+            </>
+          )}
           {tx.type === TxType.cancelProposal && tx.payload && (
             <>
               {texts.transactions.cancelProposalTx}{' '}

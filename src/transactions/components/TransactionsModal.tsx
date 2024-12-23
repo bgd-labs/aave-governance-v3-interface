@@ -17,6 +17,9 @@ export function TransactionsModal({
 }: TransactionsModalProps) {
   const activeWallet = useStore((store) => store.activeWallet);
   const transactionsPool = useStore((store) => store.transactionsPool);
+  const setAccountInfoModalOpen = useStore(
+    (store) => store.setAccountInfoModalOpen,
+  );
 
   const allTransactions = activeWallet
     ? selectAllTransactionsByWallet<TransactionUnion>(
@@ -40,7 +43,7 @@ export function TransactionsModal({
           .sort((a, b) => b.localTimestamp - a.localTimestamp)}
         onBackButtonClick={() => {
           setIsOpen(false);
-          // setAccountInfoModalOpen(true);
+          setAccountInfoModalOpen(true);
         }}
       />
     </BasicModal>

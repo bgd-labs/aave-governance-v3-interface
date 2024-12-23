@@ -18,12 +18,19 @@ export default function ProposalsListPageLoading() {
 
       <Container>
         {Array.from({ length: 2 }).map((_, index) => (
-          <ProposalListItemWrapper isForHelpModal key={index}>
+          <ProposalListItemWrapper
+            isForHelpModal
+            className="NoDataWrapper"
+            key={index}>
             <Loading />
           </ProposalListItemWrapper>
         ))}
         {Array.from({ length: PAGE_SIZE - 2 }).map((_, index) => (
-          <ProposalListItemWrapper isForHelpModal isFinished key={index}>
+          <ProposalListItemWrapper
+            isForHelpModal
+            className="NoDataWrapper"
+            isFinished
+            key={index}>
             <Loading isFinished />
           </ProposalListItemWrapper>
         ))}
