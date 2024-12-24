@@ -3,10 +3,10 @@ import { Box } from '@mui/system';
 import React, { useState } from 'react';
 
 import { texts } from '../../helpers/texts/texts';
+import { useLastTxLocalStatus } from '../../hooks/useLastTxLocalStatus';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
 import { CreationFeesTxModal } from '../../transactions/components/ActionModals/CreationFeesTxModal';
-import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
 import { InitialProposalState, ProposalInitialStruct } from '../../types';
 import { SmallButton } from '../SmallButton';
 

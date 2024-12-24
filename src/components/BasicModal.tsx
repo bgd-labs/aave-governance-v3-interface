@@ -3,8 +3,8 @@ import { Box, SxProps, useTheme } from '@mui/system';
 import { ReactNode } from 'react';
 
 import CloseIcon from '../assets/icons/cross.svg';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { media } from '../styles/themeMUI';
-import { useMediaQuery } from '../styles/useMediaQuery';
 import { BackButton3D } from './BackButton3D';
 import { BoxWith3D } from './BoxWith3D';
 import { IconBox } from './primitives/IconBox';

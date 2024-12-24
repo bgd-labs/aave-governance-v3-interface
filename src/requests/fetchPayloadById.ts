@@ -3,7 +3,7 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
-import { PayloadFromServer } from '../types';
+import { PayloadFromServer } from '../server/api/types';
 import { getChainAndPayloadsController } from './fetchFilteredPayloadsData';
 import { formatPayloadFromServer } from './utils/formatPayloadFromServer';
 import { getPayloadsDataRPC } from './utils/getPayloadsDataRPC';

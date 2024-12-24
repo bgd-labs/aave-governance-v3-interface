@@ -10,10 +10,10 @@ import { appConfig } from '../../configs/appConfig';
 import { formatRepresentedAddresses } from '../../helpers/getRepresentedAddresses';
 import { getScanLink } from '../../helpers/getScanLink';
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { ENSDataExists } from '../../store/selectors/ensSelectors';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import {
   ENSProperty,
   RepresentativeAddress,

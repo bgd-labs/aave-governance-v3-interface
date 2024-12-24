@@ -10,13 +10,13 @@ import { Form } from 'react-final-form';
 import { Address } from 'viem';
 
 import { texts } from '../../helpers/texts/texts';
+import { useLastTxLocalStatus } from '../../hooks/useLastTxLocalStatus';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import {
   checkIfAddressENS,
   checkIsGetAddressByENSNamePending,
 } from '../../store/selectors/ensSelectors';
 import { TxType } from '../../store/transactionsSlice';
-import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
 import { RepresentationFormData as BaseRepresentationFormData } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BigButton } from '../BigButton';

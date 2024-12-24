@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
-import { media } from './themeMUI';
+import { media } from '../styles/themeMUI';
 import { useMediaQuery } from './useMediaQuery';
 
 export function useScrollDirection() {

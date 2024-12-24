@@ -12,12 +12,12 @@ import {
 } from '../../configs/appConfig';
 import { ROUTES } from '../../configs/routes';
 import { texts } from '../../helpers/texts/texts';
+import { useClickOutside } from '../../hooks/useClickOutside';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useScrollDirection } from '../../hooks/useScrollDirection';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { selectIsRpcAppHasErrors } from '../../store/selectors/rpcSwitcherSelectors';
 import { media } from '../../styles/themeMUI';
-import { useClickOutside } from '../../styles/useClickOutside';
-import { useMediaQuery } from '../../styles/useMediaQuery';
-import { useScrollDirection } from '../../styles/useScrollDirection';
 import { BoxWith3D } from '../BoxWith3D';
 import { Link } from '../Link';
 import { Container } from '../primitives/Container';

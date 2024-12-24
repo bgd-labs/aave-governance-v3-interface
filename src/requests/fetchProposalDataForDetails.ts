@@ -6,12 +6,8 @@ import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL, ipfsGateway } from '../configs/configs';
 import { getProposalMetadata } from '../helpers/getProposalMetadata';
 import { texts } from '../helpers/texts/texts';
-import {
-  ContractsConstants,
-  GetProposalInitialResponse,
-  ProposalMetadata,
-  VotingConfig,
-} from '../types';
+import { GetProposalInitialResponse } from '../server/api/types';
+import { ContractsConstants, ProposalMetadata, VotingConfig } from '../types';
 import {
   getProposalFormattedData,
   getProposalPayloadsFormattedData,

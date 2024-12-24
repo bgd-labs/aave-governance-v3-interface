@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import { TransactionsModalContent } from '../../transactions/components/TransactionsModalContent';
 import { BasicModal } from '../BasicModal';
 import { BigButton } from '../BigButton';

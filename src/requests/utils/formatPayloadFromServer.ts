@@ -1,6 +1,6 @@
 import { Address, Hex } from 'viem';
 
-import { PayloadFromServer } from '../../types';
+import { PayloadFromServer } from '../../server/api/types';
 
 export function formatPayloadFromServer(payload: PayloadFromServer) {
   return {

@@ -3,9 +3,9 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL, PAGE_SIZE } from '../configs/configs';
+import { GetGovernanceProposalsResponse } from '../server/api/types';
 import {
   ContractsConstants,
-  GetGovernanceProposalsResponse,
   ProposalStateForFilters,
   VotingConfig,
 } from '../types';

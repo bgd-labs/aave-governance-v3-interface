@@ -13,9 +13,8 @@ import { texts } from '../../helpers/texts/texts';
 import {
   GetGovernanceProposalsResponse,
   GetProposalInitialResponse,
-  InitialPayloadState,
-  InitialProposalState,
-} from '../../types';
+} from '../../server/api/types';
+import { InitialPayloadState, InitialProposalState } from '../../types';
 import { IBaseVotingStrategy_ABI } from '../abis/IBaseVotingStrategy';
 import { FetchProposalsDataForListParams } from '../fetchProposalsDataForList';
 import { getDataForList, getProposalsWithPayloads } from './getDataForList';

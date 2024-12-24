@@ -190,7 +190,7 @@ export function PayloadsExplorerPage({
                           value,
                           appConfig.payloadsControllerConfig[value]
                             .contractAddresses[0],
-                          activePage,
+                          0,
                         ),
                       );
                     }}
@@ -225,9 +225,7 @@ export function PayloadsExplorerPage({
                 chainId={chainId}
                 controllerAddress={payloadsController}
                 setControllerAddress={(value) =>
-                  router.push(
-                    ROUTES.payloadsExplorerPages(chainId, value, activePage),
-                  )
+                  router.push(ROUTES.payloadsExplorerPages(chainId, value, 0))
                 }
               />
             </Box>

@@ -8,11 +8,11 @@ import { zeroAddress } from 'viem';
 
 import InfoIcon from '../../assets/icons/info.svg';
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { checkIsVotingAvailable } from '../../store/selectors/representationsSelectors';
 import { TransactionUnion, TxType } from '../../store/transactionsSlice';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import { VotedDataByUser, VotingDataByUser } from '../../types';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';

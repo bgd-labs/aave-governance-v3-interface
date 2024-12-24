@@ -4,6 +4,8 @@ import { Address, zeroAddress } from 'viem';
 
 import { appConfig } from '../../../configs/appConfig';
 import { texts } from '../../../helpers/texts/texts';
+import { useLastTxLocalStatus } from '../../../hooks/useLastTxLocalStatus';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import {
   selectCreationFeesDataByCreator,
@@ -12,9 +14,7 @@ import {
 import { TxType } from '../../../store/transactionsSlice';
 import { textCenterEllipsis } from '../../../styles/textCenterEllipsis';
 import { media } from '../../../styles/themeMUI';
-import { useMediaQuery } from '../../../styles/useMediaQuery';
 import { CreationFeesTxModal } from '../../../transactions/components/ActionModals/CreationFeesTxModal';
-import { useLastTxLocalStatus } from '../../../transactions/useLastTxLocalStatus';
 import { CreationFeeState } from '../../../types';
 import { BackButton3D } from '../../BackButton3D';
 import { BasicModal } from '../../BasicModal';

@@ -2,7 +2,7 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
-import { RepresentativeItem } from '../types';
+import { RepresentativeItem } from '../server/api/types';
 import {
   GetRepresentationDataRPC,
   getRepresentationDataRPC,

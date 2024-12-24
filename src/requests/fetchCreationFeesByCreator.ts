@@ -2,10 +2,10 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
+import { FeesDataAPI } from '../server/api/types';
 import {
   CreationFee,
   CreationFeeState,
-  FeesDataAPI,
   InitialProposalState,
   ProposalState,
 } from '../types';

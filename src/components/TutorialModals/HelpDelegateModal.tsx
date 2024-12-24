@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { Form } from 'react-final-form';
 
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import { DelegateData } from '../../types';
 import { BasicModal } from '../BasicModal';
 import { BigButton } from '../BigButton';

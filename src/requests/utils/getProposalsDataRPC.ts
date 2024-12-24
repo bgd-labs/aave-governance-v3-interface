@@ -7,7 +7,13 @@ import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
 import { PAGE_SIZE } from '../../configs/configs';
-import { GetProposalsData, ProposalInitialStruct } from '../../types';
+import { ProposalInitialStruct } from '../../types';
+
+export type GetProposalsData = {
+  proposalsCount?: number;
+  proposalsIds?: number[];
+  clients: ClientsRecord;
+};
 
 export async function getProposalsDataRPC({
   proposalsCount,

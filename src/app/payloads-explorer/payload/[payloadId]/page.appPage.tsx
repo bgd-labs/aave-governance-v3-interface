@@ -1,19 +1,7 @@
-import { Metadata } from 'next';
 import React from 'react';
 
-import { PayloadDetailsContent } from '../../../components/PayloadsExplorer/PayloadDetailsContent';
-import { metaTexts } from '../../../helpers/texts/metaTexts';
-import { api } from '../../../trpc/server';
-
-export const metadata: Metadata = {
-  title: metaTexts.ipfsTitle,
-  description: metaTexts.ipfsDescription,
-  openGraph: {
-    images: ['/metaLogo.jpg'],
-    title: metaTexts.ipfsTitle,
-    description: metaTexts.ipfsDescription,
-  },
-};
+import { PayloadDetails } from '../../../../components/PayloadsExplorer/PayloadDetails';
+import { api } from '../../../../trpc/server';
 
 export type PayloadsExplorerPageParams = {
   payloadId: string;
@@ -50,5 +38,6 @@ export default async function Page({
     chainWithController: `${splitParams[1]}_${splitParams[2]}`,
     payloadId: Number(splitParams[0]),
   });
-  return <PayloadDetailsContent payload={payload} withExecute />;
+
+  return <PayloadDetails payload={payload} />;
 }

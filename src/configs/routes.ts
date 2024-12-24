@@ -14,7 +14,7 @@ export const ROUTES = {
   createProposal: '/create-proposal/',
   create: '/create/',
   payload: (id: number, chainId: number, payloadsController: string) =>
-    `/payload/${id}_${chainId}_${payloadsController}`,
+    `/payloads-explorer/payload/${id}_${chainId}_${payloadsController}`,
   payloadsExplorerPages: (
     chainId: number,
     payloadsController: string,

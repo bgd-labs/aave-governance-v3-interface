@@ -4,8 +4,8 @@ import React, { useEffect, useRef } from 'react';
 
 import Rocket from '../../../assets/rocket.svg';
 import { texts } from '../../../helpers/texts/texts';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import { useMediaQuery } from '../../../styles/useMediaQuery';
 import { ProposalStateWithName } from '../../../types';
 import { IconBox } from '../../primitives/IconBox';
 import { Timer } from '../../Timer';

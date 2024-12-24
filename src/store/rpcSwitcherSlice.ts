@@ -12,6 +12,7 @@ import {
   getLocalStorageRpcUrls,
   setLocalStorageRpcUrls,
 } from '../configs/localStorage';
+import { createViemClient } from '../helpers/chain/createClient';
 import { blockLimit } from '../requests/utils/eventsHelpers';
 import { getPayloadsCreated } from '../requests/utils/getProposalEventsRPC';
 import {
@@ -21,7 +22,6 @@ import {
   RpcSwitcherFormData,
   SetRpcErrorParams,
 } from '../types';
-import { createViemClient } from '../utils/createClient';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { TransactionsSlice } from './transactionsSlice';
 import { IWeb3Slice } from './web3Slice';

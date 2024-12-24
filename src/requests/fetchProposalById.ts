@@ -2,7 +2,8 @@ import { Client, Hex } from 'viem';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
-import { GetProposalInitialResponse, ProposalMetadata } from '../types';
+import { GetProposalInitialResponse } from '../server/api/types';
+import { ProposalMetadata } from '../types';
 import { getProposalFormattedData } from './utils/formatDataFromAPI';
 import { getProposalsDataRPC } from './utils/getProposalsDataRPC';
 

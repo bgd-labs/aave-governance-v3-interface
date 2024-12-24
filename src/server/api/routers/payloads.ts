@@ -22,7 +22,7 @@ import {
   fetchPayloadTxHashes,
 } from '../../../requests/fetchPayloadTxHashes';
 import { serverClients } from '../../../requests/utils/chains';
-import { GetPayloadsData } from '../../../types';
+import { GetPayloadsData } from '../../../requests/utils/getPayloadsDataRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const payloadsRouter = createTRPCRouter({

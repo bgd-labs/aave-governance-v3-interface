@@ -1,20 +1,8 @@
-import { Metadata } from 'next';
 import React, { Suspense } from 'react';
 
 import { PayloadsExplorerPage } from '../../components/PayloadsExplorer/PayloadsExplorerPage';
 import { appConfig } from '../../configs/appConfig';
-import { metaTexts } from '../../helpers/texts/metaTexts';
 import { api } from '../../trpc/server';
-
-export const metadata: Metadata = {
-  title: metaTexts.ipfsTitle,
-  description: metaTexts.ipfsDescription,
-  openGraph: {
-    images: ['/metaLogo.jpg'],
-    title: metaTexts.ipfsTitle,
-    description: metaTexts.ipfsDescription,
-  },
-};
 
 export const revalidate = 60;
 

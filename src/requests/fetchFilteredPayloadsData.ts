@@ -4,7 +4,7 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig, appUsedNetworks } from '../configs/appConfig';
 import { INITIAL_API_URL, PAGE_SIZE } from '../configs/configs';
-import { PayloadFromServer } from '../types';
+import { PayloadFromServer } from '../server/api/types';
 import { fetchPayloads } from './fetchPayloads';
 import { fetchPayloadsCount } from './fetchPayloadsCount';
 import { formatPayloadFromServer } from './utils/formatPayloadFromServer';

@@ -2,10 +2,10 @@ import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { formatActiveProposalData } from '../../requests/utils/formatProposalData';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import { BasicModal } from '../BasicModal';
 import { BigButton } from '../BigButton';
 import { ActiveItem } from '../ProposalsList/ActiveItem';

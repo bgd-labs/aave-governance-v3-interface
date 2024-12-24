@@ -1,9 +1,9 @@
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 
 import { env } from '../../env';
-import { createViemClient } from '../../utils/createClient';
-import { getChains } from '../../utils/getChains';
-import { getInitialRpcUrls } from '../../utils/getInitialRpcUrls';
+import { createViemClient } from '../../helpers/chain/createClient';
+import { getChains } from '../../helpers/chain/getChains';
+import { getInitialRpcUrls } from '../../helpers/chain/getInitialRpcUrls';
 
 const initialRpcUrls = getInitialRpcUrls({
   mainnetRPC: env.RPC_MAINNET,

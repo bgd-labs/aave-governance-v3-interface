@@ -12,13 +12,13 @@ import { zeroAddress } from 'viem';
 
 import WarningIcon from '../../assets/icons/warningIcon.svg';
 import { texts } from '../../helpers/texts/texts';
+import { useLastTxLocalStatus } from '../../hooks/useLastTxLocalStatus';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import {
   checkIfAddressENS,
   checkIsGetAddressByENSNamePending,
 } from '../../store/selectors/ensSelectors';
 import { TxType } from '../../store/transactionsSlice';
-import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
 import { DelegateData, DelegateItem } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BigButton } from '../BigButton';

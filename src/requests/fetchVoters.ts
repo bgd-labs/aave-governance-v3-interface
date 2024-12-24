@@ -3,7 +3,7 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { DECIMALS, INITIAL_API_URL } from '../configs/configs';
-import { VoterAPI } from '../types';
+import { VoterAPI } from '../server/api/types';
 import { GetVotersRPC, getVotersRPC } from './utils/getVotersRPC';
 
 export async function fetchVoters({ input }: { input: GetVotersRPC }) {

@@ -25,6 +25,7 @@ import { VotingModesContent } from '../../../components/VotingModesContent';
 import { VotingTokensInfo } from '../../../components/VotingTokensInfo';
 import { DECIMALS } from '../../../configs/configs';
 import { texts } from '../../../helpers/texts/texts';
+import { useLastTxLocalStatus } from '../../../hooks/useLastTxLocalStatus';
 import { useStore } from '../../../providers/ZustandStoreProvider';
 import {
   getNextStateAndTimestampForActiveProposal,
@@ -37,7 +38,6 @@ import {
 import { checkIsVotingAvailable } from '../../../store/selectors/representationsSelectors';
 import { TxType } from '../../../store/transactionsSlice';
 import { ProposalState, VotingDataByUser } from '../../../types';
-import { useLastTxLocalStatus } from '../../useLastTxLocalStatus';
 import { BasicActionModal } from '../BasicActionModal';
 import { ActionModalBasicTypes } from './types';
 

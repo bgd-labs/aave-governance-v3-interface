@@ -22,14 +22,15 @@ export async function getPayloadsCountsRPC({
       async ([chainId, config]) => {
         await Promise.all(
           config.contractAddresses.map(async (contractAddress) => {
-            const count = await readContract(clients[Number(chainId)], {
-              abi: IPayloadsControllerCore_ABI,
-              address: contractAddress,
-              functionName: 'getPayloadsCount',
-              args: [],
-            });
-
-            payloadsCounts[contractAddress] = count;
+            payloadsCounts[contractAddress] = await readContract(
+              clients[Number(chainId)],
+              {
+                abi: IPayloadsControllerCore_ABI,
+                address: contractAddress,
+                functionName: 'getPayloadsCount',
+                args: [],
+              },
+            );
             payloadsAvailableIds[contractAddress] =
               getAvailablePayloadsIdsByChainId({
                 chainId: Number(chainId),

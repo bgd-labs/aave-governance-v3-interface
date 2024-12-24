@@ -2,8 +2,8 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import { BoxWith3D } from '../BoxWith3D';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
 

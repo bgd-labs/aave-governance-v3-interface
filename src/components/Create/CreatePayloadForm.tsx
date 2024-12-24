@@ -12,9 +12,9 @@ import {
   required,
 } from '../../helpers/inputValidation';
 import { texts } from '../../helpers/texts/texts';
+import { useLastTxLocalStatus } from '../../hooks/useLastTxLocalStatus';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TxType } from '../../store/transactionsSlice';
-import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
 import { CreateProposalPageParams, PayloadAction } from '../../types';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';

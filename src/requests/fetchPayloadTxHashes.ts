@@ -5,7 +5,8 @@ import { mainnet } from 'viem/chains';
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
 import { getBlockNumberByTimestamp } from '../helpers/getBlockNumberByTimestamp';
-import { InitialPayloadState, PayloadFromServer } from '../types';
+import { PayloadFromServer } from '../server/api/types';
+import { InitialPayloadState } from '../types';
 import {
   getPayloadsCreated,
   getPayloadsExecuted,

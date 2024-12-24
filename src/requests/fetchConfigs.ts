@@ -3,12 +3,7 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
-import {
-  ConfigsFromServer,
-  ConstantsFromServer,
-  ContractsConstants,
-  VotingConfig,
-} from '../types';
+import { ConfigsFromServer, ConstantsFromServer } from '../server/api/types';
 import { getGovCoreConfigsRPC } from './utils/getGovCoreConfigsRPC';
 
 export async function fetchConfigs({
@@ -27,14 +22,14 @@ export async function fetchConfigs({
         ).json()) as ConstantsFromServer,
       ]);
 
-      const contractsConstants: ContractsConstants = {
+      const contractsConstants = {
         precisionDivider: BigInt(data[1][0].PRECISION_DIVIDER),
         cooldownPeriod: BigInt(data[1][0].COOLDOWN_PERIOD),
         expirationTime: BigInt(data[1][0].PROPOSAL_EXPIRATION_TIME),
         cancellationFee: BigInt(data[1][0].CANCELLATION_FEE),
       };
 
-      const votingConfigs: VotingConfig[] = data[0].map((config) => {
+      const votingConfigs = data[0].map((config) => {
         return {
           accessLevel: config.accessLevel,
           quorum: BigInt(config.yesThreshold ?? 0),

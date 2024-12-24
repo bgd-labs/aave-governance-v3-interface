@@ -2,20 +2,19 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL, PAGE_SIZE } from '../configs/configs';
+import { GetGovernanceProposalsResponse } from '../server/api/types';
 import { selectIdsForRequest } from '../store/proposalsListSlice';
-import {
-  ContractsConstants,
-  GetGovernanceProposalsResponse,
-  GetProposalsData,
-  VotingConfig,
-} from '../types';
+import { ContractsConstants, VotingConfig } from '../types';
 import { formatListData } from './utils/formatDataFromAPI';
 import {
   getDataForList,
   getProposalsWithPayloads,
 } from './utils/getDataForList';
 import { getProposalPayloadsDataRPC } from './utils/getProposalPayloadsDataRPC';
-import { getProposalsDataRPC } from './utils/getProposalsDataRPC';
+import {
+  GetProposalsData,
+  getProposalsDataRPC,
+} from './utils/getProposalsDataRPC';
 import { getVotingProposalsDataRPC } from './utils/getVotingProposalsDataRPC';
 
 export type FetchProposalsDataForListParams = Pick<

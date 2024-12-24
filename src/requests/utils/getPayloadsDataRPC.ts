@@ -3,7 +3,13 @@ import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
-import { GetPayloadsData, PayloadInitialStruct } from '../../types';
+import { PayloadInitialStruct } from '../../types';
+
+export type GetPayloadsData = {
+  chainId: number;
+  payloadsIds: number[];
+  clients: ClientsRecord;
+};
 
 export async function getPayloadsDataRPC({
   chainId,

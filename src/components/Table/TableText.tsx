@@ -4,9 +4,9 @@ import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 import { isAddress, zeroAddress } from 'viem';
 
 import { texts } from '../../helpers/texts/texts';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 
 interface TableTextProps {
   children: ReactNode;

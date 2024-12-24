@@ -3,8 +3,8 @@
 import { useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { media } from '../../styles/themeMUI';
-import { useMediaQuery } from '../../styles/useMediaQuery';
 import { ProposalNextState } from '../../types';
 import { BoxWith3D } from '../BoxWith3D';
 
