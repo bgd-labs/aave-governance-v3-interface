@@ -4,6 +4,7 @@ import React from 'react';
 import { useTimer } from 'react-timer-hook';
 
 import { texts } from '../helpers/texts/texts';
+import NoSSR from './primitives/NoSSR';
 
 export function Timer({
   expiryTimestamp,
@@ -18,7 +19,7 @@ export function Timer({
   });
 
   return (
-    <>
+    <NoSSR>
       {days !== 0 && (
         <span className="Timer__value">
           {days}
@@ -52,6 +53,6 @@ export function Timer({
           {texts.other.seconds}
         </Box>
       )}
-    </>
+    </NoSSR>
   );
 }

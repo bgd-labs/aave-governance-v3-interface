@@ -11,6 +11,7 @@ import {
   getLocalStoragePayloadsExplorerView,
   setLocalStoragePayloadsExplorerView,
 } from '../../configs/localStorage';
+import { ROUTES } from '../../configs/routes';
 import { generateSeatbeltLink } from '../../helpers/formatPayloadData';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
@@ -185,7 +186,12 @@ export function PayloadsExplorerPage({
                     value={chainId}
                     onChange={(value) => {
                       router.push(
-                        `/payloads-explorer/${value}_${appConfig.payloadsControllerConfig[value].contractAddresses[0]}/0/`,
+                        ROUTES.payloadsExplorerPages(
+                          value,
+                          appConfig.payloadsControllerConfig[value]
+                            .contractAddresses[0],
+                          activePage,
+                        ),
                       );
                     }}
                     options={appUsedNetworks}
@@ -219,7 +225,9 @@ export function PayloadsExplorerPage({
                 chainId={chainId}
                 controllerAddress={payloadsController}
                 setControllerAddress={(value) =>
-                  router.push(`/payloads-explorer/${chainId}_${value}/0/`)
+                  router.push(
+                    ROUTES.payloadsExplorerPages(chainId, value, activePage),
+                  )
                 }
               />
             </Box>

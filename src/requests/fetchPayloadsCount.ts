@@ -44,8 +44,6 @@ export async function fetchPayloadsCount({
   } catch (e) {
     console.error('Error getting payloads count from API', e);
 
-    console.log('asduhaskjdh', input);
-
     return await readContract(input.clients[chainId], {
       abi: IPayloadsControllerCore_ABI,
       address: payloadsController as Address,

@@ -2,6 +2,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { ReactNode } from 'react';
 
 import AppLayout from '../components/layouts/AppLayout';
+import { ModalForExecute } from '../components/PayloadsExplorer/ModalForExecute';
 import { isForIPFS } from '../configs/appConfig';
 import Providers from '../providers';
 
@@ -15,7 +16,13 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+  payloadsModal,
+}: {
+  children: ReactNode;
+  payloadsModal: ReactNode;
+}) {
   const { pathname } = typeof window !== 'undefined' ? window.location : {};
   const ipfsMatch = RegExp('/.*\\/Qm\\w{44}\\//').exec(pathname ?? '');
 
@@ -30,7 +37,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <NextTopLoader />
         <Providers>
-          <AppLayout>{children}</AppLayout>
+          <AppLayout>
+            {children}
+            {payloadsModal}
+            <ModalForExecute />
+          </AppLayout>
         </Providers>
       </body>
     </html>

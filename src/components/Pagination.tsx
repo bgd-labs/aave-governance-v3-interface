@@ -3,6 +3,7 @@ import InitialPagination from 'rc-pagination';
 import React, { useState } from 'react';
 
 import { PAGE_SIZE } from '../configs/configs';
+import { ROUTES } from '../configs/routes';
 import { texts } from '../helpers/texts/texts';
 import { getChainAndPayloadsController } from '../requests/fetchFilteredPayloadsData';
 import { BoxWith3D } from './BoxWith3D';
@@ -284,7 +285,11 @@ export function Pagination({
               </Box>
             ) : payloadsChainId && payloadsController ? (
               <Link
-                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                href={ROUTES.payloadsExplorerPages(
+                  payloadsChainId,
+                  payloadsController,
+                  current - 1,
+                )}
                 scroll>
                 <span>{current}</span>
               </Link>
@@ -302,7 +307,11 @@ export function Pagination({
               />
             ) : payloadsChainId && payloadsController ? (
               <Link
-                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                href={ROUTES.payloadsExplorerPages(
+                  payloadsChainId,
+                  payloadsController,
+                  current - 1,
+                )}
                 scroll
               />
             ) : (
@@ -317,7 +326,11 @@ export function Pagination({
               />
             ) : payloadsChainId && payloadsController ? (
               <Link
-                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                href={ROUTES.payloadsExplorerPages(
+                  payloadsChainId,
+                  payloadsController,
+                  current - 1,
+                )}
                 scroll
               />
             ) : (
@@ -333,7 +346,11 @@ export function Pagination({
               </Box>
             ) : payloadsChainId && payloadsController ? (
               <Link
-                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                href={ROUTES.payloadsExplorerPages(
+                  payloadsChainId,
+                  payloadsController,
+                  current - 1,
+                )}
                 scroll>
                 <span>...</span>
               </Link>
@@ -352,7 +369,11 @@ export function Pagination({
               </Box>
             ) : payloadsChainId && payloadsController ? (
               <Link
-                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                href={ROUTES.payloadsExplorerPages(
+                  payloadsChainId,
+                  payloadsController,
+                  current - 1,
+                )}
                 scroll>
                 <span>...</span>
               </Link>

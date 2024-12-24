@@ -6,6 +6,7 @@ import { Box, useTheme } from '@mui/system';
 import React from 'react';
 import { Address, toHex } from 'viem';
 
+import { ROUTES } from '../../configs/routes';
 import { formatPayloadData } from '../../helpers/formatPayloadData';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
@@ -225,7 +226,11 @@ export function PayloadExploreItem({
             payload={payload}
             withoutTitle
             textColor="$text"
-            showMoreLink={`/payloads-explorer/${payload.payloadsController}/payload/${payload.id}`}
+            showMoreLink={ROUTES.payload(
+              Number(payload.id),
+              Number(payload.chain),
+              payload.payloadsController,
+            )}
           />
         </Box>
       </Box>

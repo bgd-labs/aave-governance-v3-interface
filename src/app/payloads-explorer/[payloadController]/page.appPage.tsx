@@ -2,9 +2,10 @@ import { Metadata } from 'next';
 import React, { Suspense } from 'react';
 
 import { PayloadsExplorerPage } from '../../../components/PayloadsExplorer/PayloadsExplorerPage';
+import { appConfig } from '../../../configs/appConfig';
+import { PAGE_SIZE } from '../../../configs/configs';
 import { metaTexts } from '../../../helpers/texts/metaTexts';
 import { api } from '../../../trpc/server';
-import { PayloadsExplorerPageParams } from '../layout.appPage';
 
 export const metadata: Metadata = {
   title: metaTexts.ipfsTitle,
@@ -16,6 +17,48 @@ export const metadata: Metadata = {
   },
 };
 
+type PayloadsExplorerPageParams = {
+  payloadController: string;
+};
+
+export async function generateStaticParams() {
+  const config = appConfig.payloadsControllerConfig;
+  const allControllers: string[] = [];
+  Object.entries(config).forEach(([chain, config]) => {
+    config.contractAddresses.forEach((controller) =>
+      allControllers.push(`${chain}_${controller}`),
+    );
+  });
+
+  const chainsWithCount = (
+    await Promise.all(
+      allControllers
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .map(async (controller) => {
+          const count = await api.payloads.getCount({
+            chainWithController: controller,
+          });
+          const allPagesCount = Math.ceil(Number(count) / PAGE_SIZE);
+
+          const activePages = [...Array(Number(allPagesCount)).keys()].map(
+            (activePage) => String(activePage),
+          );
+          return activePages.map((activePage) => ({
+            chainWithController: controller,
+            activePage,
+          }));
+        }),
+    )
+  ).flat();
+
+  return chainsWithCount.map((data) => {
+    return {
+      payloadController: `${data.chainWithController}_${data.activePage}`,
+      fallback: false,
+    };
+  });
+}
+
 export const revalidate = 60;
 
 export default async function Page({
@@ -23,8 +66,9 @@ export default async function Page({
 }: {
   params: PayloadsExplorerPageParams;
 }) {
+  const activePage = Number(params.payloadController.split('_')[2]);
   const data = await api.payloads.getPaginated({
-    activePage: 0,
+    activePage: activePage,
     chainWithController: params.payloadController,
   });
 
@@ -42,7 +86,7 @@ export default async function Page({
       <PayloadsExplorerPage
         payloads={data.data}
         chainWithController={params.payloadController}
-        activePage={0}
+        activePage={activePage}
         totalItems={data.count}
         currentIds={data.ids ?? []}
       />

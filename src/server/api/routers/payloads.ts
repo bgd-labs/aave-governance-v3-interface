@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
 import {
+  fetchAllPayloadsCounts,
+  FetchAllPayloadsCountsParams,
+} from '../../../requests/fetchAllPayloadsCounts';
+import {
   fetchFilteredPayloadsData,
   FetchFilteredPayloadsDataParams,
 } from '../../../requests/fetchFilteredPayloadsData';
@@ -51,6 +55,14 @@ export const payloadsRouter = createTRPCRouter({
     .query(
       async (input) =>
         await fetchPayloadsCount({
+          input: { ...input.input, clients: serverClients },
+        }),
+    ),
+  getTotalCount: publicProcedure
+    .input(z.custom<Omit<FetchAllPayloadsCountsParams, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchAllPayloadsCounts({
           input: { ...input.input, clients: serverClients },
         }),
     ),

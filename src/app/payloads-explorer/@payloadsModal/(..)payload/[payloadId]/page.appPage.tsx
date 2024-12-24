@@ -1,16 +1,15 @@
 'use client';
 
 import { Metadata } from 'next';
-import { usePathname } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 import React, { useEffect } from 'react';
 
-import { BasicModal } from '../../../../../../components/BasicModal';
-import { PayloadDetailsContent } from '../../../../../../components/PayloadsExplorer/PayloadDetailsContent';
-import { metaTexts } from '../../../../../../helpers/texts/metaTexts';
-import { useStore } from '../../../../../../providers/ZustandStoreProvider';
-import { api } from '../../../../../../trpc/react';
-import { PayloadsExplorerPageParams } from '../../../payload/[payloadId]/page.appPage';
+import { BasicModal } from '../../../../../components/BasicModal';
+import { PayloadDetailsContent } from '../../../../../components/PayloadsExplorer/PayloadDetailsContent';
+import { metaTexts } from '../../../../../helpers/texts/metaTexts';
+import { useStore } from '../../../../../providers/ZustandStoreProvider';
+import { api } from '../../../../../trpc/react';
+import { PayloadsExplorerPageParams } from '../../../../payload/[payloadId]/page.appPage';
 
 export const metadata: Metadata = {
   title: metaTexts.ipfsTitle,
@@ -28,11 +27,11 @@ export default function Page({
   params: PayloadsExplorerPageParams;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
 
+  const splitParams = params.payloadId.split('_');
   const payload = api.payloads.getById.useQuery({
-    chainWithController: params.payloadController,
-    payloadId: Number(params.payloadId),
+    chainWithController: `${splitParams[1]}_${splitParams[2]}`,
+    payloadId: Number(splitParams[0]),
   });
 
   const isPayloadExplorerItemDetailsModalOpen = useStore(
@@ -43,15 +42,9 @@ export default function Page({
   );
 
   useEffect(() => {
-    if (payload.data) {
-      if (pathname?.split('/').includes(String(payload.data.id))) {
-        setIsPayloadExplorerItemDetailsModalOpen(true);
-      }
-      if (!pathname?.split('/').includes(String(payload.data.id))) {
-        setIsPayloadExplorerItemDetailsModalOpen(false);
-      }
-    }
-  }, [pathname, payload.data]);
+    setIsPayloadExplorerItemDetailsModalOpen(true);
+    return () => setIsPayloadExplorerItemDetailsModalOpen(false);
+  }, []);
 
   return (
     <BasicModal
