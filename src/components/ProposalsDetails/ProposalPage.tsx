@@ -160,7 +160,7 @@ export function ProposalPage({
                           textAlign: 'center',
                         }}>
                         Cannot get data for Payload id{payload.payloadId} on{' '}
-                        {getChainName({ chainId: Number(payload.chain) })}
+                        {getChainName(Number(payload.chain))}
                       </Box>
                     ))}
                 </BlockWrapper>

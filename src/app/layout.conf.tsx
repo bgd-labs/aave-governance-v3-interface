@@ -1,5 +1,5 @@
 import NextTopLoader from 'nextjs-toploader';
-import React from 'react';
+import { ReactNode } from 'react';
 
 import AppLayout from '../components/layouts/AppLayout';
 import { isForIPFS } from '../configs/appConfig';
@@ -15,11 +15,7 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   const { pathname } = typeof window !== 'undefined' ? window.location : {};
   const ipfsMatch = RegExp('/.*\\/Qm\\w{44}\\//').exec(pathname ?? '');
 

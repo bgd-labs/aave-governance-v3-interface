@@ -1,10 +1,10 @@
 'use client';
 
-import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { ProposalMetadata } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BlockWrapper } from '../BlockWrapper';
 import { BoxWith3D } from '../BoxWith3D';

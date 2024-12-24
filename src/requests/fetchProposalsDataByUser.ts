@@ -19,13 +19,14 @@ export async function fetchProposalsDataByUser({
             support: boolean;
             votingPower: string;
           }[];
+
           return {
             proposalId: proposal.id,
             votedInfo: {
-              support: data[0].support,
-              votedPower: BigInt(data[0].votingPower),
+              support: data[0]?.support ?? false,
+              votedPower: BigInt(data[0]?.votingPower ?? 0),
             },
-            isVoted: data[0].votingPower !== '0',
+            isVoted: data[0]?.votingPower !== '0',
           };
         }),
       );

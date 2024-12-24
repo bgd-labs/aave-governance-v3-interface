@@ -1,5 +1,4 @@
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { Client } from 'viem';
 
 import { PayloadParams } from '../components/pages/ProposalCreateOverviewPage';
 import { ipfsGateway } from '../configs/configs';

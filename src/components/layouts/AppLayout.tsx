@@ -1,5 +1,6 @@
 'use client';
 
+import '@bgd-labs/react-web3-icons/dist/index.css';
 import 'nprogress/nprogress.css';
 
 import React, { useEffect } from 'react';

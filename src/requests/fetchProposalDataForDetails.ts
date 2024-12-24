@@ -1,6 +1,5 @@
 import { IVotingPortal_ABI } from '@bgd-labs/aave-address-book/abis';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { Client } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../configs/appConfig';

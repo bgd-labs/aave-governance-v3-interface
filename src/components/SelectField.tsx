@@ -69,7 +69,7 @@ export function SelectField({
               )}
               {value || value === 0
                 ? withChainName
-                  ? getChainName({ chainId: value })
+                  ? getChainName(value)
                   : value
                 : withMyself && value === ''
                   ? 'Myself'
@@ -129,7 +129,7 @@ export function SelectField({
                     <NetworkIcon chainId={option} size={14} css={{ mr: 8 }} />
                   )}
                   {withChainName
-                    ? getChainName({ chainId: option })
+                    ? getChainName(option)
                     : withMyself && option === ''
                       ? 'Myself'
                       : option}

@@ -220,22 +220,24 @@ export function SettingsButton({
                   </Box>
                 </Link>
 
-                <Link
-                  href={ROUTES.payloadsExplorer}
-                  css={{
-                    display: 'inline-block',
-                    color: '$textDisabled',
-                    lineHeight: 1,
-                    hover: {
-                      color: theme.palette.$textWhite,
-                    },
-                    mb: 15,
-                  }}
-                  onClick={close}>
-                  <Box sx={{ typography: 'buttonSmall' }}>
-                    {texts.header.payloadsExplorer}
-                  </Box>
-                </Link>
+                {!isForIPFS && (
+                  <Link
+                    href={ROUTES.payloadsExplorer}
+                    css={{
+                      display: 'inline-block',
+                      color: '$textDisabled',
+                      lineHeight: 1,
+                      hover: {
+                        color: theme.palette.$textWhite,
+                      },
+                      mb: 15,
+                    }}
+                    onClick={close}>
+                    <Box sx={{ typography: 'buttonSmall' }}>
+                      {texts.header.payloadsExplorer}
+                    </Box>
+                  </Link>
+                )}
 
                 <Link
                   href={ROUTES.rpcSwitcher}

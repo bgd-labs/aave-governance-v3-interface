@@ -39,7 +39,7 @@ export function ActivateVotingOnVotingMachineModal({
       <ActionModalContentWrapper>
         <Box component="p" sx={{ typography: 'body' }}>
           {texts.proposalActions.activateVotingDescription}{' '}
-          {getChainName({ chainId: votingChainId })} chain
+          {getChainName(votingChainId)} chain
         </Box>
       </ActionModalContentWrapper>
     </ActionModal>

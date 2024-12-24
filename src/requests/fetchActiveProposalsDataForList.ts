@@ -1,5 +1,4 @@
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { Client } from 'viem';
 import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';

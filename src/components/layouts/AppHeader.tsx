@@ -49,7 +49,7 @@ export function AppHeader() {
   const path = usePathname();
 
   const sm = useMediaQuery(media.sm);
-  const wrapperRef = useRef(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const isRendered = useStore((store) => store.isRendered);
   const activeWallet = useStore((store) => store.activeWallet);

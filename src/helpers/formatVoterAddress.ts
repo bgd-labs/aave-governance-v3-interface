@@ -1,6 +1,5 @@
-import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
-
 import { textCenterEllipsis } from '../styles/textCenterEllipsis';
+import { VotersData } from '../types';
 
 export function formatVoterAddress(vote: VotersData, isBig?: boolean) {
   return vote.ensName

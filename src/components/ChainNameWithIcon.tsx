@@ -23,7 +23,7 @@ export function ChainNameWithIcon({
       <NetworkIcon chainId={chainId} size={iconSize} css={{ mr: 5 }} />
       {!onlyIcon && (
         <Box className="ChainNameWithIcon__text" sx={textCss}>
-          {getChainName({ chainId })}
+          {getChainName(chainId)}
         </Box>
       )}
     </Box>

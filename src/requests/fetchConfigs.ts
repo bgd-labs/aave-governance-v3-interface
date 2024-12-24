@@ -37,9 +37,9 @@ export async function fetchConfigs({
       const votingConfigs: VotingConfig[] = data[0].map((config) => {
         return {
           accessLevel: config.accessLevel,
-          quorum: BigInt(config.yesThreshold),
-          differential: BigInt(config.yesNoDifferential),
-          minPropositionPower: BigInt(config.minPropositionPower),
+          quorum: BigInt(config.yesThreshold ?? 0),
+          differential: BigInt(config.yesNoDifferential ?? 0),
+          minPropositionPower: BigInt(config.minPropositionPower ?? 0),
           coolDownBeforeVotingStart: config.coolDownBeforeVotingStart,
           votingDuration: config.votingDuration,
         };

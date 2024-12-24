@@ -1,4 +1,3 @@
-import { PayloadAction } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box } from '@mui/system';
 import arrayMutators from 'final-form-arrays';
 import React, { useState } from 'react';
@@ -16,7 +15,7 @@ import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TxType } from '../../store/transactionsSlice';
 import { useLastTxLocalStatus } from '../../transactions/useLastTxLocalStatus';
-import { CreateProposalPageParams } from '../../types';
+import { CreateProposalPageParams, PayloadAction } from '../../types';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
 import { InputWrapper } from '../InputWrapper';

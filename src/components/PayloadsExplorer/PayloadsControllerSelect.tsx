@@ -1,7 +1,7 @@
 import { Listbox } from '@headlessui/react';
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
-import { Hex } from 'viem';
+import { Address } from 'viem';
 
 import ArrowToBottom from '../../assets/icons/arrowToBottom.svg';
 import ArrowToTop from '../../assets/icons/arrowToTop.svg';
@@ -19,8 +19,8 @@ import { SelectField } from '../SelectField';
 
 interface PayloadsControllerSelectProps {
   chainId: number;
-  controllerAddress: Hex;
-  setControllerAddress: (value: Hex) => void;
+  controllerAddress: Address;
+  setControllerAddress: (value: Address) => void;
 }
 
 export function PayloadsControllerSelect({

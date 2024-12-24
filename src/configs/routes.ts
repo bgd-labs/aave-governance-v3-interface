@@ -1,3 +1,5 @@
+import { appConfig } from './appConfig';
+
 export const ROUTES = {
   main: '/',
   delegate: '/delegate/',
@@ -8,7 +10,7 @@ export const ROUTES = {
       : `/proposal/${proposalId}_${ipfsHash}/`,
   rpcSwitcher: '/rpc-switcher/',
   proposalCreateOverview: '/proposal-create-overview/',
-  payloadsExplorer: '/payloads-explorer/',
+  payloadsExplorer: `/payloads-explorer/${appConfig.govCoreChainId}_${appConfig.payloadsControllerConfig[appConfig.govCoreChainId].contractAddresses[0]}/0`,
   createProposal: '/create-proposal/',
   create: '/create/',
   adi: 'https://adi.onaave.com/',

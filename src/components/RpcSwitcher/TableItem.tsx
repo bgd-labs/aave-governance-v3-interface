@@ -91,7 +91,7 @@ export function TableItem({
               </Box>
             ) : (
               <Box component="h3" sx={{ typography: 'h2' }}>
-                {getChainName({ chainId })}
+                {getChainName(chainId)}
               </Box>
             )}
           </Box>

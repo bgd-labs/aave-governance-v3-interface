@@ -24,7 +24,6 @@ import { PayloadStatus } from './PayloadStatus';
 export function PayloadExploreItem({
   payload,
   setSelectedPayloadForExecute,
-  setSelectedPayloadForDetailsModal,
   isColumns,
   handleReportClick,
   isSeatbeltModalOpen,
@@ -32,11 +31,6 @@ export function PayloadExploreItem({
 }: {
   payload: PayloadWithHashes;
   setSelectedPayloadForExecute: ({
-    chainId,
-    payloadsController,
-    id,
-  }: InitialPayload) => void;
-  setSelectedPayloadForDetailsModal: ({
     chainId,
     payloadsController,
     id,
@@ -53,9 +47,6 @@ export function PayloadExploreItem({
   const activeWallet = useStore((store) => store.activeWallet);
   const setExecutePayloadModalOpen = useStore(
     (store) => store.setExecutePayloadModalOpen,
-  );
-  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
-    (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
   );
 
   const {
@@ -98,15 +89,6 @@ export function PayloadExploreItem({
         payloadController: payload.payloadsController,
       },
     );
-
-  const handleDetailsOpen = () => {
-    setSelectedPayloadForDetailsModal({
-      chainId: Number(payload.chain),
-      payloadsController: payload.payloadsController as Address,
-      id: Number(payload.id),
-    });
-    setIsPayloadExplorerItemDetailsModalOpen(true);
-  };
 
   return (
     <BoxWith3D
@@ -243,7 +225,7 @@ export function PayloadExploreItem({
             payload={payload}
             withoutTitle
             textColor="$text"
-            showMoreClick={handleDetailsOpen}
+            showMoreLink={`/payloads-explorer/${payload.payloadsController}/payload/${payload.id}`}
           />
         </Box>
       </Box>

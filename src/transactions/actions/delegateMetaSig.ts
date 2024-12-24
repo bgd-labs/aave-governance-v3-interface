@@ -1,11 +1,11 @@
-import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IATokenWithDelegation';
+import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-address-book/abis';
 import { signTypedData } from '@wagmi/core';
 import { Address, Client, getContract, hexToSignature } from 'viem';
 import { Config } from 'wagmi';
 
 import { appConfig } from '../../configs/appConfig';
-import { GovernancePowerTypeApp } from '../../old/web3/services/delegationService';
 import { IAaveTokenV3_ABI } from '../../requests/abis/IAaveTokenV3';
+import { GovernancePowerTypeApp } from '../../types';
 
 export async function delegateMetaSig({
   wagmiConfig,

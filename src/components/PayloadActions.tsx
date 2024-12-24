@@ -20,6 +20,7 @@ interface PayloadActionsProps {
   textColor?: string;
   showMoreClick?: () => void;
   withoutEllipsis?: boolean;
+  showMoreLink?: string;
 }
 
 export function PayloadActions({
@@ -31,13 +32,15 @@ export function PayloadActions({
   textColor,
   showMoreClick,
   withoutEllipsis,
+  showMoreLink,
 }: PayloadActionsProps) {
   const getSeatbeltReport = useStore((store) => store.getSeatbeltReport);
   const seatbeltReportsLoadings = useStore(
     (store) => store.seatbeltReportsLoadings,
   );
 
-  const isWithShowMore = !!showMoreClick && payload.data.actions.length > 2;
+  const isWithShowMore =
+    !!(showMoreClick || showMoreLink) && payload.data.actions.length > 2;
 
   return (
     <>
@@ -109,18 +112,37 @@ export function PayloadActions({
       </Box>
 
       {isWithShowMore && (
-        <Box
-          onClick={showMoreClick}
-          sx={{
-            color: '$textSecondary',
-            cursor: 'pointer',
-            typography: 'descriptorAccent',
-            transition: 'all 0.2s ease',
-            mt: 6,
-            hover: { opacity: 0.7 },
-          }}>
-          {texts.proposals.votersListShowAll}
-        </Box>
+        <>
+          {showMoreLink && (
+            <Link
+              href={showMoreLink}
+              scroll={false}
+              css={{
+                color: '$textSecondary',
+                cursor: 'pointer',
+                typography: 'descriptorAccent',
+                transition: 'all 0.2s ease',
+                mt: 6,
+                hover: { opacity: 0.7 },
+              }}>
+              {texts.proposals.votersListShowAll}
+            </Link>
+          )}
+          {showMoreClick && (
+            <Box
+              onClick={showMoreClick}
+              sx={{
+                color: '$textSecondary',
+                cursor: 'pointer',
+                typography: 'descriptorAccent',
+                transition: 'all 0.2s ease',
+                mt: 6,
+                hover: { opacity: 0.7 },
+              }}>
+              {texts.proposals.votersListShowAll}
+            </Box>
+          )}
+        </>
       )}
 
       {withLink && !payload.seatbeltMD && !setIsSeatbeltModalOpen ? (

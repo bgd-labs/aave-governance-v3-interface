@@ -3,8 +3,8 @@ import { Address } from 'viem';
 import { Config } from 'wagmi';
 
 import { appConfig } from '../../configs/appConfig';
-import { GovernancePowerTypeApp } from '../../old/web3/services/delegationService';
 import { IAaveTokenV3_ABI } from '../../requests/abis/IAaveTokenV3';
+import { GovernancePowerTypeApp } from '../../types';
 
 export async function delegate({
   wagmiConfig,

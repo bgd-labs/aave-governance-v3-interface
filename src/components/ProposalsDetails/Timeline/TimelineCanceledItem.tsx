@@ -1,4 +1,3 @@
-import { BigNumber } from 'bignumber.js';
 import React, { ReactNode } from 'react';
 
 import { TimelineCanceledItemWrapper, TimelineLineWrapper } from './static';
@@ -22,10 +21,7 @@ export function TimelineCanceledItem({
 }: TimelineCanceledItemProps) {
   if (canceledTimestamp) {
     const getPercent = (start: number, end: number) =>
-      new BigNumber(canceledTimestamp - start)
-        .dividedBy(end - start)
-        .multipliedBy(100)
-        .toNumber();
+      ((canceledTimestamp - start) / (end - start)) * 100;
 
     if (canceledTimestamp <= votingClosedTimestamp) {
       return (

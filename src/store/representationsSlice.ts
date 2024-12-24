@@ -9,11 +9,14 @@ import {
   setLocalStorageRepresentingAddresses,
 } from '../configs/localStorage';
 import { getFormattedRepresentedAddresses } from '../helpers/getRepresentedAddresses';
-import { RepresentationDataItem } from '../old/representations/store/representationsSlice';
 import { fetchRepresentationsData } from '../requests/fetchRepresentationsData';
 import { updateRepresentatives } from '../transactions/actions/updateRepresentatives';
 import { api } from '../trpc/client';
-import { RepresentationFormData, RepresentativeAddress } from '../types';
+import {
+  RepresentationDataItem,
+  RepresentationFormData,
+  RepresentativeAddress,
+} from '../types';
 import { IEnsSlice } from './ensSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import { selectInputToAddress } from './selectors/ensSelectors';

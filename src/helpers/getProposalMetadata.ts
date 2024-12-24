@@ -30,6 +30,7 @@ export async function getProposalMetadata(
       ...data,
     };
   } catch (e) {
+    console.error(e);
     const { content, data } = matter(await clone.text());
     return {
       ...ipfsResponse,

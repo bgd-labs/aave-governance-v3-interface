@@ -9,7 +9,7 @@ import {
   setLocalStorageGaslessVote,
   setLocalStorageTermsAccept,
 } from '../configs/localStorage';
-import { AppModeType } from '../types';
+import { AppModeType, InitialPayload } from '../types';
 import { TransactionsSlice } from './transactionsSlice';
 
 export interface IUISlice {
@@ -48,6 +48,12 @@ export interface IUISlice {
 
   powersInfoModalOpen: boolean;
   setPowersInfoModalOpen: (value: boolean) => void;
+
+  isPayloadExplorerItemDetailsModalOpen: boolean;
+  setIsPayloadExplorerItemDetailsModalOpen: (value: boolean) => void;
+
+  selectedPayloadForExecute: InitialPayload | undefined;
+  setSelectedPayloadForExecute: (value: InitialPayload | undefined) => void;
 }
 
 export const createUISlice: StoreSlice<
@@ -157,5 +163,15 @@ export const createUISlice: StoreSlice<
   powersInfoModalOpen: false,
   setPowersInfoModalOpen: (value) => {
     set({ powersInfoModalOpen: value });
+  },
+
+  isPayloadExplorerItemDetailsModalOpen: false,
+  setIsPayloadExplorerItemDetailsModalOpen: (value) => {
+    set({ isPayloadExplorerItemDetailsModalOpen: value });
+  },
+
+  selectedPayloadForExecute: undefined,
+  setSelectedPayloadForExecute: (value) => {
+    set({ selectedPayloadForExecute: value });
   },
 });

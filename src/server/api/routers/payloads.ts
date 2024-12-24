@@ -1,6 +1,18 @@
 import { z } from 'zod';
 
+import {
+  fetchFilteredPayloadsData,
+  FetchFilteredPayloadsDataParams,
+} from '../../../requests/fetchFilteredPayloadsData';
+import {
+  fetchPayloadById,
+  FetchPayloadByIdParams,
+} from '../../../requests/fetchPayloadById';
 import { fetchPayloads } from '../../../requests/fetchPayloads';
+import {
+  fetchPayloadsCount,
+  FetchPayloadsCountParams,
+} from '../../../requests/fetchPayloadsCount';
 import {
   FetchPayloadsTxHashes,
   fetchPayloadTxHashes,
@@ -23,6 +35,30 @@ export const payloadsRouter = createTRPCRouter({
     .query(
       async (input) =>
         await fetchPayloadTxHashes({
+          input: { ...input.input, clients: serverClients },
+        }),
+    ),
+  getPaginated: publicProcedure
+    .input(z.custom<Omit<FetchFilteredPayloadsDataParams, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchFilteredPayloadsData({
+          input: { ...input.input, clients: serverClients },
+        }),
+    ),
+  getCount: publicProcedure
+    .input(z.custom<Omit<FetchPayloadsCountParams, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchPayloadsCount({
+          input: { ...input.input, clients: serverClients },
+        }),
+    ),
+  getById: publicProcedure
+    .input(z.custom<Omit<FetchPayloadByIdParams, 'clients'>>())
+    .query(
+      async (input) =>
+        await fetchPayloadById({
           input: { ...input.input, clients: serverClients },
         }),
     ),

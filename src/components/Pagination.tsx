@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import { PAGE_SIZE } from '../configs/configs';
 import { texts } from '../helpers/texts/texts';
+import { getChainAndPayloadsController } from '../requests/fetchFilteredPayloadsData';
 import { BoxWith3D } from './BoxWith3D';
 import { Link } from './Link';
 
@@ -15,6 +16,7 @@ export interface PaginationProps {
   isSmall?: boolean;
   setCurrentPageState?: (page: number) => void;
   filtering?: boolean;
+  chainWithController?: string;
 }
 
 export function Pagination({
@@ -24,12 +26,20 @@ export function Pagination({
   isSmall,
   setCurrentPageState,
   filtering,
+  chainWithController,
 }: PaginationProps) {
   const theme = useTheme();
 
   const [currentPage, setCurrentPage] = useState<number>(1 + (forcePage ?? 0));
 
   if (totalItems <= PAGE_SIZE) return null;
+
+  const payloadsChainId = chainWithController
+    ? getChainAndPayloadsController(chainWithController).chainId
+    : undefined;
+  const payloadsController = chainWithController
+    ? getChainAndPayloadsController(chainWithController).payloadsController
+    : undefined;
 
   return (
     <BoxWith3D
@@ -272,6 +282,12 @@ export function Pagination({
                 onClick={() => setCurrentPageState(current)}>
                 <span>{current}</span>
               </Box>
+            ) : payloadsChainId && payloadsController ? (
+              <Link
+                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                scroll>
+                <span>{current}</span>
+              </Link>
             ) : (
               <Link href={`/${current}/`} scroll>
                 <span>{current}</span>
@@ -284,6 +300,11 @@ export function Pagination({
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}
               />
+            ) : payloadsChainId && payloadsController ? (
+              <Link
+                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                scroll
+              />
             ) : (
               <Link href={`/${current}/`} scroll />
             );
@@ -293,6 +314,11 @@ export function Pagination({
               <Box
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}
+              />
+            ) : payloadsChainId && payloadsController ? (
+              <Link
+                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                scroll
               />
             ) : (
               <Link href={`/${current}/`} scroll />
@@ -305,6 +331,12 @@ export function Pagination({
                 onClick={() => setCurrentPageState(current)}>
                 <span>...</span>
               </Box>
+            ) : payloadsChainId && payloadsController ? (
+              <Link
+                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                scroll>
+                <span>...</span>
+              </Link>
             ) : (
               <Link href={`/${current}/`} scroll>
                 <span>...</span>
@@ -318,6 +350,12 @@ export function Pagination({
                 onClick={() => setCurrentPageState(current)}>
                 <span>...</span>
               </Box>
+            ) : payloadsChainId && payloadsController ? (
+              <Link
+                href={`/payloads-explorer/${payloadsChainId}_${payloadsController}/${current - 1}/`}
+                scroll>
+                <span>...</span>
+              </Link>
             ) : (
               <Link href={`/${current}/`} scroll>
                 <span>...</span>

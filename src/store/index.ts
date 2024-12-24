@@ -6,10 +6,6 @@ import { creationFeesSlice, ICreationFeesSlice } from './creationFeesSlice';
 import { createDelegationSlice, IDelegationSlice } from './delegationSlice';
 import { createEnsSlice, IEnsSlice } from './ensSlice';
 import {
-  createPayloadsExplorerSlice,
-  IPayloadsExplorerSlice,
-} from './payloadsExplorerSlice';
-import {
   createProposalHistorySlice,
   IProposalHistorySlice,
 } from './proposalHistorySlice';
@@ -44,7 +40,6 @@ export type RootState = IUISlice &
   IDelegationSlice &
   ICreationFeesSlice &
   IProposalHistorySlice &
-  IPayloadsExplorerSlice &
   ITutorialSlice;
 
 export const createRootSlice = (
@@ -63,6 +58,5 @@ export const createRootSlice = (
   ...createDelegationSlice(set, get),
   ...creationFeesSlice(set, get),
   ...createProposalHistorySlice(set, get),
-  ...createPayloadsExplorerSlice(set, get),
   ...createTutorialSlice(set, get),
 });

@@ -1,14 +1,12 @@
 'use client';
 
-import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import { Hex } from 'viem';
+import { useRouter } from 'nextjs-toploader/app';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 import ColumnsIcon from '../../assets/icons/columnsIcon.svg';
 import RowIcon from '../../assets/icons/rowIcon.svg';
-import { appConfig, appUsedNetworks, isForIPFS } from '../../configs/appConfig';
+import { appConfig, appUsedNetworks } from '../../configs/appConfig';
 import {
   getLocalStoragePayloadsExplorerView,
   setLocalStoragePayloadsExplorerView,
@@ -16,7 +14,7 @@ import {
 import { generateSeatbeltLink } from '../../helpers/formatPayloadData';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
-import { ExecutePayloadModal } from '../../transactions/components/ActionModals/ExecutePayloadModal';
+import { getChainAndPayloadsController } from '../../requests/fetchFilteredPayloadsData';
 import { PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { InputWrapper } from '../InputWrapper';
@@ -30,16 +28,7 @@ import { SelectField } from '../SelectField';
 import { TopPanelContainer } from '../TopPanelContainer';
 import { PayloadExploreItem } from './PayloadExploreItem';
 import { PayloadExploreItemLoading } from './PayloadExploreItemLoading';
-import { PayloadItemDetailsModal } from './PayloadItemDetailsModal';
 import { PayloadsControllerSelect } from './PayloadsControllerSelect';
-
-function checkChainId(chainId?: string | number) {
-  const chainIdFromQuery = Number(chainId || appConfig.govCoreChainId);
-
-  return appUsedNetworks.some((id) => chainIdFromQuery === id)
-    ? chainIdFromQuery
-    : appConfig.govCoreChainId;
-}
 
 function PayloadsExploreViewSwitcherButton({
   onClick,
@@ -87,50 +76,31 @@ function PayloadsExploreViewSwitcherButton({
   );
 }
 
-export function PayloadsExplorerPage() {
+interface PayloadsExplorerPageProps {
+  payloads: PayloadWithHashes[];
+  chainWithController: string;
+  activePage: number;
+  totalItems: number;
+  currentIds: number[];
+}
+
+export function PayloadsExplorerPage({
+  payloads,
+  chainWithController,
+  activePage,
+  totalItems,
+  currentIds,
+}: PayloadsExplorerPageProps) {
   const theme = useTheme();
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
-      params.delete('payloadId');
-      params.delete('payloadChainId');
-      params.delete('payloadsControllerAddress');
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   const isRendered = useStore((store) => store.isRendered);
-  const getPayloadsExploreData = useStore(
-    (store) => store.getPayloadsExploreData,
+  const setSelectedPayloadForExecute = useStore(
+    (store) => store.setSelectedPayloadForExecute,
   );
-  const payloadsExploreData = useStore((store) => store.payloadsExploreData);
-  const payloadsExplorePagination = useStore(
-    (store) => store.payloadsExplorePagination,
-  );
-  const setPayloadsExploreActivePage = useStore(
-    (store) => store.setPayloadsExploreActivePage,
-  );
-  const isExecutePayloadModalOpen = useStore(
-    (store) => store.isExecutePayloadModalOpen,
-  );
-  const setExecutePayloadModalOpen = useStore(
-    (store) => store.setExecutePayloadModalOpen,
-  );
-  const startDetailedPayloadsExplorerDataPolling = useStore(
-    (store) => store.startDetailedPayloadsExplorerDataPolling,
-  );
-  const stopDetailedPayloadsExplorerDataPolling = useStore(
-    (store) => store.stopDetailedPayloadsExplorerDataPolling,
-  );
-  const setIsPayloadExplorerItemDetailsModalOpen = useStore(
-    (store) => store.setIsPayloadExplorerItemDetailsModalOpen,
-  );
+
+  const { chainId, payloadsController } =
+    getChainAndPayloadsController(chainWithController);
 
   const [isSeatbeltModalOpen, setIsSeatbeltModalOpen] = useState<
     Record<string, boolean>
@@ -144,106 +114,10 @@ export function PayloadsExplorerPage() {
   >(undefined);
 
   const [isColumns, setIsColumns] = useState(false);
-  const [chainId, setChainId] = useState<number>(
-    checkChainId(Number(searchParams?.get('chainId'))),
-  );
-  const [controllerAddress, setControllerAddress] = useState<Hex>(
-    appConfig.payloadsControllerConfig[chainId].contractAddresses[0],
-  );
-  const [selectedPayloadForExecute, setSelectedPayloadForExecute] = useState<
-    InitialPayload | undefined
-  >(undefined);
-  const [selectedPayloadForDetailsModal, setSelectedPayloadForDetailsModal] =
-    useState<InitialPayload | undefined>(undefined);
 
   useEffect(() => {
     setIsColumns(getLocalStoragePayloadsExplorerView() === 'column');
   }, []);
-
-  useEffect(() => {
-    if (
-      searchParams &&
-      (!!searchParams.get('payloadChainId') || !!searchParams.get('chainId'))
-    ) {
-      setChainId(
-        checkChainId(
-          Number(
-            searchParams?.get('payloadChainId') || searchParams?.get('chainId'),
-          ),
-        ),
-      );
-    }
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (
-      searchParams &&
-      !!searchParams.get('payloadId') &&
-      !!searchParams.get('payloadChainId') &&
-      !!searchParams.get('payloadsControllerAddress')
-    ) {
-      const payloadId = Number(searchParams.get('payloadId'));
-      const payloadChainId = Number(searchParams.get('payloadChainId'));
-      const payloadsControllerAddress = String(
-        searchParams.get('payloadsControllerAddress'),
-      ) as Hex;
-
-      setSelectedPayloadForDetailsModal({
-        chainId: payloadChainId,
-        payloadsController: payloadsControllerAddress,
-        id: payloadId,
-      });
-      setIsPayloadExplorerItemDetailsModalOpen(true);
-    }
-  }, [searchParams?.get('payloadId')]);
-
-  useEffect(() => {
-    setControllerAddress(
-      appConfig.payloadsControllerConfig[chainId].contractAddresses[0],
-    );
-    if (!isForIPFS) {
-      router.replace(
-        pathname + '?' + createQueryString('chainId', chainId.toString() || ''),
-        {
-          scroll: false,
-        },
-      );
-    }
-  }, [chainId]);
-
-  useEffect(() => {
-    getPayloadsExploreData(chainId, controllerAddress, 0);
-    stopDetailedPayloadsExplorerDataPolling();
-    startDetailedPayloadsExplorerDataPolling(chainId, controllerAddress, 0);
-  }, [controllerAddress]);
-
-  useEffect(() => {
-    stopDetailedPayloadsExplorerDataPolling();
-    if (payloadsExplorePagination[controllerAddress]) {
-      startDetailedPayloadsExplorerDataPolling(
-        chainId,
-        controllerAddress,
-        payloadsExplorePagination[controllerAddress].activePage,
-      );
-    }
-  }, [payloadsExplorePagination[controllerAddress]?.activePage]);
-
-  useEffect(() => {
-    return () => stopDetailedPayloadsExplorerDataPolling();
-  }, []);
-
-  const payloadsDataByChain = payloadsExploreData[chainId];
-  const payloadsData = Object.values(
-    !!payloadsExploreData[chainId] && !!payloadsDataByChain[controllerAddress]
-      ? payloadsDataByChain[controllerAddress]
-      : {},
-  );
-
-  const filteredPayloadsData = payloadsData.filter((payload) =>
-    payloadsExplorePagination[controllerAddress].currentIds.some(
-      (id) => id === Number(payload.id),
-    ),
-  );
 
   const handleReportClick = async (payload: PayloadWithHashes) => {
     const key = `${payload.payloadsController}_${Number(payload.id)}`;
@@ -261,6 +135,10 @@ export function PayloadsExplorerPage() {
       setIsSeatbeltModalOpen({
         ...isSeatbeltModalOpen,
         [key]: true,
+      });
+      setIsSeatbeltReportLoadingOpen({
+        ...isSeatbeltReportLoading,
+        [key]: false,
       });
     }
   };
@@ -305,8 +183,10 @@ export function PayloadsExplorerPage() {
                     withChainName
                     placeholder={texts.other.payloadsNetwork}
                     value={chainId}
-                    onChange={(event) => {
-                      setChainId(event);
+                    onChange={(value) => {
+                      router.push(
+                        `/payloads-explorer/${value}_${appConfig.payloadsControllerConfig[value].contractAddresses[0]}/0/`,
+                      );
                     }}
                     options={appUsedNetworks}
                   />
@@ -337,8 +217,10 @@ export function PayloadsExplorerPage() {
             <Box sx={{ minWidth: '70%' }}>
               <PayloadsControllerSelect
                 chainId={chainId}
-                controllerAddress={controllerAddress}
-                setControllerAddress={setControllerAddress}
+                controllerAddress={payloadsController}
+                setControllerAddress={(value) =>
+                  router.push(`/payloads-explorer/${chainId}_${value}/0/`)
+                }
               />
             </Box>
 
@@ -405,23 +287,17 @@ export function PayloadsExplorerPage() {
                 gridTemplateColumns: 'repeat(4, 1fr)',
               },
             }}>
-            {!!payloadsExplorePagination[controllerAddress]?.currentIds
-              .length &&
-              !filteredPayloadsData.length && (
-                <>
-                  {payloadsExplorePagination[controllerAddress]?.currentIds.map(
-                    (id) => (
-                      <PayloadExploreItemLoading
-                        key={id}
-                        isColumns={isColumns}
-                      />
-                    ),
-                  )}
-                </>
-              )}
-            {!!filteredPayloadsData.length && (
+            {!!currentIds.length && !payloads.length && (
               <>
-                {filteredPayloadsData
+                {currentIds.map((id) => (
+                  <PayloadExploreItemLoading key={id} isColumns={isColumns} />
+                ))}
+              </>
+            )}
+
+            {!!payloads.length && (
+              <>
+                {payloads
                   .sort((a, b) => Number(b.id) - Number(a.id))
                   .map((payload) => (
                     <PayloadExploreItem
@@ -429,9 +305,6 @@ export function PayloadsExplorerPage() {
                       payload={payload}
                       setSelectedPayloadForExecute={
                         setSelectedPayloadForExecute
-                      }
-                      setSelectedPayloadForDetailsModal={
-                        setSelectedPayloadForDetailsModal
                       }
                       isColumns={isColumns}
                       handleReportClick={handleReportClick}
@@ -442,51 +315,25 @@ export function PayloadsExplorerPage() {
               </>
             )}
 
-            {payloadsExplorePagination[controllerAddress]?.currentIds.length ===
-            0 ? (
+            {payloads.length === 0 ? (
               <PayloadExploreItemLoading isColumns={false} noData />
             ) : (
               <>
-                {!payloadsExplorePagination[controllerAddress]?.currentIds
-                  .length &&
-                  !filteredPayloadsData.length && (
-                    <PayloadExploreItemLoading isColumns={isColumns} />
-                  )}
+                {!currentIds.length && !payloads.length && (
+                  <PayloadExploreItemLoading isColumns={isColumns} />
+                )}
               </>
             )}
           </Box>
         </Box>
 
         <Pagination
-          forcePage={
-            payloadsExplorePagination[controllerAddress]?.activePage || 0
-          }
-          totalItems={
-            payloadsExplorePagination[controllerAddress]?.pageCount || 1
-          }
-          setCurrentPageState={(value) =>
-            setPayloadsExploreActivePage(value, chainId, controllerAddress)
-          }
+          forcePage={activePage}
+          totalItems={totalItems}
+          chainWithController={chainWithController}
           withoutQuery
         />
       </Container>
-
-      {selectedPayloadForExecute && (
-        <ExecutePayloadModal
-          isOpen={isExecutePayloadModalOpen}
-          setIsOpen={setExecutePayloadModalOpen}
-          proposalId={0}
-          payload={selectedPayloadForExecute}
-          withController
-        />
-      )}
-
-      {selectedPayloadForDetailsModal && (
-        <PayloadItemDetailsModal
-          initialPayload={selectedPayloadForDetailsModal}
-          setSelectedPayloadForExecute={setSelectedPayloadForExecute}
-        />
-      )}
 
       {finalReport && !!reportPayload && (
         <SeatBeltReportModal

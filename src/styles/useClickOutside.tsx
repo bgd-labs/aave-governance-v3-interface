@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 type UseClickOutsideType = {
-  ref: React.RefObject<HTMLDivElement>;
+  ref: React.RefObject<HTMLDivElement | null>;
   outsideClickFunc: () => void;
   additionalCondition?: boolean;
 };

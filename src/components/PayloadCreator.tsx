@@ -46,6 +46,7 @@ export function PayloadCreator({
             css={{
               display: 'inline-flex',
               alignItems: 'center',
+              transition: 'none',
               hover: {
                 opacity: 0.7,
               },

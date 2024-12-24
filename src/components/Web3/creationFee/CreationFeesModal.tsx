@@ -1,4 +1,3 @@
-import { CreationFeeState } from '@bgd-labs/aave-governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { Address, zeroAddress } from 'viem';
@@ -16,6 +15,7 @@ import { media } from '../../../styles/themeMUI';
 import { useMediaQuery } from '../../../styles/useMediaQuery';
 import { CreationFeesTxModal } from '../../../transactions/components/ActionModals/CreationFeesTxModal';
 import { useLastTxLocalStatus } from '../../../transactions/useLastTxLocalStatus';
+import { CreationFeeState } from '../../../types';
 import { BackButton3D } from '../../BackButton3D';
 import { BasicModal } from '../../BasicModal';
 import { BigButton } from '../../BigButton';

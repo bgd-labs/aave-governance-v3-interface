@@ -221,8 +221,8 @@ export function ProposalCreateOverviewPage({
                               textAlign: 'center',
                             }}>
                             Payload id {payload.id} on{' '}
-                            {getChainName({ chainId: Number(payload.chain) })}{' '}
-                            broken or not created
+                            {getChainName(Number(payload.chain))} broken or not
+                            created
                           </Box>
                         ))}
                     </BlockWrapper>
