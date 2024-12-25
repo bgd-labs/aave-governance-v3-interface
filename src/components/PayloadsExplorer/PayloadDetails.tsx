@@ -3,9 +3,13 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'nextjs-toploader/app';
 import React from 'react';
+import useSWR, { Fetcher } from 'swr';
 
 import { ROUTES } from '../../configs/routes';
-import { PayloadWithHashes } from '../../types';
+import { generateGetPayloadAPIURL } from '../../requests/fetchPayloadById';
+import { formatPayloadFromServer } from '../../requests/utils/formatPayloadFromServer';
+import { PayloadFromServer } from '../../server/api/types';
+import { InitialPayloadState, PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
@@ -14,9 +18,30 @@ import { Container } from '../primitives/Container';
 import { TopPanelContainer } from '../TopPanelContainer';
 import { PayloadDetailsContent } from './PayloadDetailsContent';
 
+const fetcher: Fetcher<PayloadWithHashes, string> = async (url) => {
+  const dataRaw = await fetch(url);
+  const data = (await dataRaw.json()) as PayloadFromServer;
+  return formatPayloadFromServer(data);
+};
+
 export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
   const router = useRouter();
   const theme = useTheme();
+
+  const { data } = useSWR(
+    generateGetPayloadAPIURL({
+      payloadId: Number(payload.id),
+      payloadsController: payload.payloadsController,
+      chainId: Number(payload.chain),
+    }),
+    fetcher,
+    {
+      refreshInterval:
+        payload.data.state >= InitialPayloadState.Executed ? 0 : 10_000,
+    },
+  );
+
+  const updatedPayload = data ?? payload;
 
   return (
     <Container>
@@ -53,7 +78,7 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
               p: '14px 12px',
             },
           }}>
-          <PayloadDetailsContent payload={payload} withExecute />
+          <PayloadDetailsContent payload={updatedPayload} withExecute />
         </BoxWith3D>
       </Box>
 
@@ -66,8 +91,8 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
         }}>
         <Link
           href={ROUTES.payloadsExplorerPages(
-            Number(payload.chain),
-            payload.payloadsController,
+            Number(updatedPayload.chain),
+            updatedPayload.payloadsController,
             0,
           )}>
           <BigButton>Go to explorer</BigButton>

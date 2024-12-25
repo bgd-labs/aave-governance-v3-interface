@@ -14,6 +14,18 @@ export type FetchPayloadByIdParams = {
   clients: ClientsRecord;
 };
 
+export function generateGetPayloadAPIURL({
+  payloadId,
+  chainId,
+  payloadsController,
+}: {
+  payloadId: number;
+  chainId: number;
+  payloadsController: string;
+}) {
+  return `${INITIAL_API_URL}/payloads/getById/?payloadId=${payloadId}&payloadChainId=${chainId}&payloadsController=${payloadsController}`;
+}
+
 export async function fetchPayloadById({
   input,
 }: {
@@ -25,7 +37,11 @@ export async function fetchPayloadById({
 
   try {
     if (appConfig.govCoreChainId === mainnet.id) {
-      const url = `${INITIAL_API_URL}/payloads/getById/?payloadId=${input.payloadId}&payloadChainId=${chainId}&payloadsController=${payloadsController}`;
+      const url = generateGetPayloadAPIURL({
+        payloadId: input.payloadId,
+        chainId,
+        payloadsController,
+      });
       const dataRaw = await fetch(url);
       const data = (await dataRaw.json()) as PayloadFromServer;
       return formatPayloadFromServer(data);

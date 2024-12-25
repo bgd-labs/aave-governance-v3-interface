@@ -88,6 +88,48 @@ export function GlobalStyles() {
   };
 
   const stylesForSSR = {
+    ':root': {
+      body: {
+        backgroundColor: '#FFFFFF',
+        color: '#101423',
+      },
+
+      '#nprogress .bar': {
+        background: '#101423',
+      },
+      '#nprogress .spinner-icon': {
+        borderTopColor: '#101423',
+        borderLeftColor: '#101423',
+      },
+
+      '.Branding': {
+        '.Branding__text': {
+          color: '#C6C3D1',
+        },
+        a: {
+          '&:hover': {
+            '.Branding__icon': {
+              svg: {
+                path: {
+                  fill: '#101423',
+                },
+              },
+            },
+          },
+        },
+        '.Branding__icon': {
+          '> svg': {
+            path: {
+              fill: '#C6C3D1',
+            },
+          },
+        },
+      },
+
+      '.ProposalList__noData__image': {
+        backgroundImage: 'url(/images/noDataList.svg)',
+      },
+    },
     "[data-theme='dark']": {
       body: {
         backgroundColor: '#212948',

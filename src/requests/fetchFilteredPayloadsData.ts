@@ -45,18 +45,15 @@ export async function fetchFilteredPayloadsData({
       // TODO: request not working
       const url = `${INITIAL_API_URL}/proposals/get/?pageSize=${PAGE_SIZE}&page=${input.activePage}$payloadChainId=${chainId}&payloadsController=${payloadsController}`;
 
-      const data = (await (await fetch(url)).json()) as PayloadFromServer[];
+      const data = (await (await fetch(url)).json()) as PayloadFromServer[]; // TODO
 
       const formattedData = data.map((payload) =>
         formatPayloadFromServer(payload),
       );
 
-      // TODO: temporary
-      const count = await fetchPayloadsCount({ input });
-
       return {
         data: formattedData,
-        count,
+        count: 0, // TODO
       };
     }
     throw new Error('This chain id for gov core not supported by API');
