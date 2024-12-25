@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import React from 'react';
 
 import { ProposalDetailsInitializer } from '../../../components/ProposalsDetails/ProposalDetailsInitializer';
+import { isForIPFS } from '../../../configs/appConfig';
 import { generateDetailsMetadata } from '../../../helpers/generateDetailsMetadata';
 import { api } from '../../../trpc/server';
 
@@ -14,7 +15,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  if (process.env.NODE_ENV === 'production') {
+  if (isForIPFS) {
     const proposalsCount = await api.configs.getProposalsCount();
     return await Promise.all(
       [...Array(Number(proposalsCount)).keys()].map(async (proposalId) => {

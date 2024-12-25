@@ -7,29 +7,6 @@ export type PayloadsExplorerPageParams = {
   payloadId: string;
 };
 
-export async function generateStaticParams() {
-  if (process.env.NODE_ENV === 'production') {
-    const data = await api.payloads.getTotalCount({});
-    const ids = data
-      .map((data) => {
-        return [...Array(Number(data.payloadCount)).keys()].map((id) => {
-          return {
-            payloadId: `${id}_${data.chainId}_${data.payloadsController}`,
-          };
-        });
-      })
-      .flat();
-    return ids.map((data) => {
-      return {
-        payloadId: data.payloadId,
-        fallback: false,
-      };
-    });
-  } else {
-    return [];
-  }
-}
-
 export const revalidate = 60;
 
 export default async function Page({
