@@ -24,19 +24,15 @@ export default async function Page({
     <Suspense
       fallback={
         <PayloadsExplorerPage
-          payloads={[]}
+          data={data}
           chainWithController={params.payloadController}
           activePage={0}
-          totalItems={0}
-          currentIds={[]}
         />
       }>
       <PayloadsExplorerPage
-        payloads={data.data}
+        data={data}
         chainWithController={params.payloadController}
         activePage={activePage}
-        totalItems={data.count}
-        currentIds={data.ids ?? []}
       />
     </Suspense>
   );

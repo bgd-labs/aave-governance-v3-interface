@@ -54,6 +54,7 @@ export async function fetchFilteredPayloadsData({
       return {
         data: formattedData,
         count: 0, // TODO
+        ids: [],
       };
     }
     throw new Error('This chain id for gov core not supported by API');

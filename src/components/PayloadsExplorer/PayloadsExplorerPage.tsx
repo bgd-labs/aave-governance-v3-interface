@@ -3,6 +3,7 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'nextjs-toploader/app';
 import React, { ReactNode, useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 import ColumnsIcon from '../../assets/icons/columnsIcon.svg';
 import RowIcon from '../../assets/icons/rowIcon.svg';
@@ -16,7 +17,9 @@ import { generateSeatbeltLink } from '../../helpers/formatPayloadData';
 import { texts } from '../../helpers/texts/texts';
 import { useGetSeatbeltReportPayloadsExplorer } from '../../hooks/useGetSeatbeltReportPayloadsExplorer';
 import { useStore } from '../../providers/ZustandStoreProvider';
+import { filteredPayloadsDataFetcher } from '../../requests/fetchers/filteredPayloadsDataFetcher';
 import { getChainAndPayloadsController } from '../../requests/fetchFilteredPayloadsData';
+import { selectAppClients } from '../../store/selectors/rpcSwitcherSelectors';
 import { PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { InputWrapper } from '../InputWrapper';
@@ -79,19 +82,19 @@ function PayloadsExploreViewSwitcherButton({
 }
 
 interface PayloadsExplorerPageProps {
-  payloads: PayloadWithHashes[];
+  data: {
+    data: PayloadWithHashes[];
+    count: number;
+    ids: number[];
+  };
   chainWithController: string;
   activePage: number;
-  totalItems: number;
-  currentIds: number[];
 }
 
 export function PayloadsExplorerPage({
-  payloads,
+  data,
   chainWithController,
   activePage,
-  totalItems,
-  currentIds,
 }: PayloadsExplorerPageProps) {
   const theme = useTheme();
   const router = useRouter();
@@ -100,6 +103,21 @@ export function PayloadsExplorerPage({
   const setSelectedPayloadForExecute = useStore(
     (store) => store.setSelectedPayloadForExecute,
   );
+
+  const clients = useStore((store) => selectAppClients(store));
+  const { data: pollingData } = useSWR(
+    {
+      chainWithController,
+      activePage,
+      clients,
+    },
+    filteredPayloadsDataFetcher,
+    {
+      refreshInterval: 10_000,
+    },
+  );
+
+  const updatedData = pollingData ?? data;
 
   const {
     handleReportClick,
@@ -258,17 +276,17 @@ export function PayloadsExplorerPage({
                 gridTemplateColumns: 'repeat(4, 1fr)',
               },
             }}>
-            {!!currentIds.length && !payloads.length && (
+            {!!updatedData.ids.length && !updatedData.data.length && (
               <>
-                {currentIds.map((id) => (
+                {updatedData.ids.map((id) => (
                   <PayloadExploreItemLoading key={id} isColumns={isColumns} />
                 ))}
               </>
             )}
 
-            {!!payloads.length && (
+            {!!updatedData.data.length && (
               <>
-                {payloads
+                {updatedData.data
                   .sort((a, b) => Number(b.id) - Number(a.id))
                   .map((payload) => (
                     <PayloadExploreItem
@@ -286,11 +304,11 @@ export function PayloadsExplorerPage({
               </>
             )}
 
-            {payloads.length === 0 ? (
+            {updatedData.data.length === 0 ? (
               <PayloadExploreItemLoading isColumns={false} noData />
             ) : (
               <>
-                {!currentIds.length && !payloads.length && (
+                {!updatedData.ids.length && !updatedData.data.length && (
                   <PayloadExploreItemLoading isColumns={isColumns} />
                 )}
               </>
@@ -300,7 +318,7 @@ export function PayloadsExplorerPage({
 
         <Pagination
           forcePage={activePage}
-          totalItems={totalItems}
+          totalItems={updatedData.count}
           chainWithController={chainWithController}
           withoutQuery
         />
