@@ -4,9 +4,12 @@ import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'nextjs-toploader/app';
 import React from 'react';
 
+import { ROUTES } from '../../configs/routes';
 import { PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
+import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
+import { Link } from '../Link';
 import { Container } from '../primitives/Container';
 import { TopPanelContainer } from '../TopPanelContainer';
 import { PayloadDetailsContent } from './PayloadDetailsContent';
@@ -28,6 +31,7 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
           justifyContent: 'center',
         }}>
         <BoxWith3D
+          className="NoDataWrapper"
           contentColor="$mainLight"
           wrapperCss={{
             '> div, .BoxWith3D__content': {
@@ -51,6 +55,23 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
           }}>
           <PayloadDetailsContent payload={payload} withExecute />
         </BoxWith3D>
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mt: 24,
+        }}>
+        <Link
+          href={ROUTES.payloadsExplorerPages(
+            Number(payload.chain),
+            payload.payloadsController,
+            0,
+          )}>
+          <BigButton>Go to explorer</BigButton>
+        </Link>
       </Box>
     </Container>
   );

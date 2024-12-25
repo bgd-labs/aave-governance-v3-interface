@@ -10,41 +10,45 @@ type PayloadsExplorerPageParams = {
 };
 
 export async function generateStaticParams() {
-  const config = appConfig.payloadsControllerConfig;
-  const allControllers: string[] = [];
-  Object.entries(config).forEach(([chain, config]) => {
-    config.contractAddresses.forEach((controller) =>
-      allControllers.push(`${chain}_${controller}`),
-    );
-  });
+  if (process.env.NODE_ENV === 'production') {
+    const config = appConfig.payloadsControllerConfig;
+    const allControllers: string[] = [];
+    Object.entries(config).forEach(([chain, config]) => {
+      config.contractAddresses.forEach((controller) =>
+        allControllers.push(`${chain}_${controller}`),
+      );
+    });
 
-  const chainsWithCount = (
-    await Promise.all(
-      allControllers
-        .filter((value, index, self) => self.indexOf(value) === index)
-        .map(async (controller) => {
-          const count = await api.payloads.getCount({
-            chainWithController: controller,
-          });
-          const allPagesCount = Math.ceil(Number(count) / PAGE_SIZE);
+    const chainsWithCount = (
+      await Promise.all(
+        allControllers
+          .filter((value, index, self) => self.indexOf(value) === index)
+          .map(async (controller) => {
+            const count = await api.payloads.getCount({
+              chainWithController: controller,
+            });
+            const allPagesCount = Math.ceil(Number(count) / PAGE_SIZE);
 
-          const activePages = [...Array(Number(allPagesCount)).keys()].map(
-            (activePage) => String(activePage),
-          );
-          return activePages.map((activePage) => ({
-            chainWithController: controller,
-            activePage,
-          }));
-        }),
-    )
-  ).flat();
+            const activePages = [...Array(Number(allPagesCount)).keys()].map(
+              (activePage) => String(activePage),
+            );
+            return activePages.map((activePage) => ({
+              chainWithController: controller,
+              activePage,
+            }));
+          }),
+      )
+    ).flat();
 
-  return chainsWithCount.map((data) => {
-    return {
-      payloadController: `${data.chainWithController}_${data.activePage}`,
-      fallback: false,
-    };
-  });
+    return chainsWithCount.map((data) => {
+      return {
+        payloadController: `${data.chainWithController}_${data.activePage}`,
+        fallback: false,
+      };
+    });
+  } else {
+    return [];
+  }
 }
 
 export const revalidate = 60;

@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 
 import { BasicModal } from '../../../../../components/BasicModal';
 import { PayloadDetailsContent } from '../../../../../components/PayloadsExplorer/PayloadDetailsContent';
+import { PayloadExploreItemLoading } from '../../../../../components/PayloadsExplorer/PayloadExploreItemLoading';
 import { useStore } from '../../../../../providers/ZustandStoreProvider';
 import { api } from '../../../../../trpc/react';
 import { PayloadsExplorerPageParams } from '../../../payload/[payloadId]/page.appPage';
@@ -44,7 +45,7 @@ export default function Page({
       }}
       isOpen={isPayloadExplorerItemDetailsModalOpen}>
       {!payload.data ? (
-        <p>Loading</p>
+        <PayloadExploreItemLoading isColumns={true} />
       ) : (
         <PayloadDetailsContent payload={payload.data} withExecute />
       )}

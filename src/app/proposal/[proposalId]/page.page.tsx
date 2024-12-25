@@ -14,16 +14,20 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  const proposalsCount = await api.configs.getProposalsCount();
-  return await Promise.all(
-    [...Array(Number(proposalsCount)).keys()].map(async (proposalId) => {
-      const data = (await api.proposals.getProposalById({ proposalId }))[0];
-      return {
-        proposalId: `${proposalId}_${data.ipfsHash}`,
-        fallback: false,
-      };
-    }),
-  );
+  if (process.env.NODE_ENV === 'production') {
+    const proposalsCount = await api.configs.getProposalsCount();
+    return await Promise.all(
+      [...Array(Number(proposalsCount)).keys()].map(async (proposalId) => {
+        const data = (await api.proposals.getProposalById({ proposalId }))[0];
+        return {
+          proposalId: `${proposalId}_${data.ipfsHash}`,
+          fallback: false,
+        };
+      }),
+    );
+  } else {
+    return [];
+  }
 }
 
 export const revalidate = 60;

@@ -93,6 +93,7 @@ export function PayloadExploreItem({
 
   return (
     <BoxWith3D
+      className="NoDataWrapper"
       contentColor="$mainLight"
       wrapperCss={{
         mb: isColumns ? 0 : 18,

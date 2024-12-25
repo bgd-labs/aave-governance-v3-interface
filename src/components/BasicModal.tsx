@@ -1,9 +1,10 @@
 import { Dialog } from '@headlessui/react';
 import { Box, SxProps, useTheme } from '@mui/system';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import CloseIcon from '../assets/icons/cross.svg';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useStore } from '../providers/ZustandStoreProvider';
 import { media } from '../styles/themeMUI';
 import { BackButton3D } from './BackButton3D';
 import { BoxWith3D } from './BoxWith3D';
@@ -122,6 +123,18 @@ export function BasicModal({
 }: BasicModalProps) {
   const theme = useTheme();
   const sm = useMediaQuery(media.sm);
+
+  const setModalOpen = useStore((store) => store.setModalOpen);
+  const isModalOpen = useStore((store) => store.isModalOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      setModalOpen(true);
+    } else {
+      setModalOpen(false);
+    }
+    return () => setModalOpen(false);
+  }, [isOpen]);
 
   return (
     <NoSSR>
