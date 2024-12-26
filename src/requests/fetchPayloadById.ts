@@ -27,7 +27,7 @@ export async function fetchPayloadById({
     if (appConfig.govCoreChainId === mainnet.id) {
       const url = `${INITIAL_API_URL}/payloads/getById/?payloadId=${input.payloadId}&payloadChainId=${chainId}&payloadsController=${payloadsController}`;
       const dataRaw = await fetch(url);
-      const data = (await dataRaw.json()) as PayloadFromServer;
+      const data = (await dataRaw.json())[0] as PayloadFromServer;
       return formatPayloadFromServer(data);
     }
     throw new Error('This chain id for gov core not supported by API');

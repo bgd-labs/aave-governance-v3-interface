@@ -35,7 +35,7 @@ import { PayloadExploreItem } from './PayloadExploreItem';
 import { PayloadExploreItemLoading } from './PayloadExploreItemLoading';
 import { PayloadsControllerSelect } from './PayloadsControllerSelect';
 
-function PayloadsExploreViewSwitcherButton({
+export function PayloadsExploreViewSwitcherButton({
   onClick,
   isActive,
   icon,
@@ -81,7 +81,7 @@ function PayloadsExploreViewSwitcherButton({
   );
 }
 
-interface PayloadsExplorerPageProps {
+export interface PayloadsExplorerPageProps {
   data: {
     data: PayloadWithHashes[];
     count: number;
@@ -107,13 +107,13 @@ export function PayloadsExplorerPage({
   const clients = useStore((store) => selectAppClients(store));
   const { data: pollingData } = useSWR(
     {
-      chainWithController,
-      activePage,
       clients,
+      activePage,
+      chainWithController,
     },
     filteredPayloadsDataFetcher,
     {
-      refreshInterval: 10_000,
+      refreshInterval: 30_000,
     },
   );
 

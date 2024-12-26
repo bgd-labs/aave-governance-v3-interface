@@ -16,7 +16,7 @@ export function formatPayloadFromServer(payload: PayloadFromServer) {
       executedAt: payload.executedAt ?? 0,
       cancelledAt: payload.cancelledAt ?? 0,
       queuedAt: payload.queuedAt ?? 0,
-      actions: payload.actions.map((action) => {
+      actions: (payload?.actions ?? []).map((action) => {
         return {
           ...action,
           target: action.target as Address,

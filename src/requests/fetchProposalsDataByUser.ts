@@ -15,18 +15,18 @@ export async function fetchProposalsDataByUser({
         input.initialProposals.map(async (proposal) => {
           const url = `${INITIAL_API_URL}/voting/${proposal.id}/${proposal.votingChainId}/${appConfig.votingMachineConfig[proposal.votingChainId].contractAddress}/${input.walletAddress}/voteInfo/`;
           const dataRaw = await fetch(url);
-          const data = (await dataRaw.json()) as {
+          const data = (await dataRaw.json())[0] as {
             support: boolean;
             votingPower: string;
-          }[];
+          };
 
           return {
             proposalId: proposal.id,
             votedInfo: {
-              support: data[0]?.support ?? false,
-              votedPower: BigInt(data[0]?.votingPower ?? 0),
+              support: data?.support ?? false,
+              votedPower: BigInt(data?.votingPower ?? 0),
             },
-            isVoted: data[0]?.votingPower !== '0',
+            isVoted: (data?.votingPower ?? '0') !== '0',
           };
         }),
       );

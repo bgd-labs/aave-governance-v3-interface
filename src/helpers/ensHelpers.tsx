@@ -1,9 +1,12 @@
 import makeBlockie from 'ethereum-blockies-base64';
-import { Address, createClient, Hex, http, isAddress } from 'viem';
+import { Address, Hex, isAddress } from 'viem';
 import { mainnet } from 'viem/chains';
 import { getEnsAddress, getEnsAvatar, getEnsName, normalize } from 'viem/ens';
 
-const client = createClient({ chain: mainnet, transport: http() });
+import { initialRpcUrls } from '../configs/chains';
+import { createViemClient } from './chain/createClient';
+
+const client = createViemClient({ chain: mainnet, initialRpcUrls });
 
 export const getName = async (address: Hex) => {
   try {

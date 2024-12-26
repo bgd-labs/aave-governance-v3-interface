@@ -43,7 +43,7 @@ export async function fetchFilteredPayloadsData({
   try {
     if (appConfig.govCoreChainId === mainnet.id) {
       // TODO: request not working
-      const url = `${INITIAL_API_URL}/proposals/get/?pageSize=${PAGE_SIZE}&page=${input.activePage}$payloadChainId=${chainId}&payloadsController=${payloadsController}`;
+      const url = `${INITIAL_API_URL}/proposals/get/?pageSize=${PAGE_SIZE}&page=${input.activePage}&payloadChainId=${chainId}&payloadsController=${payloadsController}`;
 
       const data = (await (await fetch(url)).json()) as PayloadFromServer[]; // TODO
 
@@ -59,7 +59,10 @@ export async function fetchFilteredPayloadsData({
     }
     throw new Error('This chain id for gov core not supported by API');
   } catch (e) {
-    console.error('Error getting filtered payloads data from API', e);
+    console.error(
+      'Error getting filtered payloads data from API, using RPC fallback',
+      e,
+    );
 
     const count = await fetchPayloadsCount({ input });
 

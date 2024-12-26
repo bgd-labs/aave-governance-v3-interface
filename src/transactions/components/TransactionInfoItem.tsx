@@ -43,8 +43,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         iconSize={10}
         css={{
           display: 'inline-block',
-          '.ChainIcon': { display: 'inline', mr: 2 },
-          '.ChainNameWithIcon__text': { display: 'inline' },
+          '.ChainIcon': { display: 'inline-flex', mr: 2 },
+          '.ChainNameWithIcon__text': { display: 'inline-flex' },
         }}
       />
     );
@@ -57,8 +57,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         iconSize={10}
         css={{
           display: 'inline-block',
-          '.ChainIcon': { display: 'inline', mr: 2 },
-          '.ChainNameWithIcon__text': { display: 'inline' },
+          '.ChainIcon': { display: 'inline-flex', mr: 2 },
+          '.ChainNameWithIcon__text': { display: 'inline-flex' },
         }}
       />
     );

@@ -57,6 +57,7 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
             '> div, .BoxWith3D__content': {
               height: '100%',
               maxWidth: 450,
+              minWidth: 350,
             },
           }}
           css={{

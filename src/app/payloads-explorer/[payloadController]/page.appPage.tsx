@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 
 import { PayloadsExplorerPage } from '../../../components/PayloadsExplorer/PayloadsExplorerPage';
+import { PayloadsExplorerPageLoading } from '../../../components/PayloadsExplorer/PayloadsExplorerPageLoading';
 import { api } from '../../../trpc/server';
 
 type PayloadsExplorerPageParams = {
@@ -23,10 +24,10 @@ export default async function Page({
   return (
     <Suspense
       fallback={
-        <PayloadsExplorerPage
-          data={data}
+        <PayloadsExplorerPageLoading
+          count={data.count}
           chainWithController={params.payloadController}
-          activePage={0}
+          activePage={activePage}
         />
       }>
       <PayloadsExplorerPage

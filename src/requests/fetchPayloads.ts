@@ -19,7 +19,7 @@ export async function fetchPayloads({ input }: { input: GetPayloadsData }) {
               .contractAddresses[0];
           const url = `${INITIAL_API_URL}/payloads/getById/?payloadId=${id}&payloadChainId=${input.chainId}&payloadsController=${payloadsController}`;
           const dataRaw = await fetch(url);
-          const data = (await dataRaw.json()) as PayloadFromServer;
+          const data = (await dataRaw.json())[0] as PayloadFromServer;
           return formatPayloadFromServer(data);
         }),
       );
