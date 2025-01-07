@@ -280,10 +280,9 @@ function PayloadItem({
               <Box sx={{ typography: 'body' }}>
                 {texts.proposals.payloadsDetails.payload} {payloadNumber}
               </Box>
-              {/*TODO: need fix link*/}
               <CopyAndExternalIconsSet
                 iconSize={12}
-                externalLink={`https://vote.onaave.com/payloads-explorer/?payloadId=${payload.id}&payloadChainId=${Number(payload.chain)}&payloadsControllerAddress=${payload.payloadsController}`}
+                externalLink={`${window.location.origin}/payloads-explorer/payload/${Number(payload.id)}_${Number(payload.chain)}_${payload.payloadsController}`}
                 sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
               />
             </Box>

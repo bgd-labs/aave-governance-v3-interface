@@ -44,11 +44,6 @@ export async function delegateMetaSig({
       client: govCoreClient,
     });
 
-    // TODO: maybe need fix name
-    // const name = isAAAVE
-    //   ? await aAssetContract.name()
-    //   : await normalAssetContract.name();
-
     const name = isAAAVE
       ? 'Aave Ethereum AAVE'
       : isAAVE
