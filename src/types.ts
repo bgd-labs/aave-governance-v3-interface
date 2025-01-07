@@ -196,6 +196,7 @@ export type ProposalOnTheList = {
     state: ProposalState;
     timestamp: number;
   };
+  isActive?: boolean;
 };
 
 export type ActiveProposalOnTheList = ProposalOnTheList & {
@@ -217,7 +218,6 @@ export type ActiveProposalOnTheList = ProposalOnTheList & {
   againstVotes: number;
   requiredAgainstVotes: number;
   againstPercent: number;
-  isActive?: boolean;
   ipfsError?: string;
 };
 

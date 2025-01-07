@@ -141,12 +141,20 @@ export const createProposalsListSlice: StoreSlice<
     proposalsListData.finishedProposalsData.forEach((proposal) => {
       set((state) =>
         produce(state, (draft) => {
-          if (
-            draft.proposalsListData.finishedProposalsData[proposal.proposalId]
-          ) {
+          const currentItem =
+            draft.proposalsListData.finishedProposalsData[proposal.proposalId];
+          if (currentItem) {
             delete draft.proposalsListData.activeProposalsData[
               proposal.proposalId
             ];
+            if (isForIPFS) {
+              draft.proposalsListData.finishedProposalsData[
+                proposal.proposalId
+              ] = {
+                ...currentItem,
+                isActive: true,
+              };
+            }
           }
         }),
       );
