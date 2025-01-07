@@ -2,7 +2,7 @@ import { Box, SxProps } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { toHex } from 'viem';
 
-import { chainInfoHelper } from '../configs/configs';
+import { chainInfoHelper } from '../configs/chains';
 import { Tooltip } from './Tooltip';
 import ChainIcon from './Web3Icons/ChainIcon';
 

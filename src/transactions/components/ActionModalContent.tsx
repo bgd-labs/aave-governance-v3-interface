@@ -13,7 +13,7 @@ import { BigButton } from '../../components/BigButton';
 import { Link } from '../../components/Link';
 import { IconBox } from '../../components/primitives/IconBox';
 import { RocketLoader } from '../../components/RocketLoader';
-import { chainInfoHelper } from '../../configs/configs';
+import { chainInfoHelper } from '../../configs/chains';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { TransactionUnion } from '../../store/transactionsSlice';

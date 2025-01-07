@@ -1,7 +1,7 @@
 import { Address } from 'viem';
 
 import { appConfig } from '../configs/appConfig';
-import { chainInfoHelper } from '../configs/configs';
+import { chainInfoHelper } from '../configs/chains';
 
 export function getScanLink({
   chainId = appConfig.govCoreChainId,

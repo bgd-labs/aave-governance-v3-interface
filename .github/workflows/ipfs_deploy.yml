@@ -10,7 +10,6 @@ on:
 
 env:
   NEXT_PUBLIC_DEPLOY_FOR_IPFS: true
-  API_URL: "https://api.onaave.com"
 
 jobs:
   ipfs_deploy:

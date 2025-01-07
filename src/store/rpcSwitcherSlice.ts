@@ -6,8 +6,7 @@ import { getBlock, getProof } from 'viem/actions';
 import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
-import { initialRpcUrls } from '../configs/chains';
-import { chainInfoHelper } from '../configs/configs';
+import { chainInfoHelper, initialRpcUrls } from '../configs/chains';
 import {
   getLocalStorageRpcUrls,
   setLocalStorageRpcUrls,

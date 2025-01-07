@@ -17,6 +17,9 @@ importers:
       '@bgd-labs/react-web3-icons':
         specifier: 1.7.4
         version: 1.7.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@bgd-labs/rpc-env':
+        specifier: ^2.2.1
+        version: 2.2.1
       '@emotion/cache':
         specifier: ^11.14.0
         version: 11.14.0
@@ -857,6 +860,10 @@ packages:
     peerDependencies:
       react: '>=18.3.1'
       react-dom: '>=18.3.1'
+
+  '@bgd-labs/rpc-env@2.2.1':
+    resolution: {integrity: sha512-IiRbSdSUqnjyB6aQubs+rYOKc3IQvzk22fC/hOexzhsUVsI25IK8wkBIX3NjuDsfzm68KBYIQsisscb7hJ2t9A==}
+    hasBin: true
 
   '@changesets/apply-release-plan@7.0.7':
     resolution: {integrity: sha512-qnPOcmmmnD0MfMg9DjU1/onORFyRpDXkMMl2IJg9mECY6RnxL3wN0TCCc92b2sXt1jt8DgjAUUsZYGUGTdYIXA==}
@@ -6165,6 +6172,8 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       to-words: 4.1.0
+
+  '@bgd-labs/rpc-env@2.2.1': {}
 
   '@changesets/apply-release-plan@7.0.7':
     dependencies:

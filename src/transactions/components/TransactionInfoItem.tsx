@@ -18,7 +18,7 @@ import { IconBox } from '../../components/primitives/IconBox';
 import { TxText } from '../../components/Representations/TxText';
 import { Spinner } from '../../components/Spinner';
 import { appConfig } from '../../configs/appConfig';
-import { chainInfoHelper } from '../../configs/configs';
+import { chainInfoHelper } from '../../configs/chains';
 import { getAssetNameByAddress } from '../../helpers/getAssetName';
 import { getScanLink } from '../../helpers/getScanLink';
 import { texts } from '../../helpers/texts/texts';

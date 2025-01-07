@@ -6,6 +6,7 @@ import {
   bsc,
   bscTestnet,
   gnosis,
+  linea,
   mainnet,
   metis,
   optimism,
@@ -28,6 +29,7 @@ type RPCUrls = {
   gnosisRPC?: string;
   scrollRPC?: string;
   zkSyncRPC?: string;
+  lineaRPC?: string;
 };
 
 export function getInitialRpcUrls({
@@ -42,6 +44,7 @@ export function getInitialRpcUrls({
   gnosisRPC,
   scrollRPC,
   zkSyncRPC,
+  lineaRPC,
 }: RPCUrls) {
   return {
     [mainnet.id]: [
@@ -102,6 +105,10 @@ export function getInitialRpcUrls({
     [zkSync.id]: [
       zkSyncRPC || 'https://zksync.meowrpc.com',
       'https://mainnet.era.zksync.io',
+    ],
+    [linea.id]: [
+      lineaRPC || 'https://linea.drpc.org',
+      'https://linea-rpc.publicnode.com',
     ],
     // testnets
     [sepolia.id]: [

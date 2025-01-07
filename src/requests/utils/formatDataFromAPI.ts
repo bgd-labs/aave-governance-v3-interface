@@ -172,7 +172,6 @@ export async function getProposalVotingFormattedData(
     votingAssets: assets,
     // TODO:
     dataWarehouse: zeroAddress,
-    //
     votedInfo: {
       support: false,
       votingPower: 0n,

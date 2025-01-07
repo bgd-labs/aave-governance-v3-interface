@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 import { appUsedNetworks } from '../configs/appConfig';
-import { chainInfoHelper } from '../configs/configs';
+import { chainInfoHelper } from '../configs/chains';
 import { useStore } from './ZustandStoreProvider';
 
 function Child() {

@@ -1,3 +1,5 @@
+import { initChainInformationConfig } from '@bgd-labs/frontend-web3-utils';
+
 import { getChains } from '../helpers/chain/getChains';
 import { getInitialRpcUrls } from '../helpers/chain/getInitialRpcUrls';
 
@@ -7,3 +9,5 @@ export const initialRpcUrls = getInitialRpcUrls({
   avalancheRPC: process.env.NEXT_PUBLIC_RPC_AVALANCHE,
 });
 export const CHAINS = getChains({ initialRpcUrls });
+
+export const chainInfoHelper = initChainInformationConfig(CHAINS);

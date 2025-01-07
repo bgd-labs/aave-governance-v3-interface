@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';
 
 import { appConfig } from '../../configs/appConfig';
-import { chainInfoHelper } from '../../configs/configs';
+import { chainInfoHelper } from '../../configs/chains';
 import { ROUTES } from '../../configs/routes';
 import { texts } from '../../helpers/texts/texts';
 import { useStore } from '../../providers/ZustandStoreProvider';

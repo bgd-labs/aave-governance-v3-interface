@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Field } from 'react-final-form';
 
-import { chainInfoHelper } from '../../configs/configs';
+import { chainInfoHelper } from '../../configs/chains';
 import {
   composeValidators,
   rpcUrlValidator,
