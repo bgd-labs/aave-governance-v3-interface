@@ -1,26 +1,17 @@
 import { IVotingMachineWithProofs_ABI } from '@bgd-labs/aave-address-book/abis';
-import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { Address, formatUnits, Hex, zeroAddress, zeroHash } from 'viem';
 import { getBlockNumber, getContractEvents } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
 import { DECIMALS } from '../../configs/configs';
 import { VotersData } from '../../types';
+import { FetchVoters } from '../fetchVoters';
 import {
   blockLimit,
   getBlocksForEvents,
   getEventsBySteps,
   InitEventWithChainId,
 } from './eventsHelpers';
-
-export type GetVotersRPC = {
-  proposalId: number;
-  votingChainId: number;
-  startBlockNumber: number;
-  endBlockNumber?: number;
-  lastBlockNumber?: number;
-  clients: ClientsRecord;
-};
 
 async function getVoteEvents({
   contractAddress,
@@ -90,7 +81,7 @@ export async function getVotersRPC({
   endBlockNumber,
   lastBlockNumber,
   clients,
-}: GetVotersRPC) {
+}: FetchVoters) {
   const currentBlock = (await getBlockNumber(clients[votingChainId])) || 0;
 
   const { startBlock, endBlock } = getBlocksForEvents(

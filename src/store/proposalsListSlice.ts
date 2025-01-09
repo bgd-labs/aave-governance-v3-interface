@@ -63,8 +63,9 @@ export interface IProposalsListSlice {
   updateProposalsListActiveData: (
     activeIds: number[],
     activePage?: number,
+    rpcOnly?: boolean,
   ) => Promise<void>;
-  updateUserDataOnTheList: () => Promise<void>;
+  updateUserDataOnTheList: (rpcOnly?: boolean) => Promise<void>;
 
   updatedListDataLoading: Record<number, boolean>;
 
@@ -168,17 +169,17 @@ export const createProposalsListSlice: StoreSlice<
     const currentInterval = get().activeProposalsDataInterval;
     clearInterval(currentInterval);
 
-    const func = async (acP?: number) => {
+    const func = async (acP?: number, rpcOnly?: boolean) => {
       const configs = get().configs;
       const activeIds = Object.values(
         get().proposalsListData.activeProposalsData,
       ).map((proposal) => proposal.proposalId);
       if (configs && activeIds.length > 0) {
-        await get().updateProposalsListActiveData(activeIds, acP);
+        await get().updateProposalsListActiveData(activeIds, acP, rpcOnly);
       }
     };
     if (isForIPFS) {
-      func(activePage);
+      func(activePage, true);
     }
 
     const interval = setInterval(func, 30000);
@@ -197,15 +198,16 @@ export const createProposalsListSlice: StoreSlice<
     const currentInterval = get().newProposalsInterval;
     clearInterval(currentInterval);
 
-    const func = async () => {
+    const func = async (rpcOnly?: boolean) => {
       const totalProposalsCount = await (isForIPFS
         ? fetchTotalProposalsCount({
             input: {
               govCoreClient:
                 get().appClients[appConfig.govCoreChainId].instance,
+              rpcOnly,
             },
           })
-        : api.configs.getProposalsCount.query());
+        : api.configs.getProposalsCount.query({ rpcOnly }));
 
       const currentProposalCount = get().totalProposalsCount;
       const configs = get().configs;
@@ -220,12 +222,14 @@ export const createProposalsListSlice: StoreSlice<
           1,
           Number(totalProposalsCount) - currentProposalCount,
         );
-        await get().updateProposalsListActiveData(newIdsForFirstScreen);
+        await get().updateProposalsListActiveData(
+          newIdsForFirstScreen,
+          undefined,
+          rpcOnly,
+        );
       }
     };
-    if (isForIPFS) {
-      func();
-    }
+    func(true);
 
     const interval = setInterval(func, 15000);
     set({ newProposalsInterval: Number(interval) });
@@ -238,7 +242,7 @@ export const createProposalsListSlice: StoreSlice<
     }
   },
 
-  updateProposalsListActiveData: async (activeIds, activePage) => {
+  updateProposalsListActiveData: async (activeIds, activePage, rpcOnly) => {
     const configs = get().configs;
     if (configs && activeIds.length > 0) {
       if (
@@ -255,6 +259,7 @@ export const createProposalsListSlice: StoreSlice<
         ...configs.contractsConstants,
         votingConfigs: configs.configs,
         activeIds,
+        rpcOnly,
       };
       const proposalsData = await (isForIPFS
         ? fetchActiveProposalsDataForList({
@@ -265,7 +270,7 @@ export const createProposalsListSlice: StoreSlice<
           })
         : api.proposalsList.getActive.query(input));
       get().initializeProposalsListData(proposalsData);
-      get().updateUserDataOnTheList();
+      get().updateUserDataOnTheList(rpcOnly);
       if (activePage) {
         set((state) =>
           produce(state, (draft) => {
@@ -276,7 +281,7 @@ export const createProposalsListSlice: StoreSlice<
     }
   },
 
-  updateUserDataOnTheList: async () => {
+  updateUserDataOnTheList: async (rpcOnly) => {
     const proposalsData = Object.values(
       get().proposalsListData.activeProposalsData,
     ).map((proposal) => {
@@ -301,7 +306,7 @@ export const createProposalsListSlice: StoreSlice<
             }),
           );
         }
-        await get().getVotedDataByUser(walletAddress, proposal);
+        await get().getVotedDataByUser(walletAddress, proposal, rpcOnly);
         const data = selectProposalDataByUser({
           votedData: get().votedData,
           votingBalances: get().votingBalances,

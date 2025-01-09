@@ -641,16 +641,16 @@ export const createTransactionsSlice: StoreSlice<
     txStatusChangedCallback: async (data) => {
       switch (data.type) {
         case TxType.activateVoting:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.sendProofs:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.activateVotingOnVotingMachine:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.vote: {
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           const proposalData = get().proposalDetails[data.payload.proposalId];
           if (proposalData) {
             const startBlockFromStore = Math.max(
@@ -669,29 +669,30 @@ export const createTransactionsSlice: StoreSlice<
                 startBlockFromStore > votingStartedBlock
                   ? startBlockFromStore
                   : votingStartedBlock,
+              rpcOnly: true,
             });
           }
           break;
         }
         case TxType.closeAndSendVote:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.executeProposal:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.executePayload:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.delegate:
           await get().getDelegateData();
           get().setIsDelegateChangedView(false);
           break;
         case TxType.representations:
-          await get().getRepresentationData();
+          await get().getRepresentationData(true);
           get().setIsRepresentationsChangedView(false);
           break;
         case TxType.cancelProposal:
-          await get().getProposalDetails(data.payload.proposalId);
+          await get().getProposalDetails(data.payload.proposalId, true);
           break;
         case TxType.claimFees:
           await get().getCreationFeesData(data.payload.creator);

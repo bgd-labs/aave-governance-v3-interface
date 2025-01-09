@@ -6,7 +6,7 @@ import { appConfig, isForIPFS } from '../configs/appConfig';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { fetchCreatorPropositionPower } from '../requests/fetchCreatorPropositionPower';
 import { fetchProposalDataForDetails } from '../requests/fetchProposalDataForDetails';
-import { fetchVoters } from '../requests/fetchVoters';
+import { FetchVoters, fetchVoters } from '../requests/fetchVoters';
 import { GetCreatorPropositionPower } from '../requests/utils/getOwnerPropositionPowerRPC';
 import { api } from '../trpc/client';
 import {
@@ -27,25 +27,19 @@ import {
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { IWeb3Slice } from './web3Slice';
 
-type GetVotersParams = {
-  proposalId: number;
-  votingChainId: number;
-  startBlockNumber: number;
-  endBlockNumber?: number;
-  lastBlockNumber?: number;
-};
+type GetVotersParams = Omit<FetchVoters, 'clients'>;
 
 export interface IProposalSlice {
   proposalDetails: Record<number, DetailedProposalData>;
   initializeProposalDetails: (data: DetailedProposalData) => void;
-  getProposalDetails: (id: number) => Promise<void>;
+  getProposalDetails: (id: number, rpcOnly?: boolean) => Promise<void>;
   proposalDetailsLoading: Record<number, boolean>;
 
   activeProposalDetailsInterval: number | undefined;
   startActiveProposalDetailsPolling: (id: number) => Promise<void>;
   stopActiveProposalDetailsPolling: () => void;
 
-  updateDetailsUserData: (id: number) => Promise<void>;
+  updateDetailsUserData: (id: number, rpcOnly?: boolean) => Promise<void>;
 
   creatorPropositionPower: Record<string, number>;
   getCreatorPropositionPower: ({
@@ -70,6 +64,7 @@ export interface IProposalSlice {
     lastBlockNumber,
     proposalId,
     votingChainId,
+    rpcOnly,
   }: GetVotersParams) => Promise<void>;
   getVotersLoading: Record<
     number,
@@ -113,7 +108,7 @@ export const createProposalSlice: StoreSlice<
       );
     }
   },
-  getProposalDetails: async (id) => {
+  getProposalDetails: async (id, rpcOnly) => {
     const configs = get().configs;
     if (configs) {
       if (typeof get().proposalDetailsLoading[id] === 'undefined') {
@@ -127,6 +122,7 @@ export const createProposalSlice: StoreSlice<
         ...configs.contractsConstants,
         votingConfigs: configs.configs,
         proposalId: id,
+        rpcOnly,
       };
       const data = await (isForIPFS
         ? fetchProposalDataForDetails({
@@ -137,7 +133,7 @@ export const createProposalSlice: StoreSlice<
           })
         : api.proposals.getDetails.query(input));
       get().initializeProposalDetails(data);
-      await get().updateDetailsUserData(id);
+      await get().updateDetailsUserData(id, rpcOnly);
       if (!data.formattedData.isFinished) {
         await get().getCreatorPropositionPower({
           creatorAddress: data.proposalData.creator,
@@ -168,7 +164,7 @@ export const createProposalSlice: StoreSlice<
     }
   },
 
-  updateDetailsUserData: async (id) => {
+  updateDetailsUserData: async (id, rpcOnly) => {
     const walletAddress =
       get().representative?.address || get().activeWallet?.address;
     const proposal = get().proposalDetails[id];
@@ -181,11 +177,15 @@ export const createProposalSlice: StoreSlice<
           }),
         );
       }
-      await get().getVotedDataByUser(walletAddress, {
-        id: BigInt(proposal.proposalData.id),
-        snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
-        votingChainId: proposal.votingData.votingChainId,
-      });
+      await get().getVotedDataByUser(
+        walletAddress,
+        {
+          id: BigInt(proposal.proposalData.id),
+          snapshotBlockHash: proposal.proposalData.snapshotBlockHash,
+          votingChainId: proposal.votingData.votingChainId,
+        },
+        rpcOnly,
+      );
       const data = selectProposalDataByUser({
         votedData: get().votedData,
         votingBalances: get().votingBalances,
@@ -289,6 +289,7 @@ export const createProposalSlice: StoreSlice<
     startBlockNumber,
     endBlockNumber,
     lastBlockNumber,
+    rpcOnly,
   }) => {
     set((state) =>
       produce(state, (draft) => {
@@ -308,6 +309,7 @@ export const createProposalSlice: StoreSlice<
       startBlockNumber,
       endBlockNumber,
       lastBlockNumber,
+      rpcOnly,
     };
 
     const votersData = await (isForIPFS

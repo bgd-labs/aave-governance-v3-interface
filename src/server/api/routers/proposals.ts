@@ -10,21 +10,20 @@ import {
   fetchProposalDataForDetails,
   FetchProposalsDataForDetailsParams,
 } from '../../../requests/fetchProposalDataForDetails';
-import { fetchProposalsBalancesByUser } from '../../../requests/fetchProposalsBalancesByUser';
+import {
+  FetchProposalsBalancesByUser,
+  fetchProposalsBalancesByUser,
+} from '../../../requests/fetchProposalsBalancesByUser';
 import { fetchProposalsDataByUser } from '../../../requests/fetchProposalsDataByUser';
-import { fetchVoters } from '../../../requests/fetchVoters';
+import { FetchVoters, fetchVoters } from '../../../requests/fetchVoters';
 import { serverClients } from '../../../requests/utils/chains';
 import { GetCreatorPropositionPower } from '../../../requests/utils/getOwnerPropositionPowerRPC';
-import { GetVotersRPC } from '../../../requests/utils/getVotersRPC';
 import { GetVotingDataRPC } from '../../../requests/utils/getVotingDataRPC';
-import { GetVotingPowerWithDelegationByBlockHashRPC } from '../../../requests/utils/getVotingPowerWithDelegationByBlockHashRPC';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 
 export const proposalsRouter = createTRPCRouter({
   getWalletBalancesForProposal: publicProcedure
-    .input(
-      z.custom<Omit<GetVotingPowerWithDelegationByBlockHashRPC, 'client'>>(),
-    )
+    .input(z.custom<Omit<FetchProposalsBalancesByUser, 'client'>>())
     .query(
       async (input) =>
         await fetchProposalsBalancesByUser({
@@ -76,7 +75,7 @@ export const proposalsRouter = createTRPCRouter({
         }),
     ),
   getVoters: publicProcedure
-    .input(z.custom<Omit<GetVotersRPC, 'clients'>>())
+    .input(z.custom<Omit<FetchVoters, 'clients'>>())
     .query(
       async (input) =>
         await fetchVoters({

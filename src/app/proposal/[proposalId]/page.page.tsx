@@ -16,7 +16,7 @@ export async function generateMetadata({
 
 export async function generateStaticParams() {
   if (isForIPFS) {
-    const proposalsCount = await api.configs.getProposalsCount();
+    const proposalsCount = await api.configs.getProposalsCount({});
     return await Promise.all(
       [...Array(Number(proposalsCount)).keys()].map(async (proposalId) => {
         const data = (await api.proposals.getProposalById({ proposalId }))[0];

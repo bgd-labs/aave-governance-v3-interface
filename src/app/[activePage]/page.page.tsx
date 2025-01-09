@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export async function generateStaticParams() {
   if (isForIPFS) {
-    const proposalsCount = await api.configs.getProposalsCount();
+    const proposalsCount = await api.configs.getProposalsCount({});
     const allPagesCount = Math.ceil(Number(proposalsCount) / PAGE_SIZE);
     return [...Array(Number(allPagesCount)).keys()].map((activePage) => ({
       activePage: String(activePage + 1),
@@ -39,7 +39,7 @@ export default async function Page({
 }) {
   const [configs, count] = await Promise.all([
     await api.configs.get(),
-    await api.configs.getProposalsCount(),
+    await api.configs.getProposalsCount({}),
   ]);
   const activePage = +params.activePage;
   if (isNaN(activePage)) {

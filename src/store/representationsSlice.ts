@@ -26,7 +26,7 @@ import { IWeb3Slice } from './web3Slice';
 export interface IRepresentationsSlice {
   representationData: Record<number, RepresentationDataItem>;
   representationDataLoading: boolean;
-  getRepresentationData: () => Promise<void>;
+  getRepresentationData: (rpcOnly?: boolean) => Promise<void>;
 
   representativeLoading: boolean;
   representative: RepresentativeAddress;
@@ -62,7 +62,7 @@ export const createRepresentationsSlice: StoreSlice<
 > = (set, get) => ({
   representationData: {},
   representationDataLoading: false,
-  getRepresentationData: async () => {
+  getRepresentationData: async (rpcOnly) => {
     const activeAddress = get().activeWallet?.address;
     const appClient = get().appClients[appConfig.govCoreChainId];
 
@@ -75,9 +75,10 @@ export const createRepresentationsSlice: StoreSlice<
               input: {
                 address: activeAddress,
                 govCoreClient: appClient.instance,
+                rpcOnly,
               },
             })
-          : api.representations.get.query({ address: activeAddress }));
+          : api.representations.get.query({ address: activeAddress, rpcOnly }));
 
         appConfig.votingMachineChainIds.forEach((chainId) => {
           const represented = data.represented

@@ -37,6 +37,7 @@ export interface IProposalsSlice {
   getVotedDataByUser: (
     walletAddress: string,
     proposal: ProposalToGetUserData,
+    rpcOnly?: boolean,
   ) => Promise<void>;
 
   votingBalances: Record<string, VotingDataByUser[]>;
@@ -88,7 +89,7 @@ export const createProposalsSlice: StoreSlice<
                 get().appClients[appConfig.govCoreChainId].instance,
             },
           })
-        : api.configs.getProposalsCount.query());
+        : api.configs.getProposalsCount.query({}));
       if (Number(totalProposalsCount) > get().totalProposalsCount) {
         set({
           totalProposalsCount: Number(totalProposalsCount),
@@ -99,7 +100,7 @@ export const createProposalsSlice: StoreSlice<
   },
 
   votedData: {},
-  getVotedDataByUser: async (walletAddress, proposal) => {
+  getVotedDataByUser: async (walletAddress, proposal, rpcOnly) => {
     const key = `${walletAddress}_${proposal.snapshotBlockHash}`;
     const votingBalance = selectProposalDataByUser({
       votingBalances: get().votingBalances,
@@ -114,6 +115,7 @@ export const createProposalsSlice: StoreSlice<
       const input = {
         initialProposals: [proposal],
         walletAddress,
+        rpcOnly,
       };
       const data = await (isForIPFS
         ? fetchProposalsDataByUser({

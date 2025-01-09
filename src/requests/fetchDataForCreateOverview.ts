@@ -22,6 +22,7 @@ export async function fetchDataForCreateOverviewScreen({
   const { clients, ipfsHash, payloads } = input;
 
   try {
+    // TODO: get data from API
     throw new Error('TODO: API not implemented');
   } catch (e) {
     console.error(

@@ -1,22 +1,15 @@
-import { Address, Client, Hex } from 'viem';
 import { getBlock, multicall } from 'viem/actions';
 
 import { GovernancePowerType } from '../../types';
 import { IAaveTokenV3_ABI } from '../abis/IAaveTokenV3';
-
-export type GetVotingPowerWithDelegationByBlockHashRPC = {
-  client: Client;
-  blockHash: Hex;
-  address: Address;
-  assets: Address[];
-};
+import { FetchProposalsBalancesByUser } from '../fetchProposalsBalancesByUser';
 
 export async function getVotingPowerWithDelegationByBlockHashRPC({
   client,
   blockHash,
   address,
   assets,
-}: GetVotingPowerWithDelegationByBlockHashRPC) {
+}: FetchProposalsBalancesByUser) {
   const blockNumber = await getBlock(client, {
     blockHash,
   });

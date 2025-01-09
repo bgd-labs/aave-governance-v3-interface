@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { appConfig } from '../../../configs/appConfig';
 import { fetchConfigs } from '../../../requests/fetchConfigs';
 import { fetchTotalProposalsCount } from '../../../requests/fetchTotalProposalsCount';
@@ -10,7 +12,7 @@ const input = {
 
 export const configsRouter = createTRPCRouter({
   get: publicProcedure.query(async () => await fetchConfigs(input)),
-  getProposalsCount: publicProcedure.query(
-    async () => await fetchTotalProposalsCount(input),
-  ),
+  getProposalsCount: publicProcedure
+    .input(z.object({ rpcOnly: z.boolean().or(z.undefined()) }))
+    .query(async () => await fetchTotalProposalsCount(input)),
 });

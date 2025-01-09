@@ -1,12 +1,18 @@
-import {
-  GetVotingPowerWithDelegationByBlockHashRPC,
-  getVotingPowerWithDelegationByBlockHashRPC,
-} from './utils/getVotingPowerWithDelegationByBlockHashRPC';
+import { Address, Client, Hex } from 'viem';
+
+import { getVotingPowerWithDelegationByBlockHashRPC } from './utils/getVotingPowerWithDelegationByBlockHashRPC';
+
+export type FetchProposalsBalancesByUser = {
+  client: Client;
+  blockHash: Hex;
+  address: Address;
+  assets: Address[];
+};
 
 export async function fetchProposalsBalancesByUser({
   input,
 }: {
-  input: GetVotingPowerWithDelegationByBlockHashRPC;
+  input: FetchProposalsBalancesByUser;
 }) {
   try {
     // TODO: API not implemented

@@ -54,7 +54,7 @@ export default async function ProposalCreateOverview({
   const initialPayloads = Object.values(payloads);
   const [configs, proposalsCount] = await Promise.all([
     api.configs.get(),
-    api.configs.getProposalsCount(),
+    api.configs.getProposalsCount({}),
   ]);
   const data = await api.createProposal.getForCreateOverview({
     payloads: initialPayloads,

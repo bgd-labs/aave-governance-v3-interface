@@ -1,4 +1,5 @@
 import { Client, Hex } from 'viem';
+import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL } from '../configs/configs';
@@ -18,26 +19,29 @@ export async function fetchProposalById({
   input: FetchProposalByIdParams;
 }) {
   try {
-    const url = `${INITIAL_API_URL}/proposals/${input.proposalId}/get/`;
-    const dataRaw = await fetch(url);
-    const data = (await dataRaw.json())[0] as GetProposalInitialResponse &
-      ProposalMetadata & { originalIpfsHash: string | null };
+    if (appConfig.govCoreChainId === mainnet.id) {
+      const url = `${INITIAL_API_URL}/proposals/${input.proposalId}/get/`;
+      const dataRaw = await fetch(url);
+      const data = (await dataRaw.json())[0] as GetProposalInitialResponse &
+        ProposalMetadata & { originalIpfsHash: string | null };
 
-    const formattedData = {
-      ...data,
-      ipfsHash: data.originalIpfsHash as Hex,
-    };
+      const formattedData = {
+        ...data,
+        ipfsHash: data.originalIpfsHash as Hex,
+      };
 
-    if (!formattedData.ipfsHash) {
-      throw new Error(
-        `Something went wrong when fetching proposal ${input.proposalId} from API.`,
-      );
+      if (!formattedData.ipfsHash) {
+        throw new Error(
+          `Something went wrong when fetching proposal ${input.proposalId} from API.`,
+        );
+      }
+      return [
+        {
+          ...getProposalFormattedData(formattedData),
+        },
+      ];
     }
-    return [
-      {
-        ...getProposalFormattedData(formattedData),
-      },
-    ];
+    throw new Error('This chain id for gov core not supported by API');
   } catch (e) {
     console.error(
       'Error getting proposal data by id from API, using RPC fallback',
