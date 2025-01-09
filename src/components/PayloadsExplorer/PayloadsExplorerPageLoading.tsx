@@ -25,7 +25,6 @@ import NoSSR from '../primitives/NoSSR';
 import { SelectField } from '../SelectField';
 import { TopPanelContainer } from '../TopPanelContainer';
 import { PayloadExploreItemLoading } from './PayloadExploreItemLoading';
-import { PayloadsControllerSelect } from './PayloadsControllerSelect';
 import {
   PayloadsExplorerPageProps,
   PayloadsExploreViewSwitcherButton,
@@ -49,8 +48,7 @@ export function PayloadsExplorerPageLoading({
     setIsColumns(getLocalStoragePayloadsExplorerView() === 'column');
   }, []);
 
-  const { chainId, payloadsController } =
-    getChainAndPayloadsController(chainWithController);
+  const { chainId } = getChainAndPayloadsController(chainWithController);
 
   return (
     <Container>
@@ -113,14 +111,22 @@ export function PayloadsExplorerPageLoading({
               justifyContent: 'space-between',
             },
           }}>
-          <Box sx={{ minWidth: '70%' }}>
-            <PayloadsControllerSelect
-              chainId={chainId}
-              controllerAddress={payloadsController}
-              setControllerAddress={(value) =>
-                router.push(ROUTES.payloadsExplorerPages(chainId, value, 0))
-              }
-            />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              [theme.breakpoints.up('sm')]: {
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            }}>
+            <Box component="h2" sx={{ typography: 'h1', mr: 6 }}>
+              Payloads controller
+            </Box>
+
+            <Box sx={{ mt: 4, [theme.breakpoints.up('sm')]: { mt: 0 } }}>
+              <CustomSkeleton height={24} width={240} />
+            </Box>
           </Box>
 
           <NoSSR>

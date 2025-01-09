@@ -16,6 +16,7 @@ import { Container } from '../primitives/Container';
 import { ActiveItem } from './ActiveItem';
 import { FiltersPanel } from './FiltersPanel';
 import { FinishedItem } from './FinishedItem';
+import { NoData } from './NoData';
 import { NoFilteredData } from './NoFilteredData';
 import ProposalsListPageLoading from './ProposalsListPageLoading';
 
@@ -128,10 +129,24 @@ export function ProposalsList({
   const isWithFilters =
     filters.state !== null || (filters.title !== null && filters.title !== '');
 
+  if (count === 0 && !initializeLoading) {
+    return (
+      <Container>
+        <NoData />
+      </Container>
+    );
+  }
+
   if (
     updatedListDataLoading[activePage] ||
     filtersLoading ||
-    initializeLoading
+    initializeLoading ||
+    (![
+      ...proposalsListData.activeProposalsData,
+      ...proposalsListData.finishedProposalsData,
+    ].length &&
+      filters.title === null &&
+      filters.state === null)
   ) {
     return (
       <>
@@ -159,7 +174,8 @@ export function ProposalsList({
       ...proposalsListData.activeProposalsData,
       ...proposalsListData.finishedProposalsData,
     ].length &&
-    !initializeLoading
+    !initializeLoading &&
+    (filters.title !== null || filters.state !== null)
   ) {
     return (
       <>
