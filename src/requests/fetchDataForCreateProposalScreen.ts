@@ -14,26 +14,18 @@ export async function fetchDataForCreateProposalScreen({
   input: FetchDataForCreateProposalScreen;
 }) {
   const { clients, proposalsCount } = input;
-
-  try {
-    // TODO: get data from API
-    throw new Error('TODO: API not implemented');
-  } catch (e) {
-    console.error(
-      'Error getting data for create screen from API, using RPC fallback',
-      e,
-    );
-    const proposalsData = await getProposalsDataRPC({
-      clients,
-      proposalsCount: Number(proposalsCount),
-    });
-    const { payloadsAvailableIds, payloadsCounts } = await getPayloadsCountsRPC(
-      { proposalsCount, clients, proposalsData },
-    );
-    return {
-      payloadsCounts,
-      payloadsAvailableIds,
-      proposalsData,
-    };
-  }
+  const proposalsData = await getProposalsDataRPC({
+    clients,
+    proposalsCount: Number(proposalsCount),
+  });
+  const { payloadsAvailableIds, payloadsCounts } = await getPayloadsCountsRPC({
+    proposalsCount,
+    clients,
+    proposalsData,
+  });
+  return {
+    payloadsCounts,
+    payloadsAvailableIds,
+    proposalsData,
+  };
 }

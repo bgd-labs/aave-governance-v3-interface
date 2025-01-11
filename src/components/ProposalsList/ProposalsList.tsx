@@ -104,7 +104,7 @@ export function ProposalsList({
   ]);
   useEffect(() => {
     startActiveProposalsDataPolling(activePage);
-    startNewProposalsPolling();
+    startNewProposalsPolling(activePage);
     return () => {
       stopActiveProposalsDataPolling();
       stopNewProposalsPolling();

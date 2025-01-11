@@ -3,6 +3,7 @@ import { Draft, produce } from 'immer';
 import { Hex, zeroHash } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
+import { DATA_POLLING_TIME } from '../configs/configs';
 import { generateSeatbeltLink } from '../helpers/formatPayloadData';
 import { fetchCreatorPropositionPower } from '../requests/fetchCreatorPropositionPower';
 import { fetchProposalDataForDetails } from '../requests/fetchProposalDataForDetails';
@@ -153,7 +154,10 @@ export const createProposalSlice: StoreSlice<
   startActiveProposalDetailsPolling: async (id) => {
     const currentInterval = get().activeProposalDetailsInterval;
     clearInterval(currentInterval);
-    const interval = setInterval(() => get().getProposalDetails(id), 30000);
+    const interval = setInterval(
+      () => get().getProposalDetails(id),
+      DATA_POLLING_TIME,
+    );
     set({ activeProposalDetailsInterval: Number(interval) });
   },
   stopActiveProposalDetailsPolling: () => {
@@ -407,7 +411,7 @@ export const createProposalSlice: StoreSlice<
         endBlockNumber,
         lastBlockNumber,
       });
-    }, 60000);
+    }, DATA_POLLING_TIME);
     set({ getVotersInterval: Number(interval) });
   },
   stopVotersPolling: () => {

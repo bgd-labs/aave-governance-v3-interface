@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import ColumnsIcon from '../../assets/icons/columnsIcon.svg';
 import RowIcon from '../../assets/icons/rowIcon.svg';
 import { appConfig, appUsedNetworks } from '../../configs/appConfig';
+import { DATA_POLLING_TIME } from '../../configs/configs';
 import {
   getLocalStoragePayloadsExplorerView,
   setLocalStoragePayloadsExplorerView,
@@ -113,7 +114,7 @@ export function PayloadsExplorerPage({
     },
     filteredPayloadsDataFetcher,
     {
-      refreshInterval: 30_000,
+      refreshInterval: DATA_POLLING_TIME,
     },
   );
 

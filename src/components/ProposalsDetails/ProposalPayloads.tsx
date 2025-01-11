@@ -10,6 +10,7 @@ import { Hex, zeroHash } from 'viem';
 import ArrowToBottom from '../../assets/icons/arrowToBottom.svg';
 import ArrowToTop from '../../assets/icons/arrowToTop.svg';
 import LinkIcon from '../../assets/icons/linkIcon.svg';
+import { isForIPFS } from '../../configs/appConfig';
 import {
   formatPayloadData,
   generateSeatbeltLink,
@@ -282,7 +283,7 @@ function PayloadItem({
               </Box>
               <CopyAndExternalIconsSet
                 iconSize={12}
-                externalLink={`${window.location.origin}/payloads-explorer/payload/${Number(payload.id)}_${Number(payload.chain)}_${payload.payloadsController}`}
+                externalLink={`${isForIPFS ? 'https://vote.onaave.com' : window.location.origin}/payloads-explorer/payload/${Number(payload.id)}_${Number(payload.chain)}_${payload.payloadsController}`}
                 sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
               />
             </Box>

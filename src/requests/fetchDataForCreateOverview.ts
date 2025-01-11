@@ -21,60 +21,51 @@ export async function fetchDataForCreateOverviewScreen({
 }) {
   const { clients, ipfsHash, payloads } = input;
 
+  let ipfsData: ProposalMetadata | undefined = undefined;
+  let ipfsError = '';
   try {
-    // TODO: get data from API
-    throw new Error('TODO: API not implemented');
+    ipfsData = await getProposalMetadata(ipfsHash, ipfsGateway);
   } catch (e) {
-    console.error(
-      'Error getting data for create overview screen from API, using RPC fallback',
-      e,
-    );
-    let ipfsData: ProposalMetadata | undefined = undefined;
-    let ipfsError = '';
-    try {
-      ipfsData = await getProposalMetadata(ipfsHash, ipfsGateway);
-    } catch (e) {
-      ipfsError = texts.other.fetchFromIpfsError;
-      console.error('Error getting ipfs data', e);
-    }
-
-    const payloadsChainsWithIds: Record<number, number[]> = {};
-    const payloadsChains = payloads
-      .map((payload) => payload.chainId)
-      .filter((value, index, self) => self.indexOf(value) === index);
-    payloadsChains.forEach((chainId) => {
-      payloadsChainsWithIds[Number(chainId)] = payloads
-        .filter((payload) => Number(payload.chainId) === Number(chainId))
-        .map((payload) => payload.payloadId)
-        .filter((value, index, self) => self.indexOf(value) === index);
-    });
-    const payloadsData = (
-      await Promise.all(
-        Object.entries(payloadsChainsWithIds).map(
-          async ([chainId, payloadsIds]) =>
-            await getPayloadsDataRPC({
-              chainId: Number(chainId),
-              payloadsIds,
-              clients,
-            }),
-        ),
-      )
-    ).flat();
-
-    const formattedPayloads: PayloadWithHashes[] = await Promise.all(
-      payloadsData.map(async (payload) => {
-        const seatbeltMD = await fetch(generateSeatbeltLink(payload));
-        return {
-          ...payload,
-          seatbeltMD: seatbeltMD.ok ? await seatbeltMD.text() : undefined,
-        };
-      }),
-    );
-
-    return {
-      ipfsData,
-      payloads: formattedPayloads,
-      ipfsError,
-    };
+    ipfsError = texts.other.fetchFromIpfsError;
+    console.error('Error getting ipfs data', e);
   }
+
+  const payloadsChainsWithIds: Record<number, number[]> = {};
+  const payloadsChains = payloads
+    .map((payload) => payload.chainId)
+    .filter((value, index, self) => self.indexOf(value) === index);
+  payloadsChains.forEach((chainId) => {
+    payloadsChainsWithIds[Number(chainId)] = payloads
+      .filter((payload) => Number(payload.chainId) === Number(chainId))
+      .map((payload) => payload.payloadId)
+      .filter((value, index, self) => self.indexOf(value) === index);
+  });
+  const payloadsData = (
+    await Promise.all(
+      Object.entries(payloadsChainsWithIds).map(
+        async ([chainId, payloadsIds]) =>
+          await getPayloadsDataRPC({
+            chainId: Number(chainId),
+            payloadsIds,
+            clients,
+          }),
+      ),
+    )
+  ).flat();
+
+  const formattedPayloads: PayloadWithHashes[] = await Promise.all(
+    payloadsData.map(async (payload) => {
+      const seatbeltMD = await fetch(generateSeatbeltLink(payload));
+      return {
+        ...payload,
+        seatbeltMD: seatbeltMD.ok ? await seatbeltMD.text() : undefined,
+      };
+    }),
+  );
+
+  return {
+    ipfsData,
+    payloads: formattedPayloads,
+    ipfsError,
+  };
 }

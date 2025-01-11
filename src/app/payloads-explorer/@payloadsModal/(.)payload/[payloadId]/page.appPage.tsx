@@ -7,6 +7,7 @@ import useSWR from 'swr';
 import { BasicModal } from '../../../../../components/BasicModal';
 import { PayloadDetailsContent } from '../../../../../components/PayloadsExplorer/PayloadDetailsContent';
 import { PayloadExploreItemLoading } from '../../../../../components/PayloadsExplorer/PayloadExploreItemLoading';
+import { DATA_POLLING_TIME } from '../../../../../configs/configs';
 import { useStore } from '../../../../../providers/ZustandStoreProvider';
 import { payloadByIdFetcher } from '../../../../../requests/fetchers/payloadByIdFetcher';
 import { selectAppClients } from '../../../../../store/selectors/rpcSwitcherSelectors';
@@ -32,7 +33,7 @@ export default function Page({
     },
     payloadByIdFetcher,
     {
-      refreshInterval: 30_000,
+      refreshInterval: DATA_POLLING_TIME,
     },
   );
 

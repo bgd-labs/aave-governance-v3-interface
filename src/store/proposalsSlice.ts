@@ -79,7 +79,7 @@ export const createProposalsSlice: StoreSlice<
 
   totalProposalsCount: -1,
   initializeProposalsCount: async (count) => {
-    if (count && count > get().totalProposalsCount) {
+    if (count && count >= get().totalProposalsCount) {
       set({ totalProposalsCount: count, paginationCount: count });
     } else {
       const totalProposalsCount = await (isForIPFS

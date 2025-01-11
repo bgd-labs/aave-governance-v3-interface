@@ -4,7 +4,7 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { Hex, zeroHash } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
-import { PAGE_SIZE } from '../configs/configs';
+import { DATA_POLLING_TIME, PAGE_SIZE } from '../configs/configs';
 import { updateQueryParams } from '../helpers/updateQueryParams';
 import { fetchActiveProposalsDataForList } from '../requests/fetchActiveProposalsDataForList';
 import { fetchFilteredDataForList } from '../requests/fetchFilteredDataForList';
@@ -21,6 +21,7 @@ import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import {
   selectFilteredIds,
   selectProposalDataByUser,
+  selectProposalsForActivePage,
 } from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { IWeb3Slice } from './web3Slice';
@@ -57,7 +58,7 @@ export interface IProposalsListSlice {
   stopActiveProposalsDataPolling: () => void;
 
   newProposalsInterval: number | undefined;
-  startNewProposalsPolling: () => Promise<void>;
+  startNewProposalsPolling: (activePage: number) => Promise<void>;
   stopNewProposalsPolling: () => void;
 
   updateProposalsListActiveData: (
@@ -145,10 +146,10 @@ export const createProposalsListSlice: StoreSlice<
           const currentItem =
             draft.proposalsListData.finishedProposalsData[proposal.proposalId];
           if (currentItem) {
-            delete draft.proposalsListData.activeProposalsData[
-              proposal.proposalId
-            ];
-            if (isForIPFS) {
+            if (
+              isForIPFS &&
+              draft.proposalsListData.activeProposalsData[proposal.proposalId]
+            ) {
               draft.proposalsListData.finishedProposalsData[
                 proposal.proposalId
               ] = {
@@ -156,6 +157,9 @@ export const createProposalsListSlice: StoreSlice<
                 isActive: true,
               };
             }
+            delete draft.proposalsListData.activeProposalsData[
+              proposal.proposalId
+            ];
           }
         }),
       );
@@ -171,18 +175,18 @@ export const createProposalsListSlice: StoreSlice<
 
     const func = async (acP?: number, rpcOnly?: boolean) => {
       const configs = get().configs;
-      const activeIds = Object.values(
-        get().proposalsListData.activeProposalsData,
-      ).map((proposal) => proposal.proposalId);
+      const activeIds = selectProposalsForActivePage(
+        get(),
+        acP ?? 1,
+      ).activeProposalsData.map((proposal) => proposal.proposalId);
       if (configs && activeIds.length > 0) {
         await get().updateProposalsListActiveData(activeIds, acP, rpcOnly);
       }
     };
-    if (isForIPFS) {
-      func(activePage, true);
-    }
 
-    const interval = setInterval(func, 30000);
+    func(activePage, true);
+
+    const interval = setInterval(func, DATA_POLLING_TIME);
     set({ activeProposalsDataInterval: Number(interval) });
   },
   stopActiveProposalsDataPolling: () => {
@@ -194,7 +198,7 @@ export const createProposalsListSlice: StoreSlice<
   },
 
   newProposalsInterval: undefined,
-  startNewProposalsPolling: async () => {
+  startNewProposalsPolling: async (activePage) => {
     const currentInterval = get().newProposalsInterval;
     clearInterval(currentInterval);
 
@@ -229,9 +233,10 @@ export const createProposalsListSlice: StoreSlice<
         );
       }
     };
-    func(true);
-
-    const interval = setInterval(func, 15000);
+    if (activePage === 1) {
+      func(true);
+    }
+    const interval = setInterval(func, DATA_POLLING_TIME);
     set({ newProposalsInterval: Number(interval) });
   },
   stopNewProposalsPolling: () => {

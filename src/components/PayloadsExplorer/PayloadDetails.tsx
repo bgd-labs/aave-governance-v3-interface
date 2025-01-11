@@ -5,6 +5,7 @@ import { useRouter } from 'nextjs-toploader/app';
 import React from 'react';
 import useSWR from 'swr';
 
+import { DATA_POLLING_TIME } from '../../configs/configs';
 import { ROUTES } from '../../configs/routes';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { payloadByIdFetcher } from '../../requests/fetchers/payloadByIdFetcher';
@@ -32,7 +33,9 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
     payloadByIdFetcher,
     {
       refreshInterval:
-        payload.data.state >= InitialPayloadState.Executed ? 0 : 10_000,
+        payload.data.state >= InitialPayloadState.Executed
+          ? 0
+          : DATA_POLLING_TIME,
     },
   );
 

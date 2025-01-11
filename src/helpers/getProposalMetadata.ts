@@ -20,22 +20,22 @@ export async function getProposalMetadata(
   const ipfsResponse = await fetch(ipfsPath);
   if (!ipfsResponse.ok) throw Error(`IPFS: error fetching ${ipfsPath}`);
   const clone = ipfsResponse.clone();
+
   try {
     const response = await ipfsResponse.json();
     const { content, data } = matter(response.description);
     return {
       ...response,
       ipfsHash,
-      description: String(JSON.parse(JSON.stringify(content))),
+      description: content,
       ...data,
     };
   } catch (e) {
-    console.error(e);
     const { content, data } = matter(await clone.text());
     return {
       ...ipfsResponse,
       ipfsHash,
-      description: String(JSON.parse(JSON.stringify(content))),
+      description: content,
       ...(data as { title: string; discussions: string; author: string }),
     };
   }
