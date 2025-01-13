@@ -4,7 +4,7 @@ import {
 } from '@bgd-labs/aave-address-book/abis';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { Draft } from 'immer';
-import { Address, Hex, zeroHash } from 'viem';
+import { Address, Hex, zeroAddress, zeroHash } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
@@ -176,6 +176,7 @@ export async function getProposalVotingFormattedData(
     state: proposal.votingProposalState ?? 0,
     strategy: votingStrategyAddress,
     votingAssets: assets,
+    dataWarehouse: zeroAddress,
     votedInfo: {
       support: false,
       votingPower: 0n,
