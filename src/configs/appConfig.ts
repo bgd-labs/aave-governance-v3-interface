@@ -12,7 +12,7 @@ export const isForIPFS = env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 export const isTermsAndConditionsVisible =
   env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_VISIBLE === 'true';
 
-export const coreName: CoreNetworkName = 'mainnet';
+export const coreName: CoreNetworkName = 'mainnet'; // TIP: Сan be changed to sepolia testnet
 export const WC_PROJECT_ID =
   env?.NEXT_PUBLIC_WC_PROJECT_ID || 'e6ed0c48443e54cc875462bbaec6e3a7'; // https://docs.walletconnect.com/2.0/cloud/relay
 

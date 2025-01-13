@@ -304,7 +304,8 @@ export const texts = {
         ? 'You claim the guarantee for canceling proposals ids:'
         : 'You claim the guarantee for canceling proposals id',
     claim: 'Claim',
-    noData: "You haven't created any proposals yet",
+    noData:
+      "You don't have any proposals that you can refund the creation fee for yet",
   },
   other: {
     backButtonTitle: 'Back',

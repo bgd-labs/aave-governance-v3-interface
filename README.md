@@ -70,11 +70,33 @@ We have our own hosted version from Vercel, you can access it on [https://vote.o
 
 2.3.2. Need to leave the address of the payload controller from the address-book first, and insert the old address that was used earlier as the second element of the array. We leave the old address of the payload controller so that it would be possible to view the data on the payloads from the old controller in the UI. `TIP: Old payloads controller addresses will be added here in the array`
 
-2.3. If the controller is added to a new chain:
+2.4. If the controller is added to a new chain:
 
-2.3.1. Need to add support for the new chain to the application if it is not already done. How to add support for the new chain is described in the first point.
+2.4.1. Need to add support for the new chain to the application if it is not already done. How to add support for the new chain is described in the first point.
 
-2.3.2. Need to add the address of the payloads controller and the payloads controller data helper to the application payload controller configuration. [file](./src/configs/appConfigInit.ts) `TIP: Addresses for the new chain with a payload controller are added here`
+2.4.2. Need to add the address of the payloads controller and the payloads controller data helper to the application payload controller configuration. [file](./src/configs/appConfigInit.ts) `TIP: Addresses for the new chain with a payload controller are added here`
+
+### 3. How to add new voting machine support to the application?
+
+3.1. First need to determine whether this will be added to a new chain or whether a new voting machine will be added to one of the supported chains.
+
+3.2. Need to update `@bgd-labs/aave-address-book`.
+
+3.3. If a voting machine is added to a supported chain:
+
+3.3.1. Need to add a voting portal address for a specific chain. [file](./src/configs/appConfigInit.ts) `// TIP: The address for the new chain with the voting portal has been added here`
+
+3.3.2. Need to add a voting machine addresses for a specific chain. [file](./src/configs/appConfigInit.ts) `// TIP: The addresses for the new chain with the voting machine has been added here`
+
+3.4. If a voting machine is added to a new chain:
+
+3.4.1. Need to add support for the new chain to the application if it is not already done. How to add support for the new chain is described in the first point.
+
+3.4.2. Follow the steps 3.3.1 and 3.3.2.
+
+### 4. How to change gov core to testnet?
+
+4.1. Simply, need to change the core name to sepolia. [file](./src/configs/appConfig.ts) `// TIP: Сan be changed to sepolia testnet`
 
 ## License
 

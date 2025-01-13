@@ -264,7 +264,7 @@ export function CreationFeesModal({
                       width="100%"
                       height="auto"
                       src="/LightNoFees.svg"
-                      alt="You haven't created any proposals yet"
+                      alt={texts.creationFee.noData}
                     />
                   )}
                 </NoSSR>

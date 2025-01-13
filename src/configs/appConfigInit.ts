@@ -48,6 +48,9 @@ export const govCoreConfig: Record<
       [mainnet.id]: GovernanceV3Ethereum.VOTING_PORTAL_ETH_ETH,
       [polygon.id]: GovernanceV3Ethereum.VOTING_PORTAL_ETH_POL,
       [avalanche.id]: GovernanceV3Ethereum.VOTING_PORTAL_ETH_AVAX,
+      // TIP: The address for the new chain with the voting portal has been added here
+      // example:
+      //   [newChain.id]: AddressBook.VOTING_PORTAL...,
     },
   },
   // testnets
@@ -167,6 +170,13 @@ const votingMachineConfig: Record<
       dataHelperContractAddress: GovernanceV3Avalanche.VM_DATA_HELPER,
       dataWarehouseAddress: GovernanceV3Avalanche.DATA_WAREHOUSE,
     },
+    // TIP: The addresses for the new chain with the voting machine has been added here
+    // example:
+    //     [newChain.id]: {
+    //       contractAddress: AddressBook.VOTING_MACHINE,
+    //       dataHelperContractAddress: AddressBook.VM_DATA_HELPER,
+    //       dataWarehouseAddress: AddressBook.DATA_WAREHOUSE,
+    //     },
   },
   // testnets
   sepolia: {
