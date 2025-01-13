@@ -74,7 +74,7 @@ export const payloadsControllerConfig: Record<
   mainnet: {
     [mainnet.id]: {
       dataHelperContractAddress: GovernanceV3Ethereum.PC_DATA_HELPER,
-      contractAddresses: [GovernanceV3Ethereum.PAYLOADS_CONTROLLER],
+      contractAddresses: [GovernanceV3Ethereum.PAYLOADS_CONTROLLER], // TIP: Old payloads controller addresses will be added here in the array, after the address from the address-book, and so on for each network.
     },
     [polygon.id]: {
       dataHelperContractAddress: GovernanceV3Polygon.PC_DATA_HELPER,
@@ -116,6 +116,12 @@ export const payloadsControllerConfig: Record<
       dataHelperContractAddress: GovernanceV3ZkSync.PC_DATA_HELPER,
       contractAddresses: [GovernanceV3ZkSync.PAYLOADS_CONTROLLER],
     },
+    // TIP: Addresses for the new chain with a payload controller are added here
+    // example:
+    //     [newChain.id]: {
+    //       dataHelperContractAddress: AddressBook.PC_DATA_HELPER,
+    //       contractAddresses: [AddressBook.PAYLOADS_CONTROLLER],
+    //     },
   },
   // testnets
   sepolia: {
@@ -130,6 +136,15 @@ export const payloadsControllerConfig: Record<
       payloadAddress: '0xdf9f39247c553485ac3bf974418947d9b2f969e5', // only for test
     },
   },
+};
+
+export const payloadsControllerChainIds: Record<CoreNetworkName, number[]> = {
+  mainnet: Object.keys(payloadsControllerConfig['mainnet']).map((key) =>
+    Number(key),
+  ),
+  sepolia: Object.keys(payloadsControllerConfig['sepolia']).map((key) =>
+    Number(key),
+  ),
 };
 
 const votingMachineConfig: Record<
@@ -168,6 +183,15 @@ const votingMachineConfig: Record<
   },
 };
 
+export const votingMachineChainIds: Record<CoreNetworkName, number[]> = {
+  mainnet: Object.keys(votingMachineConfig['mainnet']).map((key) =>
+    Number(key),
+  ),
+  sepolia: Object.keys(votingMachineConfig['sepolia']).map((key) =>
+    Number(key),
+  ),
+};
+
 const govCoreChainId: Record<CoreNetworkName, number> = {
   mainnet: mainnet.id,
   // testnets
@@ -189,28 +213,6 @@ const aditionalsAddresses: Record<CoreNetworkName, Record<string, Hex>> = {
     stkAAVEAddress: '0x354032B31339853A3D682613749F183328d07275',
     delegationHelper: '0x7cc468E937ec7B06A2816B33AC159BC1273dF4A3',
   },
-};
-
-export const payloadsControllerChainIds: Record<CoreNetworkName, number[]> = {
-  mainnet: [
-    mainnet.id,
-    polygon.id,
-    avalanche.id,
-    base.id,
-    arbitrum.id,
-    metis.id,
-    optimism.id,
-    bsc.id,
-    gnosis.id,
-    scroll.id,
-    zkSync.id,
-  ],
-  sepolia: [sepolia.id, avalancheFuji.id],
-};
-
-export const votingMachineChainIds: Record<CoreNetworkName, number[]> = {
-  mainnet: [mainnet.id, polygon.id, avalanche.id],
-  sepolia: [sepolia.id, avalancheFuji.id],
 };
 
 export const appConfigInit = (coreNetwork: CoreNetworkName) => {
