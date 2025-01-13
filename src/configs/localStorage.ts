@@ -16,7 +16,7 @@ export enum LocalStorageKeys {
   TermsAccept = 'termsAccept',
   AppMode = 'appMode',
   EnsAddresses = 'EnsAddresses',
-  RpcUrls = 'rpcs_urls_4',
+  RpcUrls = 'rpcs_urls_10',
   TutorialStartButtonClicked = 'tutorialStartButtonClicked',
   RepresentingAddresses = 'representingAddresses',
   PowersInfoClicked = 'powersInfoClicked',

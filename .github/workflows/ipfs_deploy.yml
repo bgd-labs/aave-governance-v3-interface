@@ -6,10 +6,14 @@ concurrency:
 
 on:
   push:
-    branches: ['main', "feat/update"]
+    branches: ['main', 'feat/update']
 
 env:
   NEXT_PUBLIC_DEPLOY_FOR_IPFS: true
+  NEXT_PUBLIC_RPC_MAINNET: ${{ secrets.NEXT_PUBLIC_RPC_MAINNET }}
+  NEXT_PUBLIC_RPC_POLYGON: ${{ secrets.NEXT_PUBLIC_RPC_POLYGON }}
+  NEXT_PUBLIC_RPC_AVALANCHE: ${{ secrets.NEXT_PUBLIC_RPC_AVALANCHE }}
+  ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY_GOV_SERVER }}
 
 jobs:
   ipfs_deploy:

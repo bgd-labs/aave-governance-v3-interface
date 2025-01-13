@@ -30,86 +30,82 @@ type RPCUrls = {
   scrollRPC?: string;
   zkSyncRPC?: string;
   lineaRPC?: string;
+  // TIP: The new chain rpc name should be here
 };
 
-export function getInitialRpcUrls({
-  mainnetRPC,
-  polygonRPC,
-  avalancheRPC,
-  bscRPC,
-  baseRPC,
-  arbitrumRPC,
-  metisRPC,
-  optimismRPC,
-  gnosisRPC,
-  scrollRPC,
-  zkSyncRPC,
-  lineaRPC,
-}: RPCUrls) {
+export function getInitialRpcUrls({ ...urls }: RPCUrls) {
   return {
     [mainnet.id]: [
-      mainnetRPC || 'https://rpc.ankr.com/eth',
+      urls.mainnetRPC || 'https://rpc.ankr.com/eth',
       'https://rpc.ankr.com/eth',
       'https://eth.nodeconnect.org',
     ],
     [polygon.id]: [
-      polygonRPC || 'https://endpoints.omniatech.io/v1/matic/mainnet/public',
+      urls.polygonRPC ||
+        'https://endpoints.omniatech.io/v1/matic/mainnet/public',
       'https://polygon.llamarpc.com',
       'https://polygon-bor.publicnode.com',
     ],
     [avalanche.id]: [
-      avalancheRPC || 'https://api.avax.network/ext/bc/C/rpc',
+      urls.avalancheRPC || 'https://api.avax.network/ext/bc/C/rpc',
       'https://api.avax.network/ext/bc/C/rpc',
       'https://avalanche.drpc.org',
       'https://avax.meowrpc.com',
       'https://avalanche.blockpi.network/v1/rpc/public',
     ],
     [bsc.id]: [
-      bscRPC || 'https://bsc.meowrpc.com',
+      urls.bscRPC || 'https://bsc.meowrpc.com',
       'https://binance.llamarpc.com',
       'https://bsc.meowrpc.com',
     ],
     [base.id]: [
-      baseRPC || 'https://base.blockpi.network/v1/rpc/public',
+      urls.baseRPC || 'https://base.blockpi.network/v1/rpc/public',
       'https://base.blockpi.network/v1/rpc/public',
       'https://base.llamarpc.com',
       'https://base-mainnet.public.blastapi.io',
       'https://base.meowrpc.com',
     ],
     [arbitrum.id]: [
-      arbitrumRPC || 'https://endpoints.omniatech.io/v1/arbitrum/one/public',
+      urls.arbitrumRPC ||
+        'https://endpoints.omniatech.io/v1/arbitrum/one/public',
       'https://arbitrum.llamarpc.com',
       'https://arb-mainnet-public.unifra.io',
       'https://endpoints.omniatech.io/v1/arbitrum/one/public',
     ],
     [metis.id]: [
-      metisRPC || 'https://metis-mainnet.public.blastapi.io',
+      urls.metisRPC || 'https://metis-mainnet.public.blastapi.io',
       'https://metis.api.onfinality.io/public',
     ],
     [optimism.id]: [
-      optimismRPC || 'https://optimism.blockpi.network/v1/rpc/public',
+      urls.optimismRPC || 'https://optimism.blockpi.network/v1/rpc/public',
       'https://optimism.blockpi.network/v1/rpc/public',
       'https://optimism.llamarpc.com',
       'https://optimism.publicnode.com',
     ],
     [gnosis.id]: [
-      gnosisRPC || 'https://gnosis.blockpi.network/v1/rpc/public',
+      urls.gnosisRPC || 'https://gnosis.blockpi.network/v1/rpc/public',
       'https://gnosis.blockpi.network/v1/rpc/public',
       'https://gnosis-mainnet.public.blastapi.io',
     ],
     [scroll.id]: [
-      scrollRPC || 'https://scroll.blockpi.network/v1/rpc/public',
+      urls.scrollRPC || 'https://scroll.blockpi.network/v1/rpc/public',
       'https://scroll.blockpi.network/v1/rpc/public',
       'https://scroll-mainnet.public.blastapi.io',
     ],
     [zkSync.id]: [
-      zkSyncRPC || 'https://zksync.meowrpc.com',
+      urls.zkSyncRPC || 'https://zksync.meowrpc.com',
       'https://mainnet.era.zksync.io',
     ],
     [linea.id]: [
-      lineaRPC || 'https://linea.drpc.org',
+      urls.lineaRPC || 'https://linea.drpc.org',
       'https://linea-rpc.publicnode.com',
     ],
+    // TIP: The new chain public RPC urls should be here
+    // example:
+    //     [newRPC.id] (can be getting from `viem`): [
+    //       urls.newRPC || 'https://publicRPC.com',
+    //       'https://publicRPC.com',
+    //     ],
     // testnets
     [sepolia.id]: [
       'https://sepolia.drpc.org',

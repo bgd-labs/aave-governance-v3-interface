@@ -51,6 +51,15 @@ export type PayloadFromServer = {
   ];
 };
 
+export type PaginatedPayloadsFromServer = {
+  payloads: PayloadFromServer[];
+  totalPayloadsCount: [
+    {
+      count: number;
+    },
+  ];
+};
+
 export type GetProposalInitialResponse = {
   proposalId: number;
   state: InitialProposalState;
@@ -118,6 +127,8 @@ export type GetProposalInitialResponse = {
       withDelegateCall: boolean;
     },
   ];
+  votingStrategyAddress: Address | null;
+  votingAssets: Address[] | null;
 };
 
 export type GetGovernanceProposalsResponse = {

@@ -21,6 +21,8 @@ const initialRpcUrls = getInitialRpcUrls({
   scrollRPC: getRPCUrl(ChainId.scroll, { alchemyKey: env.ALCHEMY_API_KEY }),
   zkSyncRPC: getRPCUrl(ChainId.zksync, { alchemyKey: env.ALCHEMY_API_KEY }),
   lineaRPC: getRPCUrl(ChainId.linea, { alchemyKey: env.ALCHEMY_API_KEY }),
+  // TIP: The new private RPC url's for the server is specified here. Using `@bgd-labs/rpc-env` https://github.com/bgd-labs/action-rpc-env
+  // example: exampleRPC: getRPCUrl(ChainId.example, { alchemyKey: env.ALCHEMY_API_KEY }),
 });
 const serverChains = getChains({ initialRpcUrls });
 export const serverClients: ClientsRecord = {};

@@ -7,6 +7,7 @@ import {
   bsc,
   bscTestnet,
   gnosis,
+  linea,
   mainnet,
   metis,
   optimism,
@@ -35,6 +36,10 @@ export function getChains({
     [gnosis.id]: setChain({ chain: gnosis, initialRpcUrls }),
     [scroll.id]: setChain({ chain: scroll, initialRpcUrls }),
     [zkSync.id]: setChain({ chain: zkSync, initialRpcUrls }),
+    [linea.id]: setChain({ chain: linea, initialRpcUrls }),
+    // TIP: The new chain should initialize here
+    // example: [newChain.id]: setChain({ chain: newChain, initialRpcUrls }),
+
     // testnets
     [sepolia.id]: setChain({ chain: sepolia, initialRpcUrls }),
     [polygonMumbai.id]: setChain({ chain: polygonMumbai, initialRpcUrls }),

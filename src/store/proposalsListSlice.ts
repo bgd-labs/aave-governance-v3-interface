@@ -114,16 +114,19 @@ export const createProposalsListSlice: StoreSlice<
     ) {
       set({ initializeLoading: true });
     }
+
     proposalsListData.activeProposalsData.forEach((proposal) => {
       set((state) =>
         produce(state, (draft) => {
-          if (
-            !draft.proposalsListData.activeProposalsData[proposal.proposalId] &&
-            fromServer
-          ) {
+          const activeProposal =
+            draft.proposalsListData.activeProposalsData[proposal.proposalId];
+          const finishedProposal =
+            draft.proposalsListData.finishedProposalsData[proposal.proposalId];
+
+          if (!activeProposal && !finishedProposal && fromServer) {
             draft.proposalsListData.activeProposalsData[proposal.proposalId] =
               proposal;
-          } else if (!fromServer) {
+          } else if (!fromServer && !finishedProposal) {
             draft.proposalsListData.activeProposalsData[proposal.proposalId] = {
               ...proposal,
               isActive: true,
@@ -137,23 +140,15 @@ export const createProposalsListSlice: StoreSlice<
         produce(state, (draft) => {
           draft.proposalsListData.finishedProposalsData[proposal.proposalId] =
             proposal;
-        }),
-      );
-    });
-    proposalsListData.finishedProposalsData.forEach((proposal) => {
-      set((state) =>
-        produce(state, (draft) => {
-          const currentItem =
-            draft.proposalsListData.finishedProposalsData[proposal.proposalId];
-          if (currentItem) {
-            if (
-              isForIPFS &&
-              draft.proposalsListData.activeProposalsData[proposal.proposalId]
-            ) {
+          const activeProposal =
+            draft.proposalsListData.activeProposalsData[proposal.proposalId];
+          const finishedProposal = proposal;
+          if (finishedProposal) {
+            if (isForIPFS && activeProposal) {
               draft.proposalsListData.finishedProposalsData[
                 proposal.proposalId
               ] = {
-                ...currentItem,
+                ...finishedProposal,
                 isActive: true,
               };
             }
@@ -164,6 +159,7 @@ export const createProposalsListSlice: StoreSlice<
         }),
       );
     });
+
     set({ initializeLoading: false });
   },
   initializeLoading: true,

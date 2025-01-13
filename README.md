@@ -11,16 +11,16 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 - Logic: [React](https://react.dev/),  [Next.js](https://nextjs.org/), [zustand](https://docs.pmnd.rs/zustand/getting-started/introduction).
 - Web3: [viem](https://viem.sh/), [wagmi](https://wagmi.sh/), [@bgd-labs/frontend-web3-utils](https://github.com/bgd-labs/fe-shared).
 - Styling: [MUI system](https://mui.com/system/getting-started/), [headlessui](https://headlessui.com/).
-- Cache: [@bgd-labs/aave-governance-ui-helpers](https://github.com/bgd-labs/aave-governance-ui-helpers).
+- Server: [tRPC](https://trpc.io/), [Rest API](https://api.onaave.com/docs)
 
 ## Pre-requirements
 
 - [Node.js](https://nodejs.org/ru): version 18 or higher.
 - [Git](https://git-scm.com/downloads): version 2.3.x or higher.
-- Package manager: we recommend [Yarn](https://yarnpkg.com/), version 1.x or higher.
+- Package manager: we recommend [Pnpm](https://yarnpkg.com/), version 9.x or higher.
 
 ## Configurations
-- Blockchain RPC URLs can be changed here [file](./src/utils/chains.ts) and IPFS gateway URLs can be changed here [file](./src/utils/configs.ts).
+- Blockchain RPC URLs can be changed here [file](./src/helpers/chain/getInitialRpcUrls.ts) and IPFS gateway URLs can be changed here [file](./src/configs/configs.ts).
 - It is possible to run the application in SSR (Server-Side-Rendering) or IPFS mode, by changing `NEXT_PUBLIC_DEPLOY_FOR_IPFS`. The default is `false`, which is the most optimal option for all use cases.
 
 <br>
@@ -29,9 +29,9 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 
 ### Run locally
 ```sh
-yarn && yarn dev
+pnpm install && pnpm dev
 // or
-yarn && yarn build && yarn start
+pnpm install && pnpm build && pnpm start
 ```
 
 ### Deploy your own Vercel instance
@@ -45,6 +45,20 @@ You can deploy your version of the application using Vercel just by clicking on 
 We have our own hosted version from Vercel, you can access it on [https://vote.onaave.com/](https://vote.onaave.com/)
 
 <br>
+
+## For developers
+### 1. How to add new chain support to the application?
+1.1. Need to update `RPCUrls` type. [file](./src/helpers/chain/getInitialRpcUrls.ts) `// TIP: The new chain rpc name should be here`
+
+1.2. Need to add public RPC urls for new chain. [file](./src/helpers/chain/getInitialRpcUrls.ts) `// TIP: The new chain public RPC urls should be here`
+
+1.3. Need to set new chain with other chains. [file](./src/helpers/chain/getChains.ts) `// TIP: The new chain should initialize here`
+
+1.4. Need to add new chain to server chains. [file](./src/requests/utils/chains.ts) `// TIP: The new private RPC url's for the server is specified here.`
+
+1.5. Need to add new chain to client chains. Not necessarily, in very rare cases. [file](./src/configs/chains.ts) `// TIP: The new private RPC url's for the client is specified here (getting from client env).`
+
+### 2. How to add new payloads controller support to the application?
 
 ## License
 

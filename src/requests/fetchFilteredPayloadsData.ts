@@ -4,7 +4,7 @@ import { mainnet } from 'viem/chains';
 
 import { appConfig, appUsedNetworks } from '../configs/appConfig';
 import { INITIAL_API_URL, PAGE_SIZE } from '../configs/configs';
-import { PayloadFromServer } from '../server/api/types';
+import { PaginatedPayloadsFromServer } from '../server/api/types';
 import { fetchPayloads } from './fetchPayloads';
 import { fetchPayloadsCount } from './fetchPayloadsCount';
 import { formatPayloadFromServer } from './utils/formatPayloadFromServer';
@@ -42,19 +42,27 @@ export async function fetchFilteredPayloadsData({
 
   try {
     if (appConfig.govCoreChainId === mainnet.id) {
-      // TODO: request not working
-      const url = `${INITIAL_API_URL}/proposals/get/?pageSize=${PAGE_SIZE}&page=${input.activePage}&payloadChainId=${chainId}&payloadsController=${payloadsController}`;
+      const url = `${INITIAL_API_URL}/payloads/get/?pageSize=${PAGE_SIZE}&page=${input.activePage + 1}&payloadChainId=${chainId}&payloadsController=${payloadsController}`;
+      const data = (await (
+        await fetch(url)
+      ).json()) as PaginatedPayloadsFromServer;
 
-      const data = (await (await fetch(url)).json()) as PayloadFromServer[]; // TODO
-
-      const formattedData = data.map((payload) =>
+      const formattedData = data.payloads.map((payload) =>
         formatPayloadFromServer(payload),
+      );
+
+      const count = data.totalPayloadsCount[0].count;
+
+      const currentPage = input.activePage + 1 || 1;
+      const size = count > PAGE_SIZE ? count - currentPage * PAGE_SIZE : count;
+      const ids = Array.from(Array(size).keys()).filter(
+        (id) => id >= size - PAGE_SIZE && id <= count - 1,
       );
 
       return {
         data: formattedData,
-        count: 0, // TODO
-        ids: [],
+        count,
+        ids,
       };
     }
     throw new Error('This chain id for gov core not supported by API');

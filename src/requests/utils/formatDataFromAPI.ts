@@ -3,7 +3,8 @@ import {
   IVotingPortal_ABI,
 } from '@bgd-labs/aave-address-book/abis';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { Address, Hex, zeroAddress, zeroHash } from 'viem';
+import { Draft } from 'immer';
+import { Address, Hex, zeroHash } from 'viem';
 import { readContract } from 'viem/actions';
 
 import { appConfig } from '../../configs/appConfig';
@@ -122,7 +123,6 @@ export async function getProposalVotingFormattedData(
   clients: ClientsRecord,
 ) {
   let votingChainId = proposal.votingChainId;
-  // TODO: should be always from API request
   if (!votingChainId) {
     votingChainId = Number(
       await readContract(clients[appConfig.govCoreChainId], {
@@ -134,22 +134,28 @@ export async function getProposalVotingFormattedData(
     );
   }
 
-  // TODO: should be always from API request
-  const votingStrategyAddress = await readContract(
-    clients[appConfig.govCoreChainId],
-    {
-      abi: IGovernanceCore_ABI,
-      address: appConfig.govCoreConfig.contractAddress,
-      functionName: 'getPowerStrategy',
+  let votingStrategyAddress = proposal.votingStrategyAddress;
+  if (!votingStrategyAddress) {
+    votingStrategyAddress = await readContract(
+      clients[appConfig.govCoreChainId],
+      {
+        abi: IGovernanceCore_ABI,
+        address: appConfig.govCoreConfig.contractAddress,
+        functionName: 'getPowerStrategy',
+        args: [],
+      },
+    );
+  }
+
+  let assets = proposal.votingAssets;
+  if (!assets) {
+    assets = (await readContract(clients[appConfig.govCoreChainId], {
+      abi: IBaseVotingStrategy_ABI,
+      address: votingStrategyAddress as Address,
+      functionName: 'getVotingAssetList',
       args: [],
-    },
-  );
-  const assets = await readContract(clients[appConfig.govCoreChainId], {
-    abi: IBaseVotingStrategy_ABI,
-    address: votingStrategyAddress,
-    functionName: 'getVotingAssetList',
-    args: [],
-  });
+    })) as Draft<Address[]>;
+  }
 
   return {
     proposalData: {
@@ -170,8 +176,6 @@ export async function getProposalVotingFormattedData(
     state: proposal.votingProposalState ?? 0,
     strategy: votingStrategyAddress,
     votingAssets: assets,
-    // TODO:
-    dataWarehouse: zeroAddress,
     votedInfo: {
       support: false,
       votingPower: 0n,
