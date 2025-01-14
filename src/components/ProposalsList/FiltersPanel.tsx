@@ -140,9 +140,10 @@ export function FiltersPanel() {
         debouncedSearchValue !== ''
       ) {
         setTitleFilter(searchValue, router, false, true);
-      } else {
-        setTitleFilter(null, router, true, true);
       }
+    }
+    if ((searchValue === null || searchValue === '') && isSearchButtonOpen) {
+      setTitleFilter(null, router, false, true);
     }
   }, [debouncedSearchValue, isSearchButtonOpen]);
 

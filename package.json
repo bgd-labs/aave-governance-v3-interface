@@ -53,7 +53,6 @@
     "ethereum-blockies-base64": "^1.0.2",
     "final-form": "^4.20.10",
     "final-form-arrays": "^3.1.0",
-    "fuse.js": "7.0.0",
     "gray-matter": "^4.0.3",
     "immer": "^10.1.1",
     "next": "14.2.21",

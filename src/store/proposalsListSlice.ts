@@ -4,7 +4,7 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { Hex, zeroHash } from 'viem';
 
 import { appConfig, isForIPFS } from '../configs/appConfig';
-import { DATA_POLLING_TIME, PAGE_SIZE } from '../configs/configs';
+import { DATA_POLLING_TIME } from '../configs/configs';
 import { updateQueryParams } from '../helpers/updateQueryParams';
 import { fetchActiveProposalsDataForList } from '../requests/fetchActiveProposalsDataForList';
 import { fetchFilteredDataForList } from '../requests/fetchFilteredDataForList';
@@ -19,25 +19,12 @@ import { IProposalsSlice } from './proposalsSlice';
 import { IRepresentationsSlice } from './representationsSlice';
 import { IRpcSwitcherSlice } from './rpcSwitcherSlice';
 import {
-  selectFilteredIds,
+  selectIdsForRequest,
   selectProposalDataByUser,
   selectProposalsForActivePage,
 } from './selectors/proposalsSelector';
 import { selectAppClients } from './selectors/rpcSwitcherSelectors';
 import { IWeb3Slice } from './web3Slice';
-
-export const selectIdsForRequest = (
-  ids: number[],
-  activePage: number,
-  pageSize?: number,
-) => {
-  const startIndex = Number(activePage - 1) * (pageSize ?? PAGE_SIZE);
-  let endIndex = startIndex + (pageSize ?? PAGE_SIZE);
-  if (endIndex > ids.length) {
-    endIndex = ids.length;
-  }
-  return ids.slice(startIndex, endIndex);
-};
 
 export interface IProposalsListSlice {
   proposalsListData: {
@@ -75,6 +62,7 @@ export interface IProposalsListSlice {
     state: ProposalStateForFilters | null;
     title: string | null;
     activePage: number | undefined;
+    activeIds: number[];
   };
   filtersLoading: boolean;
   clearFilters: () => void;
@@ -337,6 +325,7 @@ export const createProposalsListSlice: StoreSlice<
     state: null,
     title: null,
     activePage: undefined,
+    activeIds: [],
   },
   filtersLoading: false,
   clearFilters: () => {
@@ -346,6 +335,7 @@ export const createProposalsListSlice: StoreSlice<
         state: null,
         title: null,
         activePage: undefined,
+        activeIds: [],
       },
     });
   },
@@ -451,13 +441,14 @@ export const createProposalsListSlice: StoreSlice<
         : api.proposalsList.getFilteredProposals.query(input));
 
       if (data) {
+        set((state) =>
+          produce(state, (draft) => {
+            draft.filters.activeIds = data.ids;
+          }),
+        );
         get().initializeProposalsListData(data.data);
-        const count = selectFilteredIds(get()).length;
         set({
-          paginationCount:
-            get().filters.state === ProposalStateForFilters.Active
-              ? count
-              : (data.count ?? -1),
+          paginationCount: data.count ?? -1,
         });
       }
       set({ filtersLoading: false });

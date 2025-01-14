@@ -158,7 +158,7 @@ export function SearchButton({
               onCrossClick={() => {
                 setSearchValue('');
                 setIsOpen(false);
-                setTitleFilter(null, router, true, true);
+                setTitleFilter(null, router, false, true);
               }}>
               <Input
                 ref={ref}
@@ -213,7 +213,7 @@ export function SearchButton({
               onCrossClick={() => {
                 setSearchValue('');
                 setIsOpen(false);
-                setTitleFilter(null, router, true, true);
+                setTitleFilter(null, router, false, true);
               }}>
               <Input
                 ref={refMobile}

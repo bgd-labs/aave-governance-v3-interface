@@ -3,7 +3,7 @@ import { mainnet } from 'viem/chains';
 import { appConfig } from '../configs/appConfig';
 import { INITIAL_API_URL, PAGE_SIZE } from '../configs/configs';
 import { GetGovernanceProposalsResponse } from '../server/api/types';
-import { selectIdsForRequest } from '../store/proposalsListSlice';
+import { selectIdsForRequest } from '../store/selectors/proposalsSelector';
 import { ContractsConstants, VotingConfig } from '../types';
 import { formatListData } from './utils/formatDataFromAPI';
 import {
