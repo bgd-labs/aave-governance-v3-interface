@@ -1,12 +1,12 @@
 import { Box, useTheme } from '@mui/system';
+import debounce from 'lodash.debounce';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { mainnet } from 'viem/chains';
 
 import { appConfig } from '../../configs/appConfig';
 import { proposalStatusesForFilter } from '../../helpers/statuses';
 import { texts } from '../../helpers/texts/texts';
-import { useDebounce } from '../../hooks/useDebounce';
 import { useStore } from '../../providers/ZustandStoreProvider';
 import { CustomSkeleton } from '../primitives/CustomSkeleton';
 import { TopPanelContainer } from '../TopPanelContainer';
@@ -127,31 +127,30 @@ export function FiltersPanel() {
 
   const [isSearchButtonOpen, setIsSearchButtonOpen] = useState(false);
   const [searchValue, setSearchValue] = useState<string | null>(filters.title);
-  const debouncedSearchValue = useDebounce<string | null>(searchValue, 1000);
-
-  const handleSearchValueChange = (value: string | null) => {
-    setSearchValue(value);
-  };
 
   useEffect(() => {
-    if (isSearchButtonOpen) {
-      if (
-        typeof debouncedSearchValue === 'string' &&
-        debouncedSearchValue !== ''
-      ) {
-        setTitleFilter(searchValue, router, false, true);
-      }
+    if (searchValue !== '' && searchValue !== null) {
+      setIsSearchButtonOpen(true);
     }
-    if ((searchValue === null || searchValue === '') && isSearchButtonOpen) {
-      setTitleFilter(null, router, false, true);
-    }
-  }, [debouncedSearchValue, isSearchButtonOpen]);
+  }, []);
 
-  const setFilteredStateLocal = (status: number | null) => {
+  const debouncedSearch = useRef(
+    debounce(async (value: string | null) => {
+      await setTitleFilter(value, router);
+    }, 1000),
+  ).current;
+
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
+  const setFilteredStateLocal = async (status: number | null) => {
     if (!!status || status === 0) {
-      setStateFilter(Number(status), router);
+      await setStateFilter(Number(status), router);
     } else {
-      setStateFilter(null, router);
+      await setStateFilter(null, router);
     }
   };
 
@@ -176,7 +175,15 @@ export function FiltersPanel() {
               isOpen={isSearchButtonOpen}
               setIsOpen={setIsSearchButtonOpen}
               searchValue={searchValue}
-              setSearchValue={handleSearchValueChange}
+              setSearchValue={async (value) => {
+                if (
+                  (searchValue !== null && searchValue !== '') ||
+                  (value !== '' && value !== null)
+                ) {
+                  await debouncedSearch(value);
+                }
+                setSearchValue(value);
+              }}
               disabled={appConfig.govCoreChainId !== mainnet.id}
             />
 

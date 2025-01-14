@@ -1,10 +1,8 @@
 import { Box, styled, useTheme } from '@mui/system';
-import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 
 import SearchIcon from '../../assets/icons/searchIcon.svg';
 import { texts } from '../../helpers/texts/texts';
-import { useStore } from '../../providers/ZustandStoreProvider';
 import { BoxWith3D } from '../BoxWith3D';
 import { InputWrapper } from '../InputWrapper';
 import { IconBox } from '../primitives/IconBox';
@@ -38,7 +36,7 @@ interface SearchButtonProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
   searchValue: string | null;
-  setSearchValue: (value: string) => void;
+  setSearchValue: (value: string | null) => void;
   disabled?: boolean;
 }
 
@@ -49,9 +47,7 @@ export function SearchButton({
   setSearchValue,
   disabled,
 }: SearchButtonProps) {
-  const router = useRouter();
   const theme = useTheme();
-  const setTitleFilter = useStore((store) => store.setTitleFilter);
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -156,9 +152,8 @@ export function SearchButton({
             }}>
             <InputWrapper
               onCrossClick={() => {
-                setSearchValue('');
+                setSearchValue(null);
                 setIsOpen(false);
-                setTitleFilter(null, router, false, true);
               }}>
               <Input
                 ref={ref}
@@ -211,9 +206,8 @@ export function SearchButton({
             }}>
             <InputWrapper
               onCrossClick={() => {
-                setSearchValue('');
+                setSearchValue(null);
                 setIsOpen(false);
-                setTitleFilter(null, router, false, true);
               }}>
               <Input
                 ref={refMobile}

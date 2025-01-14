@@ -365,7 +365,6 @@ export const createProposalsListSlice: StoreSlice<
       produce(state, (draft) => {
         draft.filters = {
           ...draft.filters,
-          activePage: 1,
           title: value,
         };
       }),
@@ -379,6 +378,14 @@ export const createProposalsListSlice: StoreSlice<
     }
     if (!withoutRequest) {
       await get().updateFilteredData(withoutLoading);
+      set((state) =>
+        produce(state, (draft) => {
+          draft.filters = {
+            ...draft.filters,
+            activePage: 1,
+          };
+        }),
+      );
     }
   },
   setActivePageFilter: async (value, withoutRequest) => {

@@ -1,4 +1,4 @@
-import { Box, useTheme } from '@mui/system';
+import { useTheme } from '@mui/system';
 import InitialPagination from 'rc-pagination';
 import React, { useState } from 'react';
 
@@ -228,6 +228,9 @@ export function Pagination({
               'a, .Pagination_item': {
                 cursor: 'default',
                 color: '$text',
+                span: {
+                  color: theme.palette.$text,
+                },
                 '&:after': {
                   backgroundColor: '$text',
                   width: '100%',
@@ -247,7 +250,7 @@ export function Pagination({
               },
             },
             '&:active': {
-              a: {
+              'a, .Pagination_item': {
                 span: {
                   backgroundColor: '$light',
                 },
@@ -278,11 +281,12 @@ export function Pagination({
         itemRender={(current, type) => {
           if (type === 'page') {
             return setCurrentPageState && filtering ? (
-              <Box
+              <button
+                type="button"
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}>
                 <span>{current}</span>
-              </Box>
+              </button>
             ) : payloadsChainId && payloadsController ? (
               <Link
                 href={ROUTES.payloadsExplorerPages(
@@ -301,7 +305,8 @@ export function Pagination({
           }
           if (type === 'prev') {
             return setCurrentPageState && filtering ? (
-              <Box
+              <button
+                type="button"
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}
               />
@@ -320,7 +325,8 @@ export function Pagination({
           }
           if (type === 'next') {
             return setCurrentPageState && filtering ? (
-              <Box
+              <button
+                type="button"
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}
               />
@@ -339,11 +345,12 @@ export function Pagination({
           }
           if (type === 'jump-prev') {
             return setCurrentPageState && filtering ? (
-              <Box
+              <button
+                type="button"
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}>
                 <span>...</span>
-              </Box>
+              </button>
             ) : payloadsChainId && payloadsController ? (
               <Link
                 href={ROUTES.payloadsExplorerPages(
@@ -362,11 +369,12 @@ export function Pagination({
           }
           if (type === 'jump-next') {
             return setCurrentPageState && filtering ? (
-              <Box
+              <button
+                type="button"
                 className="Pagination_item"
                 onClick={() => setCurrentPageState(current)}>
                 <span>...</span>
-              </Box>
+              </button>
             ) : payloadsChainId && payloadsController ? (
               <Link
                 href={ROUTES.payloadsExplorerPages(
