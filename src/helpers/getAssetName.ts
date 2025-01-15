@@ -10,6 +10,10 @@ export function getAssetSymbolByAddress(address: string) {
       return 'aAAVE';
     case appConfig.additional.stkAAVEAddress.toLowerCase():
       return 'stkAAVE';
+    // TIP: Symbol for new voting asset is added here
+    // example:
+    //     case appConfig.additional.newVotingAsset.toLowerCase():
+    //       return 'newVotingAssetSymbol';
   }
 }
 
@@ -27,5 +31,11 @@ export function getAssetNameByAddress(address: string) {
       return getAssetName({
         symbol: getAssetSymbolByAddress(address) ?? 'AAVE',
       });
+    // TIP: Name for new voting asset is added here
+    // example:
+    //    case appConfig.additional.newVotingAsset.toLowerCase():
+    //       return getAssetName({
+    //         symbol: getAssetSymbolByAddress(address) ?? 'AAVE',
+    //       });
   }
 }

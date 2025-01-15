@@ -17,6 +17,8 @@ export const SLOTS: Record<
   },
   [appConfig.additional.aaveAddress.toLowerCase()]: { balance: 0 },
   [appConfig.govCoreConfig.contractAddress.toLowerCase()]: { balance: 9 },
+  // TIP: Balance slot (or other slots) for new voting asset are added here
+  // example: [appConfig.additional.newVotingAsset.toLowerCase()]: { balance: 0 },
 } as const;
 
 export function formatBalances(balances: VotingDataByUser[]) {

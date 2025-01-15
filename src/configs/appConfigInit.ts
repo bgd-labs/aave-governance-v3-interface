@@ -213,6 +213,8 @@ const aditionalsAddresses: Record<CoreNetworkName, Record<string, Hex>> = {
     aaveAddress: AaveV3Ethereum.ASSETS.AAVE.UNDERLYING,
     aAaveAddress: AaveV3Ethereum.ASSETS.AAVE.A_TOKEN,
     stkAAVEAddress: AaveSafetyModule.STK_AAVE,
+    // TIP: New address of the voting asset will be added here
+
     // for delegation
     delegationHelper: GovernanceV3Ethereum.META_DELEGATE_HELPER,
   },

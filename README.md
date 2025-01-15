@@ -94,9 +94,25 @@ We have our own hosted version from Vercel, you can access it on [https://vote.o
 
 3.4.2. Follow the steps 3.3.1 and 3.3.2.
 
-### 4. How to change gov core to testnet?
+### 4. How to add support for a new voting asset?
 
-4.1. Simply, need to change the core name to sepolia. [file](./src/configs/appConfig.ts) `// TIP: Сan be changed to sepolia testnet`
+Initially, a new asset for voting is added on the smart contract side. But additional actions are also required on the UI side, namely:
+
+4.1. Need to add the address of the new voting asset to the application config. [file](./src/configs/appConfigInit.ts) `// TIP: New address of the voting asset will be added here`
+
+4.2. Need to add balance slot (or other slots) for new voting asset to balance slots config. [file](./src/helpers/getVoteBalanceSlot.ts) `// TIP: Balance slot (or other slots) for new voting asset are added here`
+
+4.3. Need to add support for symbol and name of new asset for voting.
+
+4.3.1. Add symbol. [file](./src/helpers/getAssetName.ts) `// TIP: Symbol for new voting asset is added here`
+
+4.3.2. Add name. [file](./src/helpers/getAssetName.ts) `// TIP: Name for new voting asset is added here`
+
+4.4. Need to update the string with symbols for tutorial modal windows and add a symbol of the new voting asset. [file](./src/components/TutorialModals/assets.ts) `// TIP: Just the string that is used in the tutorial, add the symbol of the new voting asset here`
+
+### 5. How to change gov core to testnet?
+
+5.1. Simply, need to change the core name to sepolia. [file](./src/configs/appConfig.ts) `// TIP: Сan be changed to sepolia testnet`
 
 ## License
 
