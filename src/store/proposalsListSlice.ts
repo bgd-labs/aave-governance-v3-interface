@@ -31,13 +31,18 @@ export interface IProposalsListSlice {
     activeProposalsData: Record<number, ActiveProposalOnTheList>;
     finishedProposalsData: Record<number, ProposalOnTheList>;
   };
-  initializeProposalsListData: (
+  initializeProposalsListData: ({
+    proposalsListData,
+    fromServer,
+    fromPolling,
+  }: {
     proposalsListData: {
       activeProposalsData: ActiveProposalOnTheList[];
       finishedProposalsData: ProposalOnTheList[];
-    },
-    fromServer?: boolean,
-  ) => void;
+    };
+    fromServer?: boolean;
+    fromPolling?: boolean;
+  }) => void;
   initializeLoading: boolean;
 
   activeProposalsDataInterval: number | undefined;
@@ -48,11 +53,16 @@ export interface IProposalsListSlice {
   startNewProposalsPolling: (activePage: number) => Promise<void>;
   stopNewProposalsPolling: () => void;
 
-  updateProposalsListActiveData: (
-    activeIds: number[],
-    activePage?: number,
-    rpcOnly?: boolean,
-  ) => Promise<void>;
+  updateProposalsListActiveData: ({
+    activeIds,
+    activePage,
+    rpcOnly,
+  }: {
+    activeIds: number[];
+    activePage?: number;
+    rpcOnly?: boolean;
+    polling?: boolean;
+  }) => Promise<void>;
   updateUserDataOnTheList: (rpcOnly?: boolean) => Promise<void>;
 
   updatedListDataLoading: Record<number, boolean>;
@@ -93,7 +103,11 @@ export const createProposalsListSlice: StoreSlice<
     activeProposalsData: {},
     finishedProposalsData: {},
   },
-  initializeProposalsListData: (proposalsListData, fromServer) => {
+  initializeProposalsListData: ({
+    proposalsListData,
+    fromServer,
+    fromPolling,
+  }) => {
     const activeProposalsData = get().proposalsListData.activeProposalsData;
     const finishedProposalsData = get().proposalsListData.activeProposalsData;
     if (
@@ -139,6 +153,13 @@ export const createProposalsListSlice: StoreSlice<
                 ...finishedProposal,
                 isActive: true,
               };
+            } else if (isForIPFS && fromPolling) {
+              draft.proposalsListData.finishedProposalsData[
+                proposal.proposalId
+              ] = {
+                ...finishedProposal,
+                isActive: true,
+              };
             }
             delete draft.proposalsListData.activeProposalsData[
               proposal.proposalId
@@ -157,18 +178,20 @@ export const createProposalsListSlice: StoreSlice<
     const currentInterval = get().activeProposalsDataInterval;
     clearInterval(currentInterval);
 
-    const func = async (acP?: number, rpcOnly?: boolean) => {
+    const func = async () => {
       const configs = get().configs;
       const activeIds = selectProposalsForActivePage(
         get(),
-        acP ?? 1,
+        activePage ?? 1,
       ).activeProposalsData.map((proposal) => proposal.proposalId);
       if (configs && activeIds.length > 0) {
-        await get().updateProposalsListActiveData(activeIds, acP, rpcOnly);
+        await get().updateProposalsListActiveData({
+          activeIds,
+          activePage,
+          polling: true,
+        });
       }
     };
-
-    func(activePage, true);
 
     const interval = setInterval(func, DATA_POLLING_TIME);
     set({ activeProposalsDataInterval: Number(interval) });
@@ -210,11 +233,11 @@ export const createProposalsListSlice: StoreSlice<
           1,
           Number(totalProposalsCount) - currentProposalCount,
         );
-        await get().updateProposalsListActiveData(
-          newIdsForFirstScreen,
-          undefined,
+        await get().updateProposalsListActiveData({
+          activeIds: newIdsForFirstScreen,
           rpcOnly,
-        );
+          polling: true,
+        });
       }
     };
     if (activePage === 1) {
@@ -231,7 +254,12 @@ export const createProposalsListSlice: StoreSlice<
     }
   },
 
-  updateProposalsListActiveData: async (activeIds, activePage, rpcOnly) => {
+  updateProposalsListActiveData: async ({
+    activeIds,
+    activePage,
+    rpcOnly,
+    polling,
+  }) => {
     const configs = get().configs;
     if (configs && activeIds.length > 0) {
       if (
@@ -258,7 +286,10 @@ export const createProposalsListSlice: StoreSlice<
             },
           })
         : api.proposalsList.getActive.query(input));
-      get().initializeProposalsListData(proposalsData);
+      get().initializeProposalsListData({
+        proposalsListData: proposalsData,
+        fromPolling: polling,
+      });
       get().updateUserDataOnTheList(rpcOnly);
       if (activePage) {
         set((state) =>
@@ -453,7 +484,7 @@ export const createProposalsListSlice: StoreSlice<
             draft.filters.activeIds = data.ids;
           }),
         );
-        get().initializeProposalsListData(data.data);
+        get().initializeProposalsListData({ proposalsListData: data.data });
         set({
           paginationCount: data.count ?? -1,
         });

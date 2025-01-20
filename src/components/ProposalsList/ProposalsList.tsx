@@ -96,7 +96,10 @@ export function ProposalsList({
       proposalsData.activeProposalsData.length ||
       proposalsData.finishedProposalsData.length
     ) {
-      initializeProposalsListData(proposalsData, true);
+      initializeProposalsListData({
+        proposalsListData: proposalsData,
+        fromServer: true,
+      });
     }
   }, [
     proposalsData.activeProposalsData.length,

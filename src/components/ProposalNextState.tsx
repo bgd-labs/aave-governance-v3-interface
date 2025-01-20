@@ -75,7 +75,10 @@ export function ProposalNextState({
           expiryTimestamp={timestamp}
           onExpire={async () => {
             if (!isForHelpModal) {
-              await updateProposalsListActiveData([proposalId]);
+              await updateProposalsListActiveData({
+                activeIds: [proposalId],
+                rpcOnly: true,
+              });
             }
           }}
         />
