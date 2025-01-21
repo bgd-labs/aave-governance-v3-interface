@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { metis, scroll, zkSync } from 'viem/chains';
+import { zkSync } from 'viem/chains';
 
 import {
   HistoryItemType,
@@ -16,11 +16,7 @@ export const generateSeatbeltLink = (
   startLink?: string,
 ) => {
   let isForgeReport = false;
-  if (
-    Number(payload.chain) === metis.id ||
-    Number(payload.chain) === zkSync.id ||
-    Number(payload.chain) === scroll.id
-  ) {
+  if (Number(payload.chain) === zkSync.id) {
     isForgeReport = true;
   }
   return `${startLink || seatbeltStartLink}${Number(payload.chain)}/${payload.payloadsController}/${payload.id}${isForgeReport ? '_forge' : ''}.md`;
