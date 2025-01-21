@@ -56,18 +56,7 @@ jobs:
         # change this if your site requires a custom build command
         run: ./node_modules/.bin/next build
         env:
-          RPC_MAINNET: ${{ secrets.RPC_MAINNET }}
-          RPC_AVALANCHE: ${{ secrets.RPC_AVALANCHE }}
-          RPC_OPTIMISM: ${{ secrets.RPC_OPTIMISM }}
-          RPC_POLYGON: ${{ secrets.RPC_POLYGON }}
-          RPC_ARBITRUM: ${{ secrets.RPC_ARBITRUM }}
-          RPC_BASE: ${{ secrets.RPC_BASE }}
-          RPC_GNOSIS: ${{ secrets.RPC_GNOSIS }}
-          RPC_SCROLL: ${{ secrets.RPC_SCROLL }}
-          RPC_BNB: ${{ secrets.RPC_BNB }}
-          RPC_METIS: ${{ secrets.RPC_METIS }}
-          RPC_ZKSYNC: ${{ secrets.RPC_ZKSYNC }}
-          RPC_FANTOM: ${{ secrets.RPC_FANTOM }}
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY_GOV_SERVER }}
 
       # Here's the first place where next-bundle-analysis' own script is used
       # This step pulls the raw bundle stats for the current bundle
