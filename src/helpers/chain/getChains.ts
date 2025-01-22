@@ -6,6 +6,7 @@ import {
   base,
   bsc,
   bscTestnet,
+  celo,
   gnosis,
   linea,
   mainnet,
@@ -37,6 +38,7 @@ export function getChains({
     [scroll.id]: setChain({ chain: scroll, initialRpcUrls }),
     [zkSync.id]: setChain({ chain: zkSync, initialRpcUrls }),
     [linea.id]: setChain({ chain: linea, initialRpcUrls }),
+    [celo.id]: setChain({ chain: celo, initialRpcUrls }),
     // TIP: The new chain should initialize here
     // example: [newChain.id]: setChain({ chain: newChain, initialRpcUrls }),
 

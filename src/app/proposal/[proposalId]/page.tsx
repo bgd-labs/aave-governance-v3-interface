@@ -11,6 +11,8 @@ export async function generateMetadata({
 }: {
   params: { proposalId: string };
 }) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return await generateDetailsMetadata({ params });
 }
 

@@ -180,10 +180,19 @@ export const createProposalsListSlice: StoreSlice<
 
     const func = async () => {
       const configs = get().configs;
-      const activeIds = selectProposalsForActivePage(
-        get(),
-        activePage ?? 1,
-      ).activeProposalsData.map((proposal) => proposal.proposalId);
+      const activeIds = selectProposalsForActivePage({
+        filters: get().filters,
+        totalProposalsCount: get().totalProposalsCount,
+        proposalsData: {
+          activeProposalsData: Object.values(
+            get().proposalsListData.activeProposalsData,
+          ),
+          finishedProposalsData: Object.values(
+            get().proposalsListData.finishedProposalsData,
+          ),
+        },
+        activePage: activePage ?? 1,
+      }).activeProposalsData.map((proposal) => proposal.proposalId);
       if (configs && activeIds.length > 0) {
         await get().updateProposalsListActiveData({
           activeIds,

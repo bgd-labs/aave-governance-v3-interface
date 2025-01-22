@@ -7,6 +7,7 @@ import {
   GovernanceV3BNB,
   GovernanceV3Ethereum,
   GovernanceV3Gnosis,
+  GovernanceV3Linea,
   GovernanceV3Metis,
   GovernanceV3Optimism,
   GovernanceV3Polygon,
@@ -21,6 +22,7 @@ import {
   base,
   bsc,
   gnosis,
+  linea,
   mainnet,
   metis,
   optimism,
@@ -118,6 +120,10 @@ export const payloadsControllerConfig: Record<
     [zkSync.id]: {
       dataHelperContractAddress: GovernanceV3ZkSync.PC_DATA_HELPER,
       contractAddresses: [GovernanceV3ZkSync.PAYLOADS_CONTROLLER],
+    },
+    [linea.id]: {
+      dataHelperContractAddress: GovernanceV3Linea.PC_DATA_HELPER,
+      contractAddresses: [GovernanceV3Linea.PAYLOADS_CONTROLLER],
     },
     // TIP: Addresses for the new chain with a payload controller are added here
     // example:

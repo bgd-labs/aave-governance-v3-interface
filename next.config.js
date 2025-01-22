@@ -2,7 +2,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-const pageExtensions =  ["page.tsx", "conf.tsx"];
+const pageExtensions =  ['js', 'jsx', 'tsx'];
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -40,10 +40,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   trailingSlash: true,
-  skipTrailingSlashRedirect: true
+  skipTrailingSlashRedirect: true,
+  output: process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? 'export' : undefined,
+  pageExtensions: process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? [...pageExtensions, "exportPage.tsx"] : [...pageExtensions, "appPage.tsx", "404.tsx", "api.ts"],
 };
 
-module.exports = withBundleAnalyzer(
-  process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? { ...nextConfig, output: 'export', pageExtensions: [...pageExtensions, "exportPage.tsx"] }
-    : { ...nextConfig, pageExtensions: [...pageExtensions, "appPage.tsx", "404.tsx", "api.ts"]},
-);
+module.exports = withBundleAnalyzer(nextConfig);

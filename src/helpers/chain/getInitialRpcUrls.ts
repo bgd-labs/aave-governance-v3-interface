@@ -5,6 +5,7 @@ import {
   base,
   bsc,
   bscTestnet,
+  celo,
   gnosis,
   linea,
   mainnet,
@@ -30,6 +31,7 @@ type RPCUrls = {
   scrollRPC?: string;
   zkSyncRPC?: string;
   lineaRPC?: string;
+  celoRPC?: string;
   // TIP: The new chain rpc name should be here
 };
 
@@ -99,6 +101,10 @@ export function getInitialRpcUrls({ ...urls }: RPCUrls) {
     [linea.id]: [
       urls.lineaRPC || 'https://linea.drpc.org',
       'https://linea-rpc.publicnode.com',
+    ],
+    [celo.id]: [
+      urls.celoRPC || 'https://rpc.ankr.com/celo',
+      'https://forno.celo.org',
     ],
     // TIP: The new chain public RPC urls should be here
     // example:

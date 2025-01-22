@@ -1,7 +1,11 @@
 import { Hex } from 'viem';
 
 import { PAGE_SIZE } from '../../configs/configs';
-import { VotersData } from '../../types';
+import {
+  ActiveProposalOnTheList,
+  ProposalOnTheList,
+  VotersData,
+} from '../../types';
 import { IProposalSlice } from '../proposalSlice';
 import { IProposalsListSlice } from '../proposalsListSlice';
 import { IProposalsSlice } from '../proposalsSlice';
@@ -19,28 +23,38 @@ export const selectIdsForRequest = (
   return ids.slice(startIndex, endIndex);
 };
 
-export const selectProposalsForActivePage = (
-  store: IProposalsSlice & IProposalsListSlice,
-  activePage: number,
-) => {
-  if (store.totalProposalsCount !== -1) {
+export const selectProposalsForActivePage = ({
+  totalProposalsCount,
+  proposalsData,
+  activePage,
+  filters,
+}: {
+  totalProposalsCount: number;
+  proposalsData: {
+    activeProposalsData: ActiveProposalOnTheList[];
+    finishedProposalsData: ProposalOnTheList[];
+  };
+  activePage: number;
+} & Pick<IProposalsListSlice, 'filters'>) => {
+  if (totalProposalsCount !== -1) {
     const ids =
-      (store.filters.title !== null && store.filters.title !== '') ||
-      store.filters.state !== null
-        ? store.filters.activeIds
+      (filters.title !== null && filters.title !== '') || filters.state !== null
+        ? filters.activeIds
         : selectIdsForRequest(
-            [...Array(Number(store.totalProposalsCount)).keys()].sort(
+            [...Array(Number(totalProposalsCount)).keys()].sort(
               (a, b) => b - a,
             ),
             activePage,
           );
 
-    const filteredActiveProposalsData = Object.values(
-      store.proposalsListData.activeProposalsData,
-    ).filter((proposal) => ids.includes(proposal.proposalId));
-    const filteredFinishedProposalsData = Object.values(
-      store.proposalsListData.finishedProposalsData,
-    ).filter((proposal) => ids.includes(proposal.proposalId));
+    const filteredActiveProposalsData =
+      proposalsData.activeProposalsData.filter((proposal) =>
+        ids.includes(proposal.proposalId),
+      );
+    const filteredFinishedProposalsData =
+      proposalsData.finishedProposalsData.filter((proposal) =>
+        ids.includes(proposal.proposalId),
+      );
 
     return {
       activeProposalsData: filteredActiveProposalsData.sort(

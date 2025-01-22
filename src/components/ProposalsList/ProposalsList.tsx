@@ -73,7 +73,19 @@ export function ProposalsList({
   const initializeLoading = useStore((store) => store.initializeLoading);
 
   const proposalsListData = useStore((store) =>
-    selectProposalsForActivePage(store, activePage),
+    selectProposalsForActivePage({
+      totalProposalsCount: store.totalProposalsCount ?? count,
+      proposalsData: {
+        activeProposalsData:
+          Object.values(store.proposalsListData.activeProposalsData) ??
+          proposalsData.activeProposalsData,
+        finishedProposalsData:
+          Object.values(store.proposalsListData.finishedProposalsData) ??
+          proposalsData.finishedProposalsData,
+      },
+      activePage,
+      filters,
+    }),
   );
 
   const [proposalId, setProposalId] = useState<null | number>(null);
