@@ -2,15 +2,13 @@
 
 import { useRouter } from 'nextjs-toploader/app';
 import React, { useEffect } from 'react';
-import useSWR from 'swr';
 
 import { BasicModal } from '../../../../../components/BasicModal';
 import { PayloadDetailsContent } from '../../../../../components/PayloadsExplorer/PayloadDetailsContent';
 import { PayloadExploreItemLoading } from '../../../../../components/PayloadsExplorer/PayloadExploreItemLoading';
 import { DATA_POLLING_TIME } from '../../../../../configs/configs';
 import { useStore } from '../../../../../providers/ZustandStoreProvider';
-import { payloadByIdFetcher } from '../../../../../requests/fetchers/payloadByIdFetcher';
-import { selectAppClients } from '../../../../../store/selectors/rpcSwitcherSelectors';
+import { api } from '../../../../../trpc/react';
 import { PayloadsExplorerPageParams } from '../../../payload/[payloadId]/page.appPage';
 
 export default function Page({
@@ -25,15 +23,11 @@ export default function Page({
     chainWithController: `${splitParams[1]}_${splitParams[2]}`,
     payloadId: Number(splitParams[0]),
   };
-  const clients = useStore((store) => selectAppClients(store));
-  const { data: payload } = useSWR(
+
+  const { data: payload, isLoading } = api.payloads.getById.useQuery(
+    { ...inputParams },
     {
-      ...inputParams,
-      clients,
-    },
-    payloadByIdFetcher,
-    {
-      refreshInterval: DATA_POLLING_TIME,
+      refetchInterval: DATA_POLLING_TIME,
     },
   );
 
@@ -58,7 +52,7 @@ export default function Page({
         router.back();
       }}
       isOpen={isPayloadExplorerItemDetailsModalOpen}>
-      {!payload ? (
+      {!payload || isLoading ? (
         <PayloadExploreItemLoading isColumns={true} />
       ) : (
         <PayloadDetailsContent payload={payload} withExecute />

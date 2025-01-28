@@ -3,14 +3,11 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'nextjs-toploader/app';
 import React from 'react';
-import useSWR from 'swr';
 
 import { DATA_POLLING_TIME } from '../../configs/configs';
 import { ROUTES } from '../../configs/routes';
-import { useStore } from '../../providers/ZustandStoreProvider';
-import { payloadByIdFetcher } from '../../requests/fetchers/payloadByIdFetcher';
-import { selectAppClients } from '../../store/selectors/rpcSwitcherSelectors';
-import { InitialPayloadState, PayloadWithHashes } from '../../types';
+import { api } from '../../providers/TRPCReactProvider';
+import { PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { BigButton } from '../BigButton';
 import { BoxWith3D } from '../BoxWith3D';
@@ -23,21 +20,13 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
   const router = useRouter();
   const theme = useTheme();
 
-  const clients = useStore((store) => selectAppClients(store));
-  const { data } = useSWR(
-    {
-      chainWithController: `${Number(payload.chain)}_${payload.payloadsController}`,
-      payloadId: payload.id,
-      clients,
-    },
-    payloadByIdFetcher,
-    {
-      refreshInterval:
-        payload.data.state >= InitialPayloadState.Executed
-          ? 0
-          : DATA_POLLING_TIME,
-    },
-  );
+  const input = {
+    chainWithController: `${Number(payload.chain)}_${payload.payloadsController}`,
+    payloadId: Number(payload.id),
+  };
+  const { data } = api.payloads.getById.useQuery(input, {
+    refetchInterval: DATA_POLLING_TIME,
+  });
 
   const updatedPayload = data ?? payload;
 

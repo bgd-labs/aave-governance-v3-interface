@@ -1,19 +1,18 @@
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { zeroAddress } from 'viem';
+import { Address } from 'viem';
 
 import ReloadIcon from '../../../assets/icons/reload.svg';
+import { appConfig } from '../../../configs/appConfig';
 import {
   getLocalStoragePowersInfoClicked,
   setLocalStoragePowersInfoClicked,
 } from '../../../configs/localStorage';
 import { texts } from '../../../helpers/texts/texts';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import {
-  selectCurrentPowers,
-  selectCurrentPowersForActiveWallet,
-} from '../../../store/selectors/powersSelectors';
+import { useGetCurrentPowersQuery } from '../../../requests/queryFetchers/fetchCurrentUserPowersQuery';
+import { selectAppClients } from '../../../store/selectors/rpcSwitcherSelectors';
 import { GovernancePowerType } from '../../../types';
 import { Divider } from '../../primitives/Divider';
 import { IconBox } from '../../primitives/IconBox';
@@ -23,7 +22,6 @@ import { CurrentPowerItem } from './CurrentPowerItem';
 
 export function CurrentPowers() {
   const representative = useStore((store) => store.representative);
-  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
   const activeWallet = useStore((store) => store.activeWallet);
   const setPowersInfoModalOpen = useStore(
     (store) => store.setPowersInfoModalOpen,
@@ -31,11 +29,7 @@ export function CurrentPowers() {
   const setAccountInfoModalOpen = useStore(
     (store) => store.setAccountInfoModalOpen,
   );
-
-  const currentPowersAll = useStore((store) => selectCurrentPowers(store));
-  const currentPowersActiveWallet = useStore((store) =>
-    selectCurrentPowersForActiveWallet(store),
-  );
+  const clients = useStore((store) => selectAppClients(store));
 
   const theme = useTheme();
 
@@ -43,6 +37,18 @@ export function CurrentPowers() {
   const [isInfoClicked, setClicked] = useState(
     getLocalStoragePowersInfoClicked() === 'true',
   );
+
+  const {
+    currentPowers,
+    currentPowersActiveWallet,
+    refetchCurrent,
+    refetchActive,
+  } = useGetCurrentPowersQuery({
+    adr: representative.address as Address,
+    activeAdr: activeWallet?.address,
+    govCoreClient: clients[appConfig.govCoreChainId],
+    withoutCache: true,
+  });
 
   return (
     <Box
@@ -69,7 +75,7 @@ export function CurrentPowers() {
         <BlockTitleWithTooltip
           title={texts.walletConnect.currentPower}
           description={texts.walletConnect.currentPowerDescription}
-          isPopoverVisible={!!currentPowersAll?.timestamp}
+          isPopoverVisible={!!currentPowers?.timestamp}
           isClicked={isInfoClicked}
           onClick={() => {
             setLocalStoragePowersInfoClicked('true');
@@ -85,7 +91,7 @@ export function CurrentPowers() {
             typography: 'descriptor',
             color: '$textDisabled',
           }}>
-          {currentPowersAll?.timestamp ? (
+          {currentPowers?.timestamp ? (
             <Box
               sx={{
                 display: 'flex',
@@ -94,9 +100,7 @@ export function CurrentPowers() {
               }}>
               <Box component="p">
                 on{' '}
-                {dayjs
-                  .unix(currentPowersAll.timestamp)
-                  .format('HH:mm DD.MM.YYYY')}
+                {dayjs.unix(currentPowers.timestamp).format('HH:mm DD.MM.YYYY')}
               </Box>
               <Box
                 component="button"
@@ -118,12 +122,11 @@ export function CurrentPowers() {
                 onClick={() => {
                   setStartAnim(true);
                   setTimeout(() => setStartAnim(false), 500);
-                  getCurrentPowers(
-                    representative.address
-                      ? representative.address
-                      : activeWallet?.address || zeroAddress,
-                    true,
-                  );
+                  if (representative.address) {
+                    refetchCurrent();
+                  } else if (activeWallet?.address) {
+                    refetchActive();
+                  }
                 }}>
                 <IconBox
                   sx={{
@@ -189,9 +192,9 @@ export function CurrentPowers() {
           <CurrentPowerItem
             type={GovernancePowerType.VOTING}
             representativeAddress={representative.address}
-            totalValue={currentPowersAll?.totalVotingPower}
-            yourValue={currentPowersAll?.yourVotingPower}
-            delegatedValue={currentPowersAll?.delegatedVotingPower}
+            totalValue={currentPowers?.totalVotingPower}
+            yourValue={currentPowers?.yourVotingPower}
+            delegatedValue={currentPowers?.delegatedVotingPower}
           />
           <CurrentPowerItem
             type={GovernancePowerType.PROPOSITION}
@@ -205,7 +208,7 @@ export function CurrentPowers() {
         <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Box
             onClick={() => {
-              if (currentPowersAll) {
+              if (currentPowers) {
                 setAccountInfoModalOpen(false);
                 setPowersInfoModalOpen(true);
               }
@@ -213,10 +216,10 @@ export function CurrentPowers() {
             sx={{
               typography: 'descriptorAccent',
               mt: 12,
-              cursor: !currentPowersAll ? 'not-allowed' : 'pointer',
+              cursor: !currentPowers ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s ease',
-              opacity: !currentPowersAll ? '0.4' : 1,
-              hover: { opacity: !currentPowersAll ? '0.4' : '0.7' },
+              opacity: !currentPowers ? '0.4' : 1,
+              hover: { opacity: !currentPowers ? '0.4' : '0.7' },
             }}>
             Details
           </Box>

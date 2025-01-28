@@ -3,7 +3,6 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'nextjs-toploader/app';
 import React, { ReactNode, useEffect, useState } from 'react';
-import useSWR from 'swr';
 
 import ColumnsIcon from '../../assets/icons/columnsIcon.svg';
 import RowIcon from '../../assets/icons/rowIcon.svg';
@@ -17,10 +16,9 @@ import { ROUTES } from '../../configs/routes';
 import { generateSeatbeltLink } from '../../helpers/formatPayloadData';
 import { texts } from '../../helpers/texts/texts';
 import { useGetSeatbeltReportPayloadsExplorer } from '../../hooks/useGetSeatbeltReportPayloadsExplorer';
+import { api } from '../../providers/TRPCReactProvider';
 import { useStore } from '../../providers/ZustandStoreProvider';
-import { filteredPayloadsDataFetcher } from '../../requests/fetchers/filteredPayloadsDataFetcher';
 import { getChainAndPayloadsController } from '../../requests/fetchFilteredPayloadsData';
-import { selectAppClients } from '../../store/selectors/rpcSwitcherSelectors';
 import { PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { InputWrapper } from '../InputWrapper';
@@ -105,16 +103,13 @@ export function PayloadsExplorerPage({
     (store) => store.setSelectedPayloadForExecute,
   );
 
-  const clients = useStore((store) => selectAppClients(store));
-  const { data: pollingData } = useSWR(
+  const { data: pollingData } = api.payloads.getPaginated.useQuery(
     {
-      clients,
       activePage,
       chainWithController,
     },
-    filteredPayloadsDataFetcher,
     {
-      refreshInterval: DATA_POLLING_TIME,
+      refetchInterval: DATA_POLLING_TIME,
     },
   );
 
