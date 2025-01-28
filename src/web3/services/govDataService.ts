@@ -8,7 +8,7 @@ import {
   IPayloadsControllerDataHelper_ABI,
   IVotingMachineDataHelper_ABI,
   IVotingMachineWithProofs_ABI,
-} from '@bgd-labs/aave-address-book';
+} from '@bgd-labs/aave-address-book/abis';
 import {
   BasicProposal,
   blockLimit,
