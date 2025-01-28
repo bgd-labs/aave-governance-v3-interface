@@ -8,6 +8,7 @@ import {
   bsc,
   bscTestnet,
   gnosis,
+  linea,
   mainnet,
   metis,
   optimism,
@@ -89,6 +90,14 @@ export const initialRpcUrls: Record<number, string[]> = {
     process.env.NEXT_PUBLIC_RPC_ZKEVM || 'https://zksync.meowrpc.com',
     'https://mainnet.era.zksync.io',
   ],
+  [linea.id]: [
+    process.env.NEXT_PUBLIC_RPC_LINEA || 'https://linea.drpc.org',
+    'https://linea-rpc.publicnode.com',
+  ],
+  // [celo.id]: [
+  //   process.env.NEXT_PUBLIC_RPC_CELO || 'https://rpc.ankr.com/celo',
+  //   'https://forno.celo.org',
+  // ],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -138,6 +147,7 @@ export const CHAINS: Record<number, Chain> = {
   [gnosis.id]: setChain(gnosis),
   [scroll.id]: setChain(scroll),
   [zkSync.id]: setChain(zkSync),
+  [linea.id]: setChain(linea),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),

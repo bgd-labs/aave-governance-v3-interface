@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: 'IPFS'
-      url: https://${{ steps.pinata.outputs.hash }}.ipfs.cf-ipfs.com/
+      url: https://${{ steps.pinata.outputs.hash }}.ipfs.dweb.link/
     outputs:
       pinata_hash: '${{ steps.pinata.outputs.hash }}'
     steps:

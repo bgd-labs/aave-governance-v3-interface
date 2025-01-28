@@ -1,12 +1,12 @@
 'use client';
 
-import { StaticChainIcon as CI } from '@bgd-labs/react-web3-icons';
-import { ExternalComponentBaseProps } from '@bgd-labs/react-web3-icons/dist/utils';
+import { Web3Icon } from '@bgd-labs/react-web3-icons';
+import { chainsIconsPack } from '@bgd-labs/react-web3-icons/dist/iconsPacks/chainsIconsPack';
 import { Box, SxProps } from '@mui/system';
 
 import { CustomSkeleton } from '../CustomSkeleton';
 
-interface ChainIconProps extends ExternalComponentBaseProps {
+interface ChainIconProps {
   chainId: number;
   size?: number;
   css?: SxProps;
@@ -17,16 +17,18 @@ interface ChainIconProps extends ExternalComponentBaseProps {
 const ChainIcon = ({ chainId, size, css, ...props }: ChainIconProps) => {
   return (
     <Box
+      className="ChainIcon"
       sx={{
         lineHeight: 0,
         width: size ?? 12,
         height: size ?? 12,
         ...css,
       }}>
-      <CI
+      <Web3Icon
         width={size ?? 12}
         height={size ?? 12}
         chainId={chainId}
+        iconsPack={chainsIconsPack}
         loader={
           <Box
             sx={{

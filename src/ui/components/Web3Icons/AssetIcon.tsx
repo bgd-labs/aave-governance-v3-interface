@@ -1,10 +1,7 @@
 'use client';
 
-import { AssetIcon as AI } from '@bgd-labs/react-web3-icons';
-import {
-  AssetIconProps,
-  ExternalComponentBaseProps,
-} from '@bgd-labs/react-web3-icons/dist/utils';
+import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
+import { Web3Icon } from '@bgd-labs/react-web3-icons';
 import { Box, SxProps } from '@mui/system';
 
 import { CustomSkeleton } from '../CustomSkeleton';
@@ -17,23 +14,28 @@ const AssetIcon = ({
   size,
   css,
   ...props
-}: AssetIconProps &
-  ExternalComponentBaseProps & {
-    size?: number;
-    css?: SxProps;
-  }) => {
+}: {
+  symbol: string;
+  size?: number;
+  css?: SxProps;
+}) => {
   return (
     <Box
       sx={{
         lineHeight: 0,
         width: size ?? 12,
         height: size ?? 12,
+        img: {
+          width: size ?? 12,
+          height: size ?? 12,
+        },
         ...css,
       }}>
-      <AI
+      <Web3Icon
         width={size ?? 12}
         height={size ?? 12}
-        symbol={symbol}
+        symbol={symbol === Asset.AAAVE ? Asset.AAVE : symbol}
+        assetTag={symbol === Asset.AAAVE ? 'a' : undefined}
         loader={
           <Box
             sx={{
