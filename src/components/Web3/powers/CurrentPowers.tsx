@@ -1,5 +1,4 @@
 import { Box, useTheme } from '@mui/system';
-import { skipToken } from '@tanstack/query-core';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
