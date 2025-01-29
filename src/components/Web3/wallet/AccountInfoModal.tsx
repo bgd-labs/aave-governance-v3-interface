@@ -1,10 +1,11 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Address, zeroAddress } from 'viem';
 
 import { appConfig } from '../../../configs/appConfig';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import { useGetCurrentPowersQuery } from '../../../requests/queryFetchers/fetchCurrentUserPowersQuery';
+import { getTotalPowers } from '../../../requests/queryHelpers/getTotalPower';
 import { selectAppClients } from '../../../store/selectors/rpcSwitcherSelectors';
 import { RepresentedAddress } from '../../../types';
 import { BasicModal } from '../../BasicModal';
@@ -45,11 +46,16 @@ export function AccountInfoModal({
 
   const allTransactions = activeWallet ? allTxsFromStore : [];
 
-  useGetCurrentPowersQuery({
-    adr: representative.address as Address,
-    activeAdr: activeWallet?.address,
-    govCoreClient: clients[appConfig.govCoreChainId],
+  useQuery({
+    queryKey: ['currentPowers', representative.address, activeWallet?.address],
+    queryFn: () =>
+      getTotalPowers({
+        adr: representative.address as Address,
+        activeAdr: activeWallet?.address,
+        govCoreClient: clients[appConfig.govCoreChainId],
+      }),
     enabled: isOpen,
+    gcTime: 3600000,
   });
 
   return (

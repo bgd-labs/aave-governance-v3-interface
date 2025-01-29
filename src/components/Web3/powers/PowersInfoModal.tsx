@@ -1,10 +1,11 @@
 import { Box } from '@mui/system';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { Address } from 'viem';
 
 import { appConfig } from '../../../configs/appConfig';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import { useGetCurrentPowersQuery } from '../../../requests/queryFetchers/fetchCurrentUserPowersQuery';
+import { getTotalPowers } from '../../../requests/queryHelpers/getTotalPower';
 import { selectAppClients } from '../../../store/selectors/rpcSwitcherSelectors';
 import { GovernancePowerType } from '../../../types';
 import { BackButton3D } from '../../BackButton3D';
@@ -24,15 +25,19 @@ export function PowersInfoModal({ isOpen, setIsOpen }: PowersInfoModalProps) {
     (store) => store.setAccountInfoModalOpen,
   );
 
-  const { currentPowers, currentPowersActiveWallet } = useGetCurrentPowersQuery(
-    {
-      adr: representative.address as Address,
-      activeAdr: activeWallet?.address,
-      govCoreClient: clients[appConfig.govCoreChainId],
-    },
-  );
+  const { data } = useQuery({
+    queryKey: ['currentPowers', representative.address, activeWallet?.address],
+    queryFn: () =>
+      getTotalPowers({
+        adr: representative.address as Address,
+        activeAdr: activeWallet?.address,
+        govCoreClient: clients[appConfig.govCoreChainId],
+      }),
+    enabled: false,
+    gcTime: 3600000,
+  });
 
-  if (!currentPowers || !currentPowersActiveWallet) return null;
+  if (!data?.currentPowers || !data?.currentPowersActiveWallet) return null;
 
   return (
     <BasicModal
@@ -43,13 +48,13 @@ export function PowersInfoModal({ isOpen, setIsOpen }: PowersInfoModalProps) {
       <PowersModalItem
         type={GovernancePowerType.VOTING}
         representativeAddress={representative.address}
-        totalValue={currentPowers.totalVotingPower}
-        powersByAssets={currentPowers.powersByAssets}
+        totalValue={data?.currentPowers.totalVotingPower}
+        powersByAssets={data?.currentPowers.powersByAssets}
       />
       <PowersModalItem
         type={GovernancePowerType.PROPOSITION}
-        totalValue={currentPowersActiveWallet.totalPropositionPower}
-        powersByAssets={currentPowersActiveWallet.powersByAssets}
+        totalValue={data?.currentPowersActiveWallet.totalPropositionPower}
+        powersByAssets={data?.currentPowersActiveWallet.powersByAssets}
       />
 
       <Box sx={{ mt: 40 }}>

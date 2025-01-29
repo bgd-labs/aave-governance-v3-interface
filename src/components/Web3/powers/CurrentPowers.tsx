@@ -1,4 +1,5 @@
 import { Box, useTheme } from '@mui/system';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { Address } from 'viem';
@@ -11,7 +12,7 @@ import {
 } from '../../../configs/localStorage';
 import { texts } from '../../../helpers/texts/texts';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import { useGetCurrentPowersQuery } from '../../../requests/queryFetchers/fetchCurrentUserPowersQuery';
+import { getTotalPowers } from '../../../requests/queryHelpers/getTotalPower';
 import { selectAppClients } from '../../../store/selectors/rpcSwitcherSelectors';
 import { GovernancePowerType } from '../../../types';
 import { Divider } from '../../primitives/Divider';
@@ -38,16 +39,15 @@ export function CurrentPowers() {
     getLocalStoragePowersInfoClicked() === 'true',
   );
 
-  const {
-    currentPowers,
-    currentPowersActiveWallet,
-    refetchCurrent,
-    refetchActive,
-  } = useGetCurrentPowersQuery({
-    adr: representative.address as Address,
-    activeAdr: activeWallet?.address,
-    govCoreClient: clients[appConfig.govCoreChainId],
-    withoutCache: true,
+  const { data, refetch } = useQuery({
+    queryKey: ['currentPowers', representative.address, activeWallet?.address],
+    queryFn: () =>
+      getTotalPowers({
+        adr: representative.address as Address,
+        activeAdr: activeWallet?.address,
+        govCoreClient: clients[appConfig.govCoreChainId],
+      }),
+    enabled: false,
   });
 
   return (
@@ -75,7 +75,7 @@ export function CurrentPowers() {
         <BlockTitleWithTooltip
           title={texts.walletConnect.currentPower}
           description={texts.walletConnect.currentPowerDescription}
-          isPopoverVisible={!!currentPowers?.timestamp}
+          isPopoverVisible={!!data?.currentPowers?.timestamp}
           isClicked={isInfoClicked}
           onClick={() => {
             setLocalStoragePowersInfoClicked('true');
@@ -91,7 +91,7 @@ export function CurrentPowers() {
             typography: 'descriptor',
             color: '$textDisabled',
           }}>
-          {currentPowers?.timestamp ? (
+          {data?.currentPowers?.timestamp ? (
             <Box
               sx={{
                 display: 'flex',
@@ -100,7 +100,9 @@ export function CurrentPowers() {
               }}>
               <Box component="p">
                 on{' '}
-                {dayjs.unix(currentPowers.timestamp).format('HH:mm DD.MM.YYYY')}
+                {dayjs
+                  .unix(data.currentPowers.timestamp)
+                  .format('HH:mm DD.MM.YYYY')}
               </Box>
               <Box
                 component="button"
@@ -122,11 +124,7 @@ export function CurrentPowers() {
                 onClick={() => {
                   setStartAnim(true);
                   setTimeout(() => setStartAnim(false), 500);
-                  if (representative.address) {
-                    refetchCurrent();
-                  } else if (activeWallet?.address) {
-                    refetchActive();
-                  }
+                  refetch();
                 }}>
                 <IconBox
                   sx={{
@@ -192,23 +190,23 @@ export function CurrentPowers() {
           <CurrentPowerItem
             type={GovernancePowerType.VOTING}
             representativeAddress={representative.address}
-            totalValue={currentPowers?.totalVotingPower}
-            yourValue={currentPowers?.yourVotingPower}
-            delegatedValue={currentPowers?.delegatedVotingPower}
+            totalValue={data?.currentPowers?.totalVotingPower}
+            yourValue={data?.currentPowers?.yourVotingPower}
+            delegatedValue={data?.currentPowers?.delegatedVotingPower}
           />
           <CurrentPowerItem
             type={GovernancePowerType.PROPOSITION}
-            totalValue={currentPowersActiveWallet?.totalPropositionPower}
-            yourValue={currentPowersActiveWallet?.yourPropositionPower}
+            totalValue={data?.currentPowersActiveWallet?.totalPropositionPower}
+            yourValue={data?.currentPowersActiveWallet?.yourPropositionPower}
             delegatedValue={
-              currentPowersActiveWallet?.delegatedPropositionPower
+              data?.currentPowersActiveWallet?.delegatedPropositionPower
             }
           />
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Box
             onClick={() => {
-              if (currentPowers) {
+              if (data?.currentPowers) {
                 setAccountInfoModalOpen(false);
                 setPowersInfoModalOpen(true);
               }
@@ -216,10 +214,10 @@ export function CurrentPowers() {
             sx={{
               typography: 'descriptorAccent',
               mt: 12,
-              cursor: !currentPowers ? 'not-allowed' : 'pointer',
+              cursor: !data?.currentPowers ? 'not-allowed' : 'pointer',
               transition: 'all 0.2s ease',
-              opacity: !currentPowers ? '0.4' : 1,
-              hover: { opacity: !currentPowers ? '0.4' : '0.7' },
+              opacity: !data?.currentPowers ? '0.4' : 1,
+              hover: { opacity: !data?.currentPowers ? '0.4' : '0.7' },
             }}>
             Details
           </Box>
