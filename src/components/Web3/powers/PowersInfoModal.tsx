@@ -1,7 +1,7 @@
 import { Box } from '@mui/system';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { Address } from 'viem';
+import { zeroAddress } from 'viem';
 
 import { appConfig } from '../../../configs/appConfig';
 import { useStore } from '../../../providers/ZustandStoreProvider';
@@ -25,12 +25,16 @@ export function PowersInfoModal({ isOpen, setIsOpen }: PowersInfoModalProps) {
     (store) => store.setAccountInfoModalOpen,
   );
 
+  const representativeAddress =
+    representative.address === '' ? zeroAddress : representative.address;
+  const activeWalletAddress = activeWallet?.address ?? zeroAddress;
+
   const { data } = useQuery({
-    queryKey: ['currentPowers', representative.address, activeWallet?.address],
+    queryKey: ['currentPowers', representativeAddress, activeWalletAddress],
     queryFn: () =>
       getTotalPowers({
-        adr: representative.address as Address,
-        activeAdr: activeWallet?.address,
+        adr: representativeAddress,
+        activeAdr: activeWalletAddress,
         govCoreClient: clients[appConfig.govCoreChainId],
       }),
     enabled: false,

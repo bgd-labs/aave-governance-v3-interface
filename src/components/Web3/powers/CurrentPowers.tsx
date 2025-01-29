@@ -1,8 +1,9 @@
 import { Box, useTheme } from '@mui/system';
+import { skipToken } from '@tanstack/query-core';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { Address } from 'viem';
+import { zeroAddress } from 'viem';
 
 import ReloadIcon from '../../../assets/icons/reload.svg';
 import { appConfig } from '../../../configs/appConfig';
@@ -39,12 +40,16 @@ export function CurrentPowers() {
     getLocalStoragePowersInfoClicked() === 'true',
   );
 
+  const representativeAddress =
+    representative.address === '' ? zeroAddress : representative.address;
+  const activeWalletAddress = activeWallet?.address ?? zeroAddress;
+
   const { data, refetch } = useQuery({
-    queryKey: ['currentPowers', representative.address, activeWallet?.address],
+    queryKey: ['currentPowers', representativeAddress, activeWalletAddress],
     queryFn: () =>
       getTotalPowers({
-        adr: representative.address as Address,
-        activeAdr: activeWallet?.address,
+        adr: representativeAddress,
+        activeAdr: activeWalletAddress,
         govCoreClient: clients[appConfig.govCoreChainId],
       }),
     enabled: false,
