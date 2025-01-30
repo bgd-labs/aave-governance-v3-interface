@@ -193,9 +193,7 @@ export async function formatListData(
   data: Omit<GetGovernanceProposalsResponse, 'totalProposalsCount'>,
 ) {
   const proposalsData = await Promise.all(
-    data.proposals.map(
-      async (proposal) => await getProposalForListFormattedData(proposal),
-    ),
+    data.proposals.map((proposal) => getProposalForListFormattedData(proposal)),
   );
   const payloadsData = data.proposals
     .map((proposal) => getProposalPayloadsFormattedData(proposal))
@@ -205,9 +203,8 @@ export async function formatListData(
     payloadsData,
   });
   const voting = await Promise.all(
-    data.proposals.map(
-      async (proposal) =>
-        await getProposalVotingFormattedData(proposal, input.clients),
+    data.proposals.map((proposal) =>
+      getProposalVotingFormattedData(proposal, input.clients),
     ),
   );
 

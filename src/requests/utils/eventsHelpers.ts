@@ -54,11 +54,11 @@ export async function getEventsBySteps<T>(
   }
 
   const results = await Promise.allSettled(
-    eventsCountArray.map(async (count) => {
+    eventsCountArray.map((count) => {
       const startBlockNumber = startBlock + blockLimit * count;
       const endBlockNumber = startBlock + (blockLimit * count + blockLimit);
 
-      return await callbackFunc(
+      return callbackFunc(
         startBlockNumber,
         endBlock > endBlockNumber ? endBlockNumber : endBlock,
       );

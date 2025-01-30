@@ -71,17 +71,16 @@ async function getProposalDataForDetailsRPC({
   const [payloadsData, votingChainId] = await Promise.all([
     (
       await Promise.all(
-        Object.entries(payloadsChainsWithIds).map(
-          async ([chainId, payloadsIds]) =>
-            await getPayloadsDataRPC({
-              chainId: Number(chainId),
-              payloadsIds,
-              clients: input.clients,
-            }),
+        Object.entries(payloadsChainsWithIds).map(([chainId, payloadsIds]) =>
+          getPayloadsDataRPC({
+            chainId: Number(chainId),
+            payloadsIds,
+            clients: input.clients,
+          }),
         ),
       )
     ).flat(),
-    await readContract(input.clients[appConfig.govCoreChainId], {
+    readContract(input.clients[appConfig.govCoreChainId], {
       abi: IVotingPortal_ABI,
       address: proposalData.votingPortal,
       functionName: 'VOTING_MACHINE_CHAIN_ID',

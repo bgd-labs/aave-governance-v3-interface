@@ -42,8 +42,8 @@ export async function getTotalPowers({
     };
   } else if (adr !== zeroAddress && activeAdr !== zeroAddress) {
     const data = await Promise.allSettled([
-      await getCurrentPowers({ adr, govCoreClient }),
-      await getCurrentPowers({
+      getCurrentPowers({ adr, govCoreClient }),
+      getCurrentPowers({
         adr: activeAdr,
         govCoreClient,
       }),
