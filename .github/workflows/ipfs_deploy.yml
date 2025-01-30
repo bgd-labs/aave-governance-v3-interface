@@ -6,7 +6,7 @@ concurrency:
 
 on:
   push:
-    branches: ['main', 'feat/update']
+    branches: ['main']
 
 env:
   NEXT_PUBLIC_DEPLOY_FOR_IPFS: true
