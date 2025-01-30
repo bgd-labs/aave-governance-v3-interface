@@ -1,9 +1,12 @@
 import { selectAllTransactionsByWallet } from '@bgd-labs/frontend-web3-utils';
-import React, { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 import { zeroAddress } from 'viem';
 
 import { appConfig } from '../../../configs/appConfig';
 import { useStore } from '../../../providers/ZustandStoreProvider';
+import { getTotalPowers } from '../../../requests/queryHelpers/getTotalPower';
+import { selectAppClients } from '../../../store/selectors/rpcSwitcherSelectors';
 import { RepresentedAddress } from '../../../types';
 import { BasicModal } from '../../BasicModal';
 import { AccountInfoModalContent } from './AccountInfoModalContent';
@@ -32,8 +35,8 @@ export function AccountInfoModal({
   setIsCreationFeeModalOpen,
 }: AccountInfoModalProps) {
   const representative = useStore((store) => store.representative);
-  const getCurrentPowers = useStore((store) => store.getCurrentPowers);
   const activeWallet = useStore((store) => store.activeWallet);
+  const clients = useStore((store) => selectAppClients(store));
   const allTxsFromStore = useStore((store) =>
     selectAllTransactionsByWallet(
       store.transactionsPool,
@@ -43,15 +46,21 @@ export function AccountInfoModal({
 
   const allTransactions = activeWallet ? allTxsFromStore : [];
 
-  useEffect(() => {
-    if (isOpen) {
-      if (representative.address) {
-        getCurrentPowers(representative.address);
-      } else if (activeWallet?.address) {
-        getCurrentPowers(activeWallet?.address);
-      }
-    }
-  }, [activeWallet?.address, representative.address, isOpen]);
+  const representativeAddress =
+    representative.address === '' ? zeroAddress : representative.address;
+  const activeWalletAddress = activeWallet?.address ?? zeroAddress;
+
+  useQuery({
+    queryKey: ['currentPowers', representativeAddress, activeWalletAddress],
+    queryFn: () =>
+      getTotalPowers({
+        adr: representativeAddress,
+        activeAdr: activeWalletAddress,
+        govCoreClient: clients[appConfig.govCoreChainId],
+      }),
+    enabled: isOpen,
+    gcTime: 3600000,
+  });
 
   return (
     <BasicModal

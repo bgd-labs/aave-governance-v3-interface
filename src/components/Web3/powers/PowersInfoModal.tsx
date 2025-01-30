@@ -1,11 +1,12 @@
 import { Box } from '@mui/system';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { zeroAddress } from 'viem';
 
+import { appConfig } from '../../../configs/appConfig';
 import { useStore } from '../../../providers/ZustandStoreProvider';
-import {
-  selectCurrentPowers,
-  selectCurrentPowersForActiveWallet,
-} from '../../../store/selectors/powersSelectors';
+import { getTotalPowers } from '../../../requests/queryHelpers/getTotalPower';
+import { selectAppClients } from '../../../store/selectors/rpcSwitcherSelectors';
 import { GovernancePowerType } from '../../../types';
 import { BackButton3D } from '../../BackButton3D';
 import { BasicModal } from '../../BasicModal';
@@ -18,16 +19,29 @@ interface PowersInfoModalProps {
 
 export function PowersInfoModal({ isOpen, setIsOpen }: PowersInfoModalProps) {
   const representative = useStore((store) => store.representative);
+  const activeWallet = useStore((store) => store.activeWallet);
+  const clients = useStore((store) => selectAppClients(store));
   const setAccountInfoModalOpen = useStore(
     (store) => store.setAccountInfoModalOpen,
   );
 
-  const currentPowersAll = useStore((store) => selectCurrentPowers(store));
-  const currentPowersActiveWallet = useStore((store) =>
-    selectCurrentPowersForActiveWallet(store),
-  );
+  const representativeAddress =
+    representative.address === '' ? zeroAddress : representative.address;
+  const activeWalletAddress = activeWallet?.address ?? zeroAddress;
 
-  if (!currentPowersAll || !currentPowersActiveWallet) return null;
+  const { data } = useQuery({
+    queryKey: ['currentPowers', representativeAddress, activeWalletAddress],
+    queryFn: () =>
+      getTotalPowers({
+        adr: representativeAddress,
+        activeAdr: activeWalletAddress,
+        govCoreClient: clients[appConfig.govCoreChainId],
+      }),
+    enabled: false,
+    gcTime: 3600000,
+  });
+
+  if (!data?.currentPowers || !data?.currentPowersActiveWallet) return null;
 
   return (
     <BasicModal
@@ -38,13 +52,13 @@ export function PowersInfoModal({ isOpen, setIsOpen }: PowersInfoModalProps) {
       <PowersModalItem
         type={GovernancePowerType.VOTING}
         representativeAddress={representative.address}
-        totalValue={currentPowersAll.totalVotingPower}
-        powersByAssets={currentPowersAll.powersByAssets}
+        totalValue={data?.currentPowers.totalVotingPower}
+        powersByAssets={data?.currentPowers.powersByAssets}
       />
       <PowersModalItem
         type={GovernancePowerType.PROPOSITION}
-        totalValue={currentPowersActiveWallet.totalPropositionPower}
-        powersByAssets={currentPowersActiveWallet.powersByAssets}
+        totalValue={data?.currentPowersActiveWallet.totalPropositionPower}
+        powersByAssets={data?.currentPowersActiveWallet.powersByAssets}
       />
 
       <Box sx={{ mt: 40 }}>

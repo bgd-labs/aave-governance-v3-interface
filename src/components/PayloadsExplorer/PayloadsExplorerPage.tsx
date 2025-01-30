@@ -3,7 +3,6 @@
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'nextjs-toploader/app';
 import React, { ReactNode, useEffect, useState } from 'react';
-import useSWR from 'swr';
 
 import ColumnsIcon from '../../assets/icons/columnsIcon.svg';
 import RowIcon from '../../assets/icons/rowIcon.svg';
@@ -17,10 +16,9 @@ import { ROUTES } from '../../configs/routes';
 import { generateSeatbeltLink } from '../../helpers/formatPayloadData';
 import { texts } from '../../helpers/texts/texts';
 import { useGetSeatbeltReportPayloadsExplorer } from '../../hooks/useGetSeatbeltReportPayloadsExplorer';
+import { api } from '../../providers/TRPCReactProvider';
 import { useStore } from '../../providers/ZustandStoreProvider';
-import { filteredPayloadsDataFetcher } from '../../requests/fetchers/filteredPayloadsDataFetcher';
 import { getChainAndPayloadsController } from '../../requests/fetchFilteredPayloadsData';
-import { selectAppClients } from '../../store/selectors/rpcSwitcherSelectors';
 import { PayloadWithHashes } from '../../types';
 import { BackButton3D } from '../BackButton3D';
 import { InputWrapper } from '../InputWrapper';
@@ -105,20 +103,16 @@ export function PayloadsExplorerPage({
     (store) => store.setSelectedPayloadForExecute,
   );
 
-  const clients = useStore((store) => selectAppClients(store));
-  const { data: pollingData } = useSWR(
+  const { data: pollingData } = api.payloads.getPaginated.useQuery(
     {
-      clients,
       activePage,
       chainWithController,
     },
-    filteredPayloadsDataFetcher,
     {
-      refreshInterval: DATA_POLLING_TIME,
+      refetchInterval: DATA_POLLING_TIME,
+      initialData: data,
     },
   );
-
-  const updatedData = pollingData ?? data;
 
   const {
     handleReportClick,
@@ -277,17 +271,17 @@ export function PayloadsExplorerPage({
                 gridTemplateColumns: 'repeat(4, 1fr)',
               },
             }}>
-            {!!updatedData.ids.length && !updatedData.data.length && (
+            {!!pollingData.ids.length && !pollingData.data.length && (
               <>
-                {updatedData.ids.map((id) => (
+                {pollingData.ids.map((id) => (
                   <PayloadExploreItemLoading key={id} isColumns={isColumns} />
                 ))}
               </>
             )}
 
-            {!!updatedData.data.length && (
+            {!!pollingData.data.length && (
               <>
-                {updatedData.data
+                {pollingData.data
                   .sort((a, b) => Number(b.id) - Number(a.id))
                   .map((payload) => (
                     <PayloadExploreItem
@@ -305,11 +299,11 @@ export function PayloadsExplorerPage({
               </>
             )}
 
-            {updatedData.data.length === 0 ? (
+            {pollingData.data.length === 0 ? (
               <PayloadExploreItemLoading isColumns={false} noData />
             ) : (
               <>
-                {!updatedData.ids.length && !updatedData.data.length && (
+                {!pollingData.ids.length && !pollingData.data.length && (
                   <PayloadExploreItemLoading isColumns={isColumns} />
                 )}
               </>
@@ -319,7 +313,7 @@ export function PayloadsExplorerPage({
 
         <Pagination
           forcePage={activePage}
-          totalItems={updatedData.count}
+          totalItems={pollingData.count}
           chainWithController={chainWithController}
           withoutQuery
         />
