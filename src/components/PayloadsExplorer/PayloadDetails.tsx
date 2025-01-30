@@ -26,9 +26,8 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
   };
   const { data } = api.payloads.getById.useQuery(input, {
     refetchInterval: DATA_POLLING_TIME,
+    initialData: payload,
   });
-
-  const updatedPayload = data ?? payload;
 
   return (
     <Container>
@@ -66,7 +65,7 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
               p: '14px 12px',
             },
           }}>
-          <PayloadDetailsContent payload={updatedPayload} withExecute />
+          <PayloadDetailsContent payload={data} withExecute />
         </BoxWith3D>
       </Box>
 
@@ -79,8 +78,8 @@ export function PayloadDetails({ payload }: { payload: PayloadWithHashes }) {
         }}>
         <Link
           href={ROUTES.payloadsExplorerPages(
-            Number(updatedPayload.chain),
-            updatedPayload.payloadsController,
+            Number(data.chain),
+            data.payloadsController,
             0,
           )}>
           <BigButton>Go to explorer</BigButton>

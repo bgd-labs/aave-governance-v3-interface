@@ -110,10 +110,9 @@ export function PayloadsExplorerPage({
     },
     {
       refetchInterval: DATA_POLLING_TIME,
+      initialData: data,
     },
   );
-
-  const updatedData = pollingData ?? data;
 
   const {
     handleReportClick,
@@ -272,17 +271,17 @@ export function PayloadsExplorerPage({
                 gridTemplateColumns: 'repeat(4, 1fr)',
               },
             }}>
-            {!!updatedData.ids.length && !updatedData.data.length && (
+            {!!pollingData.ids.length && !pollingData.data.length && (
               <>
-                {updatedData.ids.map((id) => (
+                {pollingData.ids.map((id) => (
                   <PayloadExploreItemLoading key={id} isColumns={isColumns} />
                 ))}
               </>
             )}
 
-            {!!updatedData.data.length && (
+            {!!pollingData.data.length && (
               <>
-                {updatedData.data
+                {pollingData.data
                   .sort((a, b) => Number(b.id) - Number(a.id))
                   .map((payload) => (
                     <PayloadExploreItem
@@ -300,11 +299,11 @@ export function PayloadsExplorerPage({
               </>
             )}
 
-            {updatedData.data.length === 0 ? (
+            {pollingData.data.length === 0 ? (
               <PayloadExploreItemLoading isColumns={false} noData />
             ) : (
               <>
-                {!updatedData.ids.length && !updatedData.data.length && (
+                {!pollingData.ids.length && !pollingData.data.length && (
                   <PayloadExploreItemLoading isColumns={isColumns} />
                 )}
               </>
@@ -314,7 +313,7 @@ export function PayloadsExplorerPage({
 
         <Pagination
           forcePage={activePage}
-          totalItems={updatedData.count}
+          totalItems={pollingData.count}
           chainWithController={chainWithController}
           withoutQuery
         />
