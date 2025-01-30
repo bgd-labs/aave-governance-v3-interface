@@ -1,6 +1,6 @@
 # Aave Governance V3 interface
 
-<img src="./public/metaLogo.jpg" alt="Aave Governance v3" width="100%" height="70%">
+<img src="./public/metaLogo.jpg" alt="Aave Governance v3" width="100%" height="70.01%">
 
 <br>
 
