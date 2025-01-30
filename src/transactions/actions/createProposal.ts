@@ -35,7 +35,7 @@ export async function createProposal({
     await Promise.all(
       payloadsChainIds.map(async (chainId) => {
         return await Promise.all(
-          payloadsControllers.map(async (controller) => {
+          payloadsControllers.map((controller) => {
             const payloadsIds = payloads
               .filter(
                 (payload) =>
@@ -49,9 +49,9 @@ export async function createProposal({
               payloadsIds,
             };
 
-            return await (isForIPFS
+            return isForIPFS
               ? fetchPayloads({ input: { ...input, clients } })
-              : api.payloads.getAll.query(input));
+              : api.payloads.getAll.query(input);
           }),
         );
       }),

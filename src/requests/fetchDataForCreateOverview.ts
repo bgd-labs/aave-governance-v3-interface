@@ -44,7 +44,7 @@ export async function fetchDataForCreateOverviewScreen({
     await Promise.all(
       Object.entries(payloadsChainsWithIds).map(
         async ([chainId, payloadsIds]) =>
-          await getPayloadsDataRPC({
+          getPayloadsDataRPC({
             chainId: Number(chainId),
             payloadsIds,
             clients,

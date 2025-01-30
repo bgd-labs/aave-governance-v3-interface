@@ -19,8 +19,8 @@ export const revalidate = 60;
 
 export default async function Page() {
   const [configs, count] = await Promise.all([
-    await api.configs.get(),
-    await api.configs.getProposalsCount({}),
+    api.configs.get(),
+    api.configs.getProposalsCount({}),
   ]);
 
   const data = await api.createProposal.getForCreate({ proposalsCount: count });

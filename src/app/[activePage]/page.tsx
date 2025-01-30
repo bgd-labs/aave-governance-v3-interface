@@ -38,8 +38,8 @@ export default async function Page({
   params: { activePage: string };
 }) {
   const [configs, count] = await Promise.all([
-    await api.configs.get(),
-    await api.configs.getProposalsCount({}),
+    api.configs.get(),
+    api.configs.getProposalsCount({}),
   ]);
   const activePage = +params.activePage;
   if (isNaN(activePage)) {

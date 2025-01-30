@@ -94,7 +94,7 @@ export async function fetchActiveProposalsDataForList({
             return (await dataRaw.json())[0] as GetProposalInitialResponse;
           }),
         );
-        return await formatListData(input, {
+        return formatListData(input, {
           proposals: data,
         });
       }

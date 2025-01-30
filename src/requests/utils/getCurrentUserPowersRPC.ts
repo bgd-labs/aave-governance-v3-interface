@@ -43,9 +43,9 @@ export async function getCurrentUserPowersRPC({
   const powers = await Promise.all(
     contracts.map(async (contract) => {
       const data = await Promise.all([
-        await contract.read.balanceOf([walletAddress]),
-        await contract.read.getPowersCurrent([walletAddress]),
-        await contract.read.getDelegates([walletAddress]),
+        contract.read.balanceOf([walletAddress]),
+        contract.read.getPowersCurrent([walletAddress]),
+        contract.read.getDelegates([walletAddress]),
       ]);
 
       const isPropositionPowerDelegated =

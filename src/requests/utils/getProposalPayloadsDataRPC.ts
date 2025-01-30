@@ -27,13 +27,12 @@ export async function getProposalPayloadsDataRPC({
   });
   return (
     await Promise.all(
-      Object.entries(payloadsChainsWithIds).map(
-        async ([chainId, payloadsIds]) =>
-          await getPayloadsDataRPC({
-            chainId: Number(chainId),
-            payloadsIds,
-            clients,
-          }),
+      Object.entries(payloadsChainsWithIds).map(([chainId, payloadsIds]) =>
+        getPayloadsDataRPC({
+          chainId: Number(chainId),
+          payloadsIds,
+          clients,
+        }),
       ),
     )
   ).flat();
