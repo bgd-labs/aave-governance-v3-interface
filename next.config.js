@@ -1,16 +1,15 @@
-/** @type {import('next').NextConfig} */
-const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const pageExtensions =  ['js', 'jsx', 'tsx'];
+
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     webpackBuildWorker: true,
   },
   webpack(config) {
-    // config.resolve.fallback = { fs: false, path: false };
-
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg'),
@@ -41,27 +40,9 @@ const nextConfig = {
   },
   reactStrictMode: true,
   trailingSlash: true,
+  skipTrailingSlashRedirect: true,
+  output: process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? 'export' : undefined,
+  pageExtensions: process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true' ? [...pageExtensions, "exportPage.tsx"] : [...pageExtensions, "appPage.tsx", "404.tsx", "api.ts"],
 };
 
-module.exports = withBundleAnalyzer(
-  isForIPFS
-    ? {
-        ...nextConfig,
-        output: 'export',
-        images: {
-          unoptimized: true,
-        },
-        // assetPrefix: './',
-      }
-    : {
-        ...nextConfig,
-        pageExtensions: [
-          'page.tsx',
-          'page.ts',
-          'page.jsx',
-          'page.js',
-          'page.md',
-          'page.mdx',
-        ],
-      },
-);
+module.exports = withBundleAnalyzer(nextConfig);

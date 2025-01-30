@@ -5,18 +5,18 @@ import {
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 
-import LinkIcon from '/public/images/icons/linkIcon.svg';
-import RocketError from '/public/images/rocketError.svg';
-import RocketReplaced from '/public/images/rocketReplaced.svg';
-import RocketSuccess from '/public/images/rocketSuccess.svg';
-
-import { useStore } from '../../store/ZustandStoreProvider';
-import { BigButton, Link } from '../../ui';
-import { RocketLoader } from '../../ui/components/RocketLoader';
-import { IconBox } from '../../ui/primitives/IconBox';
-import { texts } from '../../ui/utils/texts';
-import { chainInfoHelper } from '../../utils/configs';
-import { TransactionUnion } from '../store/transactionsSlice';
+import LinkIcon from '../../assets/icons/linkIcon.svg';
+import RocketError from '../../assets/rocketError.svg';
+import RocketReplaced from '../../assets/rocketReplaced.svg';
+import RocketSuccess from '../../assets/rocketSuccess.svg';
+import { BigButton } from '../../components/BigButton';
+import { Link } from '../../components/Link';
+import { IconBox } from '../../components/primitives/IconBox';
+import { RocketLoader } from '../../components/RocketLoader';
+import { chainInfoHelper } from '../../configs/chains';
+import { texts } from '../../helpers/texts/texts';
+import { useStore } from '../../providers/ZustandStoreProvider';
+import { TransactionUnion } from '../../store/transactionsSlice';
 import { CopyErrorButton } from './CopyErrorButton';
 
 export interface ActionModalContentProps {

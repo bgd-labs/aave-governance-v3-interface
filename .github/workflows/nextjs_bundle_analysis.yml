@@ -26,22 +26,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install Node.js
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.6.0
+
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
+          cache: pnpm
 
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-
-      # If pnpm is used, you need to switch the previous step with the following one. pnpm does not create a package-lock.json
-      # so the step above will fail to pull dependencies
-      # - uses: pnpm/action-setup@v2
-      #   name: Install pnpm
-      #   id: pnpm-install
-      #   with:
-      #     version: 7
-      #     run_install: true
+        run: pnpm install
 
       - name: Restore next build
         uses: actions/cache@v3
@@ -58,6 +55,8 @@ jobs:
       - name: Build next.js app
         # change this if your site requires a custom build command
         run: ./node_modules/.bin/next build
+        env:
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY_GOV_SERVER }}
 
       # Here's the first place where next-bundle-analysis' own script is used
       # This step pulls the raw bundle stats for the current bundle

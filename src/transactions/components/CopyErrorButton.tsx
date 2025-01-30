@@ -1,11 +1,10 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
 
-import CopyIcon from '/public/images/icons/copy.svg';
-
-import { CopyToClipboard } from '../../ui';
-import { IconBox } from '../../ui/primitives/IconBox';
-import { texts } from '../../ui/utils/texts';
+import CopyIcon from '../../assets/icons/copy.svg';
+import { CopyToClipboard } from '../../components/CopyToClipboard';
+import { IconBox } from '../../components/primitives/IconBox';
+import { texts } from '../../helpers/texts/texts';
 
 interface CopyErrorButtonProps {
   errorMessage: Error | string;

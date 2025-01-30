@@ -1,7 +1,7 @@
 import { SxProps } from '@mui/system';
 import React, { useEffect } from 'react';
 
-import { BasicModal } from '../../ui';
+import { BasicModal } from '../../components/BasicModal';
 import {
   ActionModalContent,
   ActionModalContentProps,

@@ -1,9 +1,10 @@
 import { Box } from '@mui/system';
 import React from 'react';
 
-import { BackButton3D, Divider } from '../../ui';
-import { texts } from '../../ui/utils/texts';
-import { AllTransactions } from '../store/transactionsSlice';
+import { BackButton3D } from '../../components/BackButton3D';
+import { Divider } from '../../components/primitives/Divider';
+import { texts } from '../../helpers/texts/texts';
+import { AllTransactions } from '../../store/transactionsSlice';
 import { TransactionInfoItem } from './TransactionInfoItem';
 
 interface TransactionsModalContentProps {

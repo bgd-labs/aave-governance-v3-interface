@@ -6,25 +6,25 @@ import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';
 
-import ArrowRightIcon from '/public/images/icons/arrowRight.svg';
-import CheckIcon from '/public/images/icons/check.svg';
-import CrossIcon from '/public/images/icons/cross.svg';
-import ReplacedIcon from '/public/images/icons/replacedIcon.svg';
-
-import { DelegatedText } from '../../delegate/components/DelegatedText';
-import { TxText } from '../../representations/components/TxText';
-import { useStore } from '../../store/ZustandStoreProvider';
-import { Link, Spinner } from '../../ui';
-import { ChainNameWithIcon } from '../../ui/components/ChainNameWithIcon';
-import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
-import { IconBox } from '../../ui/primitives/IconBox';
-import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
-import { texts } from '../../ui/utils/texts';
-import { appConfig } from '../../utils/appConfig';
-import { chainInfoHelper } from '../../utils/configs';
-import { getAssetName } from '../../utils/getAssetName';
-import { getScanLink } from '../../utils/getScanLink';
-import { TxType, TxWithStatus } from '../store/transactionsSlice';
+import ArrowRightIcon from '../../assets/icons/arrowRight.svg';
+import CheckIcon from '../../assets/icons/check.svg';
+import CrossIcon from '../../assets/icons/cross.svg';
+import ReplacedIcon from '../../assets/icons/replacedIcon.svg';
+import { ChainNameWithIcon } from '../../components/ChainNameWithIcon';
+import { CopyAndExternalIconsSet } from '../../components/CopyAndExternalIconsSet';
+import { DelegatedText } from '../../components/Delegate/DelegatedText';
+import { Link } from '../../components/Link';
+import { IconBox } from '../../components/primitives/IconBox';
+import { TxText } from '../../components/Representations/TxText';
+import { Spinner } from '../../components/Spinner';
+import { appConfig } from '../../configs/appConfig';
+import { chainInfoHelper } from '../../configs/chains';
+import { getAssetNameByAddress } from '../../helpers/getAssetName';
+import { getScanLink } from '../../helpers/getScanLink';
+import { texts } from '../../helpers/texts/texts';
+import { useStore } from '../../providers/ZustandStoreProvider';
+import { TxType, TxWithStatus } from '../../store/transactionsSlice';
+import { textCenterEllipsis } from '../../styles/textCenterEllipsis';
 
 interface TransactionInfoItemProps {
   tx: TxWithStatus;
@@ -43,8 +43,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         iconSize={10}
         css={{
           display: 'inline-block',
-          '.NetworkIcon': { mr: 2 },
-          '.ChainNameWithIcon__text': { display: 'inline' },
+          '.ChainIcon': { display: 'inline-flex', mr: 2 },
+          '.ChainNameWithIcon__text': { display: 'inline-flex' },
         }}
       />
     );
@@ -57,8 +57,8 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
         iconSize={10}
         css={{
           display: 'inline-block',
-          '.NetworkIcon': { mr: 2 },
-          '.ChainNameWithIcon__text': { display: 'inline' },
+          '.ChainIcon': { display: 'inline-flex', mr: 2 },
+          '.ChainNameWithIcon__text': { display: 'inline-flex' },
         }}
       />
     );
@@ -107,8 +107,9 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === TxType.sendProofs && tx.payload && (
             <>
               {texts.transactions.sendProofsTx}{' '}
-              <b>{getAssetName(tx.payload.underlyingAsset)}</b> for the proposal{' '}
-              <b>#{tx.payload.proposalId}</b>, on <NetworkIconWitchChainN />
+              <b>{getAssetNameByAddress(tx.payload.underlyingAsset)}</b> for the
+              proposal <b>#{tx.payload.proposalId}</b>, on{' '}
+              <NetworkIconWitchChainN />
             </>
           )}
           {tx.type === TxType.activateVotingOnVotingMachine && tx.payload && (
@@ -201,9 +202,9 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
           {tx.type === TxType.claimFees && tx.payload && (
             <>
               {texts.creationFee.claimGuaranteeTxInfo(
-                tx.payload.proposalIds.length,
+                tx.payload.proposalsIds.length,
               )}{' '}
-              {tx.payload.proposalIds.map((id) => (
+              {tx.payload.proposalsIds.map((id) => (
                 <b>{id}</b>
               ))}{' '}
               on <NetworkIconWitchChainN />
