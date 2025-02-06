@@ -17,7 +17,7 @@ export const generateSeatbeltLink = (
   startLink?: string,
 ) => {
   let isForgeReport = false;
-  if (payload.chainId === metis.id || payload.chainId === zkSync.id) {
+  if (payload.chainId === zkSync.id) {
     isForgeReport = true;
   }
   return `${startLink || seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}${isForgeReport ? '_forge' : ''}.md`;
