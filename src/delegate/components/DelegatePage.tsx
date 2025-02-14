@@ -16,14 +16,7 @@ import WarningIcon from '/public/images/icons/warningIcon.svg';
 import { useStore } from '../../store/ZustandStoreProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
-import {
-  BackButton3D,
-  BigButton,
-  BoxWith3D,
-  Container,
-  Link,
-  NoSSR,
-} from '../../ui';
+import { BackButton3D, BigButton, BoxWith3D, Container, NoSSR } from '../../ui';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
 import { NoDataWrapper } from '../../ui/components/NoDataWrapper';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
@@ -203,20 +196,7 @@ export function DelegatePage() {
                         }}>
                         <WarningIcon />
                       </IconBox>
-                      <Box>
-                        {texts.delegatePage.walletConnectSafeWarning}{' '}
-                        <Link
-                          css={{
-                            color: '$textSecondary',
-                            fontWeight: 600,
-                            hover: { color: theme.palette.$text },
-                          }}
-                          href="https://github.com/bgd-labs/aave-governance-v3-interface/issues/24"
-                          inNewWindow>
-                          {texts.other.readMore}
-                        </Link>
-                        .
-                      </Box>
+                      <Box>{texts.delegatePage.walletConnectSafeWarning}</Box>
                     </Box>
                   </BoxWith3D>
                 </Box>

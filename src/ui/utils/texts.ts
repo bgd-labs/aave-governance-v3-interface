@@ -349,7 +349,6 @@ export const texts = {
     on: 'On',
     copyError: 'Copy error text',
     userNotFound: 'User not found',
-    readMore: 'Read more',
     rpcIsNotSupported: "This RPC doesn't support our contracts logic",
     rpcError: (rpcErrorsLength: number, rpcUrl?: string) =>
       `At the moment we cannot get data from ${
