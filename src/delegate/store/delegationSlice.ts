@@ -192,17 +192,26 @@ export const createDelegationSlice: StoreSlice<
   },
 
   delegate: async (stateDelegateData, formDelegateData, timestamp) => {
-    await get().checkAndSwitchNetwork(appConfig.govCoreChainId);
-    const delegationService = get().delegationService;
-    const activeAddress = get().activeWallet?.address;
-    const isWalletAddressContract = get().activeWallet?.isContractAddress;
-    const data = await get().prepareDataForDelegation(formDelegateData);
+    const {
+      checkAndSwitchNetwork,
+      delegationService,
+      activeWallet,
+      prepareDataForDelegation,
+      executeTx,
+      setModalOpen,
+    } = get();
 
-    if (activeAddress && !isWalletAddressContract) {
+    await checkAndSwitchNetwork(appConfig.govCoreChainId);
+    const data = await prepareDataForDelegation(formDelegateData);
+    const { address: activeAddress, isContractAddress } = activeWallet || {};
+
+    if (!activeAddress) return;
+
+    if (!isContractAddress) {
       if (data.length === 1) {
-        await get().executeTx({
+        await executeTx({
           body: () => {
-            get().setModalOpen(true);
+            setModalOpen(true);
             return delegationService.delegate(
               data[0].underlyingAsset,
               data[0].delegatee,
@@ -234,9 +243,9 @@ export const createDelegationSlice: StoreSlice<
         }
 
         if (sigs.length) {
-          await get().executeTx({
+          await executeTx({
             body: () => {
-              get().setModalOpen(true);
+              setModalOpen(true);
               return delegationService.batchMetaDelegate(sigs);
             },
             params: {
@@ -251,8 +260,8 @@ export const createDelegationSlice: StoreSlice<
           });
         }
       }
-    } else if (activeAddress && isWalletAddressContract) {
-      if (get().activeWallet?.walletType === WalletType.Safe) {
+    } else {
+      if (activeWallet?.walletType === WalletType.Safe) {
         const safeSdk = new Sdk(safeSdkOptions);
 
         const txsData = data.map((item) => {
@@ -267,9 +276,9 @@ export const createDelegationSlice: StoreSlice<
           };
         });
 
-        await get().executeTx({
+        await executeTx({
           body: () => {
-            get().setModalOpen(true);
+            setModalOpen(true);
             return safeSdk.txs.send({ txs: txsData });
           },
           params: {
@@ -296,9 +305,9 @@ export const createDelegationSlice: StoreSlice<
           }
         }
 
-        await get().executeTx({
+        await executeTx({
           body: () => {
-            get().setModalOpen(true);
+            setModalOpen(true);
             return delegationService.delegate(
               data[data.length - 1].underlyingAsset,
               data[data.length - 1].delegatee,
