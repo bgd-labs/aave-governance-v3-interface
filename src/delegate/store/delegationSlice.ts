@@ -292,38 +292,55 @@ export const createDelegationSlice: StoreSlice<
           },
         });
       } else {
-        if (data.length > 1) {
-          for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            if (!isEqual(item, data[data.length - 1])) {
-              await delegationService.delegate(
-                item.underlyingAsset,
-                item.delegatee,
-                item.delegationType,
-              );
+        const txsData = data.map((item) => {
+          const txData = delegationService.getDelegateTxParams(
+            item.delegatee,
+            item.delegationType,
+          );
+          return {
+            to: item.underlyingAsset,
+            value: '0',
+            data: txData,
+          };
+        });
+
+        try {
+          setModalOpen(true);
+          await delegationService.batchDelegateEIP5792(txsData);
+        } catch (error) {
+          if (data.length > 1) {
+            for (let i = 0; i < data.length; i++) {
+              const item = data[i];
+              if (!isEqual(item, data[data.length - 1])) {
+                await delegationService.delegate(
+                  item.underlyingAsset,
+                  item.delegatee,
+                  item.delegationType,
+                );
+              }
             }
           }
-        }
 
-        await executeTx({
-          body: () => {
-            setModalOpen(true);
-            return delegationService.delegate(
-              data[data.length - 1].underlyingAsset,
-              data[data.length - 1].delegatee,
-              data[data.length - 1].delegationType,
-            );
-          },
-          params: {
-            type: TxType.delegate,
-            desiredChainID: appConfig.govCoreChainId,
-            payload: {
-              delegateData: stateDelegateData,
-              formDelegateData,
-              timestamp,
+          await executeTx({
+            body: () => {
+              setModalOpen(true);
+              return delegationService.delegate(
+                data[data.length - 1].underlyingAsset,
+                data[data.length - 1].delegatee,
+                data[data.length - 1].delegationType,
+              );
             },
-          },
-        });
+            params: {
+              type: TxType.delegate,
+              desiredChainID: appConfig.govCoreChainId,
+              payload: {
+                delegateData: stateDelegateData,
+                formDelegateData,
+                timestamp,
+              },
+            },
+          });
+        }
       }
     }
   },
