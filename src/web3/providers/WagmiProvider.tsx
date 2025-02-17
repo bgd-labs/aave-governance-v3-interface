@@ -3,9 +3,10 @@
 import {
   createWagmiConfig,
   WagmiZustandSync,
+  WalletType,
 } from '@bgd-labs/frontend-web3-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import { useStore } from '../../store/ZustandStoreProvider';
 import { appConfig, WC_PROJECT_ID } from '../../utils/appConfig';
@@ -22,6 +23,7 @@ export default function WagmiProvider() {
   const changeActiveWalletAccount = useStore(
     (store) => store.changeActiveWalletAccount,
   );
+  const connectWallet = useStore((store) => store.connectWallet);
 
   const config = useMemo(() => {
     return createWagmiConfig({
@@ -46,6 +48,13 @@ export default function WagmiProvider() {
       ssr: true,
     });
   }, []);
+
+  useEffect(() => {
+    const isInIframe = window !== window.parent;
+    if (isInIframe) {
+      connectWallet(WalletType.Safe);
+    }
+  }, [connectWallet]);
 
   return (
     <QueryClientProvider client={queryClient}>
