@@ -16,7 +16,8 @@ import {
   polygonMumbai,
   scroll,
   sepolia,
-  zkSync,
+  sonic,
+  zksync,
 } from 'viem/chains';
 
 // chains RPC urls
@@ -86,13 +87,17 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://scroll.blockpi.network/v1/rpc/public',
     'https://scroll-mainnet.public.blastapi.io',
   ],
-  [zkSync.id]: [
+  [zksync.id]: [
     process.env.NEXT_PUBLIC_RPC_ZKEVM || 'https://zksync.meowrpc.com',
     'https://mainnet.era.zksync.io',
   ],
   [linea.id]: [
     process.env.NEXT_PUBLIC_RPC_LINEA || 'https://linea.drpc.org',
     'https://linea-rpc.publicnode.com',
+  ],
+  [sonic.id]: [
+    process.env.NEXT_PUBLIC_RPC_SONIC || 'https://sonic.drpc.org',
+    'https://sonic-rpc.publicnode.com',
   ],
   // [celo.id]: [
   //   process.env.NEXT_PUBLIC_RPC_CELO || 'https://rpc.ankr.com/celo',
@@ -146,8 +151,9 @@ export const CHAINS: Record<number, Chain> = {
   [optimism.id]: setChain(optimism),
   [gnosis.id]: setChain(gnosis),
   [scroll.id]: setChain(scroll),
-  [zkSync.id]: setChain(zkSync),
+  [zksync.id]: setChain(zksync),
   [linea.id]: setChain(linea),
+  [sonic.id]: setChain(sonic),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
