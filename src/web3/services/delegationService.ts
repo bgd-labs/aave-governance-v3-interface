@@ -6,6 +6,7 @@ import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis
 import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IATokenWithDelegation';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { signTypedData, writeContract } from '@wagmi/core';
+import { sendCalls } from '@wagmi/core/experimental';
 import dayjs from 'dayjs';
 import {
   Address,
@@ -412,6 +413,20 @@ export class DelegationService {
         abi: IAaveTokenV3_ABI,
         functionName: 'delegateByType',
         args: [delegateToAddress, type],
+      });
+    }
+  }
+
+  async batchDelegateEIP5792(
+    txsData: { to: Address; value: string; data: Hex }[],
+  ) {
+    if (this.wagmiConfig) {
+      return sendCalls(this.wagmiConfig, {
+        calls: txsData.map((tx) => ({
+          to: tx.to,
+          value: BigInt(tx.value),
+          data: tx.data,
+        })),
       });
     }
   }
