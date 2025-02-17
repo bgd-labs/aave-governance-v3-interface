@@ -189,7 +189,7 @@ export const texts = {
     tableItemDelegated: 'Delegated',
     tableItemNotDelegated: 'Not Delegated',
     walletConnectSafeWarning:
-      'Note that when connecting a Safe wallet via WalletConnect, the delegation transaction tracking is broken on our side.',
+      'Transaction status may not be visible when using Safe via WalletConnect. Please check your Safe wallet directly.',
   },
   representationsPage: {
     notConnectedWallet: 'Wallet is not connected',
