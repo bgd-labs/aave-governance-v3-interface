@@ -1,6 +1,5 @@
 import { Box } from '@mui/system';
 import React, { ReactNode, useState } from 'react';
-import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 import { isAddress, zeroAddress } from 'viem';
 
 import { useStore } from '../../store/ZustandStoreProvider';
@@ -37,14 +36,18 @@ export function TableText({
 
   const isActionsAvailable = !isCrossed && !isError && !alwaysGray;
 
+  const handleCopy = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (value && isActionsAvailable) {
+      await navigator.clipboard.writeText(value);
+      setIsClick(true);
+      setTimeout(() => setIsClick(false), 1000);
+    }
+  };
+
   return (
     <Box
-      onClick={() => {
-        if (isActionsAvailable) {
-          setIsClick(true);
-          setTimeout(() => setIsClick(false), 1000);
-        }
-      }}
+      onClick={handleCopy}
       sx={(theme) => ({
         typography: 'h2',
         display: 'inline-flex',
@@ -55,6 +58,7 @@ export function TableText({
           : alwaysGray || isCrossed
             ? '$textDisabled'
             : '$text',
+        cursor: isActionsAvailable ? 'pointer' : 'default',
         [theme.breakpoints.up('sm')]: {
           mb: isCrossed ? 0 : 0,
         },
@@ -105,26 +109,24 @@ export function TableText({
             <>
               {!!value && (
                 <Box className="TableText__hovered" sx={{ display: 'none' }}>
-                  <CTC text={value}>
-                    <Box
-                      component="p"
-                      sx={(theme) => ({
-                        typography: 'body',
-                        lineHeight: '1 !important',
-                        backgroundColor: '$light',
-                        position: 'relative',
-                        cursor: isActionsAvailable ? 'pointer' : 'default',
-                        px: 5,
-                        py: 1,
-                        [theme.breakpoints.up('md')]: {
-                          typography: 'h3',
-                          p: '2px 5px',
-                          top: 1,
-                        },
-                      })}>
-                      {value}
-                    </Box>
-                  </CTC>
+                  <Box
+                    component="p"
+                    sx={(theme) => ({
+                      typography: 'body',
+                      lineHeight: '1 !important',
+                      backgroundColor: '$light',
+                      position: 'relative',
+                      cursor: isActionsAvailable ? 'pointer' : 'default',
+                      px: 5,
+                      py: 1,
+                      [theme.breakpoints.up('md')]: {
+                        typography: 'h3',
+                        p: '2px 5px',
+                        top: 1,
+                      },
+                    })}>
+                    {value}
+                  </Box>
                 </Box>
               )}
 

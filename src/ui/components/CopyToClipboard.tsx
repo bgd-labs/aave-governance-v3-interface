@@ -1,6 +1,5 @@
 import { Box } from '@mui/system';
 import React, { ReactNode, useState } from 'react';
-import { CopyToClipboard as CTC } from 'react-copy-to-clipboard';
 
 import { texts } from '../utils/texts';
 import { Tooltip } from './Tooltip';
@@ -18,26 +17,24 @@ export function CopyToClipboard({
 }: CopyToClipboardProps) {
   const [copied, setCopied] = useState(false);
 
+  const handleCopy = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    await navigator.clipboard.writeText(copyText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1000);
+  };
+
   return (
-    <CTC
-      text={copyText}
-      onCopy={() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1000);
-      }}>
-      <Box sx={{ lineHeight: 0 }}>
-        <Tooltip
-          color={copied ? 'dark' : 'light'}
-          tooltipContent={
-            <Box component="span" sx={{ typography: 'descriptor' }}>
-              {copied
-                ? texts.other.copied
-                : copyTooltipText || texts.other.copy}
-            </Box>
-          }>
-          {children}
-        </Tooltip>
-      </Box>
-    </CTC>
+    <Box onClick={handleCopy} sx={{ lineHeight: 0, cursor: 'pointer' }}>
+      <Tooltip
+        color={copied ? 'dark' : 'light'}
+        tooltipContent={
+          <Box component="span" sx={{ typography: 'descriptor' }}>
+            {copied ? texts.other.copied : copyTooltipText || texts.other.copy}
+          </Box>
+        }>
+        {children}
+      </Tooltip>
+    </Box>
   );
 }
