@@ -920,10 +920,10 @@
     "@tanstack/react-query" "^5.51.11"
     dayjs "^1.11.12"
 
-"@bgd-labs/react-web3-icons@^1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.10.0.tgz#0f54c7d06c4d4d7083fc381d5a73ff607771e77a"
-  integrity sha512-OH2/MXtsbZN9Kj0pL/uPIWlqILwDhH2xGK/9FVh2FdxIaXMTz5ifYbiZCDumu9VJcSjsE3PZ/hnW1shCusI6GQ==
+"@bgd-labs/react-web3-icons@^1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.13.0.tgz#7dd3ad266a2df3491bb9e7dd34da2c1b81f4e777"
+  integrity sha512-5KQ1HpSTt31L55UYXI12CDQtxY5vcQxba3gEIKVFH318Z64N7tjubLD3Qo5FI91EvUuyaTRtICzeF0xOGRu2Hg==
   dependencies:
     "@loadable/component" "5.16.4"
     tailwind-merge "2.6.0"
