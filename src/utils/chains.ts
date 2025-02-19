@@ -7,6 +7,7 @@ import {
   base,
   bsc,
   bscTestnet,
+  celo,
   gnosis,
   linea,
   mainnet,
@@ -99,10 +100,10 @@ export const initialRpcUrls: Record<number, string[]> = {
     process.env.NEXT_PUBLIC_RPC_SONIC || 'https://sonic.drpc.org',
     'https://sonic-rpc.publicnode.com',
   ],
-  // [celo.id]: [
-  //   process.env.NEXT_PUBLIC_RPC_CELO || 'https://rpc.ankr.com/celo',
-  //   'https://forno.celo.org',
-  // ],
+  [celo.id]: [
+    process.env.NEXT_PUBLIC_RPC_CELO || 'https://rpc.ankr.com/celo',
+    'https://forno.celo.org',
+  ],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -154,6 +155,7 @@ export const CHAINS: Record<number, Chain> = {
   [zksync.id]: setChain(zksync),
   [linea.id]: setChain(linea),
   [sonic.id]: setChain(sonic),
+  [celo.id]: setChain(celo),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
