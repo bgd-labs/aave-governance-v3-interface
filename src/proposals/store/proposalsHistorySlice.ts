@@ -697,6 +697,7 @@ export const createProposalsHistorySlice: StoreSlice<
               .votingClosedAndSentBlockNumber - 100,
             proposal.proposal.data.votingMachineData
               .votingClosedAndSentBlockNumber + 100,
+            proposal.proposal.data.id,
           );
 
           const filteredEvents = events
