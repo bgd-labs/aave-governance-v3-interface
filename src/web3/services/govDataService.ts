@@ -90,6 +90,19 @@ const VOTING_MACHINE_ADDRESSES: Record<
   },
 };
 
+export function getVotingMachineAddress(
+  chainId: number,
+  proposalId: number,
+): Address {
+  const addresses = VOTING_MACHINE_ADDRESSES[chainId];
+  if (!addresses) {
+    throw new Error(`No voting machine addresses found for chain ${chainId}`);
+  }
+  return proposalId > PROPOSAL_ID_THRESHOLD
+    ? addresses.newAddress
+    : addresses.oldAddress;
+}
+
 function initContracts(clients: ClientsRecord) {
   const govCore = getContract({
     address: appConfig.govCoreConfig.contractAddress,
@@ -106,18 +119,15 @@ function initContracts(clients: ClientsRecord) {
   const votingMachines = {
     [appConfig.votingMachineChainIds[0]]: getContract({
       abi: IVotingMachineWithProofs_ABI,
-      address:
-        appConfig.votingMachineConfig[appConfig.votingMachineChainIds[0]]
-          .contractAddress,
+      address: getVotingMachineAddress(appConfig.votingMachineChainIds[0], 0),
       client: clients[appConfig.votingMachineChainIds[0]],
     }),
   };
   if (appConfig.votingMachineChainIds.length > 1) {
     appConfig.votingMachineChainIds.forEach((chainId) => {
-      const votingMachineConfig = appConfig.votingMachineConfig[chainId];
       votingMachines[chainId] = getContract({
         abi: IVotingMachineWithProofs_ABI,
-        address: votingMachineConfig.contractAddress,
+        address: getVotingMachineAddress(chainId, 0),
         client: clients[chainId],
       });
     });
@@ -178,7 +188,10 @@ export class GovDataService {
   public govCore;
   private govCoreDataHelper;
 
-  private votingMachines;
+  private votingMachines: Record<
+    number,
+    Record<number, ReturnType<typeof getContract>>
+  >;
   private votingMachineDataHelpers;
   private payloadsControllerDataHelpers;
 
@@ -192,7 +205,7 @@ export class GovDataService {
     this.govCore = initContracts(this.clients).govCore;
     this.govCoreDataHelper = initContracts(this.clients).govCoreDataHelper;
     // voting
-    this.votingMachines = initContracts(this.clients).votingMachines;
+    this.votingMachines = {};
     this.votingMachineDataHelpers = initContracts(
       this.clients,
     ).votingMachineDataHelpers;
@@ -334,6 +347,20 @@ export class GovDataService {
     });
   }
 
+  private getVotingMachineContract(chainId: number, proposalId: number) {
+    if (!this.votingMachines[chainId]) {
+      this.votingMachines[chainId] = {};
+    }
+    if (!this.votingMachines[chainId][proposalId]) {
+      this.votingMachines[chainId][proposalId] = getContract({
+        abi: IVotingMachineWithProofs_ABI,
+        address: getVotingMachineAddress(chainId, proposalId),
+        client: this.clients[chainId],
+      });
+    }
+    return this.votingMachines[chainId][proposalId];
+  }
+
   async getVotingData(
     initialProposals: InitialProposal[],
     userAddress?: Address,
@@ -367,7 +394,10 @@ export class GovDataService {
             if (userAddress) {
               return (
                 (await votingMachineDataHelper.read.getProposalsData([
-                  this.votingMachines[chainId].address,
+                  this.getVotingMachineContract(
+                    chainId,
+                    Number(formattedInitialProposals[0].id),
+                  ).address,
                   formattedInitialProposals,
                   representative || userAddress || zeroAddress,
                 ])) || []
@@ -376,7 +406,10 @@ export class GovDataService {
           }
           return (
             (await votingMachineDataHelper.read.getProposalsData([
-              this.votingMachines[chainId].address,
+              this.getVotingMachineContract(
+                chainId,
+                Number(formattedInitialProposals[0].id),
+              ).address,
               formattedInitialProposals,
               userAddress || zeroAddress,
             ])) || []
@@ -491,6 +524,7 @@ export class GovDataService {
     startBlockNumber: number,
     endBlockNumber: number | undefined,
     lastBlockNumber: number | undefined,
+    proposalId: number,
   ): Promise<VotersData[]> {
     const currentBlock =
       (await getBlockNumber(this.clients[votingChainId])) || 0;
@@ -506,7 +540,10 @@ export class GovDataService {
 
     if (endBlock) {
       const newVoters = await getVoters({
-        contractAddress: this.votingMachines[votingChainId].address,
+        contractAddress: this.getVotingMachineContract(
+          votingChainId,
+          proposalId,
+        ).address,
         client: this.clients[votingChainId],
         endBlock,
         startBlock,
@@ -774,8 +811,9 @@ export class GovDataService {
   ) {
     if (this.wagmiConfig) {
       return writeContract(this.wagmiConfig, {
-        abi: this.votingMachines[votingChainId].abi,
-        address: this.votingMachines[votingChainId].address,
+        abi: this.getVotingMachineContract(votingChainId, proposalId).abi,
+        address: this.getVotingMachineContract(votingChainId, proposalId)
+          .address,
         functionName: 'startProposalVote',
         args: [BigInt(proposalId)],
         chainId: votingChainId,
@@ -803,7 +841,10 @@ export class GovDataService {
     voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
-    const votingMachine = this.votingMachines[votingChainId];
+    const votingMachine = this.getVotingMachineContract(
+      votingChainId,
+      proposalId,
+    );
     if (this.wagmiConfig) {
       return !!voterAddress && !!proofOfRepresentation
         ? writeContract(this.wagmiConfig, {
@@ -854,7 +895,10 @@ export class GovDataService {
     proofOfRepresentation?: Hex;
   }) {
     const relay = new GelatoRelay();
-    const votingMachine = this.votingMachines[votingChainId];
+    const votingMachine = this.getVotingMachineContract(
+      votingChainId,
+      proposalId,
+    );
 
     if (this.wagmiConfig) {
       const signatureParams = voterAddress
@@ -923,9 +967,13 @@ export class GovDataService {
 
   async closeAndSendVote(votingChainId: number, proposalId: number) {
     if (this.wagmiConfig) {
+      const votingMachine = this.getVotingMachineContract(
+        votingChainId,
+        proposalId,
+      );
       return writeContract(this.wagmiConfig, {
-        abi: this.votingMachines[votingChainId].abi,
-        address: this.votingMachines[votingChainId].address,
+        abi: votingMachine.abi,
+        address: votingMachine.address,
         functionName: 'closeAndSendVote',
         args: [BigInt(proposalId)],
         chainId: votingChainId,
@@ -1125,8 +1173,12 @@ export class GovDataService {
     votingChainId: number,
     startBlock: number,
     endBlock: number,
+    proposalId: number,
   ) {
-    const votingMachine = this.votingMachines[votingChainId];
+    const votingMachine = this.getVotingMachineContract(
+      votingChainId,
+      proposalId,
+    );
     return getProposalActivatedOnVM({
       contractAddress: votingMachine.address,
       client: this.clients[votingChainId],
@@ -1139,8 +1191,12 @@ export class GovDataService {
     votingChainId: number,
     startBlock: number,
     endBlock: number,
+    proposalId: number,
   ) {
-    const votingMachine = this.votingMachines[votingChainId];
+    const votingMachine = this.getVotingMachineContract(
+      votingChainId,
+      proposalId,
+    );
     return getProposalVotingClosed({
       contractAddress: votingMachine.address,
       client: this.clients[votingChainId],
