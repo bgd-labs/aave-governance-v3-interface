@@ -116,22 +116,16 @@ function initContracts(clients: ClientsRecord) {
     client: clients[appConfig.govCoreChainId],
   });
 
-  const votingMachines = {
-    [appConfig.votingMachineChainIds[0]]: getContract({
-      abi: IVotingMachineWithProofs_ABI,
-      address: getVotingMachineAddress(appConfig.votingMachineChainIds[0], 0),
-      client: clients[appConfig.votingMachineChainIds[0]],
-    }),
-  };
-  if (appConfig.votingMachineChainIds.length > 1) {
-    appConfig.votingMachineChainIds.forEach((chainId) => {
-      votingMachines[chainId] = getContract({
+  const votingMachines = Object.fromEntries(
+    appConfig.votingMachineChainIds.map((chainId) => [
+      chainId,
+      getContract({
         abi: IVotingMachineWithProofs_ABI,
         address: getVotingMachineAddress(chainId, 0),
         client: clients[chainId],
-      });
-    });
-  }
+      }),
+    ]),
+  );
 
   const votingMachineDataHelpers = {
     [appConfig.votingMachineChainIds[0]]: getContract({
@@ -391,18 +385,16 @@ export class GovDataService {
             setRpcError({ isError: false, rpcUrl, chainId });
           }
           if (representative && userAddress) {
-            if (userAddress) {
-              return (
-                (await votingMachineDataHelper.read.getProposalsData([
-                  this.getVotingMachineContract(
-                    chainId,
-                    Number(formattedInitialProposals[0].id),
-                  ).address,
-                  formattedInitialProposals,
-                  representative || userAddress || zeroAddress,
-                ])) || []
-              );
-            }
+            return (
+              (await votingMachineDataHelper.read.getProposalsData([
+                this.getVotingMachineContract(
+                  chainId,
+                  Number(formattedInitialProposals[0].id),
+                ).address,
+                formattedInitialProposals,
+                representative,
+              ])) || []
+            );
           }
           return (
             (await votingMachineDataHelper.read.getProposalsData([
