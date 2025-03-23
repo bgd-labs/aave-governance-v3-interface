@@ -115,7 +115,7 @@ export function ProposalPage({
     const totalVotes = forVotes + againstVotes;
 
     if (startBlock > 0) {
-      if (totalVotes > 0 && !proposal.data.isFinished && isVotingActive) {
+      if (totalVotes > 0) {
         getVoters(
           proposal.data.id,
           proposal.data.votingChainId,
