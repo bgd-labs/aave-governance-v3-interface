@@ -70,7 +70,7 @@ import { getVoteSignatureParams } from '../utils/signatures';
 
 export const PAGE_SIZE = 12;
 
-export const PROPOSAL_ID_THRESHOLD = 272;
+export const PROPOSAL_ID_THRESHOLD = 278;
 
 const VOTING_MACHINE_ADDRESSES: Record<
   number,
