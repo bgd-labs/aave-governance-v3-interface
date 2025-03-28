@@ -648,6 +648,7 @@ export const createProposalsHistorySlice: StoreSlice<
               historyItem.txInfo.chainId,
               proposal.proposal.data.votingMachineData.createdBlock - 100,
               proposal.proposal.data.votingMachineData.createdBlock + 100,
+              proposal.proposal.data.id,
             );
 
           const filteredEvents = events
@@ -696,6 +697,7 @@ export const createProposalsHistorySlice: StoreSlice<
               .votingClosedAndSentBlockNumber - 100,
             proposal.proposal.data.votingMachineData
               .votingClosedAndSentBlockNumber + 100,
+            proposal.proposal.data.id,
           );
 
           const filteredEvents = events

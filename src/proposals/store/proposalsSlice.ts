@@ -1023,6 +1023,7 @@ export const createProposalsSlice: StoreSlice<
       startBlockNumber,
       endBlockNumber,
       lastBlockNumber,
+      proposalId,
     );
 
     set((state) =>
