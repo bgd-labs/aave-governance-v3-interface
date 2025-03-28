@@ -897,15 +897,15 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@bgd-labs/aave-address-book@^4.12.0":
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.12.0.tgz#ad45981500097376c831169c008bdfc90d36a288"
-  integrity sha512-rxko8rJ2nsZuzGudTEV2aIbMja52WizmaNe8w0TVivVz/BzNX7JKZc73OnbO0hc5g8bI6pduQAfwXs4boZbi0w==
+"@bgd-labs/aave-address-book@^4.17.2":
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.17.2.tgz#976823b4c825aeda33bd9375705260aef857c88c"
+  integrity sha512-UVVCaLlLBA5VHl+qip/9qH8yZnNyIvyeRd4nHgKAluNbjeyRPzqESqToGmWSvtWOYK2kUtOrWCu0z9ncq6t6IA==
 
-"@bgd-labs/aave-governance-ui-helpers@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.4.0.tgz#08a4404e8bfd9f8b6833d31b56c0d2331cb46e60"
-  integrity sha512-vA05lsJwKw5vlk5zYufm8sfI7xHxFLKep6hhtzK1YXbHMkaq62ofoIz5fZ4AF8FsTTtnYXnVnFxrN9ezcTUPPA==
+"@bgd-labs/aave-governance-ui-helpers@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.5.0.tgz#9d6e379c279e1e7efa50bc9ddf73adff693de24e"
+  integrity sha512-hz2JfPpdJVKJ8g0yWfrGZuack4MrsfMNvPljzXBH0EkeNoS6qrUCSC9U79XEPb5c5zGJRNJxf8Sxvv80Hgn82A==
   dependencies:
     abitype "^1.0.8"
     bs58 "^6.0.0"
