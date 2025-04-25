@@ -2,7 +2,6 @@
 
 import { createContext, type ReactNode, useContext, useRef } from 'react';
 import { create, type StoreApi, useStore as useZustandStore } from 'zustand';
-import { devtools } from 'zustand/middleware';
 
 import { createRootSlice, RootState } from './index';
 
@@ -21,7 +20,7 @@ export const ZustandStoreProvider = ({
   const storeRef = useRef<StoreApi<RootState>>();
 
   if (!storeRef.current) {
-    storeRef.current = create(devtools(createRootSlice, { serialize: true }));
+    storeRef.current = create(createRootSlice);
   }
 
   return (
