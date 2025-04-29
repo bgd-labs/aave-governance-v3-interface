@@ -204,7 +204,10 @@ export function TransactionInfoItem({ tx }: TransactionInfoItemProps) {
                 tx.payload.proposalIds.length,
               )}{' '}
               {tx.payload.proposalIds.map((id) => (
-                <b>{id}</b>
+                <React.Fragment key={id}>
+                  <b>{id}</b>
+                  {tx.payload.proposalIds.length > 1 && ', '}
+                </React.Fragment>
               ))}{' '}
               on <NetworkIconWitchChainN />
             </>

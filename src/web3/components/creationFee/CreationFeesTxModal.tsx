@@ -53,7 +53,10 @@ export function CreationFeesTxModal({
         <Box>
           {texts.creationFee.claimGuaranteeTxInfo(proposalIds.length)}{' '}
           {proposalIds.map((id) => (
-            <b key={id}>{id}</b>
+            <React.Fragment key={id}>
+              <b>{id}</b>
+              {proposalIds.length > 1 && ', '}
+            </React.Fragment>
           ))}
         </Box>
       }
