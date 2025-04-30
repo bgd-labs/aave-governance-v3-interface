@@ -36,6 +36,7 @@ export function Timeline({ proposal, loading }: TimelineProps) {
     lastPayloadExpiredAt,
     lastPayloadExecutedAt,
     lastPayloadQueuedAt,
+    allPayloadsCanceled,
   } = getProposalStepsAndAmounts({
     proposalData: proposal.data,
     quorum: proposal.config.quorum,
@@ -79,10 +80,12 @@ export function Timeline({ proposal, loading }: TimelineProps) {
       ? votingClosedTimestamp
       : undefined;
 
-  const canceledTimestamp =
-    lastPayloadCanceledAt > proposal.data.canceledAt
-      ? lastPayloadCanceledAt
-      : proposal.data.canceledAt;
+  let canceledTimestamp;
+  if (allPayloadsCanceled) {
+    canceledTimestamp = lastPayloadCanceledAt;
+  } else if (proposal.data.canceledAt > 0) {
+    canceledTimestamp = proposal.data.canceledAt;
+  }
 
   const state =
     proposalStatuses.find((s) => s.value === proposal?.combineState)?.title ||
