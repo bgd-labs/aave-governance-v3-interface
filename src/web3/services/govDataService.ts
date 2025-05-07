@@ -618,7 +618,7 @@ export class GovDataService {
       const blockData = (await getExtendedBlock(
         this.clients[appConfig.govCoreChainId],
         blockNumber,
-      )) as Block & { parentBeaconBlockRoot: Hex };
+      )) as Block & { parentBeaconBlockRoot: Hex; requestsHash: Hex };
       const blockHeaderRLP = prepareBLockRLP(blockData);
 
       const slot = getSolidityStorageSlotBytes(
