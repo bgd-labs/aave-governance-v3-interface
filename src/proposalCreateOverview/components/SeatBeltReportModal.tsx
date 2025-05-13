@@ -24,7 +24,7 @@ export function SeatBeltReportModal({
 
   return (
     <BasicModal
-      maxWidth={980}
+      maxWidth={1500}
       initialFocus={initialFocusRef}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
