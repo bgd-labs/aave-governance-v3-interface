@@ -585,4 +585,8 @@ export const texts = {
       tryAgain: 'Try again',
     },
   },
+  proposalCreateOverview: {
+    votingWillHappenOn: 'Voting will happen on',
+    votingMachine: 'Voting machine',
+  },
 };
