@@ -1,9 +1,10 @@
 'use client';
 
 import { Box, useTheme } from '@mui/system';
+import { readContract } from '@wagmi/core/actions';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { Hex, zeroAddress } from 'viem';
+import React, { useEffect, useState } from 'react';
+import { type Hex, parseAbi, zeroAddress } from 'viem';
 
 import { CreateProposalModal } from '../../proposals/components/actionModals/CreateProposalModal';
 import { BlockWrapper } from '../../proposals/components/BlockWrapper';
@@ -56,13 +57,54 @@ export function ProposalCreateOverviewPage({
   const getCachedProposalPayloadsData = useStore(
     (store) => store.getCachedProposalPayloadsData,
   );
+  const wagmiConfig = useStore((store) => store.wagmiConfig);
+
+  const [votingChainId, setVotingChainId] = useState<number | undefined>(
+    undefined,
+  );
+  const [votingMachineAddress, setVotingMachineAddress] = useState<
+    Hex | undefined
+  >(undefined);
+
+  const votingPortalAbi = parseAbi([
+    'function VOTING_MACHINE() view returns (address)',
+    'function VOTING_MACHINE_CHAIN_ID() view returns (uint256)',
+  ]);
+
+  useEffect(() => {
+    const fetchVotingMachineData = async () => {
+      if (wagmiConfig && initialParams.votingPortal) {
+        try {
+          const [chainId, machineAddress] = await Promise.all([
+            readContract(wagmiConfig, {
+              address: initialParams.votingPortal as Hex,
+              abi: votingPortalAbi,
+              functionName: 'VOTING_MACHINE_CHAIN_ID',
+            }),
+            readContract(wagmiConfig, {
+              address: initialParams.votingPortal as Hex,
+              abi: votingPortalAbi,
+              functionName: 'VOTING_MACHINE',
+            }),
+          ]);
+          setVotingChainId(Number(chainId));
+          setVotingMachineAddress(machineAddress as Hex);
+        } catch (err) {
+          console.error('Error fetching voting machine data:', err);
+        }
+      }
+    };
+    if (initialParams.votingPortal && wagmiConfig) {
+      fetchVotingMachineData();
+    }
+  }, [wagmiConfig, initialParams.votingPortal, votingPortalAbi]);
+
+  const newProposalId = initialParams.proposalId || totalProposalCount + 1;
 
   useEffect(() => {
     getTotalProposalCount();
     getCachedProposalPayloadsData();
   }, []);
-
-  const newProposalId = initialParams.proposalId || totalProposalCount + 1;
 
   useEffect(() => {
     if (initialParams.ipfsHash) {
@@ -316,7 +358,6 @@ export function ProposalCreateOverviewPage({
 
         <ToTopButton />
       </Container>
-
       <CreateProposalModal
         error={error}
         setError={setError}
