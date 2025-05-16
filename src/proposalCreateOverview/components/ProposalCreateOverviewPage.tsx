@@ -1,9 +1,10 @@
 'use client';
 
 import { Box, useTheme } from '@mui/system';
+import { readContract } from '@wagmi/core/actions';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import { Hex, zeroAddress } from 'viem';
+import React, { useEffect, useState } from 'react';
+import { type Hex, parseAbi, zeroAddress } from 'viem';
 
 import { CreateProposalModal } from '../../proposals/components/actionModals/CreateProposalModal';
 import { BlockWrapper } from '../../proposals/components/BlockWrapper';
@@ -15,12 +16,16 @@ import { RightPanelWrapper } from '../../proposals/components/proposal/RightPane
 import { useStore } from '../../store/ZustandStoreProvider';
 import { useLastTxLocalStatus } from '../../transactions/hooks/useLastTxLocalStatus';
 import { TxType } from '../../transactions/store/transactionsSlice';
-import { BackButton3D, BigButton, Container, NoSSR } from '../../ui';
+import { BackButton3D, BigButton, Container, Link, NoSSR } from '../../ui';
+import { CopyAndExternalIconsSet } from '../../ui/components/CopyAndExternalIconsSet';
 import { CustomSkeleton } from '../../ui/components/CustomSkeleton';
+import { NetworkIcon } from '../../ui/components/NetworkIcon';
 import { TopPanelContainer } from '../../ui/components/TopPanelContainer';
 import { ToTopButton } from '../../ui/components/ToTopButton';
 import { getChainName } from '../../ui/utils/getChainName';
+import { textCenterEllipsis } from '../../ui/utils/text-center-ellipsis';
 import { texts } from '../../ui/utils/texts';
+import { getScanLink } from '../../utils/getScanLink';
 import { InitialParams } from '../types';
 
 interface ProposalCreateOverviewPageProps {
@@ -56,13 +61,54 @@ export function ProposalCreateOverviewPage({
   const getCachedProposalPayloadsData = useStore(
     (store) => store.getCachedProposalPayloadsData,
   );
+  const wagmiConfig = useStore((store) => store.wagmiConfig);
+
+  const [votingChainId, setVotingChainId] = useState<number | undefined>(
+    undefined,
+  );
+  const [votingMachineAddress, setVotingMachineAddress] = useState<
+    Hex | undefined
+  >(undefined);
+
+  const votingPortalAbi = parseAbi([
+    'function VOTING_MACHINE() view returns (address)',
+    'function VOTING_MACHINE_CHAIN_ID() view returns (uint256)',
+  ]);
+
+  useEffect(() => {
+    const fetchVotingMachineData = async () => {
+      if (wagmiConfig && initialParams.votingPortal) {
+        try {
+          const [chainId, machineAddress] = await Promise.all([
+            readContract(wagmiConfig, {
+              address: initialParams.votingPortal as Hex,
+              abi: votingPortalAbi,
+              functionName: 'VOTING_MACHINE_CHAIN_ID',
+            }),
+            readContract(wagmiConfig, {
+              address: initialParams.votingPortal as Hex,
+              abi: votingPortalAbi,
+              functionName: 'VOTING_MACHINE',
+            }),
+          ]);
+          setVotingChainId(Number(chainId));
+          setVotingMachineAddress(machineAddress as Hex);
+        } catch (err) {
+          console.error('Error fetching voting machine data:', err);
+        }
+      }
+    };
+    if (initialParams.votingPortal && wagmiConfig) {
+      fetchVotingMachineData();
+    }
+  }, [wagmiConfig, initialParams.votingPortal, votingPortalAbi]);
+
+  const newProposalId = initialParams.proposalId || totalProposalCount + 1;
 
   useEffect(() => {
     getTotalProposalCount();
     getCachedProposalPayloadsData();
   }, []);
-
-  const newProposalId = initialParams.proposalId || totalProposalCount + 1;
 
   useEffect(() => {
     if (initialParams.ipfsHash) {
@@ -252,6 +298,88 @@ export function ProposalCreateOverviewPage({
                   </BlockWrapper>
                 )}
               </NoSSR>
+              <BlockWrapper contentColor="$mainLight" toBottom>
+                <Box sx={{ mb: 12, pt: 6 }}>
+                  {!votingChainId && !votingMachineAddress && (
+                    <CustomSkeleton
+                      className="ProposalListItem__title--loading"
+                      count={3}
+                      width="100%"
+                    />
+                  )}
+                  {votingChainId && votingMachineAddress && (
+                    <>
+                      <Box
+                        sx={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          mb: 12,
+                        }}>
+                        <NetworkIcon
+                          chainId={votingChainId}
+                          size={14}
+                          css={{ mr: 4 }}
+                        />
+                        <Box sx={{ typography: 'body' }}>
+                          Voting will happen on{' '}
+                          <span style={{ fontWeight: 'bold' }}>
+                            {getChainName(votingChainId)}
+                          </span>
+                        </Box>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                          flexDirection: 'column',
+                          pl: 20,
+                        }}>
+                        <Box
+                          sx={{
+                            typography: 'descriptorAccent',
+                            wordBreak: 'break-word',
+                          }}>
+                          {texts.proposalCreateOverview.votingMachine}:{' '}
+                          <Box
+                            sx={{
+                              display: 'inline-flex',
+                              typography: 'descriptor',
+                            }}>
+                            <Link
+                              css={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                hover: {
+                                  opacity: 0.7,
+                                },
+                              }}
+                              inNewWindow
+                              href={getScanLink({
+                                chainId: votingChainId,
+                                address: votingMachineAddress,
+                              })}>
+                              {textCenterEllipsis(votingMachineAddress, 6, 6)}
+                            </Link>
+
+                            <CopyAndExternalIconsSet
+                              sx={{
+                                '.CopyAndExternalIconsSet__copy': { mx: 4 },
+                              }}
+                              iconSize={10}
+                              copyText={votingMachineAddress}
+                              externalLink={getScanLink({
+                                chainId: votingChainId,
+                                address: votingMachineAddress,
+                              })}
+                            />
+                          </Box>
+                        </Box>
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              </BlockWrapper>
             </LeftPanelWrapper>
 
             <RightPanelWrapper onlyChildren={!!newIpfsDataError}>
@@ -316,7 +444,6 @@ export function ProposalCreateOverviewPage({
 
         <ToTopButton />
       </Container>
-
       <CreateProposalModal
         error={error}
         setError={setError}
