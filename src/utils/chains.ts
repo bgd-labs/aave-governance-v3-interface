@@ -122,6 +122,20 @@ export const initialRpcUrls: Record<number, string[]> = {
 };
 
 export function setChain(chain: Chain, url?: string) {
+  const explorers: Record<number, { name: string; url: string }> = {
+    [gnosis.id]: {
+      name: 'Gnosis chain explorer',
+      url: 'https://gnosisscan.io',
+    },
+    [avalanche.id]: { name: 'Snowscan', url: 'https://snowscan.xyz' },
+    [avalancheFuji.id]: {
+      name: 'Snowscan Fuji',
+      url: 'https://testnet.snowscan.xyz',
+    },
+  };
+
+  const defaultExplorer = explorers[chain.id] || chain.blockExplorers?.default;
+
   return {
     ...chain,
     rpcUrls: {
@@ -133,10 +147,7 @@ export function setChain(chain: Chain, url?: string) {
     },
     blockExplorers: {
       ...chain.blockExplorers,
-      default:
-        chain.id === gnosis.id
-          ? { name: 'Gnosis chain explorer', url: 'https://gnosisscan.io' }
-          : chain.blockExplorers?.default || mainnet.blockExplorers.default,
+      default: defaultExplorer,
     },
   };
 }

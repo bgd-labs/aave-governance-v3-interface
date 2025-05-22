@@ -1,7 +1,5 @@
-import { Address } from 'viem';
-
 import { appConfig } from './appConfig';
-import { chainInfoHelper } from './configs';
+import { CHAINS } from './chains';
 
 export function getScanLink({
   chainId = appConfig.govCoreChainId,
@@ -9,10 +7,10 @@ export function getScanLink({
   type = 'address',
 }: {
   chainId?: number;
-  address: Address | string;
+  address: string;
   type?: 'address' | 'tx';
 }) {
-  return `${
-    chainInfoHelper.getChainParameters(chainId).blockExplorers?.default.url
-  }/${type}/${address}`;
+  const baseUrl = CHAINS[chainId]?.blockExplorers?.default.url || '';
+  const url = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  return `${url}${type}/${address}`;
 }
