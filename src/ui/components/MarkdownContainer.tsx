@@ -3,6 +3,7 @@ import React from 'react';
 import Markdown from 'react-markdown';
 import { Prism } from 'react-syntax-highlighter';
 import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import remarkGemoji from 'remark-gemoji';
 import remarkGfm from 'remark-gfm';
 
@@ -74,7 +75,7 @@ export function MarkdownContainer({
       }}>
       <Markdown
         remarkPlugins={[remarkGfm, remarkGemoji]}
-        rehypePlugins={[rehypeRaw]}
+        rehypePlugins={[rehypeRaw, rehypeSanitize]}
         components={{
           img({ src: _src, alt }) {
             if (!_src) return null;
