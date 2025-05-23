@@ -897,15 +897,15 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@bgd-labs/aave-address-book@^4.17.2":
-  version "4.17.2"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.17.2.tgz#976823b4c825aeda33bd9375705260aef857c88c"
-  integrity sha512-UVVCaLlLBA5VHl+qip/9qH8yZnNyIvyeRd4nHgKAluNbjeyRPzqESqToGmWSvtWOYK2kUtOrWCu0z9ncq6t6IA==
+"@bgd-labs/aave-address-book@^4.21.0":
+  version "4.21.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.21.0.tgz#b7dcac85d2762cff9ca2acdde1d80b76872ec451"
+  integrity sha512-Jtffiw/Skl2sSimTlhSkqEch6rCe6LIXzmC2djW1lQVAaHoiWguWF2rsn5Dzwu4boJ1E2U9V0j0fvRzVy3svyQ==
 
-"@bgd-labs/aave-governance-ui-helpers@^3.6.2":
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.6.2.tgz#ba071dd284d9bd341052dcc186af355028b37034"
-  integrity sha512-hvVZI6THW1bb8CLo/fmVXYdM7phUqCriHZP3kNj0qAgQ221LCVGqd1rWBEg0GiFL0/QvZhN6vRQf5L9ZsJUmqg==
+"@bgd-labs/aave-governance-ui-helpers@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.7.0.tgz#97330f94d3c7685e31b156aede43fc268596cea7"
+  integrity sha512-R72pBmSCtRdpka1du6Yhm7qd4/7oPGoVDshGKynAj7CO2b6hoInzFYBazJj48zvfjEM6Lh/kClHSD1YrfXhZww==
   dependencies:
     abitype "^1.0.8"
     bs58 "^6.0.0"
@@ -920,10 +920,10 @@
     "@tanstack/react-query" "^5.51.11"
     dayjs "^1.11.12"
 
-"@bgd-labs/react-web3-icons@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.13.0.tgz#7dd3ad266a2df3491bb9e7dd34da2c1b81f4e777"
-  integrity sha512-5KQ1HpSTt31L55UYXI12CDQtxY5vcQxba3gEIKVFH318Z64N7tjubLD3Qo5FI91EvUuyaTRtICzeF0xOGRu2Hg==
+"@bgd-labs/react-web3-icons@^1.28.0":
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/react-web3-icons/-/react-web3-icons-1.28.0.tgz#ebf950d780527ab318b02e117c3376cec9bc7d70"
+  integrity sha512-sxTSirFyh8LwnD4Nre7JtarOZSlVfIyS6ySwg4csMivkkQZJbMGzL5n0RLp/18X6T977PvhrUBV6GnA9cwXsXg==
   dependencies:
     "@loadable/component" "5.16.4"
     tailwind-merge "2.6.0"
