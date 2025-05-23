@@ -17,6 +17,7 @@ import {
   polygonMumbai,
   scroll,
   sepolia,
+  soneium,
   sonic,
   zksync,
 } from 'viem/chains';
@@ -104,6 +105,11 @@ export const initialRpcUrls: Record<number, string[]> = {
     process.env.NEXT_PUBLIC_RPC_CELO || 'https://rpc.ankr.com/celo',
     'https://forno.celo.org',
   ],
+  [soneium.id]: [
+    process.env.NEXT_PUBLIC_RPC_SONEIUM || 'https://rpc.soneium.io',
+    'https://rpc.soneium.io',
+    'https://soneium.drpc.org',
+  ],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -167,6 +173,7 @@ export const CHAINS: Record<number, Chain> = {
   [linea.id]: setChain(linea),
   [sonic.id]: setChain(sonic),
   [celo.id]: setChain(celo),
+  [soneium.id]: setChain(soneium),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
