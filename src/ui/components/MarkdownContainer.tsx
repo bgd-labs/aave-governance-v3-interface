@@ -1,11 +1,10 @@
 import { Box, useTheme } from '@mui/system';
 import React from 'react';
-// eslint-disable-next-line import/default
 import Markdown from 'react-markdown';
 import { Prism } from 'react-syntax-highlighter';
-// eslint-disable-next-line import/default
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import remarkGemoji from 'remark-gemoji';
-// eslint-disable-next-line import/default
 import remarkGfm from 'remark-gfm';
 
 import { Image } from '../primitives/Image';
@@ -76,6 +75,7 @@ export function MarkdownContainer({
       }}>
       <Markdown
         remarkPlugins={[remarkGfm, remarkGemoji]}
+        rehypePlugins={[rehypeRaw, rehypeSanitize]}
         components={{
           img({ src: _src, alt }) {
             if (!_src) return null;
