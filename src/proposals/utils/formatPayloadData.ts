@@ -4,7 +4,6 @@ import {
   ProposalHistoryItem,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import dayjs from 'dayjs';
-import { celo } from 'viem/chains';
 
 import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOverviewSlice';
 import { getHistoryId } from '../components/proposalHistory/helpers';
@@ -16,11 +15,7 @@ export const generateSeatbeltLink = (
   payload: NewPayload,
   startLink?: string,
 ) => {
-  let isForgeReport = false;
-  if (payload.chainId === celo.id) {
-    isForgeReport = true;
-  }
-  return `${startLink || seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}${isForgeReport ? '_forge' : ''}.md`;
+  return `${startLink || seatbeltStartLink}${payload.chainId}/${payload.payloadsController}/${payload.id}.md`;
 };
 
 function getTxHashFromHistory({
