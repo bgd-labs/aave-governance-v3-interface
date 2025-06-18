@@ -90,7 +90,7 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://scroll-mainnet.public.blastapi.io',
   ],
   [zksync.id]: [
-    process.env.NEXT_PUBLIC_RPC_ZKEVM || 'https://zksync.meowrpc.com',
+    process.env.NEXT_PUBLIC_RPC_ZKSYNC || 'https://zksync.meowrpc.com',
     'https://mainnet.era.zksync.io',
   ],
   [linea.id]: [
