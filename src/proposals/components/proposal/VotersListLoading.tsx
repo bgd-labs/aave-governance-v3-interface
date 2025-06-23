@@ -46,7 +46,7 @@ export function VotersListLoading({
                   representative.address || activeWallet?.address || zeroAddress
                 }
                 vote={vote}
-                key={vote.transactionHash}
+                key={`${vote.transactionHash}-${vote.proposalId}`}
               />
             ))}
         </Box>

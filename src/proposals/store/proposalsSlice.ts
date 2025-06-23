@@ -146,7 +146,7 @@ export interface IProposalsSlice {
     underlyingAssets: string[],
   ) => Promise<void>;
 
-  voters: Record<Hex, VotersData>;
+  voters: Record<string, VotersData>;
   setVoters: (voters: VotersData[]) => void;
   getVoters: (
     proposalId: number,
@@ -1029,7 +1029,8 @@ export const createProposalsSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         votersData.forEach((vote) => {
-          draft.voters[vote.transactionHash] = {
+          const voterKey = `${vote.transactionHash}-${vote.proposalId}`;
+          draft.voters[voterKey] = {
             ...vote,
             ensName: ENSDataExists(
               get().ensData,
@@ -1069,7 +1070,8 @@ export const createProposalsSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         topVotersByProposalIdWithENS.forEach((vote) => {
-          draft.voters[vote.transactionHash] = {
+          const voterKey = `${vote.transactionHash}-${vote.proposalId}`;
+          draft.voters[voterKey] = {
             ...vote,
             ensName: ENSDataExists(
               get().ensData,

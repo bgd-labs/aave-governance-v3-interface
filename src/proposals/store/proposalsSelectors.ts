@@ -326,7 +326,7 @@ export const selectConfigByAccessLevel = (
 };
 
 export const selectVotersByProposalId = (
-  voters: Record<`0x${string}`, VotersData>,
+  voters: Record<string, VotersData>,
   id: number,
 ) => {
   const votersLocal = Object.values(voters).filter(
