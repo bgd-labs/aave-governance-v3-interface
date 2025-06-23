@@ -148,8 +148,8 @@ function VotersTable({
                 {texts.proposals.votersListVotingPower}
               </Box>
             </ListItem>
-            {voters.map((vote, index) => (
-              <ListItem key={index}>
+            {voters.map((vote) => (
+              <ListItem key={`${vote.transactionHash}-${vote.proposalId}`}>
                 <ListItemAddress vote={vote} />
                 <FormattedNumber value={vote.votingPower} visibleDecimals={3} />
               </ListItem>
@@ -272,7 +272,7 @@ export function VotersModal({
                 </ListItem>
 
                 {voters.map((vote) => (
-                  <ListItem key={vote.transactionHash}>
+                  <ListItem key={`${vote.transactionHash}-${vote.proposalId}`}>
                     <ListItemAddress vote={vote} />
                     <Box
                       sx={{

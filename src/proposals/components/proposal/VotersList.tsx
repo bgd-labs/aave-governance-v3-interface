@@ -236,7 +236,7 @@ export function VotersList({
                 .map((vote) => (
                   <VotersListItem
                     vote={vote}
-                    key={vote.transactionHash}
+                    key={`${vote.transactionHash}-${vote.proposalId}`}
                     activeAddress={
                       representative.address ||
                       activeWallet?.address ||

@@ -1029,7 +1029,8 @@ export const createProposalsSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         votersData.forEach((vote) => {
-          draft.voters[vote.transactionHash] = {
+          const voterKey = `${vote.transactionHash}-${vote.proposalId}` as Hex;
+          draft.voters[voterKey] = {
             ...vote,
             ensName: ENSDataExists(
               get().ensData,
@@ -1069,7 +1070,8 @@ export const createProposalsSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         topVotersByProposalIdWithENS.forEach((vote) => {
-          draft.voters[vote.transactionHash] = {
+          const voterKey = `${vote.transactionHash}-${vote.proposalId}` as Hex;
+          draft.voters[voterKey] = {
             ...vote,
             ensName: ENSDataExists(
               get().ensData,
