@@ -318,7 +318,7 @@ export class DelegationService {
         await signTypedData(this.wagmiConfig, {
           domain: {
             name: name,
-            version: '2',
+            version: '1',
             chainId: appConfig.govCoreChainId,
             verifyingContract: underlyingAsset,
           },
