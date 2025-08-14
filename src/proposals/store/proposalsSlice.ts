@@ -994,7 +994,9 @@ export const createProposalsSlice: StoreSlice<
     set((state) =>
       produce(state, (draft) => {
         voters.forEach((votersData) => {
-          draft.voters[votersData.transactionHash] = votersData;
+          draft.voters[
+            `${votersData.transactionHash}-${votersData.proposalId}`
+          ] = votersData;
         });
       }),
     );
