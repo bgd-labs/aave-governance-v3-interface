@@ -267,7 +267,7 @@ export const texts = {
     needHelpFAQ: 'Read FAQ',
     needHelpDescription:
       'By selecting a wallet from an External Provider, you agree to their Terms and Conditions. Your ability to access the wallet may depend on the External Provider being operational.',
-    impersonatedInputPlaceholder: 'Account address',
+    impersonatedInputPlaceholder: 'Account address or ENS name',
     impersonatedButtonTitle: 'Connect',
     representing: 'Representing',
     representative: 'You are representing',
