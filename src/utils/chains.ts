@@ -1,5 +1,5 @@
-import { Draft } from 'immer';
-import { Chain, createClient, fallback, http } from 'viem';
+import { type Draft } from 'immer';
+import { type Chain, createClient, fallback, http } from 'viem';
 import {
   arbitrum,
   avalanche,
@@ -13,6 +13,7 @@ import {
   mainnet,
   metis,
   optimism,
+  plasma,
   polygon,
   polygonMumbai,
   scroll,
@@ -110,6 +111,7 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://rpc.soneium.io',
     'https://soneium.drpc.org',
   ],
+  [plasma.id]: [process.env.NEXT_PUBLIC_RPC_PLASMA || 'https://rpc.plasma.to'],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -174,6 +176,7 @@ export const CHAINS: Record<number, Chain> = {
   [sonic.id]: setChain(sonic),
   [celo.id]: setChain(celo),
   [soneium.id]: setChain(soneium),
+  [plasma.id]: setChain(plasma),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
