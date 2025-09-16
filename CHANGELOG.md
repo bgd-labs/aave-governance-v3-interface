@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.4.0](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.4...v2.4.0) (2025-09-16)
+
+
+### Features
+
+* add Celo support ([#116](https://github.com/bgd-labs/aave-governance-v3-interface/issues/116)) ([638cf73](https://github.com/bgd-labs/aave-governance-v3-interface/commit/638cf730a22551494721bc0228810b64b2201059))
+* add plasma support ([#145](https://github.com/bgd-labs/aave-governance-v3-interface/issues/145)) ([72d5533](https://github.com/bgd-labs/aave-governance-v3-interface/commit/72d553355d082de5d49c625e000bf31857d55bf7))
+* add rehype to parse markdown ([#135](https://github.com/bgd-labs/aave-governance-v3-interface/issues/135)) ([2c58a6a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/2c58a6a8682a43e672f5c17fd06c33bb7f5e652a))
+* add soneium support ([#134](https://github.com/bgd-labs/aave-governance-v3-interface/issues/134)) ([34aaef9](https://github.com/bgd-labs/aave-governance-v3-interface/commit/34aaef9454357b0776ee7b65a26b881c61991198))
+* add sonic ([#111](https://github.com/bgd-labs/aave-governance-v3-interface/issues/111)) ([ae91b0c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/ae91b0cfad310913a3656ea8a31cf87e4eddee89))
+* auto connect safe wallet ([#110](https://github.com/bgd-labs/aave-governance-v3-interface/issues/110)) ([aa4a62a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/aa4a62a8e4ff403b8ca9fce3bee782764bfe9213))
+* bump aave-governance-ui-helpers to version 3.8.0 ([#137](https://github.com/bgd-labs/aave-governance-v3-interface/issues/137)) ([579fc54](https://github.com/bgd-labs/aave-governance-v3-interface/commit/579fc54ddf7d5ec696641d010a0dd4e2417fe7d4))
+* ens-resolver ([#143](https://github.com/bgd-labs/aave-governance-v3-interface/issues/143)) ([e3f9689](https://github.com/bgd-labs/aave-governance-v3-interface/commit/e3f96892c17be446bdf8de7e40c829631e2d124a))
+* expose voting machine info ([#132](https://github.com/bgd-labs/aave-governance-v3-interface/issues/132)) ([17f862c](https://github.com/bgd-labs/aave-governance-v3-interface/commit/17f862cc883b37cc6ed29244e2563330218da0f7))
+* remove dependency, update copy component ([#113](https://github.com/bgd-labs/aave-governance-v3-interface/issues/113)) ([8cc14e4](https://github.com/bgd-labs/aave-governance-v3-interface/commit/8cc14e4f5f9bdaea9c52fdfe5825669efeae3a17))
+* use snowscan for avalanche ([#133](https://github.com/bgd-labs/aave-governance-v3-interface/issues/133)) ([1c6c5a3](https://github.com/bgd-labs/aave-governance-v3-interface/commit/1c6c5a319d524d03040385c6ed47e289f041a8b2))
+
+
+### Bug Fixes
+
+* add proposalId to voterKey ([#140](https://github.com/bgd-labs/aave-governance-v3-interface/issues/140)) ([34508b2](https://github.com/bgd-labs/aave-governance-v3-interface/commit/34508b21d562768de890fd6e79f2eca44fd630b2))
+* added linea support ([#104](https://github.com/bgd-labs/aave-governance-v3-interface/issues/104)) ([0f11557](https://github.com/bgd-labs/aave-governance-v3-interface/commit/0f11557982d13c02221731a9c85931284c44e5bb))
+* added zksynk payloads controller to config ([472f143](https://github.com/bgd-labs/aave-governance-v3-interface/commit/472f1439f63963fe4a3ab5eb6c2c4044a5034dd0))
+* bump address book ([#115](https://github.com/bgd-labs/aave-governance-v3-interface/issues/115)) ([b7587f2](https://github.com/bgd-labs/aave-governance-v3-interface/commit/b7587f24daf512a5b51cdf33f10c51995b0f0d50))
+* bump helpers ([#114](https://github.com/bgd-labs/aave-governance-v3-interface/issues/114)) ([e401fac](https://github.com/bgd-labs/aave-governance-v3-interface/commit/e401facccef5a4a2b81a5a86337944c9d8923ddb))
+* celo seatbelt link ([#118](https://github.com/bgd-labs/aave-governance-v3-interface/issues/118)) ([c131048](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c1310482bf978ec1dba6cac977277f6a050d35c2))
+* correctly show voters for failed proposals ([#120](https://github.com/bgd-labs/aave-governance-v3-interface/issues/120)) ([c680b14](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c680b144fad3893cf378f332aa0d0125a36a0266))
+* disable metis forge ([#107](https://github.com/bgd-labs/aave-governance-v3-interface/issues/107)) ([0527354](https://github.com/bgd-labs/aave-governance-v3-interface/commit/0527354fd06727bf3864316e6a69dd79765b3f5d))
+* domain version to 1 ([#141](https://github.com/bgd-labs/aave-governance-v3-interface/issues/141)) ([aa692b3](https://github.com/bgd-labs/aave-governance-v3-interface/commit/aa692b3c1dae0d932b6679509d856f447dd26da9))
+* duplicated voters in voters list ([#142](https://github.com/bgd-labs/aave-governance-v3-interface/issues/142)) ([96f639d](https://github.com/bgd-labs/aave-governance-v3-interface/commit/96f639d83971090ffff485dd533738d6ddf64e65))
+* handle partial cancellations in the timeline ([#127](https://github.com/bgd-labs/aave-governance-v3-interface/issues/127)) ([c20ce84](https://github.com/bgd-labs/aave-governance-v3-interface/commit/c20ce844c522d737a4987b13749a3eb871ec4f8b))
+* increase seatbelt modal max width ([#128](https://github.com/bgd-labs/aave-governance-v3-interface/issues/128)) ([3db6e04](https://github.com/bgd-labs/aave-governance-v3-interface/commit/3db6e049a6cc840f45ea4089572a931a513e3032))
+* remove devtools middleware ([#125](https://github.com/bgd-labs/aave-governance-v3-interface/issues/125)) ([693a379](https://github.com/bgd-labs/aave-governance-v3-interface/commit/693a3793525281232b5af35c8cb1fbd9591f4178))
+* rename env variable for zksync ([#139](https://github.com/bgd-labs/aave-governance-v3-interface/issues/139)) ([bc06e52](https://github.com/bgd-labs/aave-governance-v3-interface/commit/bc06e5271fc426a821bc1a1a40f9dd53fe21dbb7))
+* types ([#130](https://github.com/bgd-labs/aave-governance-v3-interface/issues/130)) ([a583e1d](https://github.com/bgd-labs/aave-governance-v3-interface/commit/a583e1df2d9cbb1db2d4ad16230138f107cb598b))
+* update local storage value for rpc ([f035f1a](https://github.com/bgd-labs/aave-governance-v3-interface/commit/f035f1aa3c345d3b1b6e7efc8f34feb3bf554996))
+* update lockfile ([#112](https://github.com/bgd-labs/aave-governance-v3-interface/issues/112)) ([899388b](https://github.com/bgd-labs/aave-governance-v3-interface/commit/899388b407675ce962a64805b61403c8cf31c064))
+* update rpc's ([9e29960](https://github.com/bgd-labs/aave-governance-v3-interface/commit/9e2996086d0941e18a44745fce9c5e03ff2da91c))
+* updates web3 icons package ([#99](https://github.com/bgd-labs/aave-governance-v3-interface/issues/99)) ([89b935f](https://github.com/bgd-labs/aave-governance-v3-interface/commit/89b935ff7711c0b7a09c5c45962a68d4369a8ccd))
+* use tenderly for scroll ([#106](https://github.com/bgd-labs/aave-governance-v3-interface/issues/106)) ([9313140](https://github.com/bgd-labs/aave-governance-v3-interface/commit/9313140da5283a436bd85d23ee96bf652431d0f3))
+* zksynk payloads links ([8a66f72](https://github.com/bgd-labs/aave-governance-v3-interface/commit/8a66f7263f3a594382089033c1ae29d5312fe121))
+
 ## [2.3.4](https://github.com/bgd-labs/aave-governance-v3-interface/compare/v2.3.3...v2.3.4) (2024-07-24)
 
 
