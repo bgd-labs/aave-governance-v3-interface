@@ -897,10 +897,10 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@bgd-labs/aave-address-book@^4.21.0":
-  version "4.21.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.21.0.tgz#b7dcac85d2762cff9ca2acdde1d80b76872ec451"
-  integrity sha512-Jtffiw/Skl2sSimTlhSkqEch6rCe6LIXzmC2djW1lQVAaHoiWguWF2rsn5Dzwu4boJ1E2U9V0j0fvRzVy3svyQ==
+"@bgd-labs/aave-address-book@^4.30.1":
+  version "4.30.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.30.1.tgz#6e92aa64081bb917ed897421da1651b63138e394"
+  integrity sha512-rOtveLwI0YiD9FlcA5wG62o83GQ9cvnTqlR92xrpwH/ZnmYsx9N1EJ/7wFdllnTLSBHy08q2RekOH4GA1FoUxw==
 
 "@bgd-labs/aave-governance-ui-helpers@^3.9.1":
   version "3.9.1"
