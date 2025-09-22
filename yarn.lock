@@ -902,10 +902,10 @@
   resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.30.1.tgz#6e92aa64081bb917ed897421da1651b63138e394"
   integrity sha512-rOtveLwI0YiD9FlcA5wG62o83GQ9cvnTqlR92xrpwH/ZnmYsx9N1EJ/7wFdllnTLSBHy08q2RekOH4GA1FoUxw==
 
-"@bgd-labs/aave-governance-ui-helpers@^3.9.2":
-  version "3.9.2"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.9.2.tgz#3d903d59ce9ce2b39abaa6d90e998a8aa6ca55e1"
-  integrity sha512-zhhLgs7tv1WtlRrA7E3BtIdE68zxj+f1EdQT8SIV/w2GTOs2T//SMbPKeCdN8DnKODlpXvHM/J+lpTI1UoAXYQ==
+"@bgd-labs/aave-governance-ui-helpers@^3.9.3":
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.9.3.tgz#37152f1aeac99e855378618d5f53cbf325efd356"
+  integrity sha512-SvNkX2cW5jKUIJwrPmPCGMnSgtvoAgMZpoxbB9ZKwljlesQmnMNhyQ/E31qTAYnKPp2/CHxk1I8VTHwtmX1ecQ==
   dependencies:
     abitype "^1.0.8"
     bs58 "^6.0.0"
