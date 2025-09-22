@@ -9,6 +9,7 @@ import {
   bscTestnet,
   celo,
   gnosis,
+  ink,
   linea,
   mainnet,
   metis,
@@ -112,6 +113,11 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://soneium.drpc.org',
   ],
   [plasma.id]: [process.env.NEXT_PUBLIC_RPC_PLASMA || 'https://rpc.plasma.to'],
+  [ink.id]: [
+    process.env.NEXT_PUBLIC_RPC_INK || 'https://rpc.ink.io',
+    'https://ink.drpc.org',
+    'https://ink-public.nodies.app',
+  ],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -177,6 +183,7 @@ export const CHAINS: Record<number, Chain> = {
   [celo.id]: setChain(celo),
   [soneium.id]: setChain(soneium),
   [plasma.id]: setChain(plasma),
+  [ink.id]: setChain(ink),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
