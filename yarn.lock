@@ -3078,11 +3078,6 @@ ajv@^8.0.0, ajv@^8.9.0:
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
 
-alova@2.13.0:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/alova/-/alova-2.13.0.tgz#f7d4df6fad2f0fc2d18247c0c312a2eb5372318b"
-  integrity sha512-w+HDC8/g6k/vQFdtee0P/EhtJcNSDEXfypdhIzKSdaqYcERE+Mz41VMfqHdPyB9O8cu/c39FxCamUm1wO+cNDw==
-
 ansi-colors@^4.1.1, ansi-colors@^4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-4.1.3.tgz#37611340eb2243e70cc604cad35d63270d48781b"

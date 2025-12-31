@@ -45,7 +45,6 @@
     "@next/bundle-analyzer": "^14.2.5",
     "@safe-global/safe-deployments": "^1.37.2",
     "@tanstack/react-query": "^5.51.15",
-    "alova": "2.13.0",
     "bignumber.js": "^9.1.2",
     "dayjs": "^1.11.12",
     "encoding": "^0.1.13",

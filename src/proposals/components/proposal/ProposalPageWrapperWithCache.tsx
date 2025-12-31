@@ -2,11 +2,10 @@ import {
   getVotingMachineProposalState,
   ProposalData,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
+import { useProposalDetailsCache } from '../../../queries/proposalQueries';
 import { useStore } from '../../../store/ZustandStoreProvider';
-import { getProposalDetailsCache } from '../../../utils/githubCacheRequests';
 import { ProposalLoading } from './ProposalLoading';
 import { ProposalPageWrapper } from './ProposalPageWrapper';
 
@@ -26,10 +25,10 @@ export function ProposalPageWrapperWithCache({
   );
 
   const {
-    loading: detailsLoading,
+    isLoading: detailsLoading,
     data: detailsData,
     error: detailsError,
-  } = useRequest(getProposalDetailsCache(id));
+  } = useProposalDetailsCache(id);
 
   useEffect(() => {
     if (!detailsLoading && !detailsError) {

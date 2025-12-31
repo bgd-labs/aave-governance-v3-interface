@@ -1,11 +1,10 @@
 'use client';
 
-import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
+import { useProposalListCache } from '../../../queries/proposalQueries';
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { Container } from '../../../ui';
-import { getProposalListCacheFromGithub } from '../../../utils/githubCacheRequests';
 import { Loading } from './Loading';
 import { ProposalListItemWrapper } from './ProposalListItemWrapper';
 import ProposalListWrapper from './ProposalListWrapper';
@@ -23,11 +22,11 @@ export function ProposalPage() {
   const cachedProposals = useStore((store) => store.cachedProposals);
   const setCachedProposals = useStore((store) => store.setCachedProposals);
 
-  const { loading, data, error } = useRequest(getProposalListCacheFromGithub);
+  const { isLoading, data, error } = useProposalListCache();
 
   useEffect(() => {
-    setLoadingListCache(loading);
-    if (!loading && !error) {
+    setLoadingListCache(isLoading);
+    if (!isLoading && !error) {
       const proposalListCachedData = {
         totalProposalCount: data?.totalProposalCount || -1,
         cachedProposalsIds:
@@ -55,9 +54,9 @@ export function ProposalPage() {
         setCachedProposals(proposalListCachedData.cachedProposals || []);
       }
     }
-  }, [loading, error]);
+  }, [isLoading, error]);
 
-  if (loading)
+  if (isLoading)
     return (
       <Container>
         <ProposalListItemWrapper>

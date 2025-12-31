@@ -1,16 +1,15 @@
 'use client';
 
-import { useRequest } from 'alova';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 
+import {
+  useCachedProposalIds,
+  useProposalVotesCache,
+} from '../../../queries/proposalQueries';
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { Container } from '../../../ui';
 import { NotFoundPage } from '../../../ui/pages/NotFoundPage';
-import {
-  getCachedProposalsIdsFromGithub,
-  getProposalVotesCache,
-} from '../../../utils/githubCacheRequests';
 import { setProposalDetailsVoters } from '../../store/proposalsSelectors';
 import { ProposalLoading } from './ProposalLoading';
 import { ProposalPageWrapper } from './ProposalPageWrapper';
@@ -36,12 +35,12 @@ export function ProposalClientPage() {
   );
   const setVoters = useStore((store) => store.setVoters);
 
-  const { loading, data, error } = useRequest(getCachedProposalsIdsFromGithub);
+  const { isLoading, data, error } = useCachedProposalIds();
   const {
-    loading: votesLoading,
+    isLoading: votesLoading,
     data: votesData,
     error: votesError,
-  } = useRequest(getProposalVotesCache(id));
+  } = useProposalVotesCache(id);
 
   useEffect(() => {
     if (totalProposalCount < 0 && id >= 0) {
@@ -50,7 +49,7 @@ export function ProposalClientPage() {
   }, [id, totalProposalCount]);
 
   useEffect(() => {
-    if (!loading && !error) {
+    if (!isLoading && !error) {
       if (
         !cachedProposalsIds.length ||
         cachedProposalsIds.length < (data?.cachedProposalsIds.length || 0)
@@ -58,7 +57,7 @@ export function ProposalClientPage() {
         setCachedProposalsIds(data?.cachedProposalsIds || []);
       }
     }
-  }, [loading, error]);
+  }, [isLoading, error]);
 
   useEffect(() => {
     if (!votesLoading && !votesError) {
@@ -68,7 +67,7 @@ export function ProposalClientPage() {
     }
   }, [votesLoading, votesError, votesData]);
 
-  if ((loading && !cachedProposalsIds.length) || votesLoading)
+  if ((isLoading && !cachedProposalsIds.length) || votesLoading)
     return (
       <Container>
         <ProposalLoading />

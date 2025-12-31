@@ -3,12 +3,11 @@ import {
   ProposalWithLoadings,
   TxInfo,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 
+import { useProposalEventsCache } from '../../../queries/proposalQueries';
 import { useStore } from '../../../store/ZustandStoreProvider';
 import { isForIPFS } from '../../../utils/appConfig';
-import { getProposalEventsCache } from '../../../utils/githubCacheRequests';
 import { getProposalDataById } from '../../store/proposalsSelectors';
 import { DetailsModalWrapper } from '../DetailsModalWrapper';
 import { getHistoryId } from './helpers';
@@ -258,9 +257,8 @@ function ProposalHistoryModalIPFS({
     proposalId,
   });
 
-  const { loading: cacheEventsLoading, data: cacheEventsData } = useRequest(
-    getProposalEventsCache(proposalId),
-  );
+  const { isLoading: cacheEventsLoading, data: cacheEventsData } =
+    useProposalEventsCache(proposalId);
 
   useEffect(() => {
     if (proposalData?.proposal && isForIPFS) {

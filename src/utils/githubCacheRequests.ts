@@ -1,12 +1,12 @@
+// This file is kept for backwards compatibility
+// All new code should use the TanStack Query hooks from src/queries/proposalQueries.ts
+
 import {
   CachedDetails,
   FinishedProposalForList,
   ProposalHistoryItem,
   VotersData,
 } from '@bgd-labs/aave-governance-ui-helpers';
-import { createAlova } from 'alova';
-import GlobalFetch from 'alova/GlobalFetch';
-import ReactHook from 'alova/react';
 
 import {
   cachedDetailsPath,
@@ -17,32 +17,35 @@ import {
   listViewPath,
 } from './cacheGithubLinks';
 
-const alovaInstance = createAlova({
-  baseURL: githubStartUrl,
-  statesHook: ReactHook,
-  requestAdapter: GlobalFetch(),
-  responded: {
-    onSuccess: async (response) => {
-      const data = await response.json();
-      return data ? data : undefined;
-    },
-  },
-});
+// Generic fetcher for GitHub cache
+async function fetchFromGithubCache<T>(path: string): Promise<T> {
+  const response = await fetch(`${githubStartUrl}${path}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${path}: ${response.statusText}`);
+  }
+  const data = await response.json();
+  return data;
+}
 
-export const getProposalListCacheFromGithub = alovaInstance.Get<{
-  totalProposalCount: number;
-  proposals: FinishedProposalForList[];
-}>(listViewPath);
+// Legacy functions - prefer using TanStack Query hooks instead
+export const getProposalListCacheFromGithub = () =>
+  fetchFromGithubCache<{
+    totalProposalCount: number;
+    proposals: FinishedProposalForList[];
+  }>(listViewPath);
 
-export const getCachedProposalsIdsFromGithub = alovaInstance.Get<{
-  cachedProposalsIds: number[];
-}>(cachedProposalsIdsPath);
+export const getCachedProposalsIdsFromGithub = () =>
+  fetchFromGithubCache<{
+    cachedProposalsIds: number[];
+  }>(cachedProposalsIdsPath);
 
 export const getProposalDetailsCache = (id: number) =>
-  alovaInstance.Get<CachedDetails>(cachedDetailsPath(id));
+  fetchFromGithubCache<CachedDetails>(cachedDetailsPath(id));
 
 export const getProposalVotesCache = (id: number) =>
-  alovaInstance.Get<{ votes: VotersData[] }>(cachedVotesPath(id));
+  fetchFromGithubCache<{ votes: VotersData[] }>(cachedVotesPath(id));
 
 export const getProposalEventsCache = (id: number) =>
-  alovaInstance.Get<Record<string, ProposalHistoryItem>>(cachedEventsPath(id));
+  fetchFromGithubCache<Record<string, ProposalHistoryItem>>(
+    cachedEventsPath(id),
+  );
