@@ -227,14 +227,48 @@ export const getProposalTitle = (
 };
 
 const selectFilteredProposalIds = (store: RootState) => {
+  const hasStatusFilter = store.filteredState !== null;
+  const hasTitleSearch = store.titleSearchValue !== undefined;
   const proposalsIds =
     store.totalProposalCount >= 0
       ? Array.from(Array(store.totalProposalCount).keys()).sort((a, b) => b - a)
       : [];
 
+  if (!hasStatusFilter && !hasTitleSearch) {
+    return proposalsIds;
+  }
+
   const detailedData = proposalsIds.map((id) =>
     getCombineProposalDataById(store, id),
   );
+
+  type CombineProposalData = ReturnType<typeof getCombineProposalDataById>;
+  type SortableProposalData = {
+    id: number;
+    creationTime?: number;
+    finishedTimestamp?: number;
+  };
+
+  const getProposalSortTimestamp = (proposal: CombineProposalData) => {
+    const data = proposal?.proposal?.data as SortableProposalData;
+    return data?.creationTime ?? data?.finishedTimestamp ?? data?.id ?? 0;
+  };
+
+  const sortByDateDesc = (a: CombineProposalData, b: CombineProposalData) =>
+    getProposalSortTimestamp(b) - getProposalSortTimestamp(a);
+
+  if (hasStatusFilter && !hasTitleSearch) {
+    return detailedData
+      .filter((proposal) =>
+        store.filteredState !== 7
+          ? proposal?.proposal.combineState === store.filteredState
+          : proposal?.proposal.combineState === 0 ||
+            proposal?.proposal.combineState === 1 ||
+            proposal?.proposal.combineState === 2,
+      )
+      .sort(sortByDateDesc)
+      .map((proposal) => proposal?.proposal.data.id || 0);
+  }
 
   const fuse = new Fuse(detailedData, {
     keys: ['proposal.data.title'],
@@ -242,29 +276,21 @@ const selectFilteredProposalIds = (store: RootState) => {
     distance: 1000,
   });
 
-  return store.filteredState === null && store.titleSearchValue === undefined
-    ? proposalsIds
-    : store.filteredState !== null && store.titleSearchValue === undefined
-      ? detailedData
-          .filter((proposal) =>
-            store.filteredState !== 7
-              ? proposal?.proposal.combineState === store.filteredState
-              : proposal?.proposal.combineState === 0 ||
-                proposal?.proposal.combineState === 1 ||
-                proposal?.proposal.combineState === 2,
-          )
-          .map((proposal) => proposal?.proposal.data.id || 0)
-      : store.filteredState === null && store.titleSearchValue !== undefined
-        ? fuse
-            .search(store.titleSearchValue || '')
-            .map((item) => item.item?.proposal.data.id || 0)
-        : fuse
-            .search(store.titleSearchValue || '')
-            .filter(
-              (item) =>
-                item.item?.proposal.combineState === store.filteredState,
-            )
-            .map((item) => item.item?.proposal.data.id || 0);
+  type FuseSearchResult = { item: CombineProposalData };
+  const sortFuseResultByDateDesc = (a: FuseSearchResult, b: FuseSearchResult) =>
+    sortByDateDesc(a.item, b.item);
+
+  const searchResults = fuse.search(store.titleSearchValue || '');
+  if (!hasStatusFilter) {
+    return searchResults
+      .sort(sortFuseResultByDateDesc)
+      .map((item) => item.item?.proposal.data.id || 0);
+  }
+
+  return searchResults
+    .filter((item) => item.item?.proposal.combineState === store.filteredState)
+    .sort(sortFuseResultByDateDesc)
+    .map((item) => item.item?.proposal.data.id || 0);
 };
 
 export const selectPaginatedIds = (store: RootState) => {
