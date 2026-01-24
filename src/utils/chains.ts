@@ -12,6 +12,7 @@ import {
   ink,
   linea,
   mainnet,
+  mantle,
   metis,
   optimism,
   plasma,
@@ -118,6 +119,7 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://ink.drpc.org',
     'https://ink-public.nodies.app',
   ],
+  [mantle.id]: [process.env.NEXT_PUBLIC_RPC_MANTLE || 'https://rpc.mantle.xyz'],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -184,6 +186,7 @@ export const CHAINS: Record<number, Chain> = {
   [soneium.id]: setChain(soneium),
   [plasma.id]: setChain(plasma),
   [ink.id]: setChain(ink),
+  [mantle.id]: setChain(mantle),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
