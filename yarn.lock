@@ -917,15 +917,15 @@
     viem "^2.31.7"
     zustand "5.0.3"
 
-"@bgd-labs/aave-address-book@^4.41.5":
-  version "4.41.5"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.41.5.tgz#227f9bf8885348530b0b3c079aa1ec778f0a8dd3"
-  integrity sha512-ciPFRLRAk36oWvmq5X+v9nfRBNVAY6Z5MMNuK89L4m5koVfT+bgvkRhE17hYzGIiHlRBCR2YMC0MDKYpEi5l+w==
+"@bgd-labs/aave-address-book@^4.44.2":
+  version "4.44.2"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.44.2.tgz#0a3666148b7a3201b693f6ab948e74a5584611b1"
+  integrity sha512-zKM7ewJ4693RoLDkKJmrv60wScX6wfDJtVh/vNX+hXLUD1H/HcHToMlQze6HEktP1gBLcFirbF43jRX2qTmyfQ==
 
-"@bgd-labs/aave-governance-ui-helpers@^3.11.0":
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.11.0.tgz#c3f5f55f7993f50ba9a331d2816b5208604e3f36"
-  integrity sha512-FOAqbumDBnIDNT4/+F7dPPNgmxtdG/3nZhnUVOOXGJSNCQhsNO7MYjOgBdRaebJmSXEbq8+OruTvz7azpM0DuQ==
+"@bgd-labs/aave-governance-ui-helpers@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.12.0.tgz#a086ec3201f68dd3c49e8972452d6f4089aa41b4"
+  integrity sha512-yarr8XfPYPesPYCTgO88K04odF2ARAkvlPePXinWPO6On1qimPfJzJ7dcNym7MjBTRObqB3bT2jz26WleABX0w==
   dependencies:
     abitype "^1.0.8"
     bs58 "^6.0.0"
@@ -9824,10 +9824,24 @@ viem@2.23.2, viem@^2.1.1:
     ox "0.6.7"
     ws "8.18.0"
 
-viem@>=2.29.0, viem@^2.21.26, viem@^2.27.2, viem@^2.31.7, viem@^2.44.4:
+viem@>=2.29.0, viem@^2.21.26, viem@^2.27.2, viem@^2.31.7:
   version "2.44.4"
   resolved "https://registry.yarnpkg.com/viem/-/viem-2.44.4.tgz#f749f038f9bd5a93b959319a35a1554803a09c2e"
   integrity sha512-sJDLVl2EsS5Fo7GSWZME5CXEV7QRYkUJPeBw7ac+4XI3D4ydvMw/gjulTsT5pgqcpu70BploFnOAC6DLpan1Yg==
+  dependencies:
+    "@noble/curves" "1.9.1"
+    "@noble/hashes" "1.8.0"
+    "@scure/bip32" "1.7.0"
+    "@scure/bip39" "1.6.0"
+    abitype "1.2.3"
+    isows "1.0.7"
+    ox "0.11.3"
+    ws "8.18.3"
+
+viem@^2.45.1:
+  version "2.45.1"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.45.1.tgz#c1c373efcf2a0b30f5e454cfb4a9c18ac5bb5452"
+  integrity sha512-LN6Pp7vSfv50LgwhkfSbIXftAM5J89lP9x8TeDa8QM7o41IxlHrDh0F9X+FfnCWtsz11pEVV5sn+yBUoOHNqYA==
   dependencies:
     "@noble/curves" "1.9.1"
     "@noble/hashes" "1.8.0"
