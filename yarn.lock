@@ -917,10 +917,10 @@
     viem "^2.31.7"
     zustand "5.0.3"
 
-"@bgd-labs/aave-address-book@^4.41.5":
-  version "4.41.5"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.41.5.tgz#227f9bf8885348530b0b3c079aa1ec778f0a8dd3"
-  integrity sha512-ciPFRLRAk36oWvmq5X+v9nfRBNVAY6Z5MMNuK89L4m5koVfT+bgvkRhE17hYzGIiHlRBCR2YMC0MDKYpEi5l+w==
+"@bgd-labs/aave-address-book@^4.44.2":
+  version "4.44.2"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.44.2.tgz#0a3666148b7a3201b693f6ab948e74a5584611b1"
+  integrity sha512-zKM7ewJ4693RoLDkKJmrv60wScX6wfDJtVh/vNX+hXLUD1H/HcHToMlQze6HEktP1gBLcFirbF43jRX2qTmyfQ==
 
 "@bgd-labs/aave-governance-ui-helpers@^3.12.0":
   version "3.12.0"
