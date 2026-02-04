@@ -13,6 +13,7 @@ import {
   linea,
   mainnet,
   mantle,
+  megaeth,
   metis,
   optimism,
   plasma,
@@ -120,6 +121,9 @@ export const initialRpcUrls: Record<number, string[]> = {
     'https://ink-public.nodies.app',
   ],
   [mantle.id]: [process.env.NEXT_PUBLIC_RPC_MANTLE || 'https://rpc.mantle.xyz'],
+  [megaeth.id]: [
+    process.env.NEXT_PUBLIC_RPC_MEGAETH || 'https://mainnet.megaeth.com/rpc',
+  ],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -187,6 +191,7 @@ export const CHAINS: Record<number, Chain> = {
   [plasma.id]: setChain(plasma),
   [ink.id]: setChain(ink),
   [mantle.id]: setChain(mantle),
+  [megaeth.id]: setChain(megaeth),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),
