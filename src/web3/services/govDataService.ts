@@ -882,6 +882,7 @@ export class GovDataService {
     voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
+    console.log('[Gelato] API Key:', gelatoApiKeys[votingChainId]);
     const relayer = createGelatoEvmRelayerClient({
       apiKey: gelatoApiKeys[votingChainId],
     });
@@ -949,6 +950,8 @@ export class GovDataService {
         // @ts-expect-error - payment is not typed for some reason
         payment: sponsored(),
       });
+
+      console.log('[Gelato] Task ID:', taskId);
 
       // Wrap as { taskId } to satisfy @bgd-labs/frontend-web3-utils isGelatoTxKey check
       return { taskId };
