@@ -93,7 +93,7 @@ export const createPayloadsHelperSlice: StoreSlice<IPayloadsHelperSlice> = (
       return payloadHelperData.seatbeltMD;
     } else {
       const preLink =
-        'https://raw.githubusercontent.com/bgd-labs/seatbelt-gov-v3/main/reports/payloads/';
+        'https://raw.githubusercontent.com/aave-dao/seatbelt-gov-v3/main/reports/payloads/';
 
       try {
         const response = await fetch(generateSeatbeltLink(payload, preLink));

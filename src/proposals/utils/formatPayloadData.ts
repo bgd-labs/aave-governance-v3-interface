@@ -10,7 +10,7 @@ import { NewPayload } from '../../proposalCreateOverview/store/proposalCreateOve
 import { getHistoryId } from '../components/proposalHistory/helpers';
 
 export const seatbeltStartLink =
-  'https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/payloads/';
+  'https://github.com/aave-dao/seatbelt-gov-v3/blob/main/reports/payloads/';
 
 export const generateSeatbeltLink = (
   payload: NewPayload,
