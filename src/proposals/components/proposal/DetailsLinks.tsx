@@ -41,7 +41,7 @@ export function DetailsLinks({
   if (!!prerender) {
     links.unshift({
       title: texts.proposals.detailsLinkSeatbeltReport,
-      link: `https://github.com/bgd-labs/seatbelt-gov-v3/blob/main/reports/proposals/${String(
+      link: `https://github.com/aave-dao/seatbelt-gov-v3/blob/main/reports/proposals/${String(
         proposalId,
       )}.md`,
     });
