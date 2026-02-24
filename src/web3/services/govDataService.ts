@@ -41,11 +41,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import {
-  GelatoRelay,
-  SponsoredCallRequest,
-} from '@gelatonetwork/relay-sdk-viem';
-import { BaseRelayParams } from '@gelatonetwork/relay-sdk-viem/dist/lib/types';
+import { createGelatoEvmRelayerClient } from '@gelatocloud/gasless';
 import { writeContract } from '@wagmi/core';
 import { Draft } from 'immer';
 import {
@@ -886,7 +882,7 @@ export class GovDataService {
     voterAddress?: Address;
     proofOfRepresentation?: Hex;
   }) {
-    const relay = new GelatoRelay();
+    const relayer = createGelatoEvmRelayerClient({ apiKey: gelatoApiKeys[votingChainId] });
     const votingMachine = this.getVotingMachineContract(
       votingChainId,
       proposalId,
@@ -911,8 +907,6 @@ export class GovDataService {
             support,
             votingAssetsWithSlot,
           });
-
-      const gelatoApiKey = gelatoApiKeys[votingChainId];
 
       const data =
         !!voterAddress && !!proofOfRepresentation
@@ -946,13 +940,14 @@ export class GovDataService {
               ],
             });
 
-      const request: SponsoredCallRequest = {
-        chainId: BigInt(votingChainId),
-        target: votingMachine.address,
-        data: data as BaseRelayParams['data'],
-      };
+      const taskId = await relayer.sendTransaction({
+        chainId: votingChainId,
+        to: votingMachine.address,
+        data,
+      });
 
-      return relay.sponsoredCall(request, gelatoApiKey);
+      // Wrap as { taskId } to satisfy @bgd-labs/frontend-web3-utils isGelatoTxKey check
+      return { taskId };
     }
     return undefined;
   }
