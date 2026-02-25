@@ -41,7 +41,7 @@ import {
 } from '@bgd-labs/aave-governance-ui-helpers';
 import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
-import { createGelatoEvmRelayerClient, sponsored } from '@gelatocloud/gasless';
+import { createGelatoEvmRelayerClient } from '@gelatocloud/gasless';
 import { writeContract } from '@wagmi/core';
 import { Draft } from 'immer';
 import {
@@ -886,6 +886,10 @@ export class GovDataService {
     const relayer = createGelatoEvmRelayerClient({
       apiKey: gelatoApiKeys[votingChainId],
     });
+
+    const balance = await relayer.getBalance();
+    console.log('[Gelato] Gas Tank balance:', balance);
+
     const votingMachine = this.getVotingMachineContract(
       votingChainId,
       proposalId,
@@ -947,8 +951,6 @@ export class GovDataService {
         chainId: votingChainId,
         to: votingMachine.address,
         data,
-        // @ts-expect-error - payment is not typed for some reason
-        payment: sponsored(),
       });
 
       console.log('[Gelato] Task ID:', taskId);
