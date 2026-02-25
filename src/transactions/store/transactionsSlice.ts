@@ -315,6 +315,7 @@ export const createTransactionsSlice: StoreSlice<
   checkIsGelatoAvailableWithApiKey: async (chainId) => {
     if (typeof get().isGelatoAvailableChains[chainId] === 'undefined') {
       if (gelatoApiKeys[chainId]) {
+        get().setGelatoApiKeys(gelatoApiKeys);
         await get().checkIsGelatoAvailable(chainId);
         set((state) =>
           produce(state, (draft) => {
