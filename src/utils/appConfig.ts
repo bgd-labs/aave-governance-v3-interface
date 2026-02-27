@@ -21,7 +21,8 @@ export const appUsedNetworks: number[] = [
 
 export const gelatoApiKeys: Record<number, string> = {
   [polygon.id]: 'eyUjscMpge_d3qScFe2ueftb95FDZ1eChyDJGqPx2uQ_',
-  [avalanche.id]: 'iGCOci5z6zZYDDQ1p916xsKmr2pfP5o1EAQcRhy1_fI_',
+  // [avalanche.id]: 'iGCOci5z6zZYDDQ1p916xsKmr2pfP5o1EAQcRhy1_fI_',
+  [avalanche.id]: 'ferBzi7O10rpuMM9hYlRTfYjwGU3DMWKL3lGMenYB_U_',
   // testnets
   [goerli.id]: 'MgZBKc6a7GHzxlrkdHCWIsazai_Niqbps42wvPlE7xE_',
   [sepolia.id]: 'MgZBKc6a7GHzxlrkdHCWIsazai_Niqbps42wvPlE7xE_',
