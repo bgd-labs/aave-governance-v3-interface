@@ -79,7 +79,7 @@
     "remark-gemoji": "^8.0.0",
     "remark-gfm": "^4.0.0",
     "sharp": "0.33.4",
-    "viem": "^2.45.1",
+    "viem": "^2.46.3",
     "wagmi": "^2.12.1",
     "zustand": "^4.5.4"
   },

@@ -927,13 +927,15 @@
     dayjs "^1.11.13"
     gray-matter "^4.0.3"
 
-"@bgd-labs/frontend-web3-utils@1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.3.1.tgz#6e75ee4385ddedb2e3bd3e94722a689494c132c7"
-  integrity sha512-89dkqPijNZH9NacBFGZGnLkeplEB+DN/PMlbkN0PxQlkai/6wXPLjHtI+QO/vO2lAIC+kz76x0rHHFcPrOXLsg==
+"@bgd-labs/frontend-web3-utils@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/frontend-web3-utils/-/frontend-web3-utils-1.4.1.tgz#5593f504c509eb4f012a26c1e47ec97b8d624e60"
+  integrity sha512-1qKea9ojhFpjZfKb7IB0iBNd5upmEkjPcpd3+AjrKzA/5W0sVHiawPsbUyDsKRKDx3ooZbtboTnMgC/3l71gNQ==
   dependencies:
+    "@gelatocloud/gasless" "^0.0.12"
     "@tanstack/react-query" "^5.51.11"
     dayjs "^1.11.12"
+    viem "^2.46.3"
 
 "@bgd-labs/react-web3-icons@^1.59.0":
   version "1.59.0"
@@ -7412,6 +7414,20 @@ ox@0.11.3:
     abitype "^1.2.3"
     eventemitter3 "5.0.1"
 
+ox@0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/ox/-/ox-0.12.4.tgz#469a1b3cfb033d92bc615567875942173a2ddeb5"
+  integrity sha512-+P+C7QzuwPV8lu79dOwjBKfB2CbnbEXe/hfyyrff1drrO1nOOj3Hc87svHfcW1yneRr3WXaKr6nz11nq+/DF9Q==
+  dependencies:
+    "@adraffy/ens-normalize" "^1.11.0"
+    "@noble/ciphers" "^1.3.0"
+    "@noble/curves" "1.9.1"
+    "@noble/hashes" "^1.8.0"
+    "@scure/bip32" "^1.7.0"
+    "@scure/bip39" "^1.6.0"
+    abitype "^1.2.3"
+    eventemitter3 "5.0.1"
+
 ox@0.6.7:
   version "0.6.7"
   resolved "https://registry.yarnpkg.com/ox/-/ox-0.6.7.tgz#afd53f2ecef68b8526660e9d29dee6e6b599a832"
@@ -9377,10 +9393,10 @@ viem@>=2.29.0, viem@^2.21.26, viem@^2.27.2, viem@^2.31.7:
     ox "0.11.3"
     ws "8.18.3"
 
-viem@^2.45.1:
-  version "2.45.1"
-  resolved "https://registry.yarnpkg.com/viem/-/viem-2.45.1.tgz#c1c373efcf2a0b30f5e454cfb4a9c18ac5bb5452"
-  integrity sha512-LN6Pp7vSfv50LgwhkfSbIXftAM5J89lP9x8TeDa8QM7o41IxlHrDh0F9X+FfnCWtsz11pEVV5sn+yBUoOHNqYA==
+viem@^2.46.3:
+  version "2.46.3"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.46.3.tgz#0927e4da4380d6c87c7506a7c6b14cbdc0f3802f"
+  integrity sha512-2LJS+Hyh2sYjHXQtzfv1kU9pZx9dxFzvoU/ZKIcn0FNtOU0HQuIICuYdWtUDFHaGXbAdVo8J1eCvmjkL9JVGwg==
   dependencies:
     "@noble/curves" "1.9.1"
     "@noble/hashes" "1.8.0"
@@ -9388,7 +9404,7 @@ viem@^2.45.1:
     "@scure/bip39" "1.6.0"
     abitype "1.2.3"
     isows "1.0.7"
-    ox "0.11.3"
+    ox "0.12.4"
     ws "8.18.3"
 
 wagmi@^2.12.1:
