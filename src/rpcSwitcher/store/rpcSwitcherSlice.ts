@@ -1,4 +1,4 @@
-import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book/abis';
+import { IPayloadsControllerCore_ABI } from '../../web3/abis/IPayloadsControllerCore';
 import {
   blockLimit,
   getPayloadsCreated,

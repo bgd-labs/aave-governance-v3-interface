@@ -1,4 +1,3 @@
-import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book/abis';
 import {
   CachedDetails,
   getGovCoreConfigs,
@@ -8,7 +7,6 @@ import {
   ProposalWithLoadings,
 } from '@bgd-labs/aave-governance-ui-helpers';
 import type { Metadata } from 'next';
-import React from 'react';
 import { getContract } from 'viem';
 
 import { ProposalClientPageSSR } from '../../src/proposals/components/proposal/ProposalClientPageSSR';
@@ -24,6 +22,7 @@ import {
 } from '../../src/utils/cacheGithubLinks';
 import { getProposalMetadata } from '../../src/utils/getProposalMetadata';
 import { initialClients } from '../../src/utils/initialClients';
+import { IGovernanceCore_ABI } from '../../src/web3/abis/IGovernanceCore';
 
 export const revalidate = 0;
 

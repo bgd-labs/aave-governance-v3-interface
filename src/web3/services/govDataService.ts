@@ -2,13 +2,13 @@
 
 import {
   IDataWarehouse_ABI,
-  IGovernanceCore_ABI,
   IGovernanceDataHelper_ABI,
-  IPayloadsControllerCore_ABI,
   IPayloadsControllerDataHelper_ABI,
   IVotingMachineDataHelper_ABI,
   IVotingMachineWithProofs_ABI,
-} from '@bgd-labs/aave-address-book/abis';
+} from '@aave-dao/aave-address-book/abis';
+import { IGovernanceCore_ABI } from '../abis/IGovernanceCore';
+import { IPayloadsControllerCore_ABI } from '../abis/IPayloadsControllerCore';
 import {
   BasicProposal,
   blockLimit,
