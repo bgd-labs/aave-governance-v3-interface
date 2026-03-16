@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@aave-dao/aave-address-book@^4.47.10":
+  version "4.47.10"
+  resolved "https://registry.yarnpkg.com/@aave-dao/aave-address-book/-/aave-address-book-4.47.10.tgz#970bf164e8b10695f0a626bb9c42d011025af204"
+  integrity sha512-1X7YdZT8hl3HjBKTz7IFhh3eWBA0F+rGFgHPCbDJ3ABjf3qA1KPUPIPuSlSAentIRGkUL1Xe9+TnTE6e8khXqw==
+
 "@adraffy/ens-normalize@^1.10.1", "@adraffy/ens-normalize@^1.11.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.11.0.tgz#42cc67c5baa407ac25059fcd7d405cc5ecdb0c33"
@@ -912,15 +917,10 @@
     viem "^2.31.7"
     zustand "5.0.3"
 
-"@bgd-labs/aave-address-book@^4.44.2":
-  version "4.44.2"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-address-book/-/aave-address-book-4.44.2.tgz#0a3666148b7a3201b693f6ab948e74a5584611b1"
-  integrity sha512-zKM7ewJ4693RoLDkKJmrv60wScX6wfDJtVh/vNX+hXLUD1H/HcHToMlQze6HEktP1gBLcFirbF43jRX2qTmyfQ==
-
-"@bgd-labs/aave-governance-ui-helpers@^3.12.0":
-  version "3.12.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.12.0.tgz#a086ec3201f68dd3c49e8972452d6f4089aa41b4"
-  integrity sha512-yarr8XfPYPesPYCTgO88K04odF2ARAkvlPePXinWPO6On1qimPfJzJ7dcNym7MjBTRObqB3bT2jz26WleABX0w==
+"@bgd-labs/aave-governance-ui-helpers@^3.15.0":
+  version "3.15.0"
+  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.15.0.tgz#c96acc8b3e59da36cb15b249edc88d71e34e4506"
+  integrity sha512-1aXwuZhhRn3jFNIei5gaUbKonavY6Z3nXZ2thiT58Q01faoEEMQ4NdoPAXm9Nccv9/Z2eZY/gtQWuocJvIe2hg==
   dependencies:
     abitype "^1.0.8"
     bs58 "^6.0.0"
