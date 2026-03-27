@@ -21,10 +21,13 @@ export async function getProposalMetadata({
       const response = await request.json();
       const { content, data } = matter(response.description);
       return {
-        ...response,
+        title: data.title ?? response.title ?? '',
+        author: data.author ?? response.author ?? '',
+        discussions: data.discussions ?? response.discussions ?? '',
+        snapshot: data.snapshot ?? response.snapshot,
+        originalIpfsHash: hash,
         ipfsHash: hash,
         description: content,
-        ...data,
       };
     } else {
       console.error(

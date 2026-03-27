@@ -29,23 +29,24 @@ export async function getProposalMetadataBase({
     const response = await ipfsResponse.json();
     const { content, data } = matter(response.description);
     return {
-      ...response,
+      title: data.title ?? response.title ?? '',
+      author: data.author ?? response.author ?? '',
+      discussions: data.discussions ?? response.discussions ?? '',
+      snapshot: data.snapshot ?? response.snapshot,
       ipfsHash,
       description: content,
-      ...data,
     };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    const data = matter(await clone.text());
+    const parsed = matter(await clone.text());
+    const fm = parsed.data as Record<string, string>;
     return {
-      ...ipfsResponse,
+      title: fm.title ?? '',
+      author: fm.author ?? '',
+      discussions: fm.discussions ?? '',
+      snapshot: fm.snapshot,
       ipfsHash,
-      description: data.content,
-      ...(data.data as {
-        title: string;
-        discussions: string;
-        author: string;
-      }),
+      description: parsed.content,
     };
   }
 }
