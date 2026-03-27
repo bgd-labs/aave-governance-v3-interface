@@ -11,7 +11,7 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 - Logic: [React](https://react.dev/),  [Next.js](https://nextjs.org/), [zustand](https://docs.pmnd.rs/zustand/getting-started/introduction).
 - Web3: [viem](https://viem.sh/), [wagmi](https://wagmi.sh/), [@bgd-labs/frontend-web3-utils](https://github.com/bgd-labs/fe-shared).
 - Styling: [MUI system](https://mui.com/system/getting-started/), [headlessui](https://headlessui.com/).
-- Cache: [@bgd-labs/aave-governance-ui-helpers](https://github.com/bgd-labs/aave-governance-ui-helpers).
+- Cache: [aave-governance-cache](https://github.com/aave-dao/aave-governance-cache).
 
 ## Pre-requirements
 
