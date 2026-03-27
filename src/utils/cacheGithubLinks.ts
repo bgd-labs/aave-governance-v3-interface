@@ -1,6 +1,7 @@
 import { coreName } from './appConfig';
 
 export const githubInitialUrl =
+  process.env.NEXT_PUBLIC_CACHE_URL ||
   'https://raw.githubusercontent.com/aave-dao/aave-governance-cache/main/cache';
 export const githubStartUrl = `${githubInitialUrl}/ui/${coreName}`;
 

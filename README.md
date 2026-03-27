@@ -22,6 +22,7 @@ React application to interact with the Aave Governance V3 smart contracts: visua
 ## Configurations
 - Blockchain RPC URLs can be changed here [file](./src/utils/chains.ts) and IPFS gateway URLs can be changed here [file](./src/utils/configs.ts).
 - It is possible to run the application in SSR (Server-Side-Rendering) or IPFS mode, by changing `NEXT_PUBLIC_DEPLOY_FOR_IPFS`. The default is `false`, which is the most optimal option for all use cases.
+- The governance cache base URL can be configured via `NEXT_PUBLIC_CACHE_URL`. Defaults to `https://raw.githubusercontent.com/aave-dao/aave-governance-cache/main/cache`.
 
 <br>
 
