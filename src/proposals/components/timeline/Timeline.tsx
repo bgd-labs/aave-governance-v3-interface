@@ -4,7 +4,7 @@ import {
   Proposal,
   ProposalState,
   ProposalStateWithName,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';

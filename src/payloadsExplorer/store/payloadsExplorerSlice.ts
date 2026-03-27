@@ -1,4 +1,4 @@
-import { Payload, PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
+import { Payload, PayloadState } from '../../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Address } from 'viem';

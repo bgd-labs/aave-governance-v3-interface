@@ -1,4 +1,4 @@
-import { InitialPayload, Payload } from '@bgd-labs/aave-governance-ui-helpers';
+import { InitialPayload, Payload } from '../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 

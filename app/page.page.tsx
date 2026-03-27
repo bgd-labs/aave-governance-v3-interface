@@ -1,7 +1,7 @@
 import {
   FinishedProposalForList,
   getGovCoreConfigs,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../src/governance-ui-helpers';
 import { Metadata } from 'next';
 
 import { ProposalPageSSR } from '../src/proposals/components/proposalList/ProposalPageSSR';

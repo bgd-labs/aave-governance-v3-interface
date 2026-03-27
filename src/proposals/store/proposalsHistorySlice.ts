@@ -11,7 +11,7 @@ import {
   ProposalState,
   ProposalWithLoadings,
   TxInfo,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { produce } from 'immer';
 import { Hex, zeroHash } from 'viem';
@@ -159,7 +159,7 @@ export const createProposalsHistorySlice: StoreSlice<
         txId: payload.id,
         txChainId: payload.chainId,
         timestamp: payload.createdAt,
-        addresses: payload.actions.map((action) => action.target),
+        addresses: payload.actions?.map((action) => action.target) ?? [],
         txHash:
           proposalEvents && proposalEvents[historyId]
             ? proposalEvents[historyId].txInfo.hash

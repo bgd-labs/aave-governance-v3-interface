@@ -23,6 +23,7 @@ import {
   sepolia,
   soneium,
   sonic,
+  xLayer,
   zksync,
 } from 'viem/chains';
 
@@ -124,6 +125,9 @@ export const initialRpcUrls: Record<number, string[]> = {
   [megaeth.id]: [
     process.env.NEXT_PUBLIC_RPC_MEGAETH || 'https://mainnet.megaeth.com/rpc',
   ],
+  [xLayer.id]: [
+    process.env.NEXT_PUBLIC_RPC_XLAYER || 'https://rpc.xlayer.tech',
+  ],
   // testnets
   [sepolia.id]: [
     'https://eth-sepolia.public.blastapi.io',
@@ -192,6 +196,7 @@ export const CHAINS: Record<number, Chain> = {
   [ink.id]: setChain(ink),
   [mantle.id]: setChain(mantle),
   [megaeth.id]: setChain(megaeth),
+  [xLayer.id]: setChain(xLayer),
   // testnets
   [sepolia.id]: setChain(sepolia),
   [polygonMumbai.id]: setChain(polygonMumbai),

@@ -2,13 +2,13 @@
 
 import {
   IDataWarehouse_ABI,
-  IGovernanceCore_ABI,
   IGovernanceDataHelper_ABI,
-  IPayloadsControllerCore_ABI,
   IPayloadsControllerDataHelper_ABI,
   IVotingMachineDataHelper_ABI,
   IVotingMachineWithProofs_ABI,
-} from '@bgd-labs/aave-address-book/abis';
+} from '@aave-dao/aave-address-book/abis';
+import { IGovernanceCore_ABI } from '../../governance-ui-helpers/abis/IGovernanceCore';
+import { IPayloadsControllerCore_ABI } from '../../governance-ui-helpers/abis/IPayloadsControllerCore';
 import {
   BasicProposal,
   blockLimit,
@@ -38,8 +38,8 @@ import {
   VMProposalStructOutput,
   VotersData,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
+} from '../../governance-ui-helpers';
+import { IBaseVotingStrategy_ABI } from '../../governance-ui-helpers/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { createGelatoEvmRelayerClient } from '@gelatocloud/gasless';
 import { writeContract } from '@wagmi/core';

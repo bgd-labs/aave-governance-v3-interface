@@ -1,5 +1,6 @@
-import { IERC20_ABI } from '@bgd-labs/aave-address-book/abis';
-import { Asset, normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
+import { erc20Abi } from 'viem';
+
+import { Asset, normalizeBN } from '../../governance-ui-helpers';
 import {
   safeSdkOptions,
   StoreSlice,
@@ -74,7 +75,7 @@ export const createDelegationSlice: StoreSlice<
       const delegateData = await Promise.all(
         underlyingAssets.map(async (underlyingAsset) => {
           const erc20 = getContract({
-            abi: IERC20_ABI,
+            abi: erc20Abi,
             address: underlyingAsset,
             client: get().appClients[appConfig.govCoreChainId].instance,
           });

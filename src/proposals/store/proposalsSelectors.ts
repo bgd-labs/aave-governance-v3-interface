@@ -10,7 +10,7 @@ import {
   VotersData,
   VotingBalance,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { Wallet } from '@bgd-labs/frontend-web3-utils';
 import Fuse from 'fuse.js';
 

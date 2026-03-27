@@ -1,4 +1,4 @@
-import { PayloadState } from '@bgd-labs/aave-governance-ui-helpers';
+import { PayloadState } from '../../governance-ui-helpers';
 import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import React from 'react';

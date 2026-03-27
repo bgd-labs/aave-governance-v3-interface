@@ -2,7 +2,7 @@ import {
   getBlockNumberByTimestamp,
   Payload,
   PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Address } from 'viem';

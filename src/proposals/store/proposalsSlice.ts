@@ -17,7 +17,7 @@ import {
   VotersData,
   VotingBalance,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import dayjs from 'dayjs';
 import { Draft, produce } from 'immer';

@@ -1,4 +1,4 @@
-import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers';
+import { ProposalWithLoadings } from '../../governance-ui-helpers';
 import dayjs from 'dayjs';
 import { zeroAddress } from 'viem';
 

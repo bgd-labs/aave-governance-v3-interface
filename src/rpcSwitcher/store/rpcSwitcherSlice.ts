@@ -1,8 +1,8 @@
-import { IPayloadsControllerCore_ABI } from '@bgd-labs/aave-address-book/abis';
+import { IPayloadsControllerCore_ABI } from '../../governance-ui-helpers/abis/IPayloadsControllerCore';
 import {
   blockLimit,
   getPayloadsCreated,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Chain, Client, getContract, zeroAddress, zeroHash } from 'viem';

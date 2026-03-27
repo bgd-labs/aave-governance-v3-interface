@@ -1,7 +1,7 @@
 import {
   getProposalMetadata as baseGetProposalMetadata,
   ProposalMetadata,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../governance-ui-helpers';
 import matter from 'gray-matter';
 
 import { texts } from '../ui/utils/texts';

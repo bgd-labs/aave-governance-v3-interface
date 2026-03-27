@@ -1,4 +1,4 @@
-import { IGovernanceCore_ABI } from '@bgd-labs/aave-address-book/abis';
+import { IGovernanceCore_ABI } from '../../src/governance-ui-helpers/abis/IGovernanceCore';
 import {
   CachedDetails,
   getGovCoreConfigs,
@@ -6,7 +6,7 @@ import {
   getVotingMachineProposalState,
   ProposalMetadata,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../src/governance-ui-helpers';
 import type { Metadata } from 'next';
 import React from 'react';
 import { getContract } from 'viem';

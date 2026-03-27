@@ -1,4 +1,4 @@
-import { ProposalMetadata } from '@bgd-labs/aave-governance-ui-helpers';
+import { ProposalMetadata } from '../../../governance-ui-helpers';
 import { Box } from '@mui/system';
 import React, { useEffect } from 'react';
 import { Hex } from 'viem';

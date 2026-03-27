@@ -1,4 +1,4 @@
-import { ProposalWithLoadings } from '@bgd-labs/aave-governance-ui-helpers';
+import { ProposalWithLoadings } from '../../governance-ui-helpers';
 import { IWalletSlice, StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 

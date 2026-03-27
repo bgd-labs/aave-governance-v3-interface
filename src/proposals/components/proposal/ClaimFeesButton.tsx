@@ -1,7 +1,7 @@
 import {
   ProposalState,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import { selectLastTxByTypeAndPayload } from '@bgd-labs/frontend-web3-utils';
 import { Box } from '@mui/system';
 import React, { useState } from 'react';

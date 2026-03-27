@@ -1,7 +1,7 @@
 import {
   Proposal,
   ProposalStateWithName,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import { BigNumber } from 'bignumber.js';
 
 import { texts } from '../../../ui/utils/texts';
