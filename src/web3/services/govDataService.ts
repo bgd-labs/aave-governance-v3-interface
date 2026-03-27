@@ -7,8 +7,8 @@ import {
   IVotingMachineDataHelper_ABI,
   IVotingMachineWithProofs_ABI,
 } from '@aave-dao/aave-address-book/abis';
-import { IGovernanceCore_ABI } from '../../governance-ui-helpers/abis/IGovernanceCore';
-import { IPayloadsControllerCore_ABI } from '../../governance-ui-helpers/abis/IPayloadsControllerCore';
+import { IGovernanceCore_ABI } from '../abis/IGovernanceCore';
+import { IPayloadsControllerCore_ABI } from '../abis/IPayloadsControllerCore';
 import {
   BasicProposal,
   blockLimit,

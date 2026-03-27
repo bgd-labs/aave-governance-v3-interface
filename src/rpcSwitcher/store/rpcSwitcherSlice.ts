@@ -1,4 +1,4 @@
-import { IPayloadsControllerCore_ABI } from '../../governance-ui-helpers/abis/IPayloadsControllerCore';
+import { IPayloadsControllerCore_ABI } from '../../web3/abis/IPayloadsControllerCore';
 import {
   blockLimit,
   getPayloadsCreated,

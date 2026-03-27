@@ -1,5 +1,3 @@
-import { erc20Abi } from 'viem';
-
 import { Asset, normalizeBN } from '../../governance-ui-helpers';
 import {
   safeSdkOptions,
@@ -9,7 +7,7 @@ import {
 import { default as Sdk } from '@safe-global/safe-apps-sdk';
 import { produce } from 'immer';
 import isEqual from 'lodash/isEqual';
-import { getContract } from 'viem';
+import { erc20Abi, getContract } from 'viem';
 
 import { IProposalsSlice } from '../../proposals/store/proposalsSlice';
 import { IRpcSwitcherSlice } from '../../rpcSwitcher/store/rpcSwitcherSlice';
