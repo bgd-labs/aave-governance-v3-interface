@@ -1,4 +1,4 @@
-import { FinishedProposalForList } from '@bgd-labs/aave-governance-ui-helpers';
+import { FinishedProposalForList } from '../../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 
 export interface IProposalsListCacheSlice {

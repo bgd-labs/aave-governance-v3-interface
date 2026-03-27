@@ -5,7 +5,7 @@ import {
   getVotingMachineProposalState,
   ProposalMetadata,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../src/governance-ui-helpers';
 import type { Metadata } from 'next';
 import { getContract } from 'viem';
 

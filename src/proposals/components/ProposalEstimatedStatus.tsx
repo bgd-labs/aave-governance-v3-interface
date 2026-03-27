@@ -1,4 +1,4 @@
-import { ProposalEstimatedState } from '@bgd-labs/aave-governance-ui-helpers';
+import { ProposalEstimatedState } from '../../governance-ui-helpers';
 import { Box, SxProps } from '@mui/system';
 import React from 'react';
 

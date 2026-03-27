@@ -1,4 +1,4 @@
-import { VotersData } from '@bgd-labs/aave-governance-ui-helpers';
+import { VotersData } from '../../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { ReactNode } from 'react';
 import { Hex, zeroAddress } from 'viem';

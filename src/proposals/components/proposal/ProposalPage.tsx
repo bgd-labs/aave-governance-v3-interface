@@ -5,7 +5,7 @@ import {
   InitialPayload,
   ProposalMetadata,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';

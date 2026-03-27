@@ -1,4 +1,4 @@
-import { HistoryItemType } from '@bgd-labs/aave-governance-ui-helpers';
+import { HistoryItemType } from '../../../governance-ui-helpers';
 
 export function getHistoryId({
   proposalId,

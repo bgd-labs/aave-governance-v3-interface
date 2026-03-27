@@ -2,7 +2,7 @@ import {
   HistoryItemType,
   PayloadState,
   ProposalHistoryItem,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import dayjs from 'dayjs';
 import { megaeth } from 'viem/chains';
 

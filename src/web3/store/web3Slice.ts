@@ -1,4 +1,4 @@
-import { valueToBigNumber } from '@bgd-labs/aave-governance-ui-helpers';
+import { valueToBigNumber } from '../../governance-ui-helpers';
 import {
   ClientsRecord,
   createWalletSlice,

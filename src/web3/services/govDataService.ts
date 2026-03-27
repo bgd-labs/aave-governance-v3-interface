@@ -38,8 +38,8 @@ import {
   VMProposalStructOutput,
   VotersData,
   VotingConfig,
-} from '@bgd-labs/aave-governance-ui-helpers';
-import { IBaseVotingStrategy_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IBaseVotingStrategy';
+} from '../../governance-ui-helpers';
+import { IBaseVotingStrategy_ABI } from '../../governance-ui-helpers/abis/IBaseVotingStrategy';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { createGelatoEvmRelayerClient } from '@gelatocloud/gasless';
 import { writeContract } from '@wagmi/core';

@@ -1,7 +1,8 @@
 import { coreName } from './appConfig';
 
 export const githubInitialUrl =
-  'https://raw.githubusercontent.com/bgd-labs/aave-governance-ui-helpers/main/cache';
+  process.env.NEXT_PUBLIC_CACHE_URL ||
+  'https://raw.githubusercontent.com/aave-dao/aave-governance-cache/main/cache';
 export const githubStartUrl = `${githubInitialUrl}/ui/${coreName}`;
 
 export const listViewPath = '/list_view_proposals.json';

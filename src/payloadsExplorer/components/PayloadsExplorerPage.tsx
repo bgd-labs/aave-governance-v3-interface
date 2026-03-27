@@ -1,6 +1,6 @@
 'use client';
 
-import { InitialPayload } from '@bgd-labs/aave-governance-ui-helpers';
+import { InitialPayload } from '../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';

@@ -4,7 +4,7 @@ import {
   Balance,
   baseSlots,
   getVoteBalanceSlot,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { Address } from 'viem';
 
 import { appConfig } from '../../utils/appConfig';

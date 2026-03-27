@@ -2,7 +2,7 @@ import { IPayloadsControllerCore_ABI } from '../../web3/abis/IPayloadsController
 import {
   blockLimit,
   getPayloadsCreated,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { StoreSlice } from '@bgd-labs/frontend-web3-utils';
 import { Draft, produce } from 'immer';
 import { Chain, Client, getContract, zeroAddress, zeroHash } from 'viem';

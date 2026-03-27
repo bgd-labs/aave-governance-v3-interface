@@ -1,7 +1,7 @@
 import {
   InitialPayload,
   PayloadState,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,

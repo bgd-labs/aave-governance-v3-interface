@@ -3,7 +3,7 @@ import {
   CoreNetworkName,
   payloadsControllerChainIds,
   votingMachineChainIds,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../governance-ui-helpers';
 import { avalanche, goerli, polygon, sepolia } from 'viem/chains';
 
 export const isForIPFS = process.env.NEXT_PUBLIC_DEPLOY_FOR_IPFS === 'true';

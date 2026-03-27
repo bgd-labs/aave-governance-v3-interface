@@ -3,9 +3,9 @@
 
 
 "@aave-dao/aave-address-book@^4.47.10":
-  version "4.47.10"
-  resolved "https://registry.yarnpkg.com/@aave-dao/aave-address-book/-/aave-address-book-4.47.10.tgz#970bf164e8b10695f0a626bb9c42d011025af204"
-  integrity sha512-1X7YdZT8hl3HjBKTz7IFhh3eWBA0F+rGFgHPCbDJ3ABjf3qA1KPUPIPuSlSAentIRGkUL1Xe9+TnTE6e8khXqw==
+  version "4.47.12"
+  resolved "https://registry.yarnpkg.com/@aave-dao/aave-address-book/-/aave-address-book-4.47.12.tgz#57797b02d50a75bfe849b0fbffe134b2cc9db74c"
+  integrity sha512-UVXeQBAKLYAJTHZsOonCXgdQ5ZRlkWGvpBI6A/e2tOqvgMIOf0a5PLLc2xtLSp10kugtp85EP4gxtxDNNEP2rg==
 
 "@adraffy/ens-normalize@^1.10.1", "@adraffy/ens-normalize@^1.11.0":
   version "1.11.0"
@@ -916,16 +916,6 @@
     preact "10.24.2"
     viem "^2.31.7"
     zustand "5.0.3"
-
-"@bgd-labs/aave-governance-ui-helpers@^3.15.0":
-  version "3.15.0"
-  resolved "https://registry.yarnpkg.com/@bgd-labs/aave-governance-ui-helpers/-/aave-governance-ui-helpers-3.15.0.tgz#c96acc8b3e59da36cb15b249edc88d71e34e4506"
-  integrity sha512-1aXwuZhhRn3jFNIei5gaUbKonavY6Z3nXZ2thiT58Q01faoEEMQ4NdoPAXm9Nccv9/Z2eZY/gtQWuocJvIe2hg==
-  dependencies:
-    abitype "^1.0.8"
-    bs58 "^6.0.0"
-    dayjs "^1.11.13"
-    gray-matter "^4.0.3"
 
 "@bgd-labs/frontend-web3-utils@1.4.1":
   version "1.4.1"
@@ -3367,7 +3357,7 @@ abitype@1.0.6:
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-1.0.6.tgz#76410903e1d88e34f1362746e2d407513c38565b"
   integrity sha512-MMSqYh4+C/aVqI2RQaWqbvI4Kxo5cQV40WQ4QFtDnNzCkqChm8MuENhElmynZlO0qUy/ObkEUaXtKqYnx1Kp3A==
 
-abitype@1.0.8, abitype@^1.0.6, abitype@^1.0.8:
+abitype@1.0.8, abitype@^1.0.6:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-1.0.8.tgz#3554f28b2e9d6e9f35eb59878193eabd1b9f46ba"
   integrity sha512-ZeiI6h3GnW06uYDLx0etQtX/p8E24UaHHBj57RSjK7YBFe7iuVn07EDpOeP451D06sF27VOz9JJPlIKJmXgkEg==
@@ -4301,7 +4291,7 @@ dateformat@^4.6.3:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-4.6.3.tgz#556fa6497e5217fedb78821424f8a1c22fa3f4b5"
   integrity sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==
 
-dayjs@1.11.13, dayjs@^1.11.12, dayjs@^1.11.13:
+dayjs@1.11.13, dayjs@^1.11.12:
   version "1.11.13"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
   integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==

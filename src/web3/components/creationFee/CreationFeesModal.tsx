@@ -1,4 +1,4 @@
-import { CreationFeeState } from '@bgd-labs/aave-governance-ui-helpers';
+import { CreationFeeState } from '../../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { zeroAddress } from 'viem';

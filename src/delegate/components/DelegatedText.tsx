@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset } from '../../governance-ui-helpers';
 import { Box } from '@mui/system';
 import React from 'react';
 import { Address } from 'viem';

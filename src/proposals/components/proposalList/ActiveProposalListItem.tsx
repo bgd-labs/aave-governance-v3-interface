@@ -2,7 +2,7 @@ import {
   CombineProposalState,
   formatProposal,
   ProposalWithLoadings,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import { WalletType } from '@bgd-labs/frontend-web3-utils';
 import { Box, useTheme } from '@mui/system';
 import React, { useEffect, useState } from 'react';

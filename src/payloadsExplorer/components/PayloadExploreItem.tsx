@@ -1,4 +1,4 @@
-import { InitialPayload, Payload } from '@bgd-labs/aave-governance-ui-helpers';
+import { InitialPayload, Payload } from '../../governance-ui-helpers';
 import {
   selectLastTxByTypeAndPayload,
   TransactionStatus,

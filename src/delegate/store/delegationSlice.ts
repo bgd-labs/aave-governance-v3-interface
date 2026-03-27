@@ -1,4 +1,4 @@
-import { Asset, normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset, normalizeBN } from '../../governance-ui-helpers';
 import {
   safeSdkOptions,
   StoreSlice,

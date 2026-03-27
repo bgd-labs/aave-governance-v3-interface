@@ -1,4 +1,4 @@
-import { Asset } from '@bgd-labs/aave-governance-ui-helpers';
+import { Asset } from '../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 
 import { Divider } from '../../ui';

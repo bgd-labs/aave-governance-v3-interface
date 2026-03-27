@@ -2,7 +2,7 @@ import {
   HistoryItemType,
   ProposalWithLoadings,
   TxInfo,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../../governance-ui-helpers';
 import { useRequest } from 'alova';
 import React, { useEffect } from 'react';
 

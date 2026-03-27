@@ -3,7 +3,7 @@ import {
   FinishedProposalForList,
   ProposalHistoryItem,
   VotersData,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../governance-ui-helpers';
 import { createAlova } from 'alova';
 import GlobalFetch from 'alova/GlobalFetch';
 import ReactHook from 'alova/react';

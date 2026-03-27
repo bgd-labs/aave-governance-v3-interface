@@ -1,4 +1,4 @@
-import { CachedProposalDataItemWithId } from '@bgd-labs/aave-governance-ui-helpers';
+import { CachedProposalDataItemWithId } from '../../../governance-ui-helpers';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect } from 'react';
 

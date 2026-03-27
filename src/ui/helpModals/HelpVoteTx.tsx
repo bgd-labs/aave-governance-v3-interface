@@ -5,7 +5,7 @@ import {
   getEstimatedState,
   ProposalWithLoadings,
   valueToBigNumber,
-} from '@bgd-labs/aave-governance-ui-helpers';
+} from '../../governance-ui-helpers';
 import { Box, useTheme } from '@mui/system';
 import { BigNumber } from 'bignumber.js';
 import Image from 'next/image';

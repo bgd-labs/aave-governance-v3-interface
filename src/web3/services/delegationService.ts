@@ -1,9 +1,9 @@
 'use client';
 
 import { IMetaDelegateHelper_ABI } from '@aave-dao/aave-address-book/abis';
-import { normalizeBN } from '@bgd-labs/aave-governance-ui-helpers';
-import { IAaveTokenV3_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IAaveTokenV3';
-import { IATokenWithDelegation_ABI } from '@bgd-labs/aave-governance-ui-helpers/dist/abis/IATokenWithDelegation';
+import { normalizeBN } from '../../governance-ui-helpers';
+import { IAaveTokenV3_ABI } from '../../governance-ui-helpers/abis/IAaveTokenV3';
+import { IATokenWithDelegation_ABI } from '../../governance-ui-helpers/abis/IATokenWithDelegation';
 import { ClientsRecord } from '@bgd-labs/frontend-web3-utils';
 import { signTypedData, writeContract } from '@wagmi/core';
 import { sendCalls } from '@wagmi/core/experimental';
