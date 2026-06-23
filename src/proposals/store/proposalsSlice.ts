@@ -429,8 +429,15 @@ export const createProposalsSlice: StoreSlice<
     }
   },
   getDetailedPayloadsData: async (chainId, payloadsController, ids) => {
+    const payloadsControllerConfig =
+      appConfig.payloadsControllerConfig[chainId];
+
+    if (!payloadsControllerConfig) {
+      return;
+    }
+
     const payloadController =
-      appConfig.payloadsControllerConfig[chainId].contractAddresses.some(
+      payloadsControllerConfig.contractAddresses.some(
         (address) => address === payloadsController,
       ) && payloadsController;
 

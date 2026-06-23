@@ -32,7 +32,7 @@ export function PayloadActions({
   showMoreClick,
   withoutEllipsis,
 }: PayloadActionsProps) {
-  const isWithShowMore = !!showMoreClick && payload.actions.length > 2;
+  const isWithShowMore = !!showMoreClick && (payload.actions?.length || 0) > 2;
 
   return (
     <>

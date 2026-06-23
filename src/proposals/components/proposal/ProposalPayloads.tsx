@@ -26,6 +26,11 @@ import { BoxWith3D, Link, SmallButton, Timer } from '../../../ui';
 import { CopyAndExternalIconsSet } from '../../../ui/components/CopyAndExternalIconsSet';
 import { NetworkIcon } from '../../../ui/components/NetworkIcon';
 import { IconBox } from '../../../ui/primitives/IconBox';
+import {
+  getChainName,
+  isSupportedChainId,
+  unsupportedNetworkName,
+} from '../../../ui/utils/getChainName';
 import { texts } from '../../../ui/utils/texts';
 import { getScanLink } from '../../../utils/getScanLink';
 import {
@@ -64,7 +69,8 @@ export function PayloadItemStatusInfo({
         flexDirection: 'row',
         alignItems: 'flex-end',
         color: isSecondary ? '$textSecondary' : '$text',
-      }}>
+      }}
+    >
       {title && (
         <Box sx={{ typography: titleTypography || 'descriptorAccent', mr: 6 }}>
           {title}
@@ -89,7 +95,8 @@ export function PayloadError({ payload }: { payload: NewPayload }) {
             chainId: payload.chainId,
             address: payload.payloadsController,
           })}
-          inNewWindow>
+          inNewWindow
+        >
           {payload.payloadsController}
         </Link>
       </Box>
@@ -116,7 +123,8 @@ function PayloadStatusWithHash({
               chainId: payload.chainId,
               address: txHash,
               type: 'tx',
-            })}>
+            })}
+          >
             {children}
           </Link>
           <CopyAndExternalIconsSet
@@ -264,7 +272,8 @@ function PayloadItem({
           '&:last-of-type': {
             mb: 0,
           },
-        }}>
+        }}
+      >
         <Box
           onClick={() => {
             if ((isArrowVisibleForFirstPayload || inList) && !forCreate) {
@@ -285,19 +294,22 @@ function PayloadItem({
                   ? theme.palette.$light
                   : undefined,
             },
-          }}>
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               minHeight: 24,
-            }}>
+            }}
+          >
             <Box
               sx={{
                 display: 'inline-flex',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <NetworkIcon
                 chainId={payload.chainId}
                 size={14}
@@ -331,7 +343,8 @@ function PayloadItem({
                           });
                         }
                         setExecutePayloadModalOpen(true);
-                      }}>
+                      }}
+                    >
                       {texts.proposals.payloadsDetails.execute}
                     </SmallButton>
                   ) : (
@@ -349,7 +362,8 @@ function PayloadItem({
                     ml: 4,
                     '> svg': { width: 10, height: 10 },
                     path: { stroke: theme.palette.$main },
-                  }}>
+                  }}
+                >
                   {isActionsOpen ? <ArrowToTop /> : <ArrowToBottom />}
                 </IconBox>
               )}
@@ -364,7 +378,8 @@ function PayloadItem({
                     display: 'inline-flex',
                     alignItems: 'center',
                     typography: 'descriptorAccent',
-                  }}>
+                  }}
+                >
                   Proposal id: {payload.proposalId}{' '}
                   <CopyAndExternalIconsSet
                     externalLink={`/proposal?proposalId=${payload.proposalId}`}
@@ -389,7 +404,8 @@ function PayloadItem({
 
             {isPayloadOnInitialState && (
               <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.created}>
+                title={texts.proposals.payloadsDetails.created}
+              >
                 <>
                   {createTransactionHash ? (
                     <Link
@@ -399,7 +415,8 @@ function PayloadItem({
                         chainId: payload.chainId,
                         address: createTransactionHash,
                         type: 'tx',
-                      })}>
+                      })}
+                    >
                       {dayjs
                         .unix(payload.createdAt)
                         .format('MMM D, YYYY, h:mm A')}
@@ -420,7 +437,8 @@ function PayloadItem({
                               },
                             },
                           },
-                        }}>
+                        }}
+                      >
                         <LinkIcon />
                       </IconBox>
                     </Link>
@@ -451,14 +469,16 @@ function PayloadItem({
               !isPayloadTimeLocked &&
               !isFinalStatus && (
                 <PayloadItemStatusInfo
-                  title={texts.proposals.payloadsDetails.executedIn}>
+                  title={texts.proposals.payloadsDetails.executedIn}
+                >
                   <Timer timestamp={payloadExecutionTime} />
                 </PayloadItemStatusInfo>
               )}
 
             {isExecuted && (
               <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.executedAt}>
+                title={texts.proposals.payloadsDetails.executedAt}
+              >
                 <PayloadStatusWithHash
                   txHash={txHash}
                   payload={payload}
@@ -471,7 +491,8 @@ function PayloadItem({
 
             {payload.cancelledAt > 0 && (
               <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.cancelledAt}>
+                title={texts.proposals.payloadsDetails.cancelledAt}
+              >
                 <>
                   {dayjs
                     .unix(payload.cancelledAt)
@@ -482,7 +503,8 @@ function PayloadItem({
 
             {payload.state === PayloadState.Expired && (
               <PayloadItemStatusInfo
-                title={texts.proposals.payloadsDetails.expired}>
+                title={texts.proposals.payloadsDetails.expired}
+              >
                 <>
                   {dayjs
                     .unix(
@@ -507,12 +529,14 @@ function PayloadItem({
               justifyContent: 'space-between',
               flexDirection: 'column',
               pl: 24,
-            }}>
+            }}
+          >
             {!isFinalStatus && (
               <Box sx={{ mb: 4 }}>
                 <PayloadItemStatusInfo
                   isSecondary
-                  title={texts.proposals.payloadsDetails.expiredIn}>
+                  title={texts.proposals.payloadsDetails.expiredIn}
+                >
                   <Box sx={{ typography: 'descriptor' }}>
                     <Timer timestamp={payloadExpiredTime} />
                   </Box>
@@ -540,6 +564,75 @@ function PayloadItem({
       </Box>
     </>
   );
+}
+
+function PayloadFallbackItem({
+  payload,
+  payloadCount,
+  totalPayloadsCount,
+  isFullView,
+  inList,
+}: {
+  payload: NewPayload;
+  payloadCount: number;
+  totalPayloadsCount: number;
+  isFullView?: boolean;
+  inList?: boolean;
+}) {
+  const isUnsupportedNetwork = !isSupportedChainId(payload.chainId);
+  const payloadNumber =
+    totalPayloadsCount > 1 ? `${payloadCount}/${totalPayloadsCount}` : '';
+  const payloadExplorerLink = isUnsupportedNetwork
+    ? undefined
+    : `https://vote.onaave.com/payloads-explorer/?payloadId=${payload.id}&payloadChainId=${payload.chainId}&payloadsControllerAddress=${payload.payloadsController}`;
+
+  return (
+    <Box
+      sx={{
+        mb: isFullView || inList ? 18 : 0,
+        px: 6,
+        pb: 4,
+        '&:last-of-type': {
+          mb: 0,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          minHeight: 24,
+        }}
+      >
+        <Box sx={{ typography: 'body' }}>
+          {texts.proposals.payloadsDetails.payload} {payloadNumber}
+        </Box>
+        <CopyAndExternalIconsSet
+          iconSize={12}
+          externalLink={payloadExplorerLink}
+          sx={{ '.CopyAndExternalIconsSet__link': { ml: 4 } }}
+        />
+      </Box>
+
+      <Box sx={{ pl: 18, mt: 4 }}>
+        <PayloadItemStatusInfo title="Network">
+          {isUnsupportedNetwork
+            ? unsupportedNetworkName
+            : getChainName(payload.chainId)}
+        </PayloadItemStatusInfo>
+        <PayloadItemStatusInfo title={texts.proposals.payloadsDetails.details}>
+          {isUnsupportedNetwork
+            ? unsupportedNetworkName
+            : 'Payload data unavailable'}
+        </PayloadItemStatusInfo>
+      </Box>
+    </Box>
+  );
+}
+
+function isPayloadFallbackVisible(payload: NewPayload) {
+  return !isSupportedChainId(payload.chainId) || !payload?.state;
 }
 
 export function ProposalPayloads({
@@ -575,7 +668,8 @@ export function ProposalPayloads({
         [theme.breakpoints.up('lg')]: {
           p: '24px 0 24px 24px',
         },
-      }}>
+      }}
+    >
       <Box
         sx={(theme) => ({
           pr: 12,
@@ -585,9 +679,17 @@ export function ProposalPayloads({
             maxHeight: payloads.length > 2 && !forCreate ? 300 : 'unset',
             pr: 24,
           },
-        })}>
+        })}
+      >
         {isFirstPayloadError ? (
           <PayloadError payload={payloads[0]} />
+        ) : isPayloadFallbackVisible(payloads[0]) ? (
+          <PayloadFallbackItem
+            payload={payloads[0]}
+            payloadCount={1}
+            totalPayloadsCount={payloads.length}
+            isFullView={isFullView}
+          />
         ) : (
           <PayloadItem
             proposalId={proposalId}
@@ -614,7 +716,22 @@ export function ProposalPayloads({
                 ];
 
               if (isError) {
-                return <PayloadError payload={payload} />;
+                return (
+                  <PayloadError
+                    key={`${payload.id}_${payload.chainId}`}
+                    payload={payload}
+                  />
+                );
+              } else if (isPayloadFallbackVisible(payload)) {
+                return (
+                  <PayloadFallbackItem
+                    key={`${payload.id}_${payload.chainId}`}
+                    payload={payload}
+                    payloadCount={index + 2}
+                    totalPayloadsCount={payloads.length}
+                    inList
+                  />
+                );
               } else {
                 return (
                   <PayloadItem
@@ -651,7 +768,8 @@ export function ProposalPayloads({
             [theme.breakpoints.up('lg')]: {
               pr: 24,
             },
-          }}>
+          }}
+        >
           <Box
             onClick={() => setFullView(!isFullView)}
             sx={{
@@ -660,7 +778,8 @@ export function ProposalPayloads({
               color: '$textSecondary',
               transition: 'all 0.2s ease',
               hover: { color: theme.palette.$text },
-            }}>
+            }}
+          >
             {texts.proposals.payloadsDetails.more(isFullView)}
           </Box>
         </Box>
