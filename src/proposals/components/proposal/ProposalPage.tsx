@@ -15,7 +15,10 @@ import { useStore } from '../../../store/ZustandStoreProvider';
 import { BackButton3D, BoxWith3D, NoSSR } from '../../../ui';
 import { TopPanelContainer } from '../../../ui/components/TopPanelContainer';
 import { ToTopButton } from '../../../ui/components/ToTopButton';
-import { getChainName } from '../../../ui/utils/getChainName';
+import {
+  getChainName,
+  isSupportedChainId,
+} from '../../../ui/utils/getChainName';
 import { texts } from '../../../ui/utils/texts';
 import { selectVotersByProposalId } from '../../store/proposalsSelectors';
 import { ActivateVotingOnVotingMachineModal } from '../actionModals/ActivateVotingOnVotingMachineModal';
@@ -248,10 +251,16 @@ export function ProposalPage({
           }}>
           <LeftPanelWrapper>
             <NoSSR>
-              {proposal.data.payloads.some((payload) => !payload?.state) && (
+              {proposal.data.payloads.some(
+                (payload) =>
+                  !payload?.state && isSupportedChainId(payload.chainId),
+              ) && (
                 <BlockWrapper toBottom contentColor="$mainAgainst">
                   {proposal.data.payloads
-                    .filter((payload) => !payload?.state)
+                    .filter(
+                      (payload) =>
+                        !payload?.state && isSupportedChainId(payload.chainId),
+                    )
                     .map((payload) => (
                       <Box
                         key={payload.id}
@@ -261,7 +270,7 @@ export function ProposalPage({
                           color: '$light',
                           textAlign: 'center',
                         }}>
-                        Cannot get data for Payload id{payload.id} on{' '}
+                        Cannot get data for payload id #{payload.id} on{' '}
                         {getChainName(payload.chainId)}
                       </Box>
                     ))}
