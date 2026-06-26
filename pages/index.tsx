@@ -20,7 +20,7 @@ export default function Home() {
           />
 
           <h1 className="goodbye__title">
-            This interface is not actively maintained anymore.
+            This interface is not actively maintained anymore
           </h1>
 
           <span className="btn btn--primary">
